@@ -1,0 +1,534 @@
+{
+  "_meta": {
+    "description": "pKa values for common biological buffers and ionizable amino-acid groups used by the Biochemistry area. Thermodynamic pKa at 25 C (I->0) unless the note says otherwise; values read from PubChem PUG View on 2026-09-14 carry verified=true, all others are unverified with their bibliographic reference.",
+    "created": "2026-09-14 20:17 MDT | 22:17 EDT | 02:17 Zulu",
+    "honest_note": "Buffer pKa values are reported at 25 C, zero ionic strength (the 'thermodynamic' value). Working buffers at 0.1 M ionic strength have slightly different apparent pKa; the prepare_buffer/henderson_hasselbalch/titration routines apply a Davies-equation activity correction at the stated ionic strength rather than hiding the difference."
+  },
+  "buffers": {
+    "phosphate": {
+      "name": "Phosphate (phosphoric acid)",
+      "formula": "H3PO4",
+      "charge_start": 0,
+      "pkas": [
+        {
+          "label": "pKa1",
+          "pka": {
+            "value": 2.148,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Goldberg, Kishore & Lennen, J. Phys. Chem. Ref. Data 31, 231 (2002); NIST SRD 46",
+            "note": "25 C, I->0",
+            "uncertainty": 0.002
+          },
+          "acid_form": "H3PO4",
+          "base_form": "NaH2PO4"
+        },
+        {
+          "label": "pKa2",
+          "pka": {
+            "value": 7.199,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Goldberg, Kishore & Lennen, J. Phys. Chem. Ref. Data 31, 231 (2002); NIST SRD 46",
+            "note": "25 C, I->0. PubChem (Merck Index) lists 7.09, a ~0.1 M ionic-strength value",
+            "uncertainty": 0.002
+          },
+          "dT": {
+            "value": -0.0028,
+            "unit": "C^-1",
+            "kind": "unverified",
+            "source": "Good et al., Biochemistry 5, 467 (1966)",
+            "note": "dpKa/dT"
+          },
+          "acid_form": "NaH2PO4",
+          "base_form": "Na2HPO4"
+        },
+        {
+          "label": "pKa3",
+          "pka": {
+            "value": 12.35,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Goldberg, Kishore & Lennen, J. Phys. Chem. Ref. Data 31, 231 (2002)",
+            "note": "25 C, I->0",
+            "uncertainty": 0.02
+          },
+          "acid_form": "Na2HPO4",
+          "base_form": "Na3PO4"
+        }
+      ]
+    },
+    "acetate": {
+      "name": "Acetate (acetic acid)",
+      "formula": "CH3COOH",
+      "charge_start": 0,
+      "pkas": [
+        {
+          "label": "pKa",
+          "pka": {
+            "value": 4.756,
+            "unit": "",
+            "kind": "cited",
+            "verified": true,
+            "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/176/JSON?heading=Dissociation%20Constants",
+            "retrieved": "2026-09-14",
+            "note": "Serjeant & Dempsey (1979); PubChem also lists 4.76 (at 25 C)"
+          },
+          "acid_form": "CH3COOH",
+          "base_form": "NaCH3COO"
+        }
+      ]
+    },
+    "citrate": {
+      "name": "Citrate (citric acid)",
+      "formula": "C6H8O7",
+      "charge_start": 0,
+      "pkas": [
+        {
+          "label": "pKa1",
+          "pka": {
+            "value": 3.128,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Goldberg, Kishore & Lennen, J. Phys. Chem. Ref. Data 31, 231 (2002)",
+            "note": "25 C, I->0"
+          },
+          "acid_form": "C6H8O7",
+          "base_form": "NaH2C6H5O7"
+        },
+        {
+          "label": "pKa2",
+          "pka": {
+            "value": 4.761,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Goldberg, Kishore & Lennen, J. Phys. Chem. Ref. Data 31, 231 (2002)",
+            "note": "25 C, I->0"
+          },
+          "acid_form": "NaH2C6H5O7",
+          "base_form": "Na2HC6H5O7"
+        },
+        {
+          "label": "pKa3",
+          "pka": {
+            "value": 6.396,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Goldberg, Kishore & Lennen, J. Phys. Chem. Ref. Data 31, 231 (2002)",
+            "note": "25 C, I->0"
+          },
+          "acid_form": "Na2HC6H5O7",
+          "base_form": "Na3C6H5O7"
+        }
+      ]
+    },
+    "tris": {
+      "name": "Tris (tris(hydroxymethyl)aminomethane)",
+      "formula": "C4H11NO3",
+      "charge_start": 1,
+      "pkas": [
+        {
+          "label": "pKa",
+          "pka": {
+            "value": 8.07,
+            "unit": "",
+            "kind": "cited",
+            "verified": true,
+            "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/6503/JSON?heading=Dissociation%20Constants",
+            "retrieved": "2026-09-14",
+            "note": "Perrin, Dissociation Constants of Organic Bases (IUPAC); Good et al. 1966 report 8.06 at 25 C"
+          },
+          "dT": {
+            "value": -0.028,
+            "unit": "C^-1",
+            "kind": "unverified",
+            "source": "Good et al., Biochemistry 5, 467 (1966)",
+            "note": "dpKa/dT, the largest of the common buffers"
+          },
+          "acid_form": "C4H12ClNO3",
+          "base_form": "C4H11NO3"
+        }
+      ],
+      "form_names": {
+        "acid": "Tris hydrochloride (Tris.HCl)",
+        "base": "Tris free base"
+      }
+    },
+    "hepes": {
+      "name": "HEPES",
+      "formula": "C8H18N2O4S",
+      "charge_start": 0,
+      "pkas": [
+        {
+          "label": "pKa",
+          "pka": {
+            "value": 7.48,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Good et al., Biochemistry 5, 467 (1966)",
+            "note": "7.55 at 20 C, adjusted to 25 C with dpKa/dT = -0.014 C^-1"
+          },
+          "dT": {
+            "value": -0.014,
+            "unit": "C^-1",
+            "kind": "unverified",
+            "source": "Good et al., Biochemistry 5, 467 (1966)",
+            "note": "dpKa/dT"
+          },
+          "acid_form": "C8H18N2O4S",
+          "base_form": "C8H17N2NaO4S"
+        }
+      ],
+      "form_names": {
+        "acid": "HEPES free acid",
+        "base": "HEPES sodium salt"
+      }
+    },
+    "mes": {
+      "name": "MES",
+      "formula": "C6H13NO4S",
+      "charge_start": 0,
+      "pkas": [
+        {
+          "label": "pKa",
+          "pka": {
+            "value": 6.1,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Good et al., Biochemistry 5, 467 (1966)",
+            "note": "6.15 at 20 C, adjusted to 25 C with dpKa/dT = -0.011 C^-1"
+          },
+          "dT": {
+            "value": -0.011,
+            "unit": "C^-1",
+            "kind": "unverified",
+            "source": "Good et al., Biochemistry 5, 467 (1966)",
+            "note": "dpKa/dT"
+          },
+          "acid_form": "C6H13NO4S",
+          "base_form": "C6H12NNaO4S"
+        }
+      ],
+      "form_names": {
+        "acid": "MES free acid",
+        "base": "MES sodium salt"
+      }
+    },
+    "mops": {
+      "name": "MOPS",
+      "formula": "C7H15NO4S",
+      "charge_start": 0,
+      "pkas": [
+        {
+          "label": "pKa",
+          "pka": {
+            "value": 7.13,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Good et al., Biochemistry 5, 467 (1966)",
+            "note": "7.20 at 20 C, adjusted to 25 C with dpKa/dT = -0.015 C^-1 (literature values range -0.011 to -0.015)"
+          },
+          "dT": {
+            "value": -0.015,
+            "unit": "C^-1",
+            "kind": "unverified",
+            "source": "Good et al., Biochemistry 5, 467 (1966)",
+            "note": "dpKa/dT, reported -0.011 to -0.015 C^-1"
+          },
+          "acid_form": "C7H15NO4S",
+          "base_form": "C7H14NNaO4S"
+        }
+      ],
+      "form_names": {
+        "acid": "MOPS free acid",
+        "base": "MOPS sodium salt"
+      }
+    },
+    "pipes": {
+      "name": "PIPES",
+      "formula": "C8H18N2O6S2",
+      "charge_start": 0,
+      "pkas": [
+        {
+          "label": "pKa",
+          "pka": {
+            "value": 6.76,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Good et al., Biochemistry 5, 467 (1966)",
+            "note": "6.80 at 20 C, adjusted to 25 C with dpKa/dT = -0.0085 C^-1"
+          },
+          "dT": {
+            "value": -0.0085,
+            "unit": "C^-1",
+            "kind": "unverified",
+            "source": "Good et al., Biochemistry 5, 467 (1966)",
+            "note": "dpKa/dT"
+          },
+          "acid_form": "C8H18N2O6S2",
+          "base_form": "C8H17N2NaO6S2"
+        }
+      ],
+      "form_names": {
+        "acid": "PIPES free acid",
+        "base": "PIPES disodium salt"
+      }
+    },
+    "glycine": {
+      "name": "Glycine",
+      "formula": "C2H5NO2",
+      "charge_start": 1,
+      "pkas": [
+        {
+          "label": "pKa1 (alpha-COOH)",
+          "pka": {
+            "value": 2.34,
+            "unit": "",
+            "kind": "cited",
+            "verified": true,
+            "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/750/JSON?heading=Dissociation%20Constants",
+            "retrieved": "2026-09-14",
+            "note": "Merck Index via PubChem ('pK1: 2.34')"
+          }
+        },
+        {
+          "label": "pKa2 (alpha-NH3+)",
+          "pka": {
+            "value": 9.6,
+            "unit": "",
+            "kind": "cited",
+            "verified": true,
+            "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/750/JSON?heading=Dissociation%20Constants",
+            "retrieved": "2026-09-14",
+            "note": "Merck Index via PubChem ('pK2: 9.60')"
+          }
+        }
+      ]
+    },
+    "carbonic": {
+      "name": "Bicarbonate (CO2 / carbonic acid)",
+      "formula": "H2CO3",
+      "charge_start": 0,
+      "pkas": [
+        {
+          "label": "pKa1",
+          "pka": {
+            "value": 6.352,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Goldberg, Kishore & Lennen, J. Phys. Chem. Ref. Data 31, 231 (2002)",
+            "note": "25 C, I->0; governs CO2(aq) + H2O <=> HCO3- + H+"
+          },
+          "dT": {
+            "value": -0.005,
+            "unit": "C^-1",
+            "kind": "unverified",
+            "source": "standard buffer tables",
+            "note": "dpKa/dT (approximate)"
+          }
+        },
+        {
+          "label": "pKa2",
+          "pka": {
+            "value": 10.329,
+            "unit": "",
+            "kind": "unverified",
+            "source": "Goldberg, Kishore & Lennen, J. Phys. Chem. Ref. Data 31, 231 (2002)",
+            "note": "25 C, I->0; HCO3- <=> CO3(2-)"
+          }
+        }
+      ],
+      "weigh_note": "Weighed as gas or solution, not a dry solid; no weighing forms are provided."
+    },
+    "imidazole": {
+      "name": "Imidazole",
+      "formula": "C3H4N2",
+      "charge_start": 1,
+      "pkas": [
+        {
+          "label": "pKa",
+          "pka": {
+            "value": 6.95,
+            "unit": "",
+            "kind": "cited",
+            "verified": true,
+            "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/795/JSON?heading=Dissociation%20Constants",
+            "retrieved": "2026-09-14",
+            "note": "Perrin (1965): 6.95 at 25 C (conjugate acid imidazolium)"
+          },
+          "dT": {
+            "value": -0.02,
+            "unit": "C^-1",
+            "kind": "unverified",
+            "source": "standard buffer tables",
+            "note": "dpKa/dT (approximate)"
+          },
+          "acid_form": "C3H5ClN2",
+          "base_form": "C3H4N2"
+        }
+      ],
+      "form_names": {
+        "acid": "Imidazole hydrochloride",
+        "base": "Imidazole free base"
+      }
+    },
+    "ammonium": {
+      "name": "Ammonium / ammonia",
+      "formula": "NH3",
+      "charge_start": 1,
+      "pkas": [
+        {
+          "label": "pKa (NH4+)",
+          "pka": {
+            "value": 9.249,
+            "unit": "",
+            "kind": "derived",
+            "method": "pKa = 14.00 - pKb, with pKb = 4.751 at 25 C (CRC Handbook, via PubChem CID 222)",
+            "note": "14.00 - 4.751 = 9.249"
+          },
+          "dT": {
+            "value": -0.031,
+            "unit": "C^-1",
+            "kind": "unverified",
+            "source": "standard buffer tables",
+            "note": "dpKa/dT (approximate)"
+          }
+        }
+      ],
+      "weigh_note": "Used as ammonium salt solutions, not a dry buffer; no weighing forms are provided."
+    },
+    "borate": {
+      "name": "Borate (boric acid)",
+      "formula": "H3BO3",
+      "charge_start": 0,
+      "pkas": [
+        {
+          "label": "pKa",
+          "pka": {
+            "value": 9.24,
+            "unit": "",
+            "kind": "cited",
+            "verified": true,
+            "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/7628/JSON?heading=Dissociation%20Constants",
+            "retrieved": "2026-09-14",
+            "note": "Ka = 5.80e-10 at 25 C (Kirk-Othmer via PubChem)"
+          },
+          "dT": {
+            "value": -0.008,
+            "unit": "C^-1",
+            "kind": "unverified",
+            "source": "standard buffer tables",
+            "note": "dpKa/dT (approximate)"
+          },
+          "acid_form": "H3BO3",
+          "base_form": "NaB(OH)4"
+        }
+      ],
+      "form_names": {
+        "acid": "Boric acid",
+        "base": "Sodium tetrahydroxyborate"
+      }
+    }
+  },
+  "groups": {
+    "n_terminus": {
+      "name": "N-terminus (alpha-NH3+)",
+      "type": "base",
+      "pka": {
+        "value": 9.69,
+        "unit": "",
+        "kind": "unverified",
+        "source": "Creighton, Proteins (2nd ed., 1993); typical intrinsic pKa",
+        "note": "free alpha-amino group"
+      }
+    },
+    "c_terminus": {
+      "name": "C-terminus (alpha-COOH)",
+      "type": "acid",
+      "pka": {
+        "value": 2.34,
+        "unit": "",
+        "kind": "unverified",
+        "source": "Creighton, Proteins (2nd ed., 1993); typical intrinsic pKa",
+        "note": "free alpha-carboxyl"
+      }
+    },
+    "asp": {
+      "name": "Asp (beta-carboxyl)",
+      "type": "acid",
+      "pka": {
+        "value": 3.9,
+        "unit": "",
+        "kind": "unverified",
+        "source": "Creighton, Proteins (2nd ed., 1993); typical intrinsic pKa",
+        "note": "side-chain carboxyl"
+      }
+    },
+    "glu": {
+      "name": "Glu (gamma-carboxyl)",
+      "type": "acid",
+      "pka": {
+        "value": 4.07,
+        "unit": "",
+        "kind": "unverified",
+        "source": "Creighton, Proteins (2nd ed., 1993); typical intrinsic pKa",
+        "note": "side-chain carboxyl"
+      }
+    },
+    "his": {
+      "name": "His (imidazole)",
+      "type": "base",
+      "pka": {
+        "value": 6.04,
+        "unit": "",
+        "kind": "unverified",
+        "source": "Creighton, Proteins (2nd ed., 1993); typical intrinsic pKa",
+        "note": "side-chain imidazole"
+      }
+    },
+    "cys": {
+      "name": "Cys (thiol)",
+      "type": "acid",
+      "pka": {
+        "value": 8.37,
+        "unit": "",
+        "kind": "unverified",
+        "source": "Creighton, Proteins (2nd ed., 1993); typical intrinsic pKa",
+        "note": "side-chain sulfhydryl"
+      }
+    },
+    "tyr": {
+      "name": "Tyr (phenol)",
+      "type": "acid",
+      "pka": {
+        "value": 10.46,
+        "unit": "",
+        "kind": "unverified",
+        "source": "Creighton, Proteins (2nd ed., 1993); typical intrinsic pKa",
+        "note": "side-chain phenol"
+      }
+    },
+    "lys": {
+      "name": "Lys (epsilon-amino)",
+      "type": "base",
+      "pka": {
+        "value": 10.54,
+        "unit": "",
+        "kind": "unverified",
+        "source": "Creighton, Proteins (2nd ed., 1993); typical intrinsic pKa",
+        "note": "side-chain amino"
+      }
+    },
+    "arg": {
+      "name": "Arg (guanidino)",
+      "type": "base",
+      "pka": {
+        "value": 12.48,
+        "unit": "",
+        "kind": "unverified",
+        "source": "Creighton, Proteins (2nd ed., 1993); typical intrinsic pKa",
+        "note": "side-chain guanidinium"
+      }
+    }
+  }
+}

@@ -1,0 +1,4033 @@
+{
+  "section": "robotics",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k robotics",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "robotics.serial_dof": {
+      "title": "Degrees of freedom of a serial open chain",
+      "variables": [
+        {
+          "name": "joints",
+          "unit": "",
+          "desc": "joint types in order, e.g. ['R','R','P']; R/P=1, U/C=2, S=3 freedoms",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "dof",
+          "unit": "",
+          "desc": "total degrees of freedom",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_joints",
+          "unit": "",
+          "desc": "number of joints",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _serial_dof(v):\n    \"\"\"DoF of a serial open chain from its joint types: R/P=1, U/C=2, S=3 degrees of freedom each.\"\"\"\n    joints = v['joints']\n    if not isinstance(joints, list) or not joints:\n        raise MechError(\"joints: give a list of types, e.g. ['R', 'R', 'P']\")\n    freedoms = {'R': 1, 'P': 1, 'U': 2, 'C': 2, 'S': 3}\n    dof = 0\n    for j in joints:\n        if j not in freedoms:\n            raise MechError(f\"joints: unknown type {j!r}; use one of {sorted(freedoms)}\")\n        dof += freedoms[j]\n    return {'dof': dof, 'n_joints': len(joints)}\n",
+        "source": "robotics.py",
+        "line": 135
+      },
+      "outputs": [
+        "dof",
+        "n_joints"
+      ],
+      "assumptions": [
+        "Serial (open) chain: the DoF is the sum of the joint freedoms. Closed-loop mobility is mechanisms.dof_planar / dof_spatial (Gr\u00fcbler/Kutzbach)."
+      ],
+      "method_references": [
+        "Mobility of a serial manipulator = \u03a3 joint freedoms"
+      ],
+      "synthetic_example": {
+        "joints": [
+          "R",
+          "R",
+          "P"
+        ]
+      }
+    },
+    "robotics.planar_2r_workspace": {
+      "title": "Workspace of a planar 2-link arm",
+      "variables": [
+        {
+          "name": "L1",
+          "unit": "m",
+          "desc": "link 1 length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L2",
+          "unit": "m",
+          "desc": "link 2 length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_max",
+          "unit": "m",
+          "desc": "maximum reach L1 + L2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_min",
+          "unit": "m",
+          "desc": "inner radius |L1 - L2|",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "reachable area (annulus)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _workspace_2r(v):\n    L1, L2 = v['L1'], v['L2']\n    if L1 <= 0 or L2 <= 0:\n        raise MechError('link lengths must be positive')\n    return {'R_max': L1 + L2, 'R_min': abs(L1 - L2), 'A': 4.0 * PI * L1 * L2}\n",
+        "source": "robotics.py",
+        "line": 149
+      },
+      "outputs": [
+        "R_max",
+        "R_min",
+        "A"
+      ],
+      "assumptions": [
+        "Revolute joints with no joint limits; the reachable set is the annulus R_min \u2264 r \u2264 R_max. Area = \u03c0(R_max\u00b2 \u2212 R_min\u00b2) = 4\u03c0 L1 L2."
+      ],
+      "method_references": [
+        "Annular workspace of a planar 2R arm"
+      ],
+      "synthetic_example": {
+        "L1": 0.5,
+        "L2": 0.3
+      }
+    },
+    "robotics.dh_forward": {
+      "title": "Denavit\u2013Hartenberg forward kinematics",
+      "variables": [
+        {
+          "name": "dh",
+          "unit": "",
+          "desc": "joint rows [a (m), alpha (deg), d (m), theta (deg)]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "convention",
+          "unit": "",
+          "desc": "DH convention",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "standard",
+            "modified"
+          ]
+        },
+        {
+          "name": "T",
+          "unit": "",
+          "desc": "4x4 homogeneous transform of the tool frame",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "pos",
+          "unit": "",
+          "desc": "tool position [x, y, z] in m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "rot",
+          "unit": "",
+          "desc": "3x3 rotation matrix of the tool frame",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "dof",
+          "unit": "",
+          "desc": "number of joints (rows)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _dh_forward(v):\n    \"\"\"Denavit\u2013Hartenberg forward kinematics. Rows [a (m), alpha (deg), d (m), theta (deg)].\"\"\"\n    rows = v['dh']\n    conv = v['convention']\n    if not isinstance(rows, list) or not rows:\n        raise MechError('dh: give a non-empty list of [a, alpha, d, theta] rows')\n    T = _ident()\n    for r in rows:\n        if not isinstance(r, (list, tuple)) or len(r) != 4:\n            raise MechError('dh: each row must be [a, alpha, d, theta]')\n        a, al, d, th = (float(x) for x in r)\n        al, th = math.radians(al), math.radians(th)\n        if conv == 'standard':\n            Ti = _mm(_rot_z(th), _mm(_trans_z(d), _mm(_trans_x(a), _rot_x(al))))\n        elif conv == 'modified':\n            Ti = _mm(_rot_x(al), _mm(_trans_x(a), _mm(_rot_z(th), _trans_z(d))))\n        else:\n            raise MechError(\"convention: must be 'standard' or 'modified'\")\n        T = _mm(T, Ti)\n    return {'T': T, 'pos': [T[0][3], T[1][3], T[2][3]],\n            'rot': [[T[i][j] for j in range(3)] for i in range(3)], 'dof': len(rows)}\n",
+        "source": "robotics.py",
+        "line": 156
+      },
+      "outputs": [
+        "T",
+        "pos",
+        "rot",
+        "dof"
+      ],
+      "assumptions": [
+        "Standard DH: T = Rot_z(\u03b8)Trans_z(d)Trans_x(a)Rot_x(\u03b1); modified (Craig): T = Rot_x(\u03b1)Trans_x(a)Rot_z(\u03b8)Trans_z(d). Angles are given in degrees in the table.",
+        "The joint rows are fixed parameters or joint variables: substitute joint values for revolute \u03b8 or prismatic d."
+      ],
+      "method_references": [
+        "Denavit\u2013Hartenberg convention; product of link transforms"
+      ],
+      "synthetic_example": {
+        "dh": [
+          [
+            0.5,
+            0,
+            0,
+            30
+          ],
+          [
+            0.3,
+            0,
+            0,
+            60
+          ]
+        ],
+        "convention": "standard"
+      }
+    },
+    "robotics.homogeneous_transform": {
+      "title": "Homogeneous transform from rotation and translation, with inverse",
+      "variables": [
+        {
+          "name": "translation",
+          "unit": "",
+          "desc": "translation [x, y, z] in m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "rotation",
+          "unit": "",
+          "desc": "3x3 rotation matrix",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "",
+          "desc": "4x4 homogeneous transform",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "T_inv",
+          "unit": "",
+          "desc": "inverse transform",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _homogeneous_transform(v):\n    \"\"\"Build a 4x4 homogeneous transform from a rotation matrix and translation, and its inverse.\"\"\"\n    p = v['translation']\n    R = v['rotation']\n    if not isinstance(p, (list, tuple)) or len(p) != 3:\n        raise MechError('translation: give [x, y, z] in m')\n    if not isinstance(R, (list, tuple)) or len(R) != 3 or any(len(row) != 3 for row in R):\n        raise MechError('rotation: give a 3x3 rotation matrix')\n    tx, ty, tz = (float(x) for x in p)\n    R = [[float(x) for x in row] for row in R]\n    Rn = np.array(R)\n    if not np.allclose(Rn.T @ Rn, np.eye(3), atol=1e-6):\n        raise MechError('rotation: R must be orthonormal (R\u1d40R = I); check that the columns are mutually '\n                        'orthogonal unit vectors')\n    if abs(float(np.linalg.det(Rn)) - 1.0) > 1e-6:\n        raise MechError('rotation: det R must be +1 for a proper rotation (a reflection has det = \u22121)')\n    T = [[R[0][0], R[0][1], R[0][2], tx],\n         [R[1][0], R[1][1], R[1][2], ty],\n         [R[2][0], R[2][1], R[2][2], tz],\n         [0.0, 0.0, 0.0, 1.0]]\n    RT = [[R[j][i] for j in range(3)] for i in range(3)]  # transpose\n    q = [-sum(RT[i][j] * p[j] for j in range(3)) for i in range(3)]\n    Ti = [[RT[0][0], RT[0][1], RT[0][2], q[0]],\n          [RT[1][0], RT[1][1], RT[1][2], q[1]],\n          [RT[2][0], RT[2][1], RT[2][2], q[2]],\n          [0.0, 0.0, 0.0, 1.0]]\n    return {'T': T, 'T_inv': Ti}\n",
+        "source": "robotics.py",
+        "line": 179
+      },
+      "outputs": [
+        "T",
+        "T_inv"
+      ],
+      "assumptions": [
+        "R must be a proper rotation matrix; the inverse of T = [R p; 0 1] is [R\u1d40 \u2212R\u1d40p; 0 1]."
+      ],
+      "method_references": [
+        "Homogeneous representation of a rigid-body transform"
+      ],
+      "synthetic_example": {
+        "translation": [
+          1,
+          2,
+          3
+        ],
+        "rotation": [
+          [
+            0,
+            -1,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      }
+    },
+    "robotics.planar_2r_ik": {
+      "title": "Inverse kinematics of a planar 2R arm (two elbow branches)",
+      "variables": [
+        {
+          "name": "x",
+          "unit": "m",
+          "desc": "target x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y",
+          "unit": "m",
+          "desc": "target y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L1",
+          "unit": "m",
+          "desc": "link 1 length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L2",
+          "unit": "m",
+          "desc": "link 2 length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta1",
+          "unit": "rad",
+          "desc": "\u03b81, elbow-down branch (\u03b82 = +acos)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b81",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "\u03b82, elbow-down branch (positive)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b82",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta1_b",
+          "unit": "rad",
+          "desc": "\u03b81, elbow-up branch (\u03b82 = \u2212acos)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2_b",
+          "unit": "rad",
+          "desc": "\u03b82, elbow-up branch (negative)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "elbow_a",
+          "unit": "",
+          "desc": "[x, y] of the elbow, elbow-down branch",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "elbow_b",
+          "unit": "",
+          "desc": "[x, y] of the elbow, elbow-up branch",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _planar_2r_ik(v):\n    \"\"\"Closed-form inverse kinematics of a planar 2R arm: two elbow branches.\n\n    \u03b82 is the joint-2 angle relative to link 1. The branch with \u03b82 = +acos(c2) is elbow-DOWN in the\n    standard (Spong) sense (elbow below the base\u2013tip line); \u03b82 = \u2212acos(c2) is elbow-UP. `theta1`/\n    `theta2` carry the elbow-down branch, `theta1_b`/`theta2_b` the elbow-up branch.\n    \"\"\"\n    x, y, L1, L2 = v['x'], v['y'], v['L1'], v['L2']\n    if L1 <= 0 or L2 <= 0:\n        raise MechError('link lengths must be positive')\n    c2 = (x * x + y * y - L1 * L1 - L2 * L2) / (2.0 * L1 * L2)\n    if c2 < -1.0 or c2 > 1.0:\n        raise MechError(f'target ({x}, {y}) is outside the workspace '\n                        f'|L1-L2| = {abs(L1-L2)} .. L1+L2 = {L1+L2}')\n\n    def t1(t2):\n        return math.atan2(y, x) - math.atan2(L2 * math.sin(t2), L1 + L2 * math.cos(t2))\n\n    t2a = math.acos(c2)\n    th1a, th2a = t1(t2a), t2a          # \u03b82 > 0: elbow down\n    th1b, th2b = t1(-t2a), -t2a        # \u03b82 < 0: elbow up\n    return {'theta1': th1a, 'theta2': th2a, 'theta1_b': th1b, 'theta2_b': th2b,\n            'elbow_a': [L1 * math.cos(th1a), L1 * math.sin(th1a)],\n            'elbow_b': [L1 * math.cos(th1b), L1 * math.sin(th1b)]}\n",
+        "source": "robotics.py",
+        "line": 208
+      },
+      "outputs": [
+        "theta1",
+        "theta2",
+        "theta1_b",
+        "theta2_b",
+        "elbow_a",
+        "elbow_b"
+      ],
+      "assumptions": [
+        "Angles measured from +x, with \u03b82 relative to link 1. In the standard (Spong) sense the branch with \u03b82 = +acos(c2) places the elbow below the base\u2013tip line (elbow down) and \u03b82 = \u2212acos(c2) places it above (elbow up). Two solutions exist for every reachable point; at the workspace boundary they coincide. Unreachable targets raise an error."
+      ],
+      "method_references": [
+        "Law of cosines and atan2 for the planar 2R inverse kinematics"
+      ],
+      "synthetic_example": {
+        "x": 0.6,
+        "y": 0.3,
+        "L1": 0.5,
+        "L2": 0.4
+      }
+    },
+    "robotics.planar_3r_ik": {
+      "title": "Inverse kinematics of a planar 3R arm (position and orientation)",
+      "variables": [
+        {
+          "name": "x",
+          "unit": "m",
+          "desc": "target x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y",
+          "unit": "m",
+          "desc": "target y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "end-effector orientation (\u03b81+\u03b82+\u03b83)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L1",
+          "unit": "m",
+          "desc": "link 1 length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L2",
+          "unit": "m",
+          "desc": "link 2 length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L3",
+          "unit": "m",
+          "desc": "link 3 length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta1",
+          "unit": "rad",
+          "desc": "\u03b81, branch a",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "\u03b82, branch a",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta3",
+          "unit": "rad",
+          "desc": "\u03b83, branch a",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta1_b",
+          "unit": "rad",
+          "desc": "\u03b81, branch b",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2_b",
+          "unit": "rad",
+          "desc": "\u03b82, branch b",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta3_b",
+          "unit": "rad",
+          "desc": "\u03b83, branch b",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _planar_3r_ik(v):\n    \"\"\"Closed-form IK of a planar 3R arm for a given tip position AND orientation (phi = theta1+theta2+theta3).\"\"\"\n    x, y, phi, L1, L2, L3 = (v[k] for k in ('x', 'y', 'phi', 'L1', 'L2', 'L3'))\n    if L1 <= 0 or L2 <= 0 or L3 <= 0:\n        raise MechError('link lengths must be positive')\n    xw = x - L3 * math.cos(phi)\n    yw = y - L3 * math.sin(phi)\n    c2 = (xw * xw + yw * yw - L1 * L1 - L2 * L2) / (2.0 * L1 * L2)\n    if c2 < -1.0 or c2 > 1.0:\n        raise MechError('wrist point (with the given orientation) is outside the 2-link reach')\n\n    def t1(t2):\n        return math.atan2(yw, xw) - math.atan2(L2 * math.sin(t2), L1 + L2 * math.cos(t2))\n\n    t2a = math.acos(c2)\n    th1a, th2a = t1(t2a), t2a\n    th1b, th2b = t1(-t2a), -t2a\n    return {'theta1': th1a, 'theta2': th2a, 'theta3': phi - th1a - th2a,\n            'theta1_b': th1b, 'theta2_b': th2b, 'theta3_b': phi - th1b - th2b}\n",
+        "source": "robotics.py",
+        "line": 234
+      },
+      "outputs": [
+        "theta1",
+        "theta2",
+        "theta3",
+        "theta1_b",
+        "theta2_b",
+        "theta3_b"
+      ],
+      "assumptions": [
+        "With a specified tip orientation \u03c6 the redundancy is removed: the wrist point is solved with the 2R formulas and \u03b83 = \u03c6 \u2212 \u03b81 \u2212 \u03b82."
+      ],
+      "method_references": [
+        "Wrist-centring reduction of the planar 3R IK to a 2R problem"
+      ],
+      "synthetic_example": {
+        "x": 0.7,
+        "y": 0.5,
+        "phi": 0.5235987755982988,
+        "L1": 0.5,
+        "L2": 0.4,
+        "L3": 0.3
+      }
+    },
+    "robotics.numeric_ik": {
+      "title": "Numeric inverse kinematics of a planar n-link arm (damped least squares)",
+      "variables": [
+        {
+          "name": "links",
+          "unit": "",
+          "desc": "link lengths [L1, ...] in m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "guess",
+          "unit": "",
+          "desc": "initial joint angles [\u03b81, ...] in rad",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "target",
+          "unit": "",
+          "desc": "target tip position [x, y] in m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "angles",
+          "unit": "",
+          "desc": "solution joint angles [\u03b81, ...] in rad",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "position",
+          "unit": "",
+          "desc": "reached tip position [x, y] in m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "error",
+          "unit": "m",
+          "desc": "final tip-to-target distance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _numeric_ik(v):\n    \"\"\"Numeric IK of a general planar n-link arm by damped least squares (deterministic).\"\"\"\n    links = v['links']\n    guess = v['guess']\n    target = v['target']\n    if not isinstance(links, list) or not links or any(L <= 0 for L in links):\n        raise MechError('links: give positive link lengths [L1, ...] in m')\n    if not isinstance(guess, list) or len(guess) != len(links):\n        raise MechError('guess: give one initial joint angle (rad) per link')\n    if not isinstance(target, list) or len(target) != 2:\n        raise MechError('target: give [x, y] in m')\n    theta = np.array([float(t) for t in guess])\n    x_t, y_t = float(target[0]), float(target[1])\n    # Reachability pre-check: a planar n-link arm reaches exactly the annulus [R_min, R_max].\n    r_t = math.hypot(x_t, y_t)\n    r_max = sum(links)\n    r_min = max(0.0, 2.0 * max(links) - r_max)\n    if r_t > r_max + 1e-9 or r_t < r_min - 1e-9:\n        raise MechError(f'target ({x_t}, {y_t}) is outside the workspace: reachable radius is '\n                        f'{r_min:g} .. {r_max:g} m (target is at r = {r_t:g} m)')\n    lam = 1e-3\n    err = 0.0\n    for _ in range(400):\n        x, y = _fk_planar(links, theta)\n        e = np.array([x_t - x, y_t - y])\n        err = float(np.hypot(*e))\n        if err < 1e-9:\n            break\n        J = _jacobian_planar(links, theta)\n        JTJ = J @ J.T\n        step = J.T @ np.linalg.solve(JTJ + lam * lam * np.eye(2), e)\n        theta = theta + step\n    theta = np.arctan2(np.sin(theta), np.cos(theta))  # wrap each angle to (\u2212\u03c0, \u03c0]\n    x, y = _fk_planar(links, theta)\n    err = float(math.hypot(x_t - x, y_t - y))\n    if err > 1e-6:\n        raise MechError(f'numeric IK did not converge to the target ({x_t}, {y_t}) '\n                        f'(final error {err:.3g} m after 400 iterations); the damped least-squares solver '\n                        f'fell into a local minimum \u2014 try a different initial guess')\n    return {'angles': [float(t) for t in theta], 'position': [x, y], 'error': err}\n",
+        "source": "robotics.py",
+        "line": 255
+      },
+      "outputs": [
+        "angles",
+        "position",
+        "error"
+      ],
+      "assumptions": [
+        "Damped least squares (Levenberg) with 400 fixed iterations; converges to the local solution nearest the guess. Redundant arms yield the minimum-norm step direction. Deterministic (no random restarts)."
+      ],
+      "method_references": [
+        "Jacobian pseudo-inverse IK (damped least squares)"
+      ],
+      "synthetic_example": {
+        "links": [
+          0.5,
+          0.4
+        ],
+        "guess": [
+          0.3,
+          0.3
+        ],
+        "target": [
+          0.5,
+          0.4
+        ]
+      }
+    },
+    "robotics.planar_jacobian": {
+      "title": "Geometric Jacobian and joint velocities of a planar n-link arm",
+      "variables": [
+        {
+          "name": "links",
+          "unit": "",
+          "desc": "link lengths [L1, ...] in m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "angles",
+          "unit": "",
+          "desc": "joint angles [\u03b81, ...] in rad",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "vel",
+          "unit": "",
+          "desc": "tip velocity [vx, vy] in m/s",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "position",
+          "unit": "",
+          "desc": "tip position [x, y] in m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "jacobian",
+          "unit": "",
+          "desc": "2 x n geometric Jacobian",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "joint_vel",
+          "unit": "",
+          "desc": "joint velocities [\u03b8\u03071, ...] in rad/s (min-norm)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "det",
+          "unit": "",
+          "desc": "det J (2R) or det(J\u00b7J\u1d40) for n>2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "residual",
+          "unit": "m/s",
+          "desc": "\u2016J \u03b8\u0307 \u2212 v\u2016: unachieved part of the requested tip velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _planar_jacobian(v):\n    \"\"\"Geometric Jacobian of a planar n-link arm and joint velocities for a given tip velocity.\n\n    joint_vel is the minimum-norm (pseudo-inverse) solution of J \u03b8\u0307 = v; `residual` reports how much of\n    the requested tip velocity is actually achieved (\u2016J \u03b8\u0307 \u2212 v\u2016), which is non-zero only at a singularity.\n    \"\"\"\n    links = v['links']\n    angles = v['angles']\n    vel = v['vel']\n    if not isinstance(links, list) or not links or any(L <= 0 for L in links):\n        raise MechError('links: give positive link lengths [L1, ...] in m')\n    if not isinstance(angles, list) or len(angles) != len(links):\n        raise MechError('angles: give one joint angle (rad) per link')\n    if not isinstance(vel, list) or len(vel) != 2:\n        raise MechError('vel: give [vx, vy] in m/s')\n    angles = [float(a) for a in angles]\n    x, y = _fk_planar(links, angles)\n    J = _jacobian_planar(links, angles)\n    vv = np.array([float(vel[0]), float(vel[1])])\n    theta_dot = np.linalg.pinv(J) @ vv  # min-norm solution of J theta_dot = v\n    residual = float(np.hypot(*(J @ theta_dot - vv)))\n    det = float(np.linalg.det(J)) if J.shape == (2, 2) else float(np.linalg.det(J @ J.T))\n    sv = np.linalg.svd(J, compute_uv=False)\n    warnings = []\n    if sv[-1] < 1e-6 * sv[0]:\n        warnings.append(f'Jacobian is (near-)singular (smallest singular value {sv[-1]:.3g} vs largest '\n                        f'{sv[0]:.3g}); the min-norm joint velocity may not reproduce the requested tip '\n                        f'velocity \u2014 see the residual')\n    return {'position': [x, y], 'jacobian': J.tolist(), 'joint_vel': theta_dot.tolist(), 'det': det,\n            'residual': residual, '_warnings': warnings}\n",
+        "source": "robotics.py",
+        "line": 297
+      },
+      "outputs": [
+        "position",
+        "jacobian",
+        "joint_vel",
+        "det",
+        "residual"
+      ],
+      "assumptions": [
+        "Geometric (basic) Jacobian J = [\u2202x/\u2202\u03b8; \u2202y/\u2202\u03b8]. joint_vel is the minimum-norm least-squares solution of J \u03b8\u0307 = v. At a singularity the pseudo-inverse still returns a finite (min-norm) answer, but it cannot reproduce an arbitrary tip velocity \u2014 the residual \u2016J \u03b8\u0307 \u2212 v\u2016 reports the shortfall and a warning is raised."
+      ],
+      "method_references": [
+        "Geometric Jacobian of a planar arm; J \u03b8\u0307 = v"
+      ],
+      "synthetic_example": {
+        "links": [
+          0.5,
+          0.4
+        ],
+        "angles": [
+          0.5235987755982988,
+          1.0471975511965976
+        ],
+        "vel": [
+          0.0,
+          1.0
+        ]
+      }
+    },
+    "robotics.planar_2r_dynamics": {
+      "title": "Planar 2R arm joint torques (closed-form Lagrange dynamics)",
+      "variables": [
+        {
+          "name": "L1",
+          "unit": "m",
+          "desc": "link 1 length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m1",
+          "unit": "kg",
+          "desc": "link 1 mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m2",
+          "unit": "kg",
+          "desc": "link 2 mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lc1",
+          "unit": "m",
+          "desc": "distance from joint 1 to link-1 CoM",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lc2",
+          "unit": "m",
+          "desc": "distance from joint 2 to link-2 CoM",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "kg*m^2",
+          "desc": "link 1 inertia about its CoM",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "kg*m^2",
+          "desc": "link 2 inertia about its CoM",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta1",
+          "unit": "rad",
+          "desc": "joint 1 angle (from +x)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "joint 2 angle relative to link 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "qd1",
+          "unit": "rad/s",
+          "desc": "joint 1 velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "qd2",
+          "unit": "rad/s",
+          "desc": "joint 2 velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "qdd1",
+          "unit": "rad/s^2",
+          "desc": "joint 1 acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "qdd2",
+          "unit": "rad/s^2",
+          "desc": "joint 2 acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau1",
+          "unit": "N*m",
+          "desc": "joint 1 torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau2",
+          "unit": "N*m",
+          "desc": "joint 2 torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _planar_2r_dynamics(v):\n    \"\"\"Closed-form Lagrange/Newton\u2013Euler torques of a planar 2R arm (relative joint angles, gravity \u2212y).\n\n    \u03b81 is the joint-1 angle from +x; \u03b82 is the joint-2 angle RELATIVE to link 1 (not absolute), so the\n    inertia-matrix coupling term carries cos \u03b82. Gravity acts along \u2212y.\n    \"\"\"\n    L1, m1, m2 = v['L1'], v['m1'], v['m2']\n    lc1, lc2, I1, I2 = v['lc1'], v['lc2'], v['I1'], v['I2']\n    th1, th2 = v['theta1'], v['theta2']\n    qd1, qd2, qdd1, qdd2 = v['qd1'], v['qd2'], v['qdd1'], v['qdd2']\n    g = v['g']\n    if min(L1, m1, m2, lc1, lc2) <= 0 or I1 < 0 or I2 < 0:\n        raise MechError('lengths, masses and CoM distances must be positive; inertias non-negative')\n    c2, s2 = math.cos(th2), math.sin(th2)\n    c1, c12 = math.cos(th1), math.cos(th1 + th2)\n    M11 = m1 * lc1 ** 2 + I1 + m2 * (L1 ** 2 + lc2 ** 2 + 2.0 * L1 * lc2 * c2) + I2\n    M12 = m2 * (lc2 ** 2 + L1 * lc2 * c2) + I2\n    M22 = m2 * lc2 ** 2 + I2\n    # Christoffel-symbol Coriolis/centrifugal terms (h = -m2 L1 lc2 sin th2).\n    tau1 = M11 * qdd1 + M12 * qdd2 - m2 * L1 * lc2 * s2 * (2.0 * qd1 * qd2 + qd2 ** 2) \\\n        + (m1 * lc1 + m2 * L1) * g * c1 + m2 * lc2 * g * c12\n    tau2 = M12 * qdd1 + M22 * qdd2 + m2 * L1 * lc2 * s2 * qd1 ** 2 + m2 * lc2 * g * c12\n    return {'tau1': tau1, 'tau2': tau2}\n",
+        "source": "robotics.py",
+        "line": 329
+      },
+      "outputs": [
+        "tau1",
+        "tau2"
+      ],
+      "assumptions": [
+        "Rigid links, revolute joints, gravity along \u2212y. \u03b81 is measured from +x and \u03b82 is the joint-2 angle RELATIVE to link 1 (the relative-angle Lagrangian derivation), so the inertia coupling carries cos \u03b82; the link-2 CoM enters only through lc2 (no tip mass). Inertia matrix M(q), Coriolis/centrifugal and gravity terms from the standard Lagrangian derivation."
+      ],
+      "method_references": [
+        "Lagrangian dynamics of a planar 2R manipulator (inertia, Coriolis and gravity terms)"
+      ],
+      "synthetic_example": {
+        "L1": 0.5,
+        "m1": 2.0,
+        "m2": 1.5,
+        "lc1": 0.25,
+        "lc2": 0.2,
+        "I1": 0.02,
+        "I2": 0.01,
+        "theta1": 0.5235987755982988,
+        "theta2": 1.0471975511965976,
+        "qd1": 1.0,
+        "qd2": 0.5,
+        "qdd1": 0.2,
+        "qdd2": 0.1,
+        "g": 9.80665
+      }
+    },
+    "robotics.payload_capacity": {
+      "title": "Static payload capacity of a planar 2R arm",
+      "variables": [
+        {
+          "name": "L1",
+          "unit": "m",
+          "desc": "link 1 length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L2",
+          "unit": "m",
+          "desc": "link 2 length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta1",
+          "unit": "rad",
+          "desc": "joint 1 angle",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "joint 2 angle",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m1",
+          "unit": "kg",
+          "desc": "link 1 mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m2",
+          "unit": "kg",
+          "desc": "link 2 mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau1_max",
+          "unit": "N*m",
+          "desc": "joint 1 torque limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau2_max",
+          "unit": "N*m",
+          "desc": "joint 2 torque limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_payload_max",
+          "unit": "kg",
+          "desc": "maximum payload mass at the tip",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_cap_1",
+          "unit": "kg",
+          "desc": "payload limited by joint 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_cap_2",
+          "unit": "kg",
+          "desc": "payload limited by joint 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau1_link",
+          "unit": "N*m",
+          "desc": "gravity torque of the links alone about joint 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau2_link",
+          "unit": "N*m",
+          "desc": "gravity torque of the links alone about joint 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _payload_capacity(v):\n    \"\"\"Static payload capacity of a planar 2R arm (links as point masses at mid-length, gravity \u2212y).\n\n    The payload sits at the tip. Each joint limits the payload through |\u03c4_link + m\u00b7g\u00b7arm| \u2264 \u03c4_max, solved exactly\n    for either sign of the link torque and moment arm (feasible interval clipped at m \u2265 0; capacity = upper end). A joint whose payload arm is \u2248 0\n    (payload directly above/below it) imposes no static limit and is skipped with a warning.\n    \"\"\"\n    L1, L2, th1, th2 = v['L1'], v['L2'], v['theta1'], v['theta2']\n    m1, m2, g = v['m1'], v['m2'], v['g']\n    tau1_max, tau2_max = v['tau1_max'], v['tau2_max']\n    if min(L1, L2, m1, m2) <= 0 or g <= 0:\n        raise MechError('lengths, masses and gravity must be positive')\n    if tau1_max < 0 or tau2_max < 0:\n        raise MechError('torque limits must be non-negative')\n    c1, c12 = math.cos(th1), math.cos(th1 + th2)\n    arm1 = L1 * c1 + L2 * c12          # signed payload moment arm about joint 1\n    arm2 = L2 * c12                    # signed payload moment arm about joint 2\n    tau1_link = m1 * g * (L1 / 2.0) * c1 + m2 * g * (L1 * c1 + (L2 / 2.0) * c12)  # signed holding torque\n    tau2_link = m2 * g * (L2 / 2.0) * c12\n    eps = 1e-9 * (L1 + L2)\n    warnings = []\n\n    def joint_range(j, tau_max, tau_link, arm):\n        \"\"\"Feasible payload interval for one joint from |\u03c4_link + m\u00b7g\u00b7arm| \u2264 \u03c4_max (exact for either sign).\n\n        The two bounds (\u00b1\u03c4_max \u2212 \u03c4_link)/(g\u00b7arm) bracket the feasible m; clip below at 0. Returns the upper\n        end (capacity) or None when the arm is \u2248 0.\n        \"\"\"\n        if abs(arm) < eps:\n            warnings.append(f'joint {j}: payload moment arm \u2248 0 \u2014 the payload is not statically limited by joint {j}')\n            return None\n        b = sorted([(tau_max - tau_link) / (g * arm), (-tau_max - tau_link) / (g * arm)])\n        lo, hi = max(0.0, b[0]), b[1]\n        if hi < lo:\n            raise MechError(f'no payload satisfies the joint-{j} torque limit in this pose')\n        if lo > 0.0:\n            warnings.append(f'joint {j}: the links alone exceed the torque limit; a payload of at least '\n                            f'{lo:.6g} kg is needed to balance them')\n        return hi\n\n    m_cap_1 = joint_range(1, tau1_max, tau1_link, arm1)\n    m_cap_2 = joint_range(2, tau2_max, tau2_link, arm2)\n    caps = [c for c in (m_cap_1, m_cap_2) if c is not None]\n    if not caps:\n        raise MechError('the payload sits directly above the base (both moment arms \u2248 0): no static torque '\n                        'limits the payload here')\n    return {'m_payload_max': min(caps), 'm_cap_1': m_cap_1, 'm_cap_2': m_cap_2,\n            'tau1_link': tau1_link, 'tau2_link': tau2_link, '_warnings': warnings}\n",
+        "source": "robotics.py",
+        "line": 354
+      },
+      "outputs": [
+        "m_payload_max",
+        "m_cap_1",
+        "m_cap_2",
+        "tau1_link",
+        "tau2_link"
+      ],
+      "assumptions": [
+        "Static (no acceleration); links modelled as point masses at mid-length; gravity \u2212y. Each joint limits the payload through |\u03c4_link + m\u00b7g\u00b7arm| \u2264 \u03c4_max, using magnitudes so poses reaching either side of a joint are handled. A joint with payload moment arm \u2248 0 does not limit the payload. Payload sits at the tip."
+      ],
+      "method_references": [
+        "Static joint-torque limit on the payload (min over joints)"
+      ],
+      "synthetic_example": {
+        "L1": 1.0,
+        "L2": 1.0,
+        "theta1": 0.0,
+        "theta2": 0.0,
+        "m1": 1.0,
+        "m2": 1.0,
+        "tau1_max": 50.0,
+        "tau2_max": 12.0,
+        "g": 9.80665
+      }
+    },
+    "robotics.trajectory_cubic": {
+      "title": "Cubic (rest-to-rest or via) joint trajectory polynomial",
+      "variables": [
+        {
+          "name": "q0",
+          "unit": "",
+          "desc": "start position (any coordinate unit)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v0",
+          "unit": "1/s",
+          "desc": "start velocity (coordinate per second)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "q1",
+          "unit": "",
+          "desc": "end position (any coordinate unit)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v1",
+          "unit": "1/s",
+          "desc": "end velocity (coordinate per second)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "s",
+          "desc": "travel time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "evaluation time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "coeffs",
+          "unit": "",
+          "desc": "polynomial coefficients [a0..a3]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "q_t",
+          "unit": "",
+          "desc": "position at t",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "qd_t",
+          "unit": "1/s",
+          "desc": "velocity at t",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "qdd_t",
+          "unit": "1/s^2",
+          "desc": "acceleration at t",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _traj_cubic(v):\n    T = v['T']\n    if T <= 0:\n        raise MechError('T: travel time must be positive')\n    coeffs = _cubic_coeffs(v['q0'], v['v0'], v['q1'], v['v1'], T)\n    q, qd, qdd = _poly(coeffs, v['t'])\n    warnings = []\n    if v['t'] > T:\n        warnings.append(f't = {v[\"t\"]:g} exceeds the travel time T = {T:g}; the polynomial is being '\n                        f'evaluated outside its designed interval [0, T]')\n    return {'coeffs': coeffs, 'q_t': q, 'qd_t': qd, 'qdd_t': qdd, '_warnings': warnings}\n",
+        "source": "robotics.py",
+        "line": 404
+      },
+      "outputs": [
+        "coeffs",
+        "q_t",
+        "qd_t",
+        "qdd_t"
+      ],
+      "assumptions": [
+        "Four boundary conditions (position and velocity at t = 0 and t = T). q is a generic coordinate (joint angle, displacement \u2026), so position is unit-agnostic and velocity/acceleration are per-second. Acceleration is piecewise linear, so the rest-to-rest profile peaks at the ends. T must be positive; evaluating at t > T warns."
+      ],
+      "method_references": [
+        "Cubic polynomial joint-space interpolation"
+      ],
+      "synthetic_example": {
+        "q0": 0.0,
+        "v0": 0.0,
+        "q1": 1.0,
+        "v1": 0.0,
+        "T": 1.0,
+        "t": 0.5
+      }
+    },
+    "robotics.trajectory_quintic": {
+      "title": "Quintic joint trajectory polynomial (position, velocity and acceleration)",
+      "variables": [
+        {
+          "name": "q0",
+          "unit": "",
+          "desc": "start position (any coordinate unit)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v0",
+          "unit": "1/s",
+          "desc": "start velocity (coordinate per second)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a0",
+          "unit": "1/s^2",
+          "desc": "start acceleration (coordinate per second squared)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "q1",
+          "unit": "",
+          "desc": "end position (any coordinate unit)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v1",
+          "unit": "1/s",
+          "desc": "end velocity (coordinate per second)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a1",
+          "unit": "1/s^2",
+          "desc": "end acceleration (coordinate per second squared)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "s",
+          "desc": "travel time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "evaluation time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "coeffs",
+          "unit": "",
+          "desc": "polynomial coefficients [a0..a5]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "q_t",
+          "unit": "",
+          "desc": "position at t",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "qd_t",
+          "unit": "1/s",
+          "desc": "velocity at t",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "qdd_t",
+          "unit": "1/s^2",
+          "desc": "acceleration at t",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _traj_quintic(v):\n    T = v['T']\n    if T <= 0:\n        raise MechError('T: travel time must be positive')\n    coeffs = _quintic_coeffs(v['q0'], v['v0'], v['a0'], v['q1'], v['v1'], v['a1'], T)\n    q, qd, qdd = _poly(coeffs, v['t'])\n    warnings = []\n    if v['t'] > T:\n        warnings.append(f't = {v[\"t\"]:g} exceeds the travel time T = {T:g}; the polynomial is being '\n                        f'evaluated outside its designed interval [0, T]')\n    return {'coeffs': coeffs, 'q_t': q, 'qd_t': qd, 'qdd_t': qdd, '_warnings': warnings}\n",
+        "source": "robotics.py",
+        "line": 417
+      },
+      "outputs": [
+        "coeffs",
+        "q_t",
+        "qd_t",
+        "qdd_t"
+      ],
+      "assumptions": [
+        "Six boundary conditions (position, velocity and acceleration at both ends), so acceleration is continuous \u2014 no jerk spike at the endpoints. q is a generic coordinate, so position is unit-agnostic and velocity/acceleration are per-second. T must be positive; evaluating at t > T warns."
+      ],
+      "method_references": [
+        "Quintic polynomial joint-space interpolation"
+      ],
+      "synthetic_example": {
+        "q0": 0.0,
+        "v0": 0.0,
+        "a0": 0.0,
+        "q1": 1.0,
+        "v1": 0.0,
+        "a1": 0.0,
+        "T": 1.0,
+        "t": 0.5
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "robotics-001",
+      "calculator": "robotics.serial_dof",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "joints": [
+          "R",
+          "R",
+          "P",
+          "S"
+        ]
+      },
+      "solve_for": [
+        "dof",
+        "n_joints"
+      ],
+      "expected_as_specified": {
+        "dof": 6,
+        "n_joints": 4
+      },
+      "expected_SI": {
+        "dof": 6.0,
+        "n_joints": 4.0
+      },
+      "actual_SI": {
+        "dof": {
+          "value": 6.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc robotics.serial_dof (procedure)"
+        },
+        "n_joints": {
+          "value": 4.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc robotics.serial_dof (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dof": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.012,
+          "passed": true
+        },
+        "n_joints": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.008,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R=1, R=1, P=1, S=3 freedoms -> total 6; four joints"
+      }
+    },
+    {
+      "id": "robotics-002",
+      "calculator": "robotics.planar_2r_workspace",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L1": "0.6 m",
+        "L2": "0.2 m"
+      },
+      "solve_for": [
+        "R_max",
+        "R_min",
+        "A"
+      ],
+      "expected_as_specified": {
+        "R_max": "0.8 m",
+        "R_min": "0.4 m",
+        "A": "1.5079645 m^2"
+      },
+      "expected_SI": {
+        "R_max": 0.8,
+        "R_min": 0.4,
+        "A": 1.5079645
+      },
+      "actual_SI": {
+        "R_max": {
+          "value": 0.8,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_workspace (procedure)"
+        },
+        "R_min": {
+          "value": 0.39999999999999997,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_workspace (procedure)"
+        },
+        "A": {
+          "value": 1.5079644737231008,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_workspace (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "R_max": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 8e-05,
+          "passed": true
+        },
+        "R_min": {
+          "absolute_error": 5.551115123125783e-17,
+          "relative_error": 1.3877787807814457e-16,
+          "allowed_absolute_error": 4e-05,
+          "passed": true
+        },
+        "A": {
+          "absolute_error": 2.6276899101063123e-08,
+          "relative_error": 1.742540961744333e-08,
+          "allowed_absolute_error": 0.00015079645,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R_max = 0.6 + 0.2 = 0.8 m; R_min = |0.6 - 0.2| = 0.4 m; A = 4 pi L1 L2 = 4 pi x 0.6 x 0.2 = 1.50796 m^2"
+      }
+    },
+    {
+      "id": "robotics-003",
+      "calculator": "robotics.planar_2r_workspace",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L1": "0.6 m",
+        "A": "1.5079645 m^2"
+      },
+      "solve_for": [
+        "L2"
+      ],
+      "expected_as_specified": {
+        "L2": "0.2 m"
+      },
+      "expected_SI": {
+        "L2": 0.2
+      },
+      "actual_SI": {
+        "L2": {
+          "value": 0.200000003485082,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_workspace (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "L2": {
+          "absolute_error": 3.4850820007648053e-09,
+          "relative_error": 1.7425410003824027e-08,
+          "allowed_absolute_error": 2e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 4 pi L1 L2 -> L2 = 1.5079645/(4 pi x 0.6) = 1.5079645/7.539822 = 0.2 m"
+      }
+    },
+    {
+      "id": "robotics-004",
+      "calculator": "robotics.dh_forward",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dh": [
+          [
+            0.5,
+            0,
+            0,
+            30
+          ],
+          [
+            0.3,
+            0,
+            0,
+            60
+          ]
+        ],
+        "convention": "standard"
+      },
+      "solve_for": [
+        "T",
+        "pos",
+        "rot",
+        "dof"
+      ],
+      "expected_as_specified": {
+        "pos": [
+          0.4330127,
+          0.55,
+          0
+        ],
+        "dof": 2
+      },
+      "expected_SI": {
+        "pos": [
+          0.4330127,
+          0.55,
+          0
+        ],
+        "dof": 2.0
+      },
+      "actual_SI": {
+        "pos": {
+          "value": [
+            0.4330127018922194,
+            0.5499999999999999,
+            0.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc robotics.dh_forward (procedure)",
+          "unit": ""
+        },
+        "dof": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc robotics.dh_forward (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "pos": [
+          {
+            "absolute_error": 1.8922194366943756e-09,
+            "relative_error": 4.369893623661329e-09,
+            "allowed_absolute_error": 0.00021650635,
+            "passed": true
+          },
+          {
+            "absolute_error": 1.1102230246251565e-16,
+            "relative_error": 2.0185873175002846e-16,
+            "allowed_absolute_error": 0.000275,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          }
+        ],
+        "dof": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Standard DH with alpha=0 is a planar arm: x = 0.5 cos30 + 0.3 cos90 = 0.433013; y = 0.5 sin30 + 0.3 sin90 = 0.25 + 0.3 = 0.55; z = 0; two joints"
+      }
+    },
+    {
+      "id": "robotics-005",
+      "calculator": "robotics.dh_forward",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dh": [
+          [
+            0.5,
+            30,
+            0.3,
+            45
+          ]
+        ],
+        "convention": "modified"
+      },
+      "solve_for": [
+        "T",
+        "pos",
+        "rot",
+        "dof"
+      ],
+      "expected_as_specified": {
+        "pos": [
+          0.5,
+          -0.15,
+          0.2598076
+        ],
+        "dof": 1
+      },
+      "expected_SI": {
+        "pos": [
+          0.5,
+          -0.15,
+          0.2598076
+        ],
+        "dof": 1.0
+      },
+      "actual_SI": {
+        "pos": {
+          "value": [
+            0.5,
+            -0.14999999999999997,
+            0.2598076211353316
+          ],
+          "kind": "derived",
+          "method": "mechcalc robotics.dh_forward (procedure)",
+          "unit": ""
+        },
+        "dof": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc robotics.dh_forward (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "pos": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.00025,
+            "passed": true
+          },
+          {
+            "absolute_error": 2.7755575615628914e-17,
+            "relative_error": 1.8503717077085943e-16,
+            "allowed_absolute_error": 7.5e-05,
+            "passed": true
+          },
+          {
+            "absolute_error": 2.1135331595978357e-08,
+            "relative_error": 8.134993586014556e-08,
+            "allowed_absolute_error": 0.0001299038,
+            "passed": true
+          }
+        ],
+        "dof": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Modified (Craig) DH T = Rot_x(30)Trans_x(0.5)Rot_z(45)Trans_z(0.3): translation is [a, -d sin(alpha), d cos(alpha)] = [0.5, -0.3 x 0.5, 0.3 x 0.866025] = [0.5, -0.15, 0.259808]"
+      }
+    },
+    {
+      "id": "robotics-006",
+      "calculator": "robotics.homogeneous_transform",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "translation": [
+          1,
+          2,
+          3
+        ],
+        "rotation": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            -1
+          ],
+          [
+            0,
+            1,
+            0
+          ]
+        ]
+      },
+      "solve_for": [
+        "T",
+        "T_inv"
+      ],
+      "expected_as_specified": {
+        "T": [
+          [
+            1,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            -1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            3
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "T_inv": [
+          [
+            1,
+            0,
+            0,
+            -1
+          ],
+          [
+            0,
+            0,
+            1,
+            -3
+          ],
+          [
+            0,
+            -1,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "expected_SI": {
+        "T": [
+          [
+            1,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            -1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            3
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "T_inv": [
+          [
+            1,
+            0,
+            0,
+            -1
+          ],
+          [
+            0,
+            0,
+            1,
+            -3
+          ],
+          [
+            0,
+            -1,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "actual_SI": {
+        "T": {
+          "value": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.0,
+              -1.0,
+              2.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc robotics.homogeneous_transform (procedure)",
+          "unit": ""
+        },
+        "T_inv": {
+          "value": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              -3.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0,
+              2.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc robotics.homogeneous_transform (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "T": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0002,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.00030000000000000003,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            }
+          ]
+        ],
+        "T_inv": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.00030000000000000003,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0002,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = Rot_x(90). T = [R p; 0 1]. R^T = [[1,0,0],[0,0,1],[0,-1,0]]; -R^T p = -[1,3,-2] = [-1,-3,2]; T_inv = [R^T, -R^T p; 0, 1]"
+      }
+    },
+    {
+      "id": "robotics-007",
+      "calculator": "robotics.planar_2r_ik",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "x": "0.5 m",
+        "y": "0.4 m",
+        "L1": "0.5 m",
+        "L2": "0.4 m"
+      },
+      "solve_for": [
+        "theta1",
+        "theta2",
+        "theta1_b",
+        "theta2_b",
+        "elbow_a",
+        "elbow_b"
+      ],
+      "expected_as_specified": {
+        "theta1": 0.0,
+        "theta2": "1.5707963 rad",
+        "theta1_b": "1.3494819 rad",
+        "theta2_b": "-1.5707963 rad"
+      },
+      "expected_SI": {
+        "theta1": 0.0,
+        "theta2": 1.5707963,
+        "theta1_b": 1.3494819,
+        "theta2_b": -1.5707963
+      },
+      "actual_SI": {
+        "theta1": {
+          "value": 0.0,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        },
+        "theta2": {
+          "value": 1.5707963267948966,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        },
+        "theta1_b": {
+          "value": 1.3494818844471055,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        },
+        "theta2_b": {
+          "value": -1.5707963267948966,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "theta1": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "theta2": {
+          "absolute_error": 2.6794896523796297e-08,
+          "relative_error": 1.7058161216572955e-08,
+          "allowed_absolute_error": 0.00078539815,
+          "passed": true
+        },
+        "theta1_b": {
+          "absolute_error": 1.5552894527814942e-08,
+          "relative_error": 1.1525085684969129e-08,
+          "allowed_absolute_error": 0.0006747409500000001,
+          "passed": true
+        },
+        "theta2_b": {
+          "absolute_error": 2.6794896523796297e-08,
+          "relative_error": 1.7058161216572955e-08,
+          "allowed_absolute_error": 0.00078539815,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "c2 = (0.25+0.16-0.25-0.16)/(2x0.5x0.4) = 0 -> theta2 = acos(0) = 90 deg (elbow-DOWN branch, theta2 > 0). Link 1 lies along +x so theta1 = atan2(0.4,0.5) - atan2(0.4, 0.5) = 0. Elbow-up branch: theta2_b = -90 deg; theta1_b = atan2(0.4,0.5) - atan2(-0.4,0.5) = 0.67474 + 0.67474 = 1.34948 rad"
+      }
+    },
+    {
+      "id": "robotics-008",
+      "calculator": "robotics.planar_2r_ik",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "x": "0.5 m",
+        "y": "0.5 m",
+        "L1": "0.5 m",
+        "L2": "0.5 m"
+      },
+      "solve_for": [
+        "theta1",
+        "theta2",
+        "theta1_b",
+        "theta2_b",
+        "elbow_a",
+        "elbow_b"
+      ],
+      "expected_as_specified": {
+        "theta1": 0.0,
+        "theta2": "1.5707963 rad",
+        "elbow_a": [
+          0.5,
+          0.0
+        ],
+        "theta1_b": "1.5707963 rad",
+        "theta2_b": "-1.5707963 rad",
+        "elbow_b": [
+          0.0,
+          0.5
+        ]
+      },
+      "expected_SI": {
+        "theta1": 0.0,
+        "theta2": 1.5707963,
+        "elbow_a": [
+          0.5,
+          0.0
+        ],
+        "theta1_b": 1.5707963,
+        "theta2_b": -1.5707963,
+        "elbow_b": [
+          0.0,
+          0.5
+        ]
+      },
+      "actual_SI": {
+        "theta1": {
+          "value": 0.0,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        },
+        "theta2": {
+          "value": 1.5707963267948966,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        },
+        "elbow_a": {
+          "value": [
+            0.5,
+            0.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)",
+          "unit": ""
+        },
+        "theta1_b": {
+          "value": 1.5707963267948966,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        },
+        "theta2_b": {
+          "value": -1.5707963267948966,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        },
+        "elbow_b": {
+          "value": [
+            3.061616997868383e-17,
+            0.5
+          ],
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "theta1": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "theta2": {
+          "absolute_error": 2.6794896523796297e-08,
+          "relative_error": 1.7058161216572955e-08,
+          "allowed_absolute_error": 0.00078539815,
+          "passed": true
+        },
+        "elbow_a": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.00025,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          }
+        ],
+        "theta1_b": {
+          "absolute_error": 2.6794896523796297e-08,
+          "relative_error": 1.7058161216572955e-08,
+          "allowed_absolute_error": 0.00078539815,
+          "passed": true
+        },
+        "theta2_b": {
+          "absolute_error": 2.6794896523796297e-08,
+          "relative_error": 1.7058161216572955e-08,
+          "allowed_absolute_error": 0.00078539815,
+          "passed": true
+        },
+        "elbow_b": [
+          {
+            "absolute_error": 3.061616997868383e-17,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.00025,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "c2 = 0 -> theta2 = +/-90 deg. Elbow-down branch theta2=+90: theta1 = atan2(0.5,0.5) - atan2(0.5, 0.5) = 0, elbow at (L1 cos0, L1 sin0) = (0.5, 0) BELOW the base-tip line y=x. Elbow-up branch theta2=-90: theta1 = 45 - atan2(-0.5,0.5) = 45 - (-45) = 90 deg, elbow at (0.5 cos90, 0.5 sin90) = (0, 0.5) ABOVE the line"
+      }
+    },
+    {
+      "id": "robotics-009",
+      "calculator": "robotics.planar_2r_ik",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "x": "0.9 m",
+        "y": "0 m",
+        "L1": "0.5 m",
+        "L2": "0.4 m"
+      },
+      "solve_for": [
+        "theta1",
+        "theta2",
+        "theta1_b",
+        "theta2_b",
+        "elbow_a",
+        "elbow_b"
+      ],
+      "expected_as_specified": {
+        "theta1": 0.0,
+        "theta2": 0.0,
+        "theta1_b": 0.0,
+        "theta2_b": 0.0
+      },
+      "expected_SI": {
+        "theta1": 0.0,
+        "theta2": 0.0,
+        "theta1_b": 0.0,
+        "theta2_b": 0.0
+      },
+      "actual_SI": {
+        "theta1": {
+          "value": 0.0,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        },
+        "theta2": {
+          "value": 0.0,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        },
+        "theta1_b": {
+          "value": 0.0,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        },
+        "theta2_b": {
+          "value": -0.0,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_ik (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "theta1": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-09,
+          "passed": true
+        },
+        "theta2": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-09,
+          "passed": true
+        },
+        "theta1_b": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-09,
+          "passed": true
+        },
+        "theta2_b": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-09,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Target at the outer workspace boundary (r = L1 + L2 = 0.9): c2 = 1 -> acos(1) = 0, both branches coincide at the straight pose theta1 = theta2 = 0"
+      }
+    },
+    {
+      "id": "robotics-010",
+      "calculator": "robotics.planar_3r_ik",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "x": "0.5 m",
+        "y": "0.5 m",
+        "phi": "90 deg",
+        "L1": "0.5 m",
+        "L2": "0.5 m",
+        "L3": "0.5 m"
+      },
+      "solve_for": [
+        "theta1",
+        "theta2",
+        "theta3",
+        "theta1_b",
+        "theta2_b",
+        "theta3_b"
+      ],
+      "expected_as_specified": {
+        "theta1": "-1.0471976 rad",
+        "theta2": "2.0943951 rad",
+        "theta3": "0.5235988 rad",
+        "theta1_b": "1.0471976 rad",
+        "theta2_b": "-2.0943951 rad",
+        "theta3_b": "2.6179939 rad"
+      },
+      "expected_SI": {
+        "theta1": -1.0471976,
+        "theta2": 2.0943951,
+        "theta3": 0.5235988,
+        "theta1_b": 1.0471976,
+        "theta2_b": -2.0943951,
+        "theta3_b": 2.6179939
+      },
+      "actual_SI": {
+        "theta1": {
+          "value": -1.0471975511965979,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_3r_ik (procedure)"
+        },
+        "theta2": {
+          "value": 2.0943951023931957,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_3r_ik (procedure)"
+        },
+        "theta3": {
+          "value": 0.5235987755982987,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_3r_ik (procedure)"
+        },
+        "theta1_b": {
+          "value": 1.0471975511965979,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_3r_ik (procedure)"
+        },
+        "theta2_b": {
+          "value": -2.0943951023931957,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_3r_ik (procedure)"
+        },
+        "theta3_b": {
+          "value": 2.6179938779914944,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_3r_ik (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "theta1": {
+          "absolute_error": 4.880340220836388e-08,
+          "relative_error": 4.66038140350626e-08,
+          "allowed_absolute_error": 0.0005235988000000001,
+          "passed": true
+        },
+        "theta2": {
+          "absolute_error": 2.3931958637035677e-09,
+          "relative_error": 1.1426668557921893e-09,
+          "allowed_absolute_error": 0.00104719755,
+          "passed": true
+        },
+        "theta3": {
+          "absolute_error": 2.4401701326226544e-08,
+          "relative_error": 4.6603814459136544e-08,
+          "allowed_absolute_error": 0.00026179940000000003,
+          "passed": true
+        },
+        "theta1_b": {
+          "absolute_error": 4.880340220836388e-08,
+          "relative_error": 4.66038140350626e-08,
+          "allowed_absolute_error": 0.0005235988000000001,
+          "passed": true
+        },
+        "theta2_b": {
+          "absolute_error": 2.3931958637035677e-09,
+          "relative_error": 1.1426668557921893e-09,
+          "allowed_absolute_error": 0.00104719755,
+          "passed": true
+        },
+        "theta3_b": {
+          "absolute_error": 2.200850568456758e-08,
+          "relative_error": 8.406629856764594e-09,
+          "allowed_absolute_error": 0.00130899695,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "phi = 90 deg so the wrist point is (0.5 - 0.5 cos90, 0.5 - 0.5 sin90) = (0.5, 0). 2R solve of (0.5,0) with L1=L2=0.5: c2 = (0.25 - 0.25 - 0.25)/0.5 = -0.5 -> theta2 = 120 deg; theta1 = 0 - atan2(0.4330, 0.25) = -60 deg; theta3 = 90 - (-60) - 120 = 30 deg. Branch b mirrors theta1=60, theta2=-120, theta3=150 deg"
+      }
+    },
+    {
+      "id": "robotics-011",
+      "calculator": "robotics.numeric_ik",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "links": [
+          0.5,
+          0.4
+        ],
+        "guess": [
+          0.0,
+          0.0
+        ],
+        "target": [
+          0.3,
+          0.3
+        ]
+      },
+      "solve_for": [
+        "angles",
+        "position",
+        "error"
+      ],
+      "expected_as_specified": {
+        "position": [
+          0.3,
+          0.3
+        ],
+        "error": 0.0
+      },
+      "expected_SI": {
+        "position": [
+          0.3,
+          0.3
+        ],
+        "error": 0.0
+      },
+      "actual_SI": {
+        "position": {
+          "value": [
+            0.2999999999913924,
+            0.30000000000024696
+          ],
+          "kind": "derived",
+          "method": "mechcalc robotics.numeric_ik (procedure)",
+          "unit": ""
+        },
+        "error": {
+          "value": 8.611156902940295e-12,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc robotics.numeric_ik (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "position": [
+          {
+            "absolute_error": 8.60761462107007e-12,
+            "relative_error": 2.8692048736900233e-11,
+            "allowed_absolute_error": 0.0003,
+            "passed": true
+          },
+          {
+            "absolute_error": 2.4696911182786607e-13,
+            "relative_error": 8.232303727595536e-13,
+            "allowed_absolute_error": 0.0003,
+            "passed": true
+          }
+        ],
+        "error": {
+          "absolute_error": 8.611156902940295e-12,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A converged IK must put the tip on the target: position = [0.3, 0.3] and tip-to-target error < 1e-6. Independent check of the solver, not the angles"
+      }
+    },
+    {
+      "id": "robotics-012",
+      "calculator": "robotics.planar_jacobian",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "links": [
+          0.5,
+          0.4
+        ],
+        "angles": [
+          0.5235988,
+          1.0471976
+        ],
+        "vel": [
+          0,
+          1
+        ]
+      },
+      "solve_for": [
+        "position",
+        "jacobian",
+        "joint_vel",
+        "det",
+        "residual"
+      ],
+      "expected_as_specified": {
+        "position": [
+          0.4330127,
+          0.65
+        ],
+        "joint_vel": [
+          2.3094011,
+          -3.7527767
+        ],
+        "det": 0.1732051,
+        "residual": 0.0
+      },
+      "expected_SI": {
+        "position": [
+          0.4330127,
+          0.65
+        ],
+        "joint_vel": [
+          2.3094011,
+          -3.7527767
+        ],
+        "det": 0.1732051,
+        "residual": 0.0
+      },
+      "actual_SI": {
+        "position": {
+          "value": [
+            0.4330126665097525,
+            0.6500000105662455
+          ],
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_jacobian (procedure)",
+          "unit": ""
+        },
+        "joint_vel": {
+          "value": [
+            2.3094010116872985,
+            -3.7527767049961147
+          ],
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_jacobian (procedure)",
+          "unit": ""
+        },
+        "det": {
+          "value": 0.17320508563722778,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_jacobian (procedure)"
+        },
+        "residual": {
+          "value": 2.220446049250313e-16,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_jacobian (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "position": [
+          {
+            "absolute_error": 3.349024746412965e-08,
+            "relative_error": 7.734241389254785e-08,
+            "allowed_absolute_error": 0.00021650635,
+            "passed": true
+          },
+          {
+            "absolute_error": 1.0566245434162624e-08,
+            "relative_error": 1.6255762206404036e-08,
+            "allowed_absolute_error": 0.00032500000000000004,
+            "passed": true
+          }
+        ],
+        "joint_vel": [
+          {
+            "absolute_error": 8.831270159603832e-08,
+            "relative_error": 3.824052114465448e-08,
+            "allowed_absolute_error": 0.00115470055,
+            "passed": true
+          },
+          {
+            "absolute_error": 4.996114633115667e-09,
+            "relative_error": 1.3313114614881475e-09,
+            "allowed_absolute_error": 0.00187638835,
+            "passed": true
+          }
+        ],
+        "det": {
+          "absolute_error": 1.4362772221554465e-08,
+          "relative_error": 8.292349487142391e-08,
+          "allowed_absolute_error": 8.660255e-05,
+          "passed": true
+        },
+        "residual": {
+          "absolute_error": 2.220446049250313e-16,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-09,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta = [30, 60] deg so theta1+theta2 = 90 deg. J = [[-L1 s1 - L2 s12, -L2 s12],[L1 c1 + L2 c12, L2 c12]] = [[-0.65, -0.4],[0.433013, 0]]; det = 0.4 x 0.433013 = 0.173205; J^-1 [0,1] = [0.4, -0.65]/det = [2.30940, -3.75278] rad/s; position = [0.433013, 0.65]. J is full rank so the min-norm solution is exact: residual ||J qd - v|| = 0"
+      }
+    },
+    {
+      "id": "robotics-013",
+      "calculator": "robotics.planar_jacobian",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "links": [
+          0.5,
+          0.4
+        ],
+        "angles": [
+          0.5235988,
+          0.0
+        ],
+        "vel": [
+          0,
+          1
+        ]
+      },
+      "solve_for": [
+        "position",
+        "jacobian",
+        "joint_vel",
+        "det",
+        "residual"
+      ],
+      "expected_as_specified": {
+        "det": 0.0,
+        "residual": "0.5 m/s"
+      },
+      "expected_SI": {
+        "det": 0.0,
+        "residual": 0.5
+      },
+      "actual_SI": {
+        "det": {
+          "value": -2.16333299170376e-17,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_jacobian (procedure)"
+        },
+        "residual": {
+          "value": 0.500000021132493,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_jacobian (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "det": {
+          "absolute_error": 2.16333299170376e-17,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "residual": {
+          "absolute_error": 2.1132492977748996e-08,
+          "relative_error": 4.226498595549799e-08,
+          "allowed_absolute_error": 0.00025,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta2 = 0 puts the arm at a singularity (fully extended): the two Jacobian columns are both perpendicular to the arm (ratio 0.4/0.9), so det = 0 and the tip can only move perpendicular to the arm (direction 120 deg). The requested velocity [0, 1] = up has a component along the arm (30 deg) of |v| sin(30 deg) = 0.5 that cannot be produced at full extension; that radial component is the residual ||J qd - v|| = 0.5 m/s"
+      }
+    },
+    {
+      "id": "robotics-014",
+      "calculator": "robotics.planar_2r_dynamics",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L1": 1.0,
+        "m1": 1.0,
+        "m2": 1.0,
+        "lc1": 0.5,
+        "lc2": 0.5,
+        "I1": 0.1,
+        "I2": 0.1,
+        "theta1": 0.0,
+        "theta2": 0.0,
+        "qd1": 0.0,
+        "qd2": 0.0,
+        "qdd1": 0.0,
+        "qdd2": 0.0,
+        "g": 9.80665
+      },
+      "solve_for": [
+        "tau1",
+        "tau2"
+      ],
+      "expected_as_specified": {
+        "tau1": "19.6133 N*m",
+        "tau2": "4.903325 N*m"
+      },
+      "expected_SI": {
+        "tau1": 19.6133,
+        "tau2": 4.903325
+      },
+      "actual_SI": {
+        "tau1": {
+          "value": 19.6133,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_dynamics (procedure)"
+        },
+        "tau2": {
+          "value": 4.903325,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_dynamics (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "tau1": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00980665,
+          "passed": true
+        },
+        "tau2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0024516625,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Static horizontal pose (theta1=theta2=0, no motion, relative angles): gravity torque about each joint = g x (sum of mass x horizontal moment arm). tau1 = 9.80665(1x0.5 + 1x1.5) = 19.6133 N m; tau2 = 9.80665 x 1 x 0.5 = 4.90333 N m"
+      }
+    },
+    {
+      "id": "robotics-015",
+      "calculator": "robotics.planar_2r_dynamics",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L1": 1.0,
+        "m1": 1.0,
+        "m2": 1.0,
+        "lc1": 0.5,
+        "lc2": 0.5,
+        "I1": 0.1,
+        "I2": 0.1,
+        "theta1": 0.5235988,
+        "theta2": 0.5235988,
+        "qd1": 0.0,
+        "qd2": 0.0,
+        "qdd1": 0.0,
+        "qdd2": 0.0,
+        "g": 9.80665
+      },
+      "solve_for": [
+        "tau1",
+        "tau2"
+      ],
+      "expected_as_specified": {
+        "tau1": "15.190875 N*m",
+        "tau2": "2.4516625 N*m"
+      },
+      "expected_SI": {
+        "tau1": 15.190875,
+        "tau2": 2.4516625
+      },
+      "actual_SI": {
+        "tau1": {
+          "value": 15.190874152320822,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_dynamics (procedure)"
+        },
+        "tau2": {
+          "value": 2.4516622927610334,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc robotics.planar_2r_dynamics (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "tau1": {
+          "absolute_error": 8.476791784062243e-07,
+          "relative_error": 5.5801866476172326e-08,
+          "allowed_absolute_error": 0.007595437500000001,
+          "passed": true
+        },
+        "tau2": {
+          "absolute_error": 2.0723896643204398e-07,
+          "relative_error": 8.452997361261756e-08,
+          "allowed_absolute_error": 0.00122583125,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Static torques with RELATIVE theta2=30 deg (link 2 absolute = 60 deg): link-1 CoM at x = lc1 cos30 = 0.433013, link-2 CoM at x = L1 cos30 + lc2 cos60 = 0.866025 + 0.25 = 1.116025. tau1 = g(m1 lc1 cos30 + m2 (L1 cos30 + lc2 cos60)) = 9.80665(0.433013 + 1.116025) = 9.80665 x 1.549038 = 15.1909; tau2 = g m2 lc2 cos60 = 9.80665 x 0.25 = 2.45166 (an absolute-angle theta2 would give a different value, so this pins the relative convention)"
+      }
+    },
+    {
+      "id": "robotics-016",
+      "calculator": "robotics.payload_capacity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L1": 1.0,
+        "L2": 1.0,
+        "theta1": 0.0,
+        "theta2": 0.0,
+        "m1": 1.0,
+        "m2": 1.0,
+        "tau1_max": 50.0,
+        "tau2_max": 12.0,
+        "g": 9.80665
+      },
+      "solve_for": [
+        "m_payload_max",
+        "m_cap_1",
+        "m_cap_2",
+        "tau1_link",
+        "tau2_link"
+      ],
+      "expected_as_specified": {
+        "m_payload_max": "0.7236595 kg",
+        "m_cap_1": "1.5492905 kg",
+        "m_cap_2": "0.7236595 kg",
+        "tau1_link": "19.6133 N*m",
+        "tau2_link": "4.903325 N*m"
+      },
+      "expected_SI": {
+        "m_payload_max": 0.7236595,
+        "m_cap_1": 1.5492905,
+        "m_cap_2": 0.7236595,
+        "tau1_link": 19.6133,
+        "tau2_link": 4.903325
+      },
+      "actual_SI": {
+        "m_payload_max": {
+          "value": 0.723659455573514,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        },
+        "m_cap_1": {
+          "value": 1.5492905324448207,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        },
+        "m_cap_2": {
+          "value": 0.723659455573514,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        },
+        "tau1_link": {
+          "value": 19.6133,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        },
+        "tau2_link": {
+          "value": 4.903325,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "m_payload_max": {
+          "absolute_error": 4.442648604552346e-08,
+          "relative_error": 6.139142241001943e-08,
+          "allowed_absolute_error": 0.00036182975,
+          "passed": true
+        },
+        "m_cap_1": {
+          "absolute_error": 3.2444820829979903e-08,
+          "relative_error": 2.0941728378235008e-08,
+          "allowed_absolute_error": 0.00077464525,
+          "passed": true
+        },
+        "m_cap_2": {
+          "absolute_error": 4.442648604552346e-08,
+          "relative_error": 6.139142241001943e-08,
+          "allowed_absolute_error": 0.00036182975,
+          "passed": true
+        },
+        "tau1_link": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00980665,
+          "passed": true
+        },
+        "tau2_link": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0024516625,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Horizontal pose: tau1_link = 9.80665(0.5 + 1.5) = 19.6133; tau2_link = 9.80665 x 0.5 = 4.90333. m_cap_1 = (50 - 19.6133)/(9.80665 x 2) = 1.54929; m_cap_2 = (12 - 4.90333)/9.80665 = 0.723659; max = min = 0.723659 kg"
+      }
+    },
+    {
+      "id": "robotics-017",
+      "calculator": "robotics.payload_capacity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L1": 1.0,
+        "L2": 1.0,
+        "theta1": "30 deg",
+        "theta2": "30 deg",
+        "m1": 1.0,
+        "m2": 1.0,
+        "tau1_max": 50.0,
+        "tau2_max": 20.0,
+        "g": 9.80665
+      },
+      "solve_for": [
+        "m_payload_max",
+        "m_cap_1",
+        "m_cap_2",
+        "tau1_link",
+        "tau2_link"
+      ],
+      "expected_as_specified": {
+        "m_payload_max": "2.5984458 kg",
+        "m_cap_1": "2.5984458 kg",
+        "m_cap_2": "3.5788649 kg",
+        "tau1_link": "15.190875 N*m",
+        "tau2_link": "2.4516625 N*m"
+      },
+      "expected_SI": {
+        "m_payload_max": 2.5984458,
+        "m_cap_1": 2.5984458,
+        "m_cap_2": 3.5788649,
+        "tau1_link": 15.190875,
+        "tau2_link": 2.4516625
+      },
+      "actual_SI": {
+        "m_payload_max": {
+          "value": 2.5984457897922866,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        },
+        "m_cap_1": {
+          "value": 2.5984457897922866,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        },
+        "m_cap_2": {
+          "value": 3.578864851911712,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        },
+        "tau1_link": {
+          "value": 15.190874539033999,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        },
+        "tau2_link": {
+          "value": 2.4516625000000003,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "m_payload_max": {
+          "absolute_error": 1.020771334125925e-08,
+          "relative_error": 3.928391864575067e-09,
+          "allowed_absolute_error": 0.0012992229,
+          "passed": true
+        },
+        "m_cap_1": {
+          "absolute_error": 1.020771334125925e-08,
+          "relative_error": 3.928391864575067e-09,
+          "allowed_absolute_error": 0.0012992229,
+          "passed": true
+        },
+        "m_cap_2": {
+          "absolute_error": 4.808828801827758e-08,
+          "relative_error": 1.3436743034999051e-08,
+          "allowed_absolute_error": 0.00178943245,
+          "passed": true
+        },
+        "tau1_link": {
+          "absolute_error": 4.609660013699113e-07,
+          "relative_error": 3.034492755485851e-08,
+          "allowed_absolute_error": 0.007595437500000001,
+          "passed": true
+        },
+        "tau2_link": {
+          "absolute_error": 4.440892098500626e-16,
+          "relative_error": 1.8113798691706654e-16,
+          "allowed_absolute_error": 0.00122583125,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta1=30, theta12=60 deg: c1=0.866025, c12=0.5. tau1_link = 9.80665(0.5x0.866025 + 0.866025 + 0.5x0.5) = 9.80665 x 1.549038 = 15.1909; tau2_link = 9.80665 x 0.25 = 2.45166. arm1 = 0.866025 + 0.5 = 1.36603, arm2 = 0.5. m_cap_1 = (50-15.1909)/(9.80665x1.36603) = 2.59845; m_cap_2 = (20-2.45166)/(9.80665x0.5) = 3.57886"
+      }
+    },
+    {
+      "id": "robotics-018",
+      "calculator": "robotics.trajectory_cubic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "q0": 0.0,
+        "v0": 0.0,
+        "q1": 1.0,
+        "v1": 0.0,
+        "T": 1.0,
+        "t": 0.5
+      },
+      "solve_for": [
+        "coeffs",
+        "q_t",
+        "qd_t",
+        "qdd_t"
+      ],
+      "expected_as_specified": {
+        "q_t": 0.5,
+        "qd_t": 1.5,
+        "qdd_t": 0.0
+      },
+      "expected_SI": {
+        "q_t": 0.5,
+        "qd_t": 1.5,
+        "qdd_t": 0.0
+      },
+      "actual_SI": {
+        "q_t": {
+          "value": 0.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_cubic (procedure)"
+        },
+        "qd_t": {
+          "value": 1.5,
+          "unit": "1/s",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_cubic (procedure)"
+        },
+        "qdd_t": {
+          "value": 0.0,
+          "unit": "1/s^2",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_cubic (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "q_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00025,
+          "passed": true
+        },
+        "qd_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00075,
+          "passed": true
+        },
+        "qdd_t": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Rest-to-rest cubic q = 3t^2 - 2t^3 over T=1: q(0.5) = 0.75 - 0.25 = 0.5; qd = 6t - 6t^2 = 3 - 1.5 = 1.5; qdd = 6 - 12t = 0 (coordinate is unit-agnostic, so plain numbers)"
+      }
+    },
+    {
+      "id": "robotics-019",
+      "calculator": "robotics.trajectory_cubic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "q0": 0.0,
+        "v0": 0.0,
+        "q1": 2.0,
+        "v1": 1.0,
+        "T": 2.0,
+        "t": 1.0
+      },
+      "solve_for": [
+        "coeffs",
+        "q_t",
+        "qd_t",
+        "qdd_t"
+      ],
+      "expected_as_specified": {
+        "q_t": 0.75,
+        "qd_t": 1.25,
+        "qdd_t": 0.5
+      },
+      "expected_SI": {
+        "q_t": 0.75,
+        "qd_t": 1.25,
+        "qdd_t": 0.5
+      },
+      "actual_SI": {
+        "q_t": {
+          "value": 0.75,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_cubic (procedure)"
+        },
+        "qd_t": {
+          "value": 1.25,
+          "unit": "1/s",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_cubic (procedure)"
+        },
+        "qdd_t": {
+          "value": 0.5,
+          "unit": "1/s^2",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_cubic (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "q_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.000375,
+          "passed": true
+        },
+        "qd_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.000625,
+          "passed": true
+        },
+        "qdd_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00025,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Boundary q(2)=2, qd(2)=1 with q0=v0=0 gives q = t^2 - 0.25 t^3 (solve 4a2+8a3=2, 4a2+12a3=1 -> a2=1, a3=-0.25). q(1)=0.75; qd(1)=2-0.75=1.25; qdd(1)=2-1.5=0.5"
+      }
+    },
+    {
+      "id": "robotics-020",
+      "calculator": "robotics.trajectory_quintic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "q0": 0.0,
+        "v0": 0.0,
+        "a0": 0.0,
+        "q1": 1.0,
+        "v1": 0.0,
+        "a1": 0.0,
+        "T": 1.0,
+        "t": 0.5
+      },
+      "solve_for": [
+        "coeffs",
+        "q_t",
+        "qd_t",
+        "qdd_t"
+      ],
+      "expected_as_specified": {
+        "q_t": 0.5,
+        "qd_t": 1.875,
+        "qdd_t": 0.0
+      },
+      "expected_SI": {
+        "q_t": 0.5,
+        "qd_t": 1.875,
+        "qdd_t": 0.0
+      },
+      "actual_SI": {
+        "q_t": {
+          "value": 0.49999999999999933,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_quintic (procedure)"
+        },
+        "qd_t": {
+          "value": 1.8749999999999976,
+          "unit": "1/s",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_quintic (procedure)"
+        },
+        "qdd_t": {
+          "value": 1.7763568394002505e-15,
+          "unit": "1/s^2",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_quintic (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "q_t": {
+          "absolute_error": 6.661338147750939e-16,
+          "relative_error": 1.3322676295501878e-15,
+          "allowed_absolute_error": 0.00025,
+          "passed": true
+        },
+        "qd_t": {
+          "absolute_error": 2.4424906541753444e-15,
+          "relative_error": 1.3026616822268502e-15,
+          "allowed_absolute_error": 0.0009375,
+          "passed": true
+        },
+        "qdd_t": {
+          "absolute_error": 1.7763568394002505e-15,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Rest-to-rest quintic q = 10t^3 - 15t^4 + 6t^5: q(0.5) = 1.25 - 0.9375 + 0.1875 = 0.5; qd = 30t^2 - 60t^3 + 30t^4 = 7.5 - 7.5 + 1.875 = 1.875; qdd = 60t - 180t^2 + 120t^3 = 30 - 45 + 15 = 0"
+      }
+    },
+    {
+      "id": "robotics-021",
+      "calculator": "robotics.trajectory_quintic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "q0": 0.0,
+        "v0": 0.0,
+        "a0": 0.0,
+        "q1": 1.0,
+        "v1": 0.0,
+        "a1": 0.0,
+        "T": 2.0,
+        "t": 1.0
+      },
+      "solve_for": [
+        "coeffs",
+        "q_t",
+        "qd_t",
+        "qdd_t"
+      ],
+      "expected_as_specified": {
+        "q_t": 0.5,
+        "qd_t": 0.9375,
+        "qdd_t": 0.0
+      },
+      "expected_SI": {
+        "q_t": 0.5,
+        "qd_t": 0.9375,
+        "qdd_t": 0.0
+      },
+      "actual_SI": {
+        "q_t": {
+          "value": 0.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_quintic (procedure)"
+        },
+        "qd_t": {
+          "value": 0.9375000000000002,
+          "unit": "1/s",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_quintic (procedure)"
+        },
+        "qdd_t": {
+          "value": -8.881784197001252e-16,
+          "unit": "1/s^2",
+          "kind": "derived",
+          "method": "mechcalc robotics.trajectory_quintic (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "q_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00025,
+          "passed": true
+        },
+        "qd_t": {
+          "absolute_error": 2.220446049250313e-16,
+          "relative_error": 2.3684757858670006e-16,
+          "allowed_absolute_error": 0.00046875,
+          "passed": true
+        },
+        "qdd_t": {
+          "absolute_error": 8.881784197001252e-16,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Same rest-to-rest quintic scaled to T=2: q(t) = f(t/2) with f(u) = 10u^3 - 15u^4 + 6u^5. At t=1 (u=0.5): q = 0.5; qd = f'(0.5)/2 = 1.875/2 = 0.9375; qdd = f''(0.5)/4 = 0"
+      }
+    },
+    {
+      "id": "robotics-022",
+      "calculator": "robotics.payload_capacity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L1": "1 m",
+        "L2": "1 m",
+        "theta1": "100 deg",
+        "theta2": "-150 deg",
+        "m1": "5 kg",
+        "m2": "1 kg",
+        "tau1_max": "30 N*m",
+        "tau2_max": "400 N*m",
+        "g": "9.80665 m/s^2"
+      },
+      "solve_for": [
+        "m_payload_max",
+        "m_cap_1",
+        "m_cap_2",
+        "tau1_link",
+        "tau2_link"
+      ],
+      "expected_as_specified": {
+        "m_payload_max": "7.13119 kg",
+        "tau1_link": "-2.80838 N*m"
+      },
+      "expected_SI": {
+        "m_payload_max": 7.13119,
+        "tau1_link": -2.80838
+      },
+      "actual_SI": {
+        "m_payload_max": {
+          "value": 7.131192194871686,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        },
+        "tau1_link": {
+          "value": -2.808377599044657,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc robotics.payload_capacity (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "m_payload_max": {
+          "absolute_error": 2.194871686178601e-06,
+          "relative_error": 3.077847717111171e-07,
+          "allowed_absolute_error": 0.003565595,
+          "passed": true
+        },
+        "tau1_link": {
+          "absolute_error": 2.4009553429849007e-06,
+          "relative_error": 8.549253815313101e-07,
+          "allowed_absolute_error": 0.00140419,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Opposite-sign joint-1 pose: c1 = cos100\u00b0 = \u22120.173648, c12 = cos(\u221250\u00b0) = 0.642788; arm1 = c1 + c12 = 0.469140 m; \u03c41_link = g[5\u00b70.5\u00b7c1 + 1\u00b7(c1 + 0.5\u00b7c12)] = 9.80665\u00b7(\u22120.286374) = \u22122.80838 N\u00b7m. |\u03c4_link + m g arm| \u2264 30 \u2192 m \u2264 (30 + 2.80838)/(9.80665\u00b70.469140) = 7.13119 kg (the other bound is negative). Joint 2 (arm 0.642788, \u03c4_link +3.15180, limit 400) allows 62.96 kg, so joint 1 governs."
+      }
+    }
+  ],
+  "passed": 22,
+  "failed": 0
+}

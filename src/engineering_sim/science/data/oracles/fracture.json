@@ -1,0 +1,273 @@
+{
+  "section": "fracture",
+  "cases": [
+    {
+      "calc": "fracture.stress_intensity",
+      "inputs": {
+        "Y": 1.12,
+        "sigma": "100 MPa",
+        "a": "10 mm"
+      },
+      "expect": {
+        "K": "19.851 MPa*m^0.5"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "K = Y sigma sqrt(pi a) = 1.12 x 100e6 x sqrt(pi x 0.01) = 1.12 x 100e6 x 0.177245 = 1.9851e7 Pa·m^0.5"
+      }
+    },
+    {
+      "calc": "fracture.stress_intensity",
+      "inputs": {
+        "Y": 1.12,
+        "sigma": "100 MPa",
+        "K": "19.851 MPa*m^0.5"
+      },
+      "solve_for": [
+        "a"
+      ],
+      "expect": {
+        "a": "10 mm"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = (K/(Y sigma))^2/pi = (19.851e6/(1.12 x 100e6))^2/pi = (0.177241)^2/pi = 0.0314145/3.14159 = 0.010 m"
+      }
+    },
+    {
+      "calc": "fracture.critical_crack_length",
+      "inputs": {
+        "K_Ic": "50 MPa*m^0.5",
+        "Y": 1,
+        "sigma": "200 MPa"
+      },
+      "expect": {
+        "a_c": "19.894 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a_c = (K_Ic/(Y sigma))^2/pi = (50e6/(1 x 200e6))^2/pi = (0.25)^2/pi = 0.0625/3.14159 = 0.019894 m"
+      }
+    },
+    {
+      "calc": "fracture.critical_crack_length",
+      "inputs": {
+        "K_Ic": "50 MPa*m^0.5",
+        "Y": 1,
+        "a_c": "19.894 mm"
+      },
+      "solve_for": [
+        "sigma"
+      ],
+      "expect": {
+        "sigma": "200 MPa"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma = K_Ic/(Y sqrt(pi a_c)) = 50e6/sqrt(pi x 0.019894) = 50e6/0.25000 = 200 MPa"
+      }
+    },
+    {
+      "calc": "fracture.critical_stress",
+      "inputs": {
+        "K_Ic": "50 MPa*m^0.5",
+        "Y": 1,
+        "a": "10 mm"
+      },
+      "expect": {
+        "sigma_c": "282.09 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma_c = K_Ic/(Y sqrt(pi a)) = 50e6/sqrt(pi x 0.01) = 50e6/0.177245 = 2.8209e8 Pa"
+      }
+    },
+    {
+      "calc": "fracture.energy_release_rate",
+      "inputs": {
+        "K": "50 MPa*m^0.5",
+        "E": "200 GPa",
+        "nu": 0.3
+      },
+      "expect": {
+        "G_plane_strain": "11.375 kJ/m^2",
+        "G_plane_stress": "12.5 kJ/m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "G_plane_stress = K^2/E = (50e6)^2/200e9 = 2.5e15/2e11 = 12500 J/m^2; G_plane_strain = 12500 x (1 - 0.3^2) = 12500 x 0.91 = 11375 J/m^2"
+      }
+    },
+    {
+      "calc": "fracture.plastic_zone_size",
+      "inputs": {
+        "K": "50 MPa*m^0.5",
+        "sigma_ys": "500 MPa"
+      },
+      "expect": {
+        "r_y_stress": "1.5915 mm",
+        "r_y_strain": "0.53052 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r_y_stress = K^2/(2 pi sigma_ys^2) = (50e6)^2/(2 pi x (500e6)^2) = 2.5e15/1.57080e18 = 1.5915e-3 m; r_y_strain = r_y_stress/3 = 0.53052 mm (plane-strain is one third of plane-stress)"
+      }
+    },
+    {
+      "calc": "fracture.paris_growth_rate",
+      "inputs": {
+        "C": 1e-29,
+        "m": 3,
+        "dsigma": "50 MPa",
+        "Y": 1,
+        "a": "5 mm"
+      },
+      "expect": {
+        "dadN": "2.4609e-9 m",
+        "DK": "6.2666 MPa*m^0.5"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "DK = Y dsigma sqrt(pi a) = 1 x 50e6 x sqrt(pi x 0.005) = 50e6 x 0.125331 = 6.2666e6 Pa·m^0.5; dadN = C DK^m = 1e-29 x (6.2666e6)^3 = 1e-29 x 2.4609e20 = 2.4609e-9 m/cycle"
+      }
+    },
+    {
+      "calc": "fracture.paris_cycles",
+      "inputs": {
+        "C": 1e-29,
+        "m": 3,
+        "dsigma": "50 MPa",
+        "Y": 1,
+        "a0": "2 mm",
+        "ac": "5 mm"
+      },
+      "expect": {
+        "N_f": 2361511.5
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "DKbase = Y dsigma sqrt(pi) = 50e6 x 1.772454 = 8.86227e7; N_f = (ac^(1-m/2) - a0^(1-m/2))/(C DKbase^m (1-m/2)) = (0.005^-0.5 - 0.002^-0.5)/(1e-29 x 8.86227e7^3 x (-0.5)) = (14.1421 - 22.3607)/(1e-29 x 6.9607e23 x (-0.5)) = (-8.2186)/(-3.4804e-6) = 2.3615e6 cycles"
+      }
+    },
+    {
+      "calc": "fracture.paris_cycles",
+      "inputs": {
+        "C": 1e-19,
+        "m": 2,
+        "dsigma": "100 MPa",
+        "Y": 1,
+        "a0": "1 mm",
+        "ac": "10 mm"
+      },
+      "expect": {
+        "N_f": 732.94
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "m = 2 logarithmic case: N_f = ln(ac/a0)/(C (Y dsigma)^2 pi) = ln(10)/(1e-19 x (100e6)^2 x pi) = 2.302585/(1e-19 x 1e16 x 3.14159) = 2.302585/3.14159e-3 = 732.94 cycles"
+      }
+    },
+    {
+      "calc": "fracture.paris_cycles_ya",
+      "inputs": {
+        "C": 1e-29,
+        "m": 3,
+        "dsigma": "50 MPa",
+        "Y_table": [
+          [
+            0.002,
+            1.0
+          ],
+          [
+            0.005,
+            1.0
+          ]
+        ],
+        "a0": "2 mm",
+        "ac": "5 mm"
+      },
+      "expect": {
+        "N_f": "2.3615e6"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Constant-Y table reproduces the closed-form integral (cross-check with the paris_cycles oracle): N_f = integral_{0.002}^{0.005} da/(C (Y dsigma sqrt(pi a))^3) = 2.3615e6 cycles (adaptive quadrature per segment)."
+      }
+    },
+    {
+      "calc": "fracture.paris_cycles_ya",
+      "inputs": {
+        "C": 1e-29,
+        "m": 3,
+        "dsigma": "50 MPa",
+        "Y_table": [
+          [
+            0.0001,
+            1.12
+          ],
+          [
+            0.01,
+            1.2
+          ],
+          [
+            0.03,
+            1.5
+          ]
+        ],
+        "a0": "0.1 mm",
+        "ac": "30 mm"
+      },
+      "expect": {
+        "N_f": "1.8620e7"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Piecewise-linear Y(a) with a breakpoint at 10 mm. N_f = sum over segments of integral da/(C (Y(a) dsigma sqrt(pi a))^3) with Y interpolated between [0.1 mm, 1.12], [10 mm, 1.2], [30 mm, 1.5]; each segment integrated with scipy.integrate.quad. Reference (independent scipy quad, not mechcalc) = 1.8620e7 cycles. Sanity check: constant Y = 1.12 gives (1/(C (1.12 dsigma sqrt(pi))^3)) 2 (a0^-1/2 - ac^-1/2) = 1.927e7; the rising Y (1.12 -> 1.5) reduces it to 1.8620e7."
+      }
+    },
+    {
+      "calc": "fracture.leak_before_break",
+      "inputs": {
+        "K_Ic": "50 MPa*m^0.5",
+        "Y": 1,
+        "sigma": "200 MPa",
+        "t": "5 mm"
+      },
+      "expect": {
+        "margin": 3.9789,
+        "a_c": "19.894 mm"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "a_c = (K_Ic/(Y sigma))^2/pi = 0.019894 m; margin = a_c/t = 0.019894/0.005 = 3.9789 (> 1 so leak-before-break holds)"
+      }
+    },
+    {
+      "calc": "fracture.leak_before_break",
+      "inputs": {
+        "K_Ic": "50 MPa*m^0.5",
+        "Y": 1,
+        "sigma": "200 MPa",
+        "margin": 3.9789
+      },
+      "solve_for": [
+        "t"
+      ],
+      "expect": {
+        "t": "5 mm"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "t = a_c/margin = 0.019894/3.9789 = 0.005 m"
+      }
+    }
+  ]
+}

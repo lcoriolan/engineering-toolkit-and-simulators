@@ -1,0 +1,3312 @@
+{
+  "section": "economics",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k economics",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "economics.simple_interest": {
+      "title": "Simple interest: future value and interest (F = P(1 + n\u00b7i))",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "",
+          "desc": "principal",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i",
+          "unit": "",
+          "desc": "interest rate per period",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of periods",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "",
+          "desc": "future value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "",
+          "desc": "total interest",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F = P*(1 + n*i)",
+        "I = P*i*n"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F",
+        "I"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "F = P(1 + ni) (simple interest)"
+      ],
+      "synthetic_example": {
+        "P": 1000.0,
+        "i": 0.05,
+        "n": 3.0
+      }
+    },
+    "economics.compound_interest": {
+      "title": "Compound interest: future value (F = P(1 + i)^n)",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "",
+          "desc": "principal",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i",
+          "unit": "",
+          "desc": "interest rate per period",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of periods",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "",
+          "desc": "future value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F = P*(1 + i)**n"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F"
+      ],
+      "assumptions": [
+        "Solving for P gives the present worth P = F/(1+i)^n."
+      ],
+      "method_references": [
+        "F = P(1 + i)^n (compound interest)"
+      ],
+      "synthetic_example": {
+        "P": 1000.0,
+        "i": 0.05,
+        "n": 3.0
+      }
+    },
+    "economics.effective_rate": {
+      "title": "Effective annual interest rate from a nominal rate (i_eff = (1 + r/m)^m \u2212 1)",
+      "variables": [
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "nominal annual rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "",
+          "desc": "compounding periods per year",
+          "lo": 0.001,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i_eff",
+          "unit": "",
+          "desc": "effective annual rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "i_eff = (1 + r/m)**m - 1"
+      ],
+      "procedure": null,
+      "outputs": [
+        "i_eff"
+      ],
+      "assumptions": [
+        "m = 12 monthly, 4 quarterly, 365 daily. As m \u2192 \u221e the effective rate approaches e^r \u2212 1."
+      ],
+      "method_references": [
+        "i_eff = (1 + r/m)^m \u2212 1"
+      ],
+      "synthetic_example": {
+        "r": 0.12,
+        "m": 12.0
+      }
+    },
+    "economics.annual_worth": {
+      "title": "Annual worth from a present amount (capital-recovery factor)",
+      "variables": [
+        {
+          "name": "A",
+          "unit": "",
+          "desc": "annual worth (uniform series)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "",
+          "desc": "present worth",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i",
+          "unit": "",
+          "desc": "interest rate per period",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of periods",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _annual_worth(values):\n    \"\"\"Annual worth from a present amount (capital-recovery factor), with the i = 0 limit A = P/n.\"\"\"\n    P, i, n = values['P'], values['i'], values['n']\n    if n <= 0:\n        raise MechError('n: number of periods must be positive')\n    if i == 0:\n        return {'A': P / n}\n    return {'A': P * i * (1.0 + i) ** n / ((1.0 + i) ** n - 1.0)}\n",
+        "source": "economics.py",
+        "line": 130
+      },
+      "outputs": [
+        "A"
+      ],
+      "assumptions": [
+        "At i = 0 the capital-recovery factor is the 0/0 limit A = P/n (principal spread over n periods)."
+      ],
+      "method_references": [
+        "A = P\u00b7i(1+i)^n/((1+i)^n \u2212 1) (capital recovery); A = P/n at i = 0"
+      ],
+      "synthetic_example": {
+        "P": 1000.0,
+        "i": 0.05,
+        "n": 3.0
+      }
+    },
+    "economics.sinking_fund": {
+      "title": "Annual amount to accumulate a future sum (sinking-fund factor)",
+      "variables": [
+        {
+          "name": "A",
+          "unit": "",
+          "desc": "annual deposit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "",
+          "desc": "future value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i",
+          "unit": "",
+          "desc": "interest rate per period",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of periods",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _sinking_fund(values):\n    \"\"\"Annual deposit to accumulate a future sum (sinking-fund factor), with the i = 0 limit A = F/n.\"\"\"\n    F, i, n = values['F'], values['i'], values['n']\n    if n <= 0:\n        raise MechError('n: number of periods must be positive')\n    if i == 0:\n        return {'A': F / n}\n    return {'A': F * i / ((1.0 + i) ** n - 1.0)}\n",
+        "source": "economics.py",
+        "line": 140
+      },
+      "outputs": [
+        "A"
+      ],
+      "assumptions": [
+        "At i = 0 the sinking-fund factor is the 0/0 limit A = F/n (no interest accrues)."
+      ],
+      "method_references": [
+        "A = F\u00b7i/((1+i)^n \u2212 1) (sinking fund); A = F/n at i = 0"
+      ],
+      "synthetic_example": {
+        "F": 1000.0,
+        "i": 0.05,
+        "n": 3.0
+      }
+    },
+    "economics.irr": {
+      "title": "Internal rate of return from a cash-flow series (all real roots)",
+      "variables": [
+        {
+          "name": "cash_flows",
+          "unit": "",
+          "desc": "cash flows [CF0, CF1, ...] (CF0 at t = 0; negative = outflow)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "irr",
+          "unit": "",
+          "desc": "all real IRRs as decimals (rate > \u22121), ascending",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _irr(values):\n    \"\"\"All real internal rates of return from a cash-flow list [CF0, CF1, ...].\n\n    NPV(r) = \u03a3 CF_t (1+r)^-t. Multiplying by (1+r)^(n-1) turns this into a polynomial in x = 1 + r with\n    the cash flows as coefficients, so numpy.roots gives every root (including tangent/even-multiplicity\n    roots and rates near \u2212100 %); each real x > 0 is polished against the polynomial directly (evaluated\n    by Horner in x to avoid the cancellation the sum \u03a3 CF_t/(1+r)^t suffers near a multiple root).\n    \"\"\"\n    cf_raw = values['cash_flows']\n    if not isinstance(cf_raw, list) or len(cf_raw) < 2:\n        raise MechError('cash_flows: give [CF0, CF1, ...] with at least two entries')\n    cf = [_number(x, 'cash_flows') for x in cf_raw]\n    poly = np.asarray(cf, dtype=float)       # P(x) = sum cf_t x^(n-1-t), x = 1 + r\n    dpoly = np.polyder(poly)                 # P'(x)\n\n    def P(x):\n        return float(np.polyval(poly, x))\n\n    def dP(x):\n        return float(np.polyval(dpoly, x))\n\n    xs = np.roots(poly)\n    roots = []\n    for x in xs:\n        if abs(x.imag) > 1e-8 * max(1.0, abs(x.real)):\n            continue\n        xr = float(x.real)\n        if xr <= 1e-12:  # r <= -1 (the NPV pole) or x = 0\n            continue\n        xstar = _polish_root(P, dP, xr)\n        if not math.isfinite(xstar) or xstar <= 1e-12:\n            continue\n        roots.append(xstar - 1.0)\n    roots.sort()\n    dedup = []\n    for r in roots:\n        if not any(math.isclose(r, o, rel_tol=1e-9, abs_tol=1e-12) for o in dedup):\n            dedup.append(r)\n    if not dedup:\n        raise MechError('no real IRR (rate > -1) for these cash flows')\n    return {'irr': dedup}\n",
+        "source": "economics.py",
+        "line": 66
+      },
+      "outputs": [
+        "irr"
+      ],
+      "assumptions": [
+        "IRR solves NPV(r) = \u03a3 CF_t/(1+r)^t = 0 for r > \u22121. All real roots are found from the NPV polynomial in x = 1 + r (including tangent/even-multiplicity roots and rates near \u2212100 %); non-conventional flows (several sign changes) can therefore have several IRRs, all reported ascending."
+      ],
+      "method_references": [
+        "Roots of NPV(r) = 0 via the NPV polynomial"
+      ],
+      "synthetic_example": {
+        "cash_flows": [
+          -100.0,
+          60.0,
+          60.0
+        ]
+      }
+    },
+    "economics.payback": {
+      "title": "Simple payback period (PP = C0/A)",
+      "variables": [
+        {
+          "name": "PP",
+          "unit": "",
+          "desc": "payback period (periods)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C0",
+          "unit": "",
+          "desc": "initial investment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "",
+          "desc": "uniform net annual savings",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "PP = C0/A"
+      ],
+      "procedure": null,
+      "outputs": [
+        "PP"
+      ],
+      "assumptions": [
+        "Ignores the time value of money; discounted payback is in cash_flow_series."
+      ],
+      "method_references": [
+        "PP = C0/A"
+      ],
+      "synthetic_example": {
+        "C0": 10000.0,
+        "A": 2000.0
+      }
+    },
+    "economics.benefit_cost_ratio": {
+      "title": "Benefit-cost ratio (B/C)",
+      "variables": [
+        {
+          "name": "bc",
+          "unit": "",
+          "desc": "benefit-cost ratio",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "B",
+          "unit": "",
+          "desc": "present worth of benefits",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "present worth of costs",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "bc = B/C"
+      ],
+      "procedure": null,
+      "outputs": [
+        "bc"
+      ],
+      "assumptions": [
+        "B/C > 1 favours the project; benefits and costs are both present worths."
+      ],
+      "method_references": [
+        "B/C = PW(benefits)/PW(costs)"
+      ],
+      "synthetic_example": {
+        "B": 120000.0,
+        "C": 100000.0
+      }
+    },
+    "economics.depreciation_sl": {
+      "title": "Straight-line depreciation and book value",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "",
+          "desc": "first cost",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S",
+          "unit": "",
+          "desc": "salvage value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "useful life (periods)",
+          "lo": 0.001,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "desc": "period index (year k)",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "BV_k",
+          "unit": "",
+          "desc": "book value after k periods",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "",
+          "desc": "annual depreciation (P \u2212 S)/n",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _depreciation_sl(values):\n    \"\"\"Straight-line depreciation D = (P \u2212 S)/n and book value, with k > n rejected.\"\"\"\n    P, S, n, k = values['P'], values['S'], values['n'], values['k']\n    if n <= 0:\n        raise MechError('n: useful life must be positive')\n    if k > n + 1e-9:\n        raise MechError('k: period index cannot exceed the useful life n')\n    if S < 0:\n        raise MechError('S: salvage value cannot be negative')\n    D = (P - S) / n\n    BV = P - k * D\n    if BV < -1e-9 * max(1.0, abs(P)):\n        raise MechError('book value would be negative')\n    return {'BV_k': BV, 'D': D}\n",
+        "source": "economics.py",
+        "line": 160
+      },
+      "outputs": [
+        "BV_k",
+        "D"
+      ],
+      "assumptions": [
+        "k must not exceed the useful life n (a period beyond the life is rejected); at k = n the book value equals the salvage value."
+      ],
+      "method_references": [
+        "D = (P \u2212 S)/n; BV_k = P \u2212 kD"
+      ],
+      "synthetic_example": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 2.0
+      }
+    },
+    "economics.depreciation_db": {
+      "title": "Declining-balance depreciation and book value",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "",
+          "desc": "first cost",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "",
+          "desc": "declining-balance rate per period",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "desc": "period index (year k)",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "BV_k",
+          "unit": "",
+          "desc": "book value after k periods",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D_k",
+          "unit": "",
+          "desc": "depreciation in period k",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "BV_k = P*(1 - d)**k",
+        "D_k = P*(1 - d)**(k - 1)*d"
+      ],
+      "procedure": null,
+      "outputs": [
+        "BV_k",
+        "D_k"
+      ],
+      "assumptions": [
+        "d = 2/n is double-declining balance. The book value is not floored at the salvage value (apply S as a floor in practice)."
+      ],
+      "method_references": [
+        "BV_k = P(1 \u2212 d)^k; D_k = P(1 \u2212 d)^(k\u22121)d"
+      ],
+      "synthetic_example": {
+        "P": 10000.0,
+        "d": 0.4,
+        "k": 2.0
+      }
+    },
+    "economics.depreciation_soyd": {
+      "title": "Sum-of-years-digits depreciation and book value",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "",
+          "desc": "first cost",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S",
+          "unit": "",
+          "desc": "salvage value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "useful life (periods)",
+          "lo": 0.001,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "desc": "period index (year k)",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D_k",
+          "unit": "",
+          "desc": "depreciation in period k",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "BV_k",
+          "unit": "",
+          "desc": "book value after k periods",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "SOYD",
+          "unit": "",
+          "desc": "sum of years digits n(n+1)/2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _depreciation_soyd(values):\n    \"\"\"Sum-of-years-digits depreciation and book value, with k > n rejected.\"\"\"\n    P, S, n, k = values['P'], values['S'], values['n'], values['k']\n    if n <= 0:\n        raise MechError('n: useful life must be positive')\n    if k > n + 1e-9:\n        raise MechError('k: period index cannot exceed the useful life n')\n    if S < 0:\n        raise MechError('S: salvage value cannot be negative')\n    SOYD = n * (n + 1) / 2\n    D_k = (P - S) * (n - k + 1) / SOYD\n    BV_k = P - (P - S) * (k * (n + 1) - k * (k + 1) / 2) / SOYD\n    return {'D_k': D_k, 'BV_k': BV_k, 'SOYD': SOYD}\n",
+        "source": "economics.py",
+        "line": 176
+      },
+      "outputs": [
+        "D_k",
+        "BV_k",
+        "SOYD"
+      ],
+      "assumptions": [
+        "k must not exceed the useful life n; at k = n the book value equals the salvage value."
+      ],
+      "method_references": [
+        "D_k = (P \u2212 S)(n \u2212 k + 1)/SOYD; SOYD = n(n+1)/2"
+      ],
+      "synthetic_example": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 2.0
+      }
+    },
+    "economics.depreciation_table": {
+      "title": "Depreciation from a user-supplied percentage schedule (e.g. MACRS)",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "",
+          "desc": "first cost",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rates",
+          "unit": "",
+          "desc": "per-period percentages [r1, r2, ...] (MACRS rates are user inputs)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "first_year",
+          "unit": "",
+          "desc": "first-period depreciation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "depreciation",
+          "unit": "",
+          "desc": "per-period depreciation amounts",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "book_values",
+          "unit": "",
+          "desc": "book value at the end of each period",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _depreciation_table(values):\n    \"\"\"Depreciation from a user-supplied percentage schedule (e.g. MACRS rates).\"\"\"\n    rates = values['rates']\n    P = values['P']\n    if not isinstance(rates, list) or not rates:\n        raise MechError('rates: give a non-empty list of per-period percentages (e.g. [20, 32, ...])')\n    rates = [_number(r, 'rates') / 100.0 for r in rates]  # entered as percent\n    if any(r < 0 or r > 1 for r in rates):\n        raise MechError('rates: each percentage must be in 0..100')\n    if sum(rates) > 1.0 + 1e-9:\n        raise MechError('rates: percentages sum to more than 100 % (book value would go negative)')\n    dep = [P * r for r in rates]\n    bv, acc = [], 0.0\n    for d in dep:\n        acc += d\n        bv.append(P - acc)\n    if min(bv) < -1e-9:\n        raise MechError('book value went negative; check the rate schedule')\n    return {'first_year': dep[0], 'depreciation': dep, 'book_values': bv}\n",
+        "source": "economics.py",
+        "line": 109
+      },
+      "outputs": [
+        "first_year",
+        "depreciation",
+        "book_values"
+      ],
+      "assumptions": [
+        "Rates are entered as percentages and applied to the first cost P (MACRS convention, no salvage). No rate table is built in \u2014 the user supplies the percentages from the applicable code."
+      ],
+      "method_references": [
+        "D_k = r_k\u00b7P (rate-schedule depreciation)"
+      ],
+      "synthetic_example": {
+        "P": 10000.0,
+        "rates": [
+          20.0,
+          32.0,
+          19.2,
+          11.52,
+          11.52,
+          5.76
+        ]
+      }
+    },
+    "economics.break_even": {
+      "title": "Break-even point (quantity and revenue)",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "",
+          "desc": "break-even quantity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "",
+          "desc": "break-even revenue",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "FC",
+          "unit": "",
+          "desc": "fixed cost",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "",
+          "desc": "unit selling price",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "",
+          "desc": "unit variable cost",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q = FC/(p - v)",
+        "R = p*Q"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q",
+        "R"
+      ],
+      "assumptions": [
+        "Requires p > v for a positive break-even quantity."
+      ],
+      "method_references": [
+        "Q = FC/(p \u2212 v); R = p\u00b7Q"
+      ],
+      "synthetic_example": {
+        "FC": 10000.0,
+        "p": 50.0,
+        "v": 30.0
+      }
+    },
+    "economics.life_cycle_cost": {
+      "title": "Life-cycle cost: first cost plus present worth of uniform annual costs",
+      "variables": [
+        {
+          "name": "LCC",
+          "unit": "",
+          "desc": "life-cycle cost (present worth)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C0",
+          "unit": "",
+          "desc": "initial (first) cost",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_annual",
+          "unit": "",
+          "desc": "uniform annual operating/maintenance cost",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i",
+          "unit": "",
+          "desc": "interest rate per period",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "life in periods",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _life_cycle_cost(values):\n    \"\"\"Life-cycle cost (present worth) with the i = 0 limit LCC = C0 + n\u00b7C_annual.\"\"\"\n    C0, C_annual, i, n = values['C0'], values['C_annual'], values['i'], values['n']\n    if n <= 0:\n        raise MechError('n: life in periods must be positive')\n    if i == 0:\n        return {'LCC': C0 + n * C_annual}\n    return {'LCC': C0 + C_annual * ((1.0 + i) ** n - 1.0) / (i * (1.0 + i) ** n)}\n",
+        "source": "economics.py",
+        "line": 150
+      },
+      "outputs": [
+        "LCC"
+      ],
+      "assumptions": [
+        "C_annual is a uniform end-of-period series discounted at rate i over n periods. At i = 0 the cost is simply C0 + n\u00b7C_annual."
+      ],
+      "method_references": [
+        "LCC = C0 + C_annual\u00b7((1+i)^n \u2212 1)/(i(1+i)^n); LCC = C0 + n\u00b7C_annual at i = 0"
+      ],
+      "synthetic_example": {
+        "C0": 100000.0,
+        "C_annual": 5000.0,
+        "i": 0.05,
+        "n": 10.0
+      }
+    },
+    "economics.cash_flow_series": {
+      "title": "Present/future/annual worth and discounted payback of a cash-flow series",
+      "variables": [
+        {
+          "name": "cash_flows",
+          "unit": "",
+          "desc": "cash flows [CF0, CF1, ...] (CF0 at t = 0; negative = outflow)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "i",
+          "unit": "",
+          "desc": "interest rate per period",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "npv",
+          "unit": "",
+          "desc": "net present value (present worth)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "fw",
+          "unit": "",
+          "desc": "future worth at the end of the last period",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "aw",
+          "unit": "",
+          "desc": "equivalent uniform annual worth",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "payback",
+          "unit": "",
+          "desc": "discounted payback period (periods)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _cash_flow_series(values):\n    \"\"\"Present/future/annual worth and discounted payback of a cash-flow series at rate i.\n\n    Cash flows are [CF0, CF1, ...] with CF0 at t = 0 (negative for an outlay). NPV = \u03a3 CF_t/(1+i)^t;\n    future worth is compounded to the end of the last period; annual worth spreads NPV uniformly;\n    discounted payback is the first time the cumulative discounted flow reaches zero (linearly\n    interpolated within the crossing period).\n    \"\"\"\n    cf_raw = values['cash_flows']\n    i = values['i']\n    if not isinstance(cf_raw, list) or len(cf_raw) < 2:\n        raise MechError('cash_flows: give [CF0, CF1, ...] with at least two entries')\n    cf = [_number(x, 'cash_flows') for x in cf_raw]\n    n = len(cf)\n    if i < 0:\n        raise MechError('i: interest rate must be >= 0')\n    pv = [cf[t] / (1.0 + i) ** t for t in range(n)]\n    npv = sum(pv)\n    m = n - 1  # number of periods in the horizon (n cash flows span n \u2212 1 periods)\n    fw = npv * (1.0 + i) ** m\n    aw = npv / m if i == 0 else npv * i * (1.0 + i) ** m / ((1.0 + i) ** m - 1.0)\n    payback = None\n    cum = 0.0\n    for t in range(n):\n        prev = cum\n        cum += pv[t]\n        if prev < 0 and cum >= 0:\n            payback = (t - 1) + (-prev) / pv[t] if pv[t] != 0 else float(t - 1)\n            break\n    out = {'npv': npv, 'fw': fw, 'aw': aw, 'payback': payback}\n    if payback is None:\n        if cf[0] >= 0:\n            out['payback'] = 0.0\n        else:\n            # A project that never pays back still has a (negative) worth \u2014 the main reason to run NPV.\n            \n            out['_warnings'] = ['the project is not paid back within the given cash-flow series (payback undefined)']\n    return out\n",
+        "source": "economics.py",
+        "line": 191
+      },
+      "outputs": [
+        "npv",
+        "fw",
+        "aw",
+        "payback"
+      ],
+      "assumptions": [
+        "Cash flows are end-of-period with CF0 at t = 0; n flows span an n \u2212 1 period horizon. FW is compounded to the end of the last period; AW is the uniform series equivalent of the NPV over that n \u2212 1 period horizon. Discounted payback is the first time the cumulative discounted flow reaches zero (interpolated within the crossing period); it errors if the project never pays back."
+      ],
+      "method_references": [
+        "NPV = \u03a3 CF_t/(1+i)^t; FW = NPV(1+i)^(n\u22121); AW = NPV\u00b7CRF; discounted payback"
+      ],
+      "synthetic_example": {
+        "cash_flows": [
+          -1000.0,
+          300.0,
+          400.0,
+          500.0
+        ],
+        "i": 0.05
+      }
+    },
+    "economics.modified_bc": {
+      "title": "Modified benefit-cost ratio ((B \u2212 O&M)/C)",
+      "variables": [
+        {
+          "name": "mbc",
+          "unit": "",
+          "desc": "modified benefit-cost ratio",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "B",
+          "unit": "",
+          "desc": "present worth of benefits",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "O",
+          "unit": "",
+          "desc": "present worth of operating and maintenance costs",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "present worth of initial investment",
+          "lo": 0.001,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "mbc = (B - O)/C"
+      ],
+      "procedure": null,
+      "outputs": [
+        "mbc"
+      ],
+      "assumptions": [
+        "Operating and maintenance costs are subtracted from benefits in the numerator and only the initial investment appears in the denominator (the modified B/C convention). A project is attractive when mbc > 1."
+      ],
+      "method_references": [
+        "Modified B/C = (PW(benefits) \u2212 PW(O&M))/PW(initial investment)"
+      ],
+      "synthetic_example": {
+        "B": 120000.0,
+        "O": 30000.0,
+        "C": 80000.0
+      }
+    },
+    "economics.continuous_compounding": {
+      "title": "Effective rate under continuous compounding (i_eff = e^r \u2212 1)",
+      "variables": [
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "nominal annual rate (continuously compounded)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i_eff",
+          "unit": "",
+          "desc": "effective annual rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "i_eff = exp(r) - 1"
+      ],
+      "procedure": null,
+      "outputs": [
+        "i_eff"
+      ],
+      "assumptions": [
+        "This is the m \u2192 \u221e limit of the nominal-rate formula i_eff = (1 + r/m)^m \u2212 1."
+      ],
+      "method_references": [
+        "i_eff = e^r \u2212 1 (continuous compounding)"
+      ],
+      "synthetic_example": {
+        "r": 0.1
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "economics-001",
+      "calculator": "economics.simple_interest",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 1000.0,
+        "i": "5 percent",
+        "n": 3.0
+      },
+      "solve_for": [
+        "F",
+        "I"
+      ],
+      "expected_as_specified": {
+        "F": 1150.0,
+        "I": 150.0
+      },
+      "expected_SI": {
+        "F": 1150.0,
+        "I": 150.0
+      },
+      "actual_SI": {
+        "F": {
+          "value": 1150.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.simple_interest (symbolic)"
+        },
+        "I": {
+          "value": 150.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.simple_interest (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.3000000000000003,
+          "passed": true
+        },
+        "I": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.3,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 1000(1 + 3\u00b70.05) = 1150; I = 1000\u00b70.05\u00b73 = 150"
+      }
+    },
+    {
+      "id": "economics-002",
+      "calculator": "economics.simple_interest",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 1000.0,
+        "n": 3.0,
+        "F": 1150.0
+      },
+      "solve_for": [
+        "i",
+        "I"
+      ],
+      "expected_as_specified": {
+        "i": 0.05
+      },
+      "expected_SI": {
+        "i": 0.05
+      },
+      "actual_SI": {
+        "i": {
+          "value": 0.05,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.simple_interest (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "i": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "i = (F/P \u2212 1)/n = (1.15 \u2212 1)/3 = 0.05"
+      }
+    },
+    {
+      "id": "economics-003",
+      "calculator": "economics.compound_interest",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 5000.0,
+        "i": "6 percent",
+        "n": 5.0
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expected_as_specified": {
+        "F": 6691.1279
+      },
+      "expected_SI": {
+        "F": 6691.1279
+      },
+      "actual_SI": {
+        "F": {
+          "value": 6691.127888000002,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.compound_interest (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 1.199999860546086e-05,
+          "relative_error": 1.7934194032460296e-09,
+          "allowed_absolute_error": 13.382255800000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 5000\u00b71.06\u2075 = 5000\u00b71.338226 = 6691.128"
+      }
+    },
+    {
+      "id": "economics-004",
+      "calculator": "economics.compound_interest",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 1000.0,
+        "i": 0.05,
+        "F": 1157.625
+      },
+      "solve_for": [
+        "n"
+      ],
+      "expected_as_specified": {
+        "n": 3.0
+      },
+      "expected_SI": {
+        "n": 3.0
+      },
+      "actual_SI": {
+        "n": {
+          "value": 3.0000000000000067,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.compound_interest (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n": {
+          "absolute_error": 6.661338147750939e-15,
+          "relative_error": 2.220446049250313e-15,
+          "allowed_absolute_error": 0.006,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "n = ln(F/P)/ln(1+i) = ln(1.157625)/ln(1.05) = 0.14635/0.048790 = 3.0"
+      }
+    },
+    {
+      "id": "economics-005",
+      "calculator": "economics.effective_rate",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "r": "12 percent",
+        "m": 12.0
+      },
+      "solve_for": [
+        "i_eff"
+      ],
+      "expected_as_specified": {
+        "i_eff": 0.126825
+      },
+      "expected_SI": {
+        "i_eff": 0.126825
+      },
+      "actual_SI": {
+        "i_eff": {
+          "value": 0.12682503013196889,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.effective_rate (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "i_eff": {
+          "absolute_error": 3.013196889223302e-08,
+          "relative_error": 2.3758698121216654e-07,
+          "allowed_absolute_error": 0.00025365,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "i_eff = (1 + 0.12/12)^12 \u2212 1 = 1.01^12 \u2212 1 = 1.126825 \u2212 1 = 0.126825"
+      }
+    },
+    {
+      "id": "economics-006",
+      "calculator": "economics.effective_rate",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "r": 0.12,
+        "i_eff": 0.126825
+      },
+      "solve_for": [
+        "m"
+      ],
+      "expected_as_specified": {
+        "m": 12.0
+      },
+      "expected_SI": {
+        "m": 12.0
+      },
+      "actual_SI": {
+        "m": {
+          "value": 11.999458066798937,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.effective_rate (numeric)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "m": {
+          "absolute_error": 0.0005419332010632161,
+          "relative_error": 4.516110008860134e-05,
+          "allowed_absolute_error": 0.024,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "monthly compounding: 1.01^12 = 1.126825, so m = 12"
+      }
+    },
+    {
+      "id": "economics-007",
+      "calculator": "economics.annual_worth",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 5000.0,
+        "i": "6 percent",
+        "n": 5.0
+      },
+      "solve_for": [
+        "A"
+      ],
+      "expected_as_specified": {
+        "A": 1186.982
+      },
+      "expected_SI": {
+        "A": 1186.982
+      },
+      "actual_SI": {
+        "A": {
+          "value": 1186.9820021559474,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.annual_worth (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 2.1559474134846823e-06,
+          "relative_error": 1.8163269649284339e-09,
+          "allowed_absolute_error": 2.373964,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "CRF = i(1+i)^n/((1+i)^n\u22121) = 0.06\u00b71.338226/0.338226 = 0.237397; A = 5000\u00b70.237397 = 1186.98"
+      }
+    },
+    {
+      "id": "economics-008",
+      "calculator": "economics.annual_worth",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A": 1186.982,
+        "i": 0.06,
+        "n": 5.0
+      },
+      "solve_for": [
+        "P"
+      ],
+      "expected_as_specified": {
+        "P": 5000.0
+      },
+      "expected_SI": {
+        "P": 5000.0
+      },
+      "actual_SI": {
+        "P": {
+          "value": 4999.999990918366,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.annual_worth (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P": {
+          "absolute_error": 9.08163383428473e-06,
+          "relative_error": 1.816326766856946e-09,
+          "allowed_absolute_error": 10.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = A/CRF = 1186.982/0.237397 = 5000"
+      }
+    },
+    {
+      "id": "economics-009",
+      "calculator": "economics.sinking_fund",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": 5000.0,
+        "i": "6 percent",
+        "n": 5.0
+      },
+      "solve_for": [
+        "A"
+      ],
+      "expected_as_specified": {
+        "A": 886.982
+      },
+      "expected_SI": {
+        "A": 886.982
+      },
+      "actual_SI": {
+        "A": {
+          "value": 886.9820021559474,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.sinking_fund (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 2.1559474134846823e-06,
+          "relative_error": 2.4306552032450292e-09,
+          "allowed_absolute_error": 1.7739639999999999,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = F\u00b7i/((1+i)^n\u22121) = 5000\u00b70.06/0.338226 = 886.98"
+      }
+    },
+    {
+      "id": "economics-010",
+      "calculator": "economics.irr",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cash_flows": [
+          -100.0,
+          60.0,
+          60.0
+        ]
+      },
+      "solve_for": [
+        "irr"
+      ],
+      "expected_as_specified": {
+        "irr": [
+          0.1306624
+        ]
+      },
+      "expected_SI": {
+        "irr": [
+          0.1306624
+        ]
+      },
+      "actual_SI": {
+        "irr": {
+          "value": [
+            0.1306623862918075
+          ],
+          "kind": "derived",
+          "method": "mechcalc economics.irr (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "irr": [
+          {
+            "absolute_error": 1.370819252555222e-08,
+            "relative_error": 1.0491306240779458e-07,
+            "allowed_absolute_error": 0.0002613248,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "NPV(r)\u00b7(1+r)\u00b2 = \u2212100(1+r)\u00b2 + 60(1+r) + 60 = 0 \u2192 (1+r) = (60 + \u221a(3600+24000))/200 = 1.130662 \u2192 IRR = 13.066 %"
+      }
+    },
+    {
+      "id": "economics-011",
+      "calculator": "economics.irr",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cash_flows": [
+          -100.0,
+          230.0,
+          -132.0
+        ]
+      },
+      "solve_for": [
+        "irr"
+      ],
+      "expected_as_specified": {
+        "irr": [
+          0.1,
+          0.2
+        ]
+      },
+      "expected_SI": {
+        "irr": [
+          0.1,
+          0.2
+        ]
+      },
+      "actual_SI": {
+        "irr": {
+          "value": [
+            0.09999999999999987,
+            0.1999999999999984
+          ],
+          "kind": "derived",
+          "method": "mechcalc economics.irr (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "irr": [
+          {
+            "absolute_error": 1.3877787807814457e-16,
+            "relative_error": 1.3877787807814457e-15,
+            "allowed_absolute_error": 0.0002,
+            "passed": true
+          },
+          {
+            "absolute_error": 1.609823385706477e-15,
+            "relative_error": 8.049116928532385e-15,
+            "allowed_absolute_error": 0.0004,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u2212100(1+r)\u00b2 + 230(1+r) \u2212 132 = 0 \u2192 (1+r) = (230 \u00b1 10)/200 = 1.2 or 1.1 \u2192 IRR = 20 % and 10 % (two sign changes)"
+      }
+    },
+    {
+      "id": "economics-012",
+      "calculator": "economics.irr",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cash_flows": [
+          -1000.0,
+          300.0,
+          400.0,
+          500.0
+        ]
+      },
+      "solve_for": [
+        "irr"
+      ],
+      "expected_as_specified": {
+        "irr": [
+          0.0889634
+        ]
+      },
+      "expected_SI": {
+        "irr": [
+          0.0889634
+        ]
+      },
+      "actual_SI": {
+        "irr": {
+          "value": [
+            0.0889633946933499
+          ],
+          "kind": "derived",
+          "method": "mechcalc economics.irr (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "irr": [
+          {
+            "absolute_error": 5.306650091574383e-09,
+            "relative_error": 5.964981207523974e-08,
+            "allowed_absolute_error": 0.0001779268,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "numpy.roots of \u22121000x\u00b3 + 300x\u00b2 + 400x + 500 = 0 \u2192 x = 1.088963 \u2192 IRR = 8.896 %"
+      }
+    },
+    {
+      "id": "economics-013",
+      "calculator": "economics.irr",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cash_flows": [
+          1.0,
+          -2.0,
+          1.0
+        ]
+      },
+      "solve_for": [
+        "irr"
+      ],
+      "expected_as_specified": {
+        "irr": [
+          0.0
+        ]
+      },
+      "expected_SI": {
+        "irr": [
+          0.0
+        ]
+      },
+      "actual_SI": {
+        "irr": {
+          "value": [
+            0.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc economics.irr (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "irr": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Tangent (double) root: NPV\u00b7(1+r)\u00b2 = (1+r)\u00b2 \u2212 2(1+r) + 1 = r\u00b2 = 0 \u2192 IRR = 0 (even multiplicity; NPV touches zero without a sign change)"
+      }
+    },
+    {
+      "id": "economics-014",
+      "calculator": "economics.irr",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cash_flows": [
+          -1000.0,
+          5000.0,
+          -8000.0,
+          4000.0
+        ]
+      },
+      "solve_for": [
+        "irr"
+      ],
+      "expected_as_specified": {
+        "irr": [
+          0.0,
+          1.0
+        ]
+      },
+      "expected_SI": {
+        "irr": [
+          0.0,
+          1.0
+        ]
+      },
+      "actual_SI": {
+        "irr": {
+          "value": [
+            2.220446049250313e-16,
+            0.9999999999999993
+          ],
+          "kind": "derived",
+          "method": "mechcalc economics.irr (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "irr": [
+          {
+            "absolute_error": 2.220446049250313e-16,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          {
+            "absolute_error": 6.661338147750939e-16,
+            "relative_error": 6.661338147750939e-16,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u22121000x\u00b3 + 5000x\u00b2 \u2212 8000x + 4000 = \u22121000(x\u22121)(x\u22122)\u00b2 = 0 \u2192 x = 1 (r = 0) and x = 2 (r = 1.0, double root)"
+      }
+    },
+    {
+      "id": "economics-015",
+      "calculator": "economics.irr",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cash_flows": [
+          -100.0,
+          0.6
+        ]
+      },
+      "solve_for": [
+        "irr"
+      ],
+      "expected_as_specified": {
+        "irr": [
+          -0.994
+        ]
+      },
+      "expected_SI": {
+        "irr": [
+          -0.994
+        ]
+      },
+      "actual_SI": {
+        "irr": {
+          "value": [
+            -0.994
+          ],
+          "kind": "derived",
+          "method": "mechcalc economics.irr (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "irr": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.001988,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "NPV(r) = \u2212100 + 0.6/(1+r) = 0 \u2192 1 + r = 0.006 \u2192 r = \u22120.994 (rate near \u2212100 %)"
+      }
+    },
+    {
+      "id": "economics-016",
+      "calculator": "economics.payback",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C0": 15000.0,
+        "A": 2500.0
+      },
+      "solve_for": [
+        "PP"
+      ],
+      "expected_as_specified": {
+        "PP": 6.0
+      },
+      "expected_SI": {
+        "PP": 6.0
+      },
+      "actual_SI": {
+        "PP": {
+          "value": 6.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.payback (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "PP": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.012,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "PP = 15000/2500 = 6 periods"
+      }
+    },
+    {
+      "id": "economics-017",
+      "calculator": "economics.benefit_cost_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "B": 120000.0,
+        "C": 100000.0
+      },
+      "solve_for": [
+        "bc"
+      ],
+      "expected_as_specified": {
+        "bc": 1.2
+      },
+      "expected_SI": {
+        "bc": 1.2
+      },
+      "actual_SI": {
+        "bc": {
+          "value": 1.2,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.benefit_cost_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "bc": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0024,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "B/C = 120000/100000 = 1.2"
+      }
+    },
+    {
+      "id": "economics-018",
+      "calculator": "economics.depreciation_sl",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 2.0
+      },
+      "solve_for": [
+        "BV_k",
+        "D"
+      ],
+      "expected_as_specified": {
+        "D": 1800.0,
+        "BV_k": 6400.0
+      },
+      "expected_SI": {
+        "D": 1800.0,
+        "BV_k": 6400.0
+      },
+      "actual_SI": {
+        "D": {
+          "value": 1800.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_sl (procedure)"
+        },
+        "BV_k": {
+          "value": 6400.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_sl (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "D": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 3.6,
+          "passed": true
+        },
+        "BV_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 12.8,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = (10000 \u2212 1000)/5 = 1800; BV_2 = 10000 \u2212 2\u00b71800 = 6400"
+      }
+    },
+    {
+      "id": "economics-019",
+      "calculator": "economics.depreciation_sl",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 5.0
+      },
+      "solve_for": [
+        "BV_k",
+        "D"
+      ],
+      "expected_as_specified": {
+        "D": 1800.0,
+        "BV_k": 1000.0
+      },
+      "expected_SI": {
+        "D": 1800.0,
+        "BV_k": 1000.0
+      },
+      "actual_SI": {
+        "D": {
+          "value": 1800.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_sl (procedure)"
+        },
+        "BV_k": {
+          "value": 1000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_sl (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "D": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 3.6,
+          "passed": true
+        },
+        "BV_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "End of life: BV_5 = 10000 \u2212 5\u00b71800 = 1000 = salvage"
+      }
+    },
+    {
+      "id": "economics-020",
+      "calculator": "economics.depreciation_db",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 10000.0,
+        "d": 0.4,
+        "k": 2.0
+      },
+      "solve_for": [
+        "BV_k",
+        "D_k"
+      ],
+      "expected_as_specified": {
+        "BV_k": 3600.0,
+        "D_k": 2400.0
+      },
+      "expected_SI": {
+        "BV_k": 3600.0,
+        "D_k": 2400.0
+      },
+      "actual_SI": {
+        "BV_k": {
+          "value": 3600.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_db (symbolic)"
+        },
+        "D_k": {
+          "value": 2400.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_db (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "BV_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 7.2,
+          "passed": true
+        },
+        "D_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4.8,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "BV_2 = 10000\u00b70.6\u00b2 = 3600; D_2 = 10000\u00b70.6\u00b70.4 = 2400"
+      }
+    },
+    {
+      "id": "economics-021",
+      "calculator": "economics.depreciation_db",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 10000.0,
+        "d": 0.4,
+        "k": 1.0
+      },
+      "solve_for": [
+        "BV_k",
+        "D_k"
+      ],
+      "expected_as_specified": {
+        "BV_k": 6000.0,
+        "D_k": 4000.0
+      },
+      "expected_SI": {
+        "BV_k": 6000.0,
+        "D_k": 4000.0
+      },
+      "actual_SI": {
+        "BV_k": {
+          "value": 6000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_db (symbolic)"
+        },
+        "D_k": {
+          "value": 4000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_db (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "BV_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 12.0,
+          "passed": true
+        },
+        "D_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 8.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D_1 = 10000\u00b70.4 = 4000; BV_1 = 6000"
+      }
+    },
+    {
+      "id": "economics-022",
+      "calculator": "economics.depreciation_soyd",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 2.0
+      },
+      "solve_for": [
+        "D_k",
+        "BV_k",
+        "SOYD"
+      ],
+      "expected_as_specified": {
+        "SOYD": 15.0,
+        "D_k": 2400.0,
+        "BV_k": 4600.0
+      },
+      "expected_SI": {
+        "SOYD": 15.0,
+        "D_k": 2400.0,
+        "BV_k": 4600.0
+      },
+      "actual_SI": {
+        "SOYD": {
+          "value": 15.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_soyd (procedure)"
+        },
+        "D_k": {
+          "value": 2400.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_soyd (procedure)"
+        },
+        "BV_k": {
+          "value": 4600.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_soyd (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "SOYD": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.03,
+          "passed": true
+        },
+        "D_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4.8,
+          "passed": true
+        },
+        "BV_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 9.200000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "SOYD = 5\u00b76/2 = 15; D_2 = 9000\u00b74/15 = 2400; BV_2 = 10000 \u2212 9000\u00b7(12\u22123)/15 = 10000 \u2212 5400 = 4600"
+      }
+    },
+    {
+      "id": "economics-023",
+      "calculator": "economics.depreciation_soyd",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 1.0
+      },
+      "solve_for": [
+        "D_k",
+        "BV_k",
+        "SOYD"
+      ],
+      "expected_as_specified": {
+        "SOYD": 15.0,
+        "D_k": 3000.0,
+        "BV_k": 7000.0
+      },
+      "expected_SI": {
+        "SOYD": 15.0,
+        "D_k": 3000.0,
+        "BV_k": 7000.0
+      },
+      "actual_SI": {
+        "SOYD": {
+          "value": 15.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_soyd (procedure)"
+        },
+        "D_k": {
+          "value": 3000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_soyd (procedure)"
+        },
+        "BV_k": {
+          "value": 7000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_soyd (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "SOYD": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.03,
+          "passed": true
+        },
+        "D_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 6.0,
+          "passed": true
+        },
+        "BV_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 14.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D_1 = 9000\u00b75/15 = 3000; BV_1 = 10000 \u2212 9000\u00b7(6\u22121)/15 = 10000 \u2212 3000 = 7000"
+      }
+    },
+    {
+      "id": "economics-024",
+      "calculator": "economics.depreciation_table",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 10000.0,
+        "rates": [
+          20.0,
+          32.0,
+          19.2,
+          11.52,
+          11.52,
+          5.76
+        ]
+      },
+      "solve_for": [
+        "first_year",
+        "depreciation",
+        "book_values"
+      ],
+      "expected_as_specified": {
+        "first_year": 2000.0,
+        "depreciation": [
+          2000.0,
+          3200.0,
+          1920.0,
+          1152.0,
+          1152.0,
+          576.0
+        ],
+        "book_values": [
+          8000.0,
+          4800.0,
+          2880.0,
+          1728.0,
+          576.0,
+          0.0
+        ]
+      },
+      "expected_SI": {
+        "first_year": 2000.0,
+        "depreciation": [
+          2000.0,
+          3200.0,
+          1920.0,
+          1152.0,
+          1152.0,
+          576.0
+        ],
+        "book_values": [
+          8000.0,
+          4800.0,
+          2880.0,
+          1728.0,
+          576.0,
+          0.0
+        ]
+      },
+      "actual_SI": {
+        "first_year": {
+          "value": 2000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_table (procedure)"
+        },
+        "depreciation": {
+          "value": [
+            2000.0,
+            3200.0,
+            1920.0,
+            1152.0,
+            1152.0,
+            576.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_table (procedure)",
+          "unit": ""
+        },
+        "book_values": {
+          "value": [
+            8000.0,
+            4800.0,
+            2880.0,
+            1728.0,
+            576.0,
+            0.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_table (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "first_year": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4.0,
+          "passed": true
+        },
+        "depreciation": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 4.0,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 6.4,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 3.84,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 2.3040000000000003,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 2.3040000000000003,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 1.1520000000000001,
+            "passed": true
+          }
+        ],
+        "book_values": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 16.0,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 9.6,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 5.76,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 3.456,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 1.1520000000000001,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "MACRS 5-year rates applied to P = 10000: 20 % \u2192 2000, 32 % \u2192 3200, \u2026; book values subtract cumulatively to 0"
+      }
+    },
+    {
+      "id": "economics-025",
+      "calculator": "economics.break_even",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "FC": 10000.0,
+        "p": 50.0,
+        "v": 30.0
+      },
+      "solve_for": [
+        "Q",
+        "R"
+      ],
+      "expected_as_specified": {
+        "Q": 500.0,
+        "R": 25000.0
+      },
+      "expected_SI": {
+        "Q": 500.0,
+        "R": 25000.0
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 500.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.break_even (symbolic)"
+        },
+        "R": {
+          "value": 25000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.break_even (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.0,
+          "passed": true
+        },
+        "R": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 50.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = 10000/(50\u221230) = 500; R = 50\u00b7500 = 25000"
+      }
+    },
+    {
+      "id": "economics-026",
+      "calculator": "economics.break_even",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "FC": 20000.0,
+        "p": 40.0,
+        "v": 25.0
+      },
+      "solve_for": [
+        "Q",
+        "R"
+      ],
+      "expected_as_specified": {
+        "Q": 1333.3333,
+        "R": 53333.3333
+      },
+      "expected_SI": {
+        "Q": 1333.3333,
+        "R": 53333.3333
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 1333.3333333333333,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.break_even (symbolic)"
+        },
+        "R": {
+          "value": 53333.333333333336,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.break_even (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q": {
+          "absolute_error": 3.333333324917476e-05,
+          "relative_error": 2.500000056188108e-08,
+          "allowed_absolute_error": 2.6666666,
+          "passed": true
+        },
+        "R": {
+          "absolute_error": 3.3333337341900915e-05,
+          "relative_error": 6.250000755512672e-10,
+          "allowed_absolute_error": 106.6666666,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = 20000/15 = 1333.333; R = 40\u00b71333.333 = 53333.33"
+      }
+    },
+    {
+      "id": "economics-027",
+      "calculator": "economics.life_cycle_cost",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C0": 100000.0,
+        "C_annual": 5000.0,
+        "i": "5 percent",
+        "n": 10.0
+      },
+      "solve_for": [
+        "LCC"
+      ],
+      "expected_as_specified": {
+        "LCC": 138608.67
+      },
+      "expected_SI": {
+        "LCC": 138608.67
+      },
+      "actual_SI": {
+        "LCC": {
+          "value": 138608.6746459241,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.life_cycle_cost (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "LCC": {
+          "absolute_error": 0.004645924083888531,
+          "relative_error": 3.351827907942938e-08,
+          "allowed_absolute_error": 277.21734000000004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "PW factor = ((1.05)^10 \u2212 1)/(0.05\u00b71.05^10) = 7.72173; LCC = 100000 + 5000\u00b77.72173 = 138608.7"
+      }
+    },
+    {
+      "id": "economics-028",
+      "calculator": "economics.annual_worth",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 1000.0,
+        "i": 0.0,
+        "n": 3.0
+      },
+      "solve_for": [
+        "A"
+      ],
+      "expected_as_specified": {
+        "A": 333.3333
+      },
+      "expected_SI": {
+        "A": 333.3333
+      },
+      "actual_SI": {
+        "A": {
+          "value": 333.3333333333333,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.annual_worth (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 3.3333333306018176e-05,
+          "relative_error": 1.0000000991805551e-07,
+          "allowed_absolute_error": 0.6666666,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "i = 0 limit of the capital-recovery factor: A = P/n = 1000/3 = 333.333 (the 0/0 form i(1+i)^n/((1+i)^n\u22121) is replaced by its limit)"
+      }
+    },
+    {
+      "id": "economics-029",
+      "calculator": "economics.sinking_fund",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": 1000.0,
+        "i": 0.0,
+        "n": 4.0
+      },
+      "solve_for": [
+        "A"
+      ],
+      "expected_as_specified": {
+        "A": 250.0
+      },
+      "expected_SI": {
+        "A": 250.0
+      },
+      "actual_SI": {
+        "A": {
+          "value": 250.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.sinking_fund (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.5,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "i = 0 limit of the sinking-fund factor: A = F/n = 1000/4 = 250"
+      }
+    },
+    {
+      "id": "economics-030",
+      "calculator": "economics.life_cycle_cost",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C0": 100000.0,
+        "C_annual": 5000.0,
+        "i": 0.0,
+        "n": 10.0
+      },
+      "solve_for": [
+        "LCC"
+      ],
+      "expected_as_specified": {
+        "LCC": 150000.0
+      },
+      "expected_SI": {
+        "LCC": 150000.0
+      },
+      "actual_SI": {
+        "LCC": {
+          "value": 150000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.life_cycle_cost (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "LCC": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 300.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "i = 0 limit: no discounting, LCC = C0 + n\u00b7C_annual = 100000 + 10\u00b75000 = 150000"
+      }
+    },
+    {
+      "id": "economics-031",
+      "calculator": "economics.depreciation_soyd",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 5.0
+      },
+      "solve_for": [
+        "D_k",
+        "BV_k",
+        "SOYD"
+      ],
+      "expected_as_specified": {
+        "SOYD": 15.0,
+        "D_k": 600.0,
+        "BV_k": 1000.0
+      },
+      "expected_SI": {
+        "SOYD": 15.0,
+        "D_k": 600.0,
+        "BV_k": 1000.0
+      },
+      "actual_SI": {
+        "SOYD": {
+          "value": 15.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_soyd (procedure)"
+        },
+        "D_k": {
+          "value": 600.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_soyd (procedure)"
+        },
+        "BV_k": {
+          "value": 1000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.depreciation_soyd (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "SOYD": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.03,
+          "passed": true
+        },
+        "D_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.2,
+          "passed": true
+        },
+        "BV_k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "End of life (k = n): SOYD = 15; D_5 = 9000\u00b7(5\u22125+1)/15 = 600; BV_5 = 10000 \u2212 9000 = 1000 = salvage"
+      }
+    },
+    {
+      "id": "economics-032",
+      "calculator": "economics.cash_flow_series",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cash_flows": [
+          -1000.0,
+          300.0,
+          400.0,
+          500.0
+        ],
+        "i": "5 percent"
+      },
+      "solve_for": [
+        "npv",
+        "fw",
+        "aw",
+        "payback"
+      ],
+      "expected_as_specified": {
+        "npv": 80.444876,
+        "fw": 93.125,
+        "aw": 29.540048,
+        "payback": 2.81375
+      },
+      "expected_SI": {
+        "npv": 80.444876,
+        "fw": 93.125,
+        "aw": 29.540048,
+        "payback": 2.81375
+      },
+      "actual_SI": {
+        "npv": {
+          "value": 80.44487636324368,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.cash_flow_series (procedure)"
+        },
+        "fw": {
+          "value": 93.12499999999997,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.cash_flow_series (procedure)"
+        },
+        "aw": {
+          "value": 29.54004758128466,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.cash_flow_series (procedure)"
+        },
+        "payback": {
+          "value": 2.8137499999999998,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.cash_flow_series (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "npv": {
+          "absolute_error": 3.6324368579698785e-07,
+          "relative_error": 4.5154359588668875e-09,
+          "allowed_absolute_error": 0.160889752,
+          "passed": true
+        },
+        "fw": {
+          "absolute_error": 2.842170943040401e-14,
+          "relative_error": 3.051995643533316e-16,
+          "allowed_absolute_error": 0.18625,
+          "passed": true
+        },
+        "aw": {
+          "absolute_error": 4.1871533795756477e-07,
+          "relative_error": 1.4174497548465892e-08,
+          "allowed_absolute_error": 0.059080096,
+          "passed": true
+        },
+        "payback": {
+          "absolute_error": 4.440892098500626e-16,
+          "relative_error": 1.5782823984009332e-16,
+          "allowed_absolute_error": 0.0056275000000000006,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Discounted flows: \u22121000, 285.71429, 362.81179, 431.91877 \u2192 NPV = 80.44488; FW = NPV\u00b71.05\u00b3 = 93.125; AW = NPV\u00b7CRF(5 %, 3) = 80.44488\u00b70.3672086 = 29.54005; payback = 2 + (1000 \u2212 285.71429 \u2212 362.81179)/431.91877 = 2 + 0.81375 = 2.81375"
+      }
+    },
+    {
+      "id": "economics-033",
+      "calculator": "economics.modified_bc",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "B": 120000.0,
+        "O": 30000.0,
+        "C": 80000.0
+      },
+      "solve_for": [
+        "mbc"
+      ],
+      "expected_as_specified": {
+        "mbc": 1.125
+      },
+      "expected_SI": {
+        "mbc": 1.125
+      },
+      "actual_SI": {
+        "mbc": {
+          "value": 1.125,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.modified_bc (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "mbc": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0022500000000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "mbc = (B \u2212 O)/C = (120000 \u2212 30000)/80000 = 90000/80000 = 1.125"
+      }
+    },
+    {
+      "id": "economics-034",
+      "calculator": "economics.continuous_compounding",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "r": "10 percent"
+      },
+      "solve_for": [
+        "i_eff"
+      ],
+      "expected_as_specified": {
+        "i_eff": 0.1051709
+      },
+      "expected_SI": {
+        "i_eff": 0.1051709
+      },
+      "actual_SI": {
+        "i_eff": {
+          "value": 0.10517091807564771,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.continuous_compounding (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "i_eff": {
+          "absolute_error": 1.8075647714721477e-08,
+          "relative_error": 1.7186928812743333e-07,
+          "allowed_absolute_error": 0.0002103418,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "i_eff = e^0.1 \u2212 1 = 1.1051709 \u2212 1 = 0.1051709"
+      }
+    },
+    {
+      "id": "economics-035",
+      "calculator": "economics.cash_flow_series",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cash_flows": [
+          -1000,
+          500,
+          500
+        ],
+        "i": 0.1
+      },
+      "solve_for": [
+        "npv",
+        "fw",
+        "aw",
+        "payback"
+      ],
+      "expected_as_specified": {
+        "npv": -132.2314,
+        "fw": -160.0
+      },
+      "expected_SI": {
+        "npv": -132.2314,
+        "fw": -160.0
+      },
+      "actual_SI": {
+        "npv": {
+          "value": -132.23140495867779,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.cash_flow_series (procedure)"
+        },
+        "fw": {
+          "value": -160.00000000000014,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc economics.cash_flow_series (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "npv": {
+          "absolute_error": 4.958677777722187e-06,
+          "relative_error": 3.7500002100274115e-08,
+          "allowed_absolute_error": 0.0661157,
+          "passed": true
+        },
+        "fw": {
+          "absolute_error": 1.4210854715202004e-13,
+          "relative_error": 8.881784197001252e-16,
+          "allowed_absolute_error": 0.08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Rejected project: NPV = \u22121000 + 500/1.1 + 500/1.21 = \u22121000 + 454.5455 + 413.2231 = \u2212132.2314; FW = NPV\u00b71.1\u00b2 = \u2212160.0; payback undefined (warning)."
+      }
+    }
+  ],
+  "passed": 35,
+  "failed": 0
+}

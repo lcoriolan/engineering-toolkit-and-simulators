@@ -1,0 +1,485 @@
+{
+  "section": "section_props",
+  "cases": [
+    {
+      "calc": "section_props.first_moment",
+      "inputs": {
+        "A": "200 cm^2",
+        "ybar": "10 cm"
+      },
+      "expect": {
+        "Q": "0.002 m^3"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = A·ybar = 0.02 m^2 x 0.1 m = 0.002 m^3"
+      }
+    },
+    {
+      "calc": "section_props.parallel_axis",
+      "inputs": {
+        "I": "8e-6 m^4",
+        "A": "0.02 m^2",
+        "d": "0.1 m"
+      },
+      "expect": {
+        "I_prime": "2.08e-4 m^4"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "I' = 8e-6 + 0.02 x 0.01 = 8e-6 + 2e-4 = 2.08e-4 m^4"
+      }
+    },
+    {
+      "calc": "section_props.parallel_axis",
+      "inputs": {
+        "I_prime": "2.08e-4 m^4",
+        "I": "8e-6 m^4",
+        "A": "0.02 m^2"
+      },
+      "solve_for": [
+        "d"
+      ],
+      "expect": {
+        "d": "0.1 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "d = sqrt((I' - I)/A) = sqrt(2e-4/0.02) = sqrt(0.01) = 0.1 m"
+      }
+    },
+    {
+      "calc": "section_props.section_modulus",
+      "inputs": {
+        "I": "8e-6 m^4",
+        "c": "0.1 m"
+      },
+      "expect": {
+        "S": "8e-5 m^3"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "S = I/c = 8e-6/0.1 = 8e-5 m^3"
+      }
+    },
+    {
+      "calc": "section_props.radius_gyration",
+      "inputs": {
+        "I": "8e-6 m^4",
+        "A": "0.02 m^2"
+      },
+      "expect": {
+        "r": "0.02 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r = sqrt(8e-6/0.02) = sqrt(4e-4) = 0.02 m"
+      }
+    },
+    {
+      "calc": "section_props.principal_axes",
+      "inputs": {
+        "Ix": "10e-6 m^4",
+        "Iy": "4e-6 m^4",
+        "Ixy": "3e-6 m^4"
+      },
+      "expect": {
+        "I1": "1.1242641e-5 m^4",
+        "I2": "2.7573593e-6 m^4",
+        "theta_p": "-22.5 deg"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "avg = 7e-6; R = sqrt(3e-6^2 + 3e-6^2) = 4.24264e-6; I1 = 1.124264e-5, I2 = 2.757359e-6; theta_p = 1/2 atan2(-2·3, 10-4) = 1/2 atan2(-6, 6) = -22.5 deg (I1 axis; Ixy = +∫xy dA)"
+      }
+    },
+    {
+      "calc": "section_props.principal_axes",
+      "inputs": {
+        "I1": "1.1242641e-5 m^4",
+        "Ix": "10e-6 m^4",
+        "Iy": "4e-6 m^4"
+      },
+      "solve_for": [
+        "Ixy"
+      ],
+      "expect": {
+        "Ixy": "3e-6 m^4"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Ixy = sqrt(((I1-I2)/2)^2 - ((Ix-Iy)/2)^2) with I2 = Ix+Iy-I1; recovers 3e-6 m^4"
+      }
+    },
+    {
+      "calc": "section_props.rectangle",
+      "inputs": {
+        "b": "200 mm",
+        "h": "10 cm"
+      },
+      "expect": {
+        "A": "0.02 m^2",
+        "Ix": "1.6666667e-5 m^4",
+        "Iy": "6.6666667e-5 m^4",
+        "Zx": "5e-4 m^3",
+        "shape_x": 1.5,
+        "J_t": "4.5776042e-5 m^4"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "b = 0.2 m, h = 0.1 m; A = 0.02; Ix = 0.2·0.001/12 = 1.66667e-5; Iy = 0.1·0.008/12 = 6.66667e-5; Zx = bh^2/4 = 5e-4; shape = 1.5 (landmark); J_t = 0.2·0.001(1/3 - 0.21·0.5(1 - 0.0625/12)) = 4.57760e-5"
+      }
+    },
+    {
+      "calc": "section_props.rectangle",
+      "inputs": {
+        "A": "0.02 m^2",
+        "h": "0.1 m"
+      },
+      "solve_for": [
+        "b"
+      ],
+      "expect": {
+        "b": "0.2 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "b = A/h = 0.02/0.1 = 0.2 m"
+      }
+    },
+    {
+      "calc": "section_props.hollow_rectangle",
+      "inputs": {
+        "b": "0.2 m",
+        "h": "0.1 m",
+        "bi": "0.16 m",
+        "hi": "0.06 m"
+      },
+      "expect": {
+        "A": "0.0104 m^2",
+        "Ix": "1.3786667e-5 m^4",
+        "Zx": "3.56e-4 m^3"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 0.02 - 0.0096 = 0.0104; Ix = (0.2·0.001 - 0.16·0.000216)/12 = (2e-4 - 3.456e-5)/12 = 1.37867e-5; Zx = (b h^2 - bi hi^2)/4 = (2e-3 - 5.76e-4)/4 = 3.56e-4"
+      }
+    },
+    {
+      "calc": "section_props.circle",
+      "inputs": {
+        "d": "0.2 m"
+      },
+      "expect": {
+        "A": "0.03141593 m^2",
+        "Ix": "7.8539816e-5 m^4",
+        "Zx": "1.3333333e-3 m^3",
+        "shape_x": 1.6976527
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = pi·0.04/4 = 0.0314159; Ix = pi·0.0016/64 = 7.85398e-5; Zx = d^3/6 = 1.33333e-3; shape = Z/S = 16/(3pi) = 1.697653 (landmark)"
+      }
+    },
+    {
+      "calc": "section_props.tube",
+      "inputs": {
+        "do": "0.2 m",
+        "di": "0.16 m"
+      },
+      "expect": {
+        "A": "0.01130973 m^2",
+        "Ix": "4.6369908e-5 m^4",
+        "Zx": "6.5066667e-4 m^3",
+        "J_t": "9.2739815e-5 m^4"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = pi(0.04 - 0.0256)/4 = 0.0113097; Ix = pi(0.0016 - 0.00065536)/64 = 4.63699e-5; Zx = (do^3 - di^3)/6 = (0.008 - 0.004096)/6 = 6.50667e-4; J_t = pi(do^4-di^4)/32 = pi(0.00094464)/32 = 9.27398e-5 [Corrected 2026-09-15 03:26 MDT: first draft mis-typed 9.27698e-5]"
+      }
+    },
+    {
+      "calc": "section_props.i_section",
+      "inputs": {
+        "bf": "0.2 m",
+        "tf": "0.02 m",
+        "d": "0.4 m",
+        "tw": "0.01 m"
+      },
+      "expect": {
+        "A": "0.0116 m^2",
+        "Ix": "3.2794667e-4 m^4",
+        "Iy": "2.6696667e-5 m^4",
+        "Zx": "1.844e-3 m^3",
+        "shape_x": 1.1245731
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 2·0.2·0.02 + 0.36·0.01 = 0.0116; Ix = (0.2·0.064 - 0.19·0.046656)/12 = (0.0128 - 0.00886464)/12 = 3.27947e-4; Iy = (2·0.02·0.008 + 0.36e-6)/12 = 2.66967e-5; Zx (closed form) = bf·tf(d-tf) + tw(d-2tf)^2/4 = 0.00152 + 0.000324 = 1.844e-3; shape = 1.844e-3/(Ix/0.2) = 1.12457"
+      }
+    },
+    {
+      "calc": "section_props.channel",
+      "inputs": {
+        "bf": "0.1 m",
+        "tf": "0.012 m",
+        "d": "0.2 m",
+        "tw": "0.008 m"
+      },
+      "expect": {
+        "A": "0.003808 m^2",
+        "xbar": "0.0329916 m",
+        "Ix": "2.4869717e-5 m^4",
+        "Zx": "2.87552e-4 m^3"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 2·0.1·0.012 + 0.176·0.008 = 0.003808; xbar = (bf^2 tf + (d-2tf)tw^2/2)/A = (1.2e-4 + 5.632e-6)/0.003808 = 0.0329916; Ix = (0.1·0.008 - 0.092·0.176^3)/12 = (8e-4 - 5.0157e-4)/12 = 2.48697e-5; Zx = bf tf(d-tf) + tw(d-2tf)^2/4 = 2.256e-4 + 6.1952e-5 = 2.87552e-4"
+      }
+    },
+    {
+      "calc": "section_props.tee",
+      "inputs": {
+        "bf": "0.15 m",
+        "tf": "0.02 m",
+        "d": "0.2 m",
+        "tw": "0.01 m"
+      },
+      "expect": {
+        "A": "0.0048 m^2",
+        "ybar": "0.1525 m",
+        "Ix": "1.621e-5 m^4",
+        "Zx": "1.896e-4 m^3"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 0.15·0.02 + 0.01·0.18 = 0.0048; ybar = (0.003·0.19 + 0.0018·0.09)/0.0048 = 0.1525; Ix = 1e-7 + 4.21875e-6 + 4.86e-6 + 7.03125e-6 = 1.621e-5; Zx by equal-area bisection = 1.896e-4"
+      }
+    },
+    {
+      "calc": "section_props.angle",
+      "inputs": {
+        "L": "0.1 m",
+        "t": "0.01 m"
+      },
+      "expect": {
+        "A": "0.0019 m^2",
+        "xbar": "0.0286842 m",
+        "Ix": "1.8000439e-6 m^4",
+        "I1": "2.8658333e-6 m^4",
+        "theta_p": "45 deg"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = t(2L-t) = 0.01·0.19 = 0.0019; xbar = (L^2+Lt-t^2)/(2(2L-t)) = 0.0109/0.38 = 0.0286842; Ix = [t(L-x)^3 + L x^3 - (L-t)(x-t)^3]/3 = (3.6267e-6+2.3603e-6-5.8716e-7)/3 = 1.80004e-6; Ixy = t^2(2L^2-t^2)/4 - A x^2 = 4.975e-7 - 1.5633e-6 = -1.0658e-6; I1 = Ix+|Ixy| = 2.86583e-6; heel at origin puts the section in the +x+y quadrant, so Ixy < 0 and theta_p = 1/2 atan2(-2·Ixy, 0) = +45 deg (I1 axis along the legs' bisector)"
+      }
+    },
+    {
+      "calc": "section_props.channel_shear_center",
+      "inputs": {
+        "b": "50 mm",
+        "h": "100 mm",
+        "t": "5 mm"
+      },
+      "expect": {
+        "e": "0.01875 m",
+        "Ix": "1.6666667e-6 m^4",
+        "A": "0.001 m^2"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "b=0.05, h=0.1, t=0.005; e = 3b^2/(6b+h) = 0.0075/0.4 = 0.01875 m; Ix = t h^2(h+6b)/12 = 0.005·0.01·0.4/12 = 1.66667e-6; A = t(2b+h) = 0.005·0.2 = 0.001"
+      }
+    },
+    {
+      "calc": "section_props.polygon_properties",
+      "inputs": {
+        "vertices": [
+          [
+            0,
+            0
+          ],
+          [
+            0.2,
+            0
+          ],
+          [
+            0.2,
+            0.1
+          ],
+          [
+            0,
+            0.1
+          ]
+        ]
+      },
+      "expect": {
+        "A": "0.02 m^2",
+        "Ix": "1.6666667e-5 m^4",
+        "Zx": "5e-4 m^3",
+        "Zy": "1e-3 m^3",
+        "shape_y": 1.5
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "0.2 x 0.1 rectangle polygon: A = 0.02, Ix = bh^3/12 = 1.66667e-5, Zx = bh^2/4 = 5e-4, Zy = hb^2/4 = 0.1·0.04/4 = 1e-3, shape_y = 1.5 (rectangle landmark; agrees with the rectangle calculator)"
+      }
+    },
+    {
+      "calc": "section_props.polygon_properties",
+      "inputs": {
+        "vertices": [
+          [
+            0,
+            0
+          ],
+          [
+            0.2,
+            0
+          ],
+          [
+            0,
+            0.1
+          ]
+        ]
+      },
+      "expect": {
+        "A": "0.01 m^2",
+        "xbar": "0.06666667 m",
+        "Ix": "5.5555556e-6 m^4",
+        "Ixy": "-5.5555556e-6 m^4",
+        "Zx": "1.9526215e-4 m^3",
+        "shape_x": 2.3431458,
+        "Zy": "3.9052429e-4 m^3",
+        "shape_y": 2.3431458
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Right triangle b=0.2, h=0.1: A = 0.01; xbar = b/3 = 0.0666667; Ix = bh^3/36 = 5.55556e-6; Ixy = -b^2 h^2/72 = -5.55556e-6; Zx: equal-area axis at c = h(1-1/sqrt2) = 0.0292893, Q_above = b(h-c)^3/(6h) = 1.17851e-4, Zx = 2Q - A(ybar-c) = 1.95262e-4; shape_x = 2.34315 (triangle landmark). For the vertical axis: c = b(1-1/sqrt2) = 0.0585786, Q_above = hb^2/(12·sqrt2) = 2.35702e-4, Zy = 2Q - A(xbar-c) = 4.71405e-4 - 8.08803e-5 = 3.90524e-4; shape_y = 2.34315 (same triangle landmark)"
+      }
+    },
+    {
+      "calc": "section_props.composite",
+      "inputs": {
+        "rects": [
+          [
+            0.1,
+            0.1,
+            0.05,
+            0.05
+          ],
+          [
+            0.1,
+            0.1,
+            0.15,
+            0.15
+          ]
+        ]
+      },
+      "expect": {
+        "A": "0.02 m^2",
+        "Ix": "6.6666667e-5 m^4",
+        "Ixy": "5e-5 m^4",
+        "Zx": "1e-3 m^3",
+        "I1": "1.1666667e-4 m^4",
+        "theta_p": "-45 deg"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two 0.1x0.1 squares at (0.05,0.05) and (0.15,0.15): A = 0.02, centroid (0.1,0.1); Ix = 2(0.1·0.001/12) + 2·0.01·0.0025 = 6.66667e-5; Ixy = 2·0.01·0.0025 = 5e-5; equal-area axis between the squares at c=0.1, Zx = 2·0.01·0.05 = 1e-3; I1 = Ix + |Ixy| = 1.16667e-4; with Ix = Iy and Ixy > 0, theta_p = 1/2 atan2(-2·Ixy, 0) = -45 deg (I1 axis across the +45-deg diagonal pair)"
+      }
+    },
+    {
+      "calc": "section_props.polygon_properties",
+      "inputs": {
+        "vertices": [
+          [
+            1,
+            0
+          ],
+          [
+            1.2,
+            0
+          ],
+          [
+            1.2,
+            0.1
+          ],
+          [
+            1,
+            0.1
+          ]
+        ]
+      },
+      "expect": {
+        "Zx": "5e-4 m^3",
+        "Zy": "1e-3 m^3"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Same 0.2 × 0.1 m rectangle translated to x = 1 m: plastic moduli are translation-invariant, Zx = b h²/4 = 0.2·0.01/4 = 5e-4, Zy = h b²/4 = 0.1·0.04/4 = 1e-3 m³"
+      }
+    },
+    {
+      "calc": "section_props.polygon_properties",
+      "inputs": {
+        "vertices": [
+          [
+            -0.05,
+            0
+          ],
+          [
+            0.05,
+            0
+          ],
+          [
+            0.05,
+            0.01
+          ],
+          [
+            0.005,
+            0.01
+          ],
+          [
+            0.005,
+            0.06
+          ],
+          [
+            -0.005,
+            0.06
+          ],
+          [
+            -0.005,
+            0.01
+          ],
+          [
+            -0.05,
+            0.01
+          ]
+        ]
+      },
+      "expect": {
+        "Zx": "1.6875e-5 m^3",
+        "Zy": "2.625e-5 m^3"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Flange-down tee: flange 100×10 mm (A 1e-3), web 10×50 mm (A 5e-4), total 1.5e-3. Equal-area axis in the flange at y = 7.5 mm. Zx = 7.5e-4·3.75e-3 + 2.5e-4·1.25e-3 + 5e-4·(35 − 7.5)e-3 = 2.8125e-6 + 3.125e-7 + 1.375e-5 = 1.6875e-5. Zy (symmetric about x = 0) = 2·(5e-4·0.025) + 2·(2.5e-4·0.0025) = 2.5e-5 + 1.25e-6 = 2.625e-5 m³. Also matched a 1600² raster integration."
+      }
+    }
+  ]
+}

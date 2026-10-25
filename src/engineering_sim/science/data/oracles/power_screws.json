@@ -1,0 +1,122 @@
+{
+  "section": "power_screws",
+  "cases": [
+    {
+      "calc": "power_screws.power_screw_torque",
+      "inputs": {
+        "F": "5 kN",
+        "d_m": "32 mm",
+        "f": 0.15,
+        "alpha": "0 deg",
+        "n_s": 1,
+        "p": "6 mm"
+      },
+      "expect": {
+        "T_R": "16.9262 N*m",
+        "T_L": "7.16124 N*m",
+        "l": "6 mm",
+        "lam": "3.41554 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Square thread (α=0, secα=1): l = 1·6 = 6 mm; λ = atan(6/(π·32)) = 3.41554°. π·f·d_m = π·0.15·0.032 = 0.0150796, π·d_m = 0.100531, f·l = 0.0009. T_R = F·d_m/2·(l+πfd_m)/(πd_m−fl) = 5000·0.016·0.0210796/0.099631 = 80·0.211577 = 16.9262 N·m. T_L = 80·(0.0150796−0.006)/(0.100531+0.0009) = 80·0.089519 = 7.16124 N·m (positive → self-locking)"
+      }
+    },
+    {
+      "calc": "power_screws.power_screw_torque",
+      "inputs": {
+        "F": "8 kN",
+        "d_m": "40 mm",
+        "f": 0.12,
+        "alpha": "14.5 deg",
+        "n_s": 2,
+        "p": "5 mm"
+      },
+      "expect": {
+        "T_R": "32.8885 N*m",
+        "T_L": "7.02995 N*m",
+        "l": "10 mm",
+        "lam": "4.54987 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Acme 2-start: l = 2·5 = 10 mm; λ = atan(10/(π·40)) = 4.54987°. sec(14.5°) = 1.03293. π·f·d_m·secα = π·0.12·0.04·1.03293 = 0.0155792, π·d_m = 0.125664, f·l·secα = 0.12·0.01·1.03293 = 0.0012395. T_R = 8000·0.02·(0.01+0.0155792)/(0.125664−0.0012395) = 160·0.0255792/0.124424 = 160·0.205581 = 32.893 N·m ≈ 32.8885 (full precision). T_L = 160·(0.0155792−0.01)/(0.125664+0.0012395) = 160·0.043963 = 7.02995 N·m"
+      }
+    },
+    {
+      "calc": "power_screws.power_screw_collar",
+      "inputs": {
+        "F": "5 kN",
+        "f_c": 0.15,
+        "d_c": "50 mm"
+      },
+      "expect": {
+        "T_c": "18.75 N*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T_c = F·f_c·d_c/2 = 5000·0.15·0.05/2 = 18.75 N·m"
+      }
+    },
+    {
+      "calc": "power_screws.power_screw_efficiency",
+      "inputs": {
+        "d_m": "32 mm",
+        "l": "6 mm",
+        "f": 0.15,
+        "alpha": "0 deg"
+      },
+      "expect": {
+        "e": 0.282087,
+        "n_lock": 2.51327
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Square: e = l(πd_m − f·l)/(πd_m(l + πf·d_m)) = 0.006(0.100531−0.0009)/(0.100531·(0.006+0.0150796)) = 0.00059779/0.00211906 = 0.282087; n_lock = π·f·d_m/l = 0.0150796/0.006 = 2.51327 (>1 → self-locking)"
+      }
+    },
+    {
+      "calc": "power_screws.power_screw_efficiency",
+      "inputs": {
+        "n_lock": 1.0,
+        "d_m": "32 mm",
+        "f": 0.15,
+        "alpha": "0 deg"
+      },
+      "solve_for": [
+        "l",
+        "e"
+      ],
+      "expect": {
+        "l": "15.0796 mm",
+        "e": 0.48875
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Self-locking boundary π·f·d_m = l·cosα → l = π·0.15·0.032/1 = 0.0150796 m. e at that lead = l(πd_m − f·l)/(πd_m(l+πfd_m)) = 0.0150796(0.100531−0.0022619)/(0.100531(0.0150796+0.0150796)) = 0.00148187/0.00303191 = 0.48875"
+      }
+    },
+    {
+      "calc": "power_screws.power_screw_thread_stress",
+      "inputs": {
+        "F": "5 kN",
+        "d_m": "32 mm",
+        "d_r": "29 mm",
+        "p": "6 mm",
+        "n_t": 8,
+        "t": "3 mm"
+      },
+      "expect": {
+        "sigma_B": "2.07233 MPa",
+        "c_arm": "1.5 mm",
+        "sigma_b": "6.86013 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Consistent square thread p = 6 mm, d_m = 32, d_r = 29 mm: σ_B = 2·5000/(π·0.032·8·0.006) = 2.07233 MPa; landmark: square thread reduces to Shigley σ_b = 6F/(π d_r n_t p) = 30000/(π·0.029·8·0.006) = 6.86013 MPa; c_arm = (32 − 29)/2 = 1.5 mm = p/4. [Reviewer rewrite 2026-09-15: previous geometry d_r = 26 mm was not a real square thread.]"
+      }
+    }
+  ]
+}

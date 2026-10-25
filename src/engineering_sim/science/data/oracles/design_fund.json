@@ -1,0 +1,235 @@
+{
+  "section": "design_fund",
+  "cases": [
+    {
+      "calc": "design_fund.factor_of_safety",
+      "inputs": {
+        "S": "350 MPa",
+        "sigma": "120 MPa"
+      },
+      "expect": {
+        "n": 2.9166667
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "n = 350/120 = 2.91667"
+      }
+    },
+    {
+      "calc": "design_fund.factor_of_safety",
+      "inputs": {
+        "n": 3.0,
+        "S": "350 MPa"
+      },
+      "solve_for": [
+        "sigma"
+      ],
+      "expect": {
+        "sigma": "116.66667 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma = S/n = 350/3 = 116.667 MPa"
+      }
+    },
+    {
+      "calc": "design_fund.tolerance_stackup",
+      "inputs": {
+        "parts": [
+          [
+            10.0,
+            0.1
+          ],
+          [
+            20.0,
+            0.2
+          ],
+          [
+            5.0,
+            0.05
+          ]
+        ]
+      },
+      "expect": {
+        "total_nominal": 35.0,
+        "worst_max": 35.35,
+        "worst_min": 34.65,
+        "rss_tol": 0.2291288
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "nominal = 10+20+5 = 35; worst max = 35 + (0.1+0.2+0.05) = 35.35; worst min = 35 - 0.35 = 34.65; RSS = sqrt(0.1^2+0.2^2+0.05^2) = sqrt(0.0525) = 0.229129"
+      }
+    },
+    {
+      "calc": "design_fund.limits_fit",
+      "inputs": {
+        "D": "50 mm",
+        "hole_es": "25 um",
+        "hole_ei": "0 um",
+        "shaft_es": "-25 um",
+        "shaft_ei": "-50 um"
+      },
+      "expect": {
+        "D_max": "50.025 mm",
+        "D_min": "50.000 mm",
+        "d_max": "49.975 mm",
+        "d_min": "49.950 mm",
+        "max_clearance": "0.075 mm",
+        "min_clearance": "0.025 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Hole: 50 + 0.025/0 = 50.025/50.000 mm; shaft: 50 - 0.025/0.050 = 49.975/49.950 mm; max clearance = 50.025 - 49.950 = 0.075 mm; min clearance = 50.000 - 49.975 = 0.025 mm (a clearance fit)"
+      }
+    },
+    {
+      "calc": "design_fund.interference_pressure",
+      "inputs": {
+        "delta": "40 um",
+        "d": "50 mm",
+        "d_o": "90 mm",
+        "d_i": "0 mm",
+        "E_o": "207 GPa",
+        "nu_o": 0.3,
+        "E_i": "207 GPa",
+        "nu_i": 0.3
+      },
+      "expect": {
+        "p": "57.244444 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Same material, solid shaft: the nu terms cancel and p = delta E (d_o^2 - d^2)/(2 d d_o^2) = 40e-6 * 207e9 * (0.0081-0.0025)/(2*0.05*0.0081) = 40e-6*207e9*0.0056/0.00081 = 46368/0.00081 = 57.2444 MPa"
+      }
+    },
+    {
+      "calc": "design_fund.interference_pressure",
+      "inputs": {
+        "p": "57.244444 MPa",
+        "d": "50 mm",
+        "d_o": "90 mm",
+        "d_i": "0 mm",
+        "E_o": "207 GPa",
+        "nu_o": 0.3,
+        "E_i": "207 GPa",
+        "nu_i": 0.3
+      },
+      "solve_for": [
+        "delta"
+      ],
+      "expect": {
+        "delta": "40 um"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "delta = p * 2 d d_o^2/(E (d_o^2 - d^2)) = 57.244444e6 * 2*0.05*0.0081/(207e9*0.0056) = 57.244444e6*0.00081/(1.1592e9) = 40e-6 m"
+      }
+    },
+    {
+      "calc": "design_fund.press_force",
+      "inputs": {
+        "d": "50 mm",
+        "L": "30 mm",
+        "p": "57.244444 MPa",
+        "mu": 0.15
+      },
+      "expect": {
+        "F": "40463.713 N"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = pi d L p mu = pi*0.05*0.03*57.244444e6*0.15 = pi*0.0015*8.586667e6 = pi*12880.0 = 40463.7 N"
+      }
+    },
+    {
+      "calc": "design_fund.holding_torque",
+      "inputs": {
+        "d": "50 mm",
+        "L": "30 mm",
+        "p": "57.244444 MPa",
+        "mu": 0.15
+      },
+      "expect": {
+        "T": "1011.5928 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = (pi/2) d^2 L p mu = (pi/2)*0.0025*0.03*57.244444e6*0.15 = (pi/2)*0.0025*0.03*8.586667e6 = 1011.59 N*m"
+      }
+    },
+    {
+      "calc": "design_fund.preferred_number",
+      "inputs": {
+        "i": 6,
+        "n": 20
+      },
+      "expect": {
+        "value": 1.9952623
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R20 value = 10^(6/20) = 10^0.3 = 1.9952623"
+      }
+    },
+    {
+      "calc": "design_fund.preferred_number",
+      "inputs": {
+        "value": 1.9952623,
+        "n": 20
+      },
+      "solve_for": [
+        "i"
+      ],
+      "expect": {
+        "i": 6.0
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "i = n log10(value) = 20*0.3 = 6"
+      }
+    },
+    {
+      "calc": "design_fund.renard_series",
+      "inputs": {
+        "n": 20
+      },
+      "expect": {
+        "count": 20,
+        "values": [
+          1.0,
+          1.1220185,
+          1.2589254,
+          1.4125375,
+          1.5848932,
+          1.7782794,
+          1.9952623,
+          2.2387211,
+          2.5118864,
+          2.8183829,
+          3.1622777,
+          3.5481339,
+          3.9810717,
+          4.4668359,
+          5.0118723,
+          5.6234133,
+          6.3095734,
+          7.0794578,
+          7.9432823,
+          8.9125094
+        ]
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "R20 series (unrounded) = 10^(i/20) for i = 0..19: 10^0=1.0, 10^0.05=1.1220, 10^0.1=1.2589, ... 10^0.95=8.9125. These are the exact geometric values, not the ISO-rounded preferred numbers."
+      }
+    }
+  ]
+}

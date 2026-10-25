@@ -1,0 +1,4631 @@
+{
+  "section": "materials_sci",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k materials_sci",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "materials_sci.atomic_packing_factor": {
+      "title": "Atomic packing factor of a unit cell",
+      "variables": [
+        {
+          "name": "APF",
+          "unit": "",
+          "desc": "atomic packing factor (fraction of cell volume occupied by atoms)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "atoms per unit cell",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "atomic radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "lattice parameter (cube edge for cubic cells)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "APF = n*(4/3)*pi*r**3/a**3"
+      ],
+      "procedure": null,
+      "outputs": [
+        "APF"
+      ],
+      "assumptions": [
+        "APF = (atoms/cell) x (atomic volume) / (cell volume). For FCC r = a/(2 sqrt 2) giving APF = pi/(3 sqrt 2) = 0.7405; BCC r = a sqrt(3)/4 gives sqrt(3) pi/8 = 0.6802; simple cubic r = a/2 gives pi/6 = 0.5236."
+      ],
+      "method_references": [
+        "Atomic packing factor definition"
+      ],
+      "synthetic_example": {
+        "n": 4,
+        "r": 1.278e-10,
+        "a": 3.615e-10
+      }
+    },
+    "materials_sci.crystal_density": {
+      "title": "Density from crystal structure",
+      "variables": [
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "theoretical density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "atoms per unit cell",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_am",
+          "unit": "kg/mol",
+          "desc": "atomic (molar) mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "lattice parameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _crystal_density(v):\n    \"\"\"Theoretical density: rho = n A_molar / (N_A a^3).\"\"\"\n    return {'rho': v['n'] * v['A_am'] / (N_A * v['a'] ** 3)}\n",
+        "source": "materials_sci.py",
+        "line": 82
+      },
+      "outputs": [
+        "rho"
+      ],
+      "assumptions": [
+        "rho = (atoms/cell x molar mass) / (Avogadro x cell volume). Example values give copper (FCC, a = 0.3615 nm) rho \u2248 8.94 g/cm^3."
+      ],
+      "method_references": [
+        "Theoretical density, rho = n A / (N_A V_cell)"
+      ],
+      "synthetic_example": {
+        "n": 4,
+        "A_am": 0.06355,
+        "a": 3.615e-10
+      }
+    },
+    "materials_sci.miller_indices": {
+      "title": "Miller indices from intercepts",
+      "variables": [
+        {
+          "name": "intercepts",
+          "unit": "",
+          "desc": "[x, y, z] axis intercepts as fractions of the lattice parameters (0 = parallel to that axis)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "miller_indices",
+          "unit": "",
+          "desc": "[h, k, l] smallest-integer Miller indices",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _miller(v):\n    \"\"\"Miller indices (hkl) from intercepts with the unit-cell axes.\n\n    intercepts: [x, y, z] as fractions of the lattice parameters; 0 means the plane is parallel to that\n    axis (intercept at infinity). The indices are the smallest integers proportional to the reciprocal\n    intercepts.\n    \"\"\"\n    ints = v['intercepts']\n    if not isinstance(ints, list) or len(ints) != 3:\n        raise MechError('intercepts: [x, y, z] intercepts as fractions of a, b, c (0 = parallel to that axis)')\n    recips = []\n    for xi in ints:\n        if not isinstance(xi, (int, float)):\n            raise MechError('intercepts must be numbers (0 = parallel to that axis)')\n        if xi == 0:\n            recips.append(Fraction(0, 1))\n        else:\n            recips.append(1 / Fraction(xi).limit_denominator(10 ** 6))\n    if all(r == 0 for r in recips):\n        raise MechError('a plane cannot be parallel to all three axes')\n    lcm = 1\n    for r in recips:\n        lcm = lcm * r.denominator // math.gcd(lcm, r.denominator)\n    scaled = [r * lcm for r in recips]\n    g = 0\n    for s in scaled:\n        g = math.gcd(g, s.numerator)\n    g = g or 1\n    return {'miller_indices': [s.numerator // g for s in scaled]}\n",
+        "source": "materials_sci.py",
+        "line": 32
+      },
+      "outputs": [
+        "miller_indices"
+      ],
+      "assumptions": [
+        "Indices are the smallest integers proportional to the reciprocal intercepts; negative intercepts give negative indices. Enter intercepts as exact decimals (0.5, 0.25, ...)."
+      ],
+      "method_references": [
+        "Miller index definition (h:k:l = 1/x : 1/y : 1/z)"
+      ],
+      "synthetic_example": {
+        "intercepts": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "materials_sci.interplanar_spacing_cubic": {
+      "title": "Interplanar spacing of a cubic lattice",
+      "variables": [
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "interplanar spacing d_hkl",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "lattice parameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "",
+          "desc": "Miller index h",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "desc": "Miller index k",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l",
+          "unit": "",
+          "desc": "Miller index l",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "d = a/sqrt(h**2 + k**2 + l**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "d"
+      ],
+      "assumptions": [
+        "Cubic lattices only; non-cubic spacing needs the full lattice geometry."
+      ],
+      "method_references": [
+        "Cubic interplanar spacing, d = a/sqrt(h^2 + k^2 + l^2)"
+      ],
+      "synthetic_example": {
+        "a": 3.615e-10,
+        "h": 1,
+        "k": 1,
+        "l": 1
+      }
+    },
+    "materials_sci.bragg_law": {
+      "title": "Bragg's law (X-ray diffraction)",
+      "variables": [
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "interplanar spacing",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "order of reflection",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam",
+          "unit": "m",
+          "desc": "X-ray wavelength",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "Bragg angle (half the 2\u03b8 detector angle)",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "n*lam = 2*d*sin(theta)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "d"
+      ],
+      "assumptions": [
+        "theta is the Bragg angle; a powder diffractometer reports 2\u03b8, so halve it before use."
+      ],
+      "method_references": [
+        "Bragg's law, n lambda = 2 d sin(theta)"
+      ],
+      "synthetic_example": {
+        "n": 1,
+        "lam": 1.54e-10,
+        "theta": 0.3490658503988659
+      }
+    },
+    "materials_sci.diffusion_arrhenius": {
+      "title": "Diffusion coefficient (Arrhenius)",
+      "variables": [
+        {
+          "name": "D",
+          "unit": "m^2/s",
+          "desc": "diffusion coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D0",
+          "unit": "m^2/s",
+          "desc": "pre-exponential (frequency) factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "J/mol",
+          "desc": "activation energy for diffusion",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "absolute temperature",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _diffusion(v):\n    \"\"\"Arrhenius diffusion coefficient: D = D0 exp(-Q/(R T)).\"\"\"\n    return {'D': v['D0'] * math.exp(-v['Q'] / (R_GAS * v['T']))}\n",
+        "source": "materials_sci.py",
+        "line": 87
+      },
+      "outputs": [
+        "D"
+      ],
+      "assumptions": [
+        "R = 8.314462618 J/(mol\u00b7K) is built in; enter Q in J/mol."
+      ],
+      "method_references": [
+        "Arrhenius diffusion, D = D0 exp(-Q/RT)"
+      ],
+      "synthetic_example": {
+        "D0": 2.8e-05,
+        "Q": 251000.0,
+        "T": 1200.0
+      }
+    },
+    "materials_sci.fick_first_law": {
+      "title": "Fick's first law (steady-state diffusion flux)",
+      "variables": [
+        {
+          "name": "J",
+          "unit": "kg/(m^2*s)",
+          "desc": "diffusion flux (positive from C1 to C2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m^2/s",
+          "desc": "diffusion coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C1",
+          "unit": "kg/m^3",
+          "desc": "concentration at the high side",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C2",
+          "unit": "kg/m^3",
+          "desc": "concentration at the low side",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x",
+          "unit": "m",
+          "desc": "diffusion distance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "J = D*(C1 - C2)/x"
+      ],
+      "procedure": null,
+      "outputs": [
+        "J"
+      ],
+      "assumptions": [
+        "Steady state (concentration gradient constant); the general vector form is J = -D dC/dx."
+      ],
+      "method_references": [
+        "Fick's first law"
+      ],
+      "synthetic_example": {
+        "D": 2e-09,
+        "C1": 5.0,
+        "C2": 1.0,
+        "x": 0.002
+      }
+    },
+    "materials_sci.fick_second_law": {
+      "title": "Fick's second law (non-steady, semi-infinite solid)",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "kg/m^3",
+          "desc": "concentration at depth x and time t",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "diffusion_length",
+          "unit": "m",
+          "desc": "characteristic diffusion length sqrt(D t)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C0",
+          "unit": "kg/m^3",
+          "desc": "initial uniform concentration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Cs",
+          "unit": "kg/m^3",
+          "desc": "surface concentration (held constant)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m^2/s",
+          "desc": "diffusion coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x",
+          "unit": "m",
+          "desc": "depth below the surface",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _fick_second(v):\n    \"\"\"Non-steady diffusion into a semi-infinite solid: C(x,t) = Cs - (Cs - C0) erf(x/(2 sqrt(D t))).\"\"\"\n    dl = math.sqrt(v['D'] * v['t'])\n    if dl <= 0:\n        raise MechError('diffusion length sqrt(D*t) must be positive (give D > 0 and t > 0)')\n    C = v['Cs'] - (v['Cs'] - v['C0']) * math.erf(v['x'] / (2 * dl))\n    return {'C': C, 'diffusion_length': dl}\n",
+        "source": "materials_sci.py",
+        "line": 68
+      },
+      "outputs": [
+        "C",
+        "diffusion_length"
+      ],
+      "assumptions": [
+        "Constant surface concentration, semi-infinite solid: C = Cs - (Cs - C0) erf(x/(2 sqrt(D t)))."
+      ],
+      "method_references": [
+        "Fick's second law erf solution (standard)"
+      ],
+      "synthetic_example": {
+        "C0": 0.2,
+        "Cs": 1.0,
+        "D": 3e-11,
+        "x": 0.0005,
+        "t": 3600.0
+      }
+    },
+    "materials_sci.lever_rule": {
+      "title": "Lever rule (weight fractions of two phases)",
+      "variables": [
+        {
+          "name": "W_alpha",
+          "unit": "",
+          "desc": "weight fraction of phase \u03b1",
+          "lo": null,
+          "hi": 1.0,
+          "label": "W\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_beta",
+          "unit": "",
+          "desc": "weight fraction of phase \u03b2",
+          "lo": null,
+          "hi": 1.0,
+          "label": "W\u03b2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_0",
+          "unit": "",
+          "desc": "overall alloy composition",
+          "lo": null,
+          "hi": 1.0,
+          "label": "C0",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_alpha",
+          "unit": "",
+          "desc": "composition of phase \u03b1 (tie-line end)",
+          "lo": null,
+          "hi": 1.0,
+          "label": "C\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_beta",
+          "unit": "",
+          "desc": "composition of phase \u03b2 (tie-line end)",
+          "lo": null,
+          "hi": 1.0,
+          "label": "C\u03b2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "W_alpha = (C_beta - C_0)/(C_beta - C_alpha)",
+        "W_beta = (C_0 - C_alpha)/(C_beta - C_alpha)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "W_alpha",
+        "W_beta"
+      ],
+      "assumptions": [
+        "Two-phase region of a binary phase diagram; C_alpha and C_beta are read from the tie line at the temperature of interest. Compositions are dimensionless fractions (wt fraction or at fraction)."
+      ],
+      "method_references": [
+        "Lever rule"
+      ],
+      "synthetic_example": {
+        "C_0": 0.35,
+        "C_alpha": 0.1,
+        "C_beta": 0.9
+      }
+    },
+    "materials_sci.hall_petch": {
+      "title": "Hall-Petch yield strength vs grain size",
+      "variables": [
+        {
+          "name": "sigma_y",
+          "unit": "Pa",
+          "desc": "yield strength",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3y",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma0",
+          "unit": "Pa",
+          "desc": "friction stress (single-crystal strength)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "Pa*m^0.5",
+          "desc": "Hall-Petch strengthening coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "k",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "mean grain diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _hall_petch(v):\n    \"\"\"Hall-Petch yield strength via common.hall_petch (single shared implementation).\"\"\"\n    return {'sigma_y': common.hall_petch(v['sigma0'], v['k'], v['d'])}\n",
+        "source": "materials_sci.py",
+        "line": 63
+      },
+      "outputs": [
+        "sigma_y"
+      ],
+      "assumptions": [
+        "sigma_y = sigma0 + k/sqrt(d). Empirical; breaks down (inverse Hall-Petch) below ~10-20 nm, which is not modelled."
+      ],
+      "method_references": [
+        "Hall-Petch relation (via common.hall_petch / materials_props.hall_petch)"
+      ],
+      "synthetic_example": {
+        "sigma0": 50000000.0,
+        "k": 740000.0,
+        "d": 0.0001
+      }
+    },
+    "materials_sci.true_stress_strain": {
+      "title": "True stress and true strain from engineering values",
+      "variables": [
+        {
+          "name": "sigma_true",
+          "unit": "Pa",
+          "desc": "true stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3t",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eps_true",
+          "unit": "",
+          "desc": "true (logarithmic) strain",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b5t",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_eng",
+          "unit": "Pa",
+          "desc": "engineering stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eps_eng",
+          "unit": "",
+          "desc": "engineering strain",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b5",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_true = sigma_eng*(1 + eps_eng)",
+        "eps_true = log(1 + eps_eng)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_true",
+        "eps_true"
+      ],
+      "assumptions": [
+        "Valid up to necking (constant-volume plastic flow). Beyond necking the true stress needs a Bridgman correction for triaxiality."
+      ],
+      "method_references": [
+        "True stress/strain conversion"
+      ],
+      "synthetic_example": {
+        "sigma_eng": 300000000.0,
+        "eps_eng": 0.1
+      }
+    },
+    "materials_sci.strain_hardening": {
+      "title": "Strain-hardening exponent and strength coefficient (power law)",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "strain-hardening exponent",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "Pa",
+          "desc": "strength coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma1",
+          "unit": "Pa",
+          "desc": "true stress at point 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eps1",
+          "unit": "",
+          "desc": "true strain at point 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma2",
+          "unit": "Pa",
+          "desc": "true stress at point 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eps2",
+          "unit": "",
+          "desc": "true strain at point 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "n = log(sigma2/sigma1)/log(eps2/eps1)",
+        "K = sigma1/eps1**n"
+      ],
+      "procedure": null,
+      "outputs": [
+        "n",
+        "K"
+      ],
+      "assumptions": [
+        "Power-law true stress-strain curve sigma = K epsilon^n fitted between two points; 0 < n < 1 for most metals."
+      ],
+      "method_references": [
+        "Hollomon power-law fit, sigma = K epsilon^n"
+      ],
+      "synthetic_example": {
+        "sigma1": 250000000.0,
+        "eps1": 0.05,
+        "sigma2": 350000000.0,
+        "eps2": 0.2
+      }
+    },
+    "materials_sci.ductility": {
+      "title": "Percent elongation and reduction of area",
+      "variables": [
+        {
+          "name": "EL",
+          "unit": "",
+          "desc": "elongation (fraction of the original gauge length; \u00d7100 = %)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "RA",
+          "unit": "",
+          "desc": "reduction of area (fraction; \u00d7100 = %)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_0",
+          "unit": "m",
+          "desc": "original gauge length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_f",
+          "unit": "m",
+          "desc": "final gauge length at fracture",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_0",
+          "unit": "m^2",
+          "desc": "original cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_f",
+          "unit": "m^2",
+          "desc": "final (necked) cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "EL = (L_f - L_0)/L_0",
+        "RA = (A_0 - A_f)/A_0"
+      ],
+      "procedure": null,
+      "outputs": [
+        "EL",
+        "RA"
+      ],
+      "assumptions": [
+        "Reported as fractions here; multiply by 100 for the usual percentage. Elongation depends on gauge length for a necked specimen."
+      ],
+      "method_references": [
+        "Percent elongation and reduction of area definitions"
+      ],
+      "synthetic_example": {
+        "L_0": 0.05,
+        "L_f": 0.06,
+        "A_0": 0.0001,
+        "A_f": 6e-05
+      }
+    },
+    "materials_sci.brinell_hardness": {
+      "title": "Brinell hardness from indentation",
+      "variables": [
+        {
+          "name": "HB",
+          "unit": "Pa",
+          "desc": "Brinell hardness as a pressure (the conventional HB number = HB/9.80665e6 kgf/mm^2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "N",
+          "desc": "indenter load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "ball diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "indentation diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "HB = 2*P/(pi*D*(D - sqrt(D**2 - d**2)))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "HB"
+      ],
+      "assumptions": [
+        "Standard Brinell definition with P in N and D, d in m; the conventional HB number is this pressure in kgf/mm^2 (divide by 9.80665e6)."
+      ],
+      "method_references": [
+        "Brinell hardness definition"
+      ],
+      "synthetic_example": {
+        "P": 30000.0,
+        "D": 0.01,
+        "d": 0.005
+      }
+    },
+    "materials_sci.hardness_uts": {
+      "title": "Approximate UTS from Brinell hardness (steels)",
+      "variables": [
+        {
+          "name": "UTS",
+          "unit": "Pa",
+          "desc": "ultimate tensile strength (approximate)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "HB",
+          "unit": "",
+          "desc": "Brinell hardness number (dimensionless)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _hardness_uts(v):\n    \"\"\"Approximate ultimate tensile strength from Brinell hardness: UTS(MPa) \u2248 3.45 HB (steels).\"\"\"\n    return {'UTS': 3.45e6 * v['HB']}\n",
+        "source": "materials_sci.py",
+        "line": 92
+      },
+      "outputs": [
+        "UTS"
+      ],
+      "assumptions": [
+        "UTS(MPa) \u2248 3.45 \u00d7 HB for carbon and alloy steels (HB \u2272 400). Approximate only \u2014 use a real tensile test for design. Tabular ASTM E140 conversions are NOT provided (not recalled)."
+      ],
+      "method_references": [
+        "Rule of thumb UTS \u2248 3.45 HB MPa (approximate; recalled)"
+      ],
+      "synthetic_example": {
+        "HB": 200.0
+      }
+    },
+    "materials_sci.charpy_impact": {
+      "title": "Charpy impact toughness (energy per fracture area)",
+      "variables": [
+        {
+          "name": "toughness",
+          "unit": "J/m^2",
+          "desc": "impact toughness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "J",
+          "desc": "Charpy impact energy (CVN)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area at the notch (or ligament area)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "toughness = E/A"
+      ],
+      "procedure": null,
+      "outputs": [
+        "toughness"
+      ],
+      "assumptions": [
+        "Normalizes the measured impact energy by the fractured area; the value depends on notch geometry and test temperature (the ductile-brittle transition is empirical \u2014 see report)."
+      ],
+      "method_references": [
+        "Impact toughness definition"
+      ],
+      "synthetic_example": {
+        "E": 50.0,
+        "A": 8e-05
+      }
+    },
+    "materials_sci.creep_rate": {
+      "title": "Steady-state creep rate (Norton power law)",
+      "variables": [
+        {
+          "name": "edot",
+          "unit": "1/s",
+          "desc": "steady-state creep strain rate",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b5\u0307",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "",
+          "desc": "creep constant in 1/(s\u00b7Pa^n) \u2014 its value must match the Pa you use for sigma",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "Pa",
+          "desc": "applied stress (Pa; A must be consistent with this)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "stress exponent",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "J/mol",
+          "desc": "activation energy for creep",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "absolute temperature",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _creep(v):\n    \"\"\"Steady-state (secondary) creep rate by the Norton power law: edot = A sigma^n exp(-Q/RT).\"\"\"\n    return {'edot': v['A'] * v['sigma'] ** v['n'] * math.exp(-v['Q'] / (R_GAS * v['T']))}\n",
+        "source": "materials_sci.py",
+        "line": 77
+      },
+      "outputs": [
+        "edot"
+      ],
+      "assumptions": [
+        "Steady-state (secondary) creep only: edot = A sigma^n exp(-Q/RT) with R = 8.314462618 J/(mol\u00b7K). sigma is entered in Pa, so A must carry units of 1/(s\u00b7Pa^n) (its value depends on n and on the stress unit); enter a bare number with those units kept consistent."
+      ],
+      "method_references": [
+        "Norton creep law"
+      ],
+      "synthetic_example": {
+        "A": 1e-15,
+        "sigma": 100000000.0,
+        "n": 3.0,
+        "Q": 280000.0,
+        "T": 1000.0
+      }
+    },
+    "materials_sci.larson_miller": {
+      "title": "Larson-Miller parameter and rupture time",
+      "variables": [
+        {
+          "name": "LMP",
+          "unit": "K",
+          "desc": "Larson-Miller parameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "absolute temperature",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "Larson-Miller material constant (\u2248 20 for many alloys)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t_r",
+          "unit": "",
+          "desc": "time to rupture in hours (bare number of hours)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "LMP = T*(C + log(t_r)/log(10))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "LMP"
+      ],
+      "assumptions": [
+        "LMP = T (C + log10 t) with T in kelvin and t_r the rupture time in hours; C is a material constant. Solve for t_r to get rupture time at a given LMP and T."
+      ],
+      "method_references": [
+        "Larson-Miller parameter (recalled)"
+      ],
+      "synthetic_example": {
+        "T": 900.0,
+        "C": 20.0,
+        "t_r": 1000.0
+      }
+    },
+    "materials_sci.corrosion_rate": {
+      "title": "Corrosion (penetration) rate from mass loss",
+      "variables": [
+        {
+          "name": "CR",
+          "unit": "m/s",
+          "desc": "corrosion penetration rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "kg",
+          "desc": "mass lost",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "material density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "exposed surface area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "exposure time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "CR = W/(rho*A*t)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "CR"
+      ],
+      "assumptions": [
+        "Uniform corrosion: penetration rate = mass loss / (density x area x time). Convert to mm/yr by multiplying by 3.1536e7 s/yr x 1000 mm/m (or enter t in years)."
+      ],
+      "method_references": [
+        "Corrosion rate from mass loss (ASTM G1 form, unit-consistent)"
+      ],
+      "synthetic_example": {
+        "W": 0.001,
+        "rho": 7800.0,
+        "A": 0.01,
+        "t": 31536000.0
+      }
+    },
+    "materials_sci.galvanic_potential": {
+      "title": "Galvanic couple potential difference",
+      "variables": [
+        {
+          "name": "E_cell",
+          "unit": "V",
+          "desc": "cell (driving) potential of the couple",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_cathode",
+          "unit": "V",
+          "desc": "potential of the cathodic (noble) member",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_anode",
+          "unit": "V",
+          "desc": "potential of the anodic (active) member",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "E_cell = E_cathode - E_anode"
+      ],
+      "procedure": null,
+      "outputs": [
+        "E_cell"
+      ],
+      "assumptions": [
+        "Potentials are standard electrode potentials (vs SHE) or galvanic-series potentials from a table \u2014 user inputs, not built in. A larger positive E_cell means a stronger driving force."
+      ],
+      "method_references": [
+        "Galvanic cell potential, E = E_cathode - E_anode"
+      ],
+      "synthetic_example": {
+        "E_cathode": -0.13,
+        "E_anode": -0.76
+      }
+    },
+    "materials_sci.composite_modulus": {
+      "title": "Composite rule-of-mixtures moduli (fibre/matrix)",
+      "variables": [
+        {
+          "name": "E_L",
+          "unit": "Pa",
+          "desc": "longitudinal modulus (isostrain, upper bound)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_T",
+          "unit": "Pa",
+          "desc": "transverse modulus (isostress, lower-bound estimate)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_f",
+          "unit": "",
+          "desc": "fibre volume fraction",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_m",
+          "unit": "",
+          "desc": "matrix volume fraction (= 1 - V_f)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_f",
+          "unit": "Pa",
+          "desc": "fibre modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_m",
+          "unit": "Pa",
+          "desc": "matrix modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "E_L = V_f*E_f + V_m*E_m",
+        "E_T = 1/(V_f/E_f + V_m/E_m)",
+        "V_m = 1 - V_f"
+      ],
+      "procedure": null,
+      "outputs": [
+        "E_L",
+        "E_T",
+        "V_m"
+      ],
+      "assumptions": [
+        "Longitudinal modulus is the isostrain (Voigt) rule of mixtures; transverse is the isostress (Reuss) bound (it underestimates the true transverse modulus)."
+      ],
+      "method_references": [
+        "Rule of mixtures for fibre composites"
+      ],
+      "synthetic_example": {
+        "V_f": 0.4,
+        "E_f": 230000000000.0,
+        "E_m": 3500000000.0
+      }
+    },
+    "materials_sci.composite_strength": {
+      "title": "Composite longitudinal strength (rule of mixtures)",
+      "variables": [
+        {
+          "name": "sigma_L",
+          "unit": "Pa",
+          "desc": "longitudinal tensile strength",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3L",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_f",
+          "unit": "",
+          "desc": "fibre volume fraction",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_m",
+          "unit": "",
+          "desc": "matrix volume fraction (= 1 - V_f)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_f",
+          "unit": "Pa",
+          "desc": "fibre tensile strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_m",
+          "unit": "Pa",
+          "desc": "matrix stress at fibre fracture strain",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_L = V_f*sigma_f + V_m*sigma_m",
+        "V_m = 1 - V_f"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_L",
+        "V_m"
+      ],
+      "assumptions": [
+        "Longitudinal (isostrain) strength. Transverse strength is matrix-limited and not a simple rule of mixtures, so it is not provided."
+      ],
+      "method_references": [
+        "Longitudinal strength rule of mixtures"
+      ],
+      "synthetic_example": {
+        "V_f": 0.4,
+        "sigma_f": 3500000000.0,
+        "sigma_m": 30000000.0
+      }
+    },
+    "materials_sci.elastic_bounds": {
+      "title": "Isotropic two-phase elastic bounds (Voigt, Reuss, Hashin-Shtrikman)",
+      "variables": [
+        {
+          "name": "K1",
+          "unit": "Pa",
+          "desc": "bulk modulus of phase 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G1",
+          "unit": "Pa",
+          "desc": "shear modulus of phase 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K2",
+          "unit": "Pa",
+          "desc": "bulk modulus of phase 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G2",
+          "unit": "Pa",
+          "desc": "shear modulus of phase 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f1",
+          "unit": "",
+          "desc": "volume fraction of phase 1",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_voigt",
+          "unit": "Pa",
+          "desc": "isotropic E from the Voigt (isostrain) K and G",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_reuss",
+          "unit": "Pa",
+          "desc": "isotropic E from the Reuss (isostress) K and G",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_voigt",
+          "unit": "Pa",
+          "desc": "Voigt bulk bound",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_reuss",
+          "unit": "Pa",
+          "desc": "Reuss bulk bound",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_hs_upper",
+          "unit": "Pa",
+          "desc": "Hashin-Shtrikman upper bulk bound",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_hs_lower",
+          "unit": "Pa",
+          "desc": "Hashin-Shtrikman lower bulk bound",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G_voigt",
+          "unit": "Pa",
+          "desc": "Voigt shear bound",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G_reuss",
+          "unit": "Pa",
+          "desc": "Reuss shear bound",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G_hs_upper",
+          "unit": "Pa",
+          "desc": "Hashin-Shtrikman upper shear bound",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G_hs_lower",
+          "unit": "Pa",
+          "desc": "Hashin-Shtrikman lower shear bound",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _elastic_bounds(v):\n    \"\"\"Isotropic two-phase elastic bounds via common.elastic_bounds (single shared implementation).\n\n    The E values are the isotropic Young's modulus E = 9KG/(3K+G) corresponding to each K, G bound.\n    \"\"\"\n    b = common.elastic_bounds(v['K1'], v['G1'], v['K2'], v['G2'], v['f1'])\n\n    def E(K, G):\n        return 9.0 * K * G / (3.0 * K + G)\n\n    return {'E_voigt': E(b['voigt']['K'], b['voigt']['G']),\n            'E_reuss': E(b['reuss']['K'], b['reuss']['G']),\n            'K_voigt': b['voigt']['K'], 'K_reuss': b['reuss']['K'],\n            'K_hs_upper': b['hs_upper']['K'], 'K_hs_lower': b['hs_lower']['K'],\n            'G_voigt': b['voigt']['G'], 'G_reuss': b['reuss']['G'],\n            'G_hs_upper': b['hs_upper']['G'], 'G_hs_lower': b['hs_lower']['G']}\n",
+        "source": "materials_sci.py",
+        "line": 97
+      },
+      "outputs": [
+        "E_voigt",
+        "E_reuss",
+        "K_voigt",
+        "K_reuss",
+        "K_hs_upper",
+        "K_hs_lower",
+        "G_voigt",
+        "G_reuss",
+        "G_hs_upper",
+        "G_hs_lower"
+      ],
+      "assumptions": [
+        "Isotropic two-phase bounds on the effective bulk and shear moduli; E values are the isotropic E = 9KG/(3K+G) for each bound pair. Voigt/Reuss are isostrain/isostress; Hashin-Shtrikman is the tightest bound for well-ordered isotropic phases."
+      ],
+      "method_references": [
+        "Voigt/Reuss/Hashin-Shtrikman bounds (via common.elastic_bounds / materials_props.rule_of_mixtures)"
+      ],
+      "synthetic_example": {
+        "K1": 165000000000.0,
+        "G1": 80000000000.0,
+        "K2": 2500000000.0,
+        "G2": 1000000000.0,
+        "f1": 0.4
+      }
+    },
+    "materials_sci.laminate_clt": {
+      "title": "Composite laminate stiffness (classical lamination theory)",
+      "variables": [
+        {
+          "name": "plies",
+          "unit": "",
+          "desc": "[[thickness (m), angle (deg)], ...] bottom-to-top",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "E1",
+          "unit": "Pa",
+          "desc": "ply longitudinal modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E2",
+          "unit": "Pa",
+          "desc": "ply transverse modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu12",
+          "unit": "",
+          "desc": "ply major Poisson ratio",
+          "lo": null,
+          "hi": 0.5,
+          "label": "\u03bd12",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G12",
+          "unit": "Pa",
+          "desc": "ply in-plane shear modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_x",
+          "unit": "Pa",
+          "desc": "laminate in-plane modulus in x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_y",
+          "unit": "Pa",
+          "desc": "laminate in-plane modulus in y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu_xy",
+          "unit": "",
+          "desc": "laminate in-plane Poisson ratio",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G_xy",
+          "unit": "Pa",
+          "desc": "laminate in-plane shear modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "total laminate thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "",
+          "desc": "A (extensional) matrix, N/m, 3x3",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "B",
+          "unit": "",
+          "desc": "B (coupling) matrix, N, 3x3",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "",
+          "desc": "D (bending) matrix, N\u00b7m, 3x3",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _laminate(v):\n    \"\"\"Classical lamination theory: A, B, D matrices and in-plane constants from a ply list.\n\n    plies: [[thickness (m), angle (deg)], ...] bottom-to-top, one material for all plies. Reduced\n    stiffness Q from E1, E2, nu12, G12; transformed to global axes by the standard CLT transformation;\n    A = sum Q_bar t, B = 1/2 sum Q_bar (z^2 - z0^2), D = 1/3 sum Q_bar (z^3 - z0^3). In-plane (membrane)\n    constants come from the compliance a = A^-1: E_x = 1/(h a11), E_y = 1/(h a22), G_xy = 1/(h a66),\n    nu_xy = -a12/a11. These are exact for symmetric laminates (B = 0); for unsymmetric layups they come\n    from A alone and ignore bending-extension coupling.\n    \"\"\"\n    plies = v['plies']\n    E1, E2, nu12, G12 = v['E1'], v['E2'], v['nu12'], v['G12']\n    if not isinstance(plies, list) or not plies:\n        raise MechError('plies: [[thickness (m), angle (deg)], ...] bottom-to-top')\n    nu21 = nu12 * E2 / E1\n    denom = 1.0 - nu12 * nu21\n    if denom <= 0:\n        raise MechError('nu12*nu21 must be less than 1')\n    Q11, Q22, Q12, Q66 = E1 / denom, E2 / denom, nu12 * E2 / denom, G12\n    total = sum(float(row[0]) for row in plies)\n    if total <= 0:\n        raise MechError('plies: total thickness must be positive')\n    A = np.zeros((3, 3))\n    B = np.zeros((3, 3))\n    D = np.zeros((3, 3))\n    z = -total / 2.0  # z measured from the laminate mid-plane\n    for row in plies:\n        t = float(row[0])\n        th = math.radians(float(row[1]))\n        zt = z + t\n        m, n = math.cos(th), math.sin(th)\n        m2, n2 = m * m, n * n\n        Qb = np.zeros((3, 3))\n        Qb[0, 0] = Q11 * m ** 4 + 2 * (Q12 + 2 * Q66) * m2 * n2 + Q22 * n ** 4\n        Qb[0, 1] = (Q11 + Q22 - 4 * Q66) * m2 * n2 + Q12 * (m ** 4 + n ** 4)\n        Qb[1, 1] = Q11 * n ** 4 + 2 * (Q12 + 2 * Q66) * m2 * n2 + Q22 * m ** 4\n        Qb[0, 2] = (Q11 - Q12 - 2 * Q66) * m ** 3 * n + (Q12 - Q22 + 2 * Q66) * m * n ** 3\n        Qb[1, 2] = (Q11 - Q12 - 2 * Q66) * m * n ** 3 + (Q12 - Q22 + 2 * Q66) * m ** 3 * n\n        Qb[2, 2] = (Q11 + Q22 - 2 * Q12 - 2 * Q66) * m2 * n2 + Q66 * (m ** 4 + n ** 4)\n        Qb[1, 0], Qb[2, 0], Qb[2, 1] = Qb[0, 1], Qb[0, 2], Qb[1, 2]\n        A += Qb * (zt - z)\n        B += Qb * (zt ** 2 - z ** 2) / 2.0\n        D += Qb * (zt ** 3 - z ** 3) / 3.0\n        z = zt\n    h = total\n    if h <= 0:\n        raise MechError('plies: total thickness must be positive')\n    if A[1, 1] <= 0 or A[0, 0] <= 0:\n        raise MechError('A matrix is singular (check E1, E2 and ply angles)')\n    a = np.linalg.inv(A)\n    return {'E_x': 1.0 / (h * a[0, 0]), 'E_y': 1.0 / (h * a[1, 1]), 'nu_xy': -a[0, 1] / a[0, 0],\n            'G_xy': 1.0 / (h * a[2, 2]), 'h': h, 'A': A.tolist(), 'B': B.tolist(), 'D': D.tolist()}\n",
+        "source": "materials_sci.py",
+        "line": 115
+      },
+      "outputs": [
+        "E_x",
+        "E_y",
+        "nu_xy",
+        "G_xy",
+        "h",
+        "A",
+        "B",
+        "D"
+      ],
+      "assumptions": [
+        "One material for all plies; Q transformed to global axes by the standard CLT transformation. A = sum(Q_bar t), B = 1/2 sum(Q_bar (z2^2 - z1^2)), D = 1/3 sum(Q_bar (z2^3 - z1^3)). The membrane constants come from the compliance a = A^-1 (E_x = 1/(h a11), E_y = 1/(h a22), G_xy = 1/(h a66), nu_xy = -a12/a11) and are exact for symmetric laminates (B = 0); for unsymmetric laminates bending-extension coupling makes the true laminate moduli differ."
+      ],
+      "method_references": [
+        "Classical lamination theory (Jones, Mechanics of Composite Materials; recalled)"
+      ],
+      "synthetic_example": {
+        "plies": [
+          [
+            0.001,
+            45
+          ],
+          [
+            0.001,
+            -45
+          ]
+        ],
+        "E1": 100000000000.0,
+        "E2": 10000000000.0,
+        "nu12": 0.3,
+        "G12": 5000000000.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "materials_sci-001",
+      "calculator": "materials_sci.atomic_packing_factor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 4,
+        "r": "0.127809 nm",
+        "a": "0.3615 nm"
+      },
+      "solve_for": [
+        "APF"
+      ],
+      "expected_as_specified": {
+        "APF": 0.74048
+      },
+      "expected_SI": {
+        "APF": 0.74048
+      },
+      "actual_SI": {
+        "APF": {
+          "value": 0.7404709180972106,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.atomic_packing_factor (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "APF": {
+          "absolute_error": 9.081902789476182e-06,
+          "relative_error": 1.226488600566684e-05,
+          "allowed_absolute_error": 0.0007404800000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "FCC: r = a/(2 sqrt 2) = 0.3615/2.828427 = 0.127809 nm. APF = n (4/3) pi r^3 / a^3 = 4 (4/3) pi (1/(2 sqrt 2))^3 = (16 pi/3)/(16 sqrt 2) = pi/(3 sqrt 2) = 0.74048."
+      }
+    },
+    {
+      "id": "materials_sci-002",
+      "calculator": "materials_sci.atomic_packing_factor",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "n": 2,
+        "r": "0.12412 nm",
+        "a": "0.28665 nm"
+      },
+      "solve_for": [
+        "APF"
+      ],
+      "expected_as_specified": {
+        "APF": 0.68017
+      },
+      "expected_SI": {
+        "APF": 0.68017
+      },
+      "actual_SI": {
+        "APF": {
+          "value": 0.6801239483334124,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.atomic_packing_factor (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "APF": {
+          "absolute_error": 4.605166658766535e-05,
+          "relative_error": 6.770611257136502e-05,
+          "allowed_absolute_error": 0.00068017,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "BCC landmark: APF = sqrt(3) pi/8 = 0.68017 (universal textbook result; recalled). Input r = a sqrt(3)/4 for BCC."
+      }
+    },
+    {
+      "id": "materials_sci-003",
+      "calculator": "materials_sci.crystal_density",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 4,
+        "A_am": "63.55 g/mol",
+        "a": "0.3615 nm"
+      },
+      "solve_for": [
+        "rho"
+      ],
+      "expected_as_specified": {
+        "rho": "8.9351 g/cm^3"
+      },
+      "expected_SI": {
+        "rho": 8935.099999999999
+      },
+      "actual_SI": {
+        "rho": {
+          "value": 8935.106615068256,
+          "unit": "kg/m^3",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.crystal_density (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "rho": {
+          "absolute_error": 0.006615068257815437,
+          "relative_error": 7.403463036580943e-07,
+          "allowed_absolute_error": 8.935099999999998,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Copper FCC: rho = n A/(N_A a^3) = 4 x 0.06355/(6.02214076e23 x (0.3615e-9)^3) = 0.2542/(6.02214076e23 x 4.7241e-29) = 0.2542/2.8451e-5 = 8935.1 kg/m^3 = 8.9351 g/cm^3"
+      }
+    },
+    {
+      "id": "materials_sci-004",
+      "calculator": "materials_sci.miller_indices",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "intercepts": [
+          0.5,
+          0.25,
+          1
+        ]
+      },
+      "solve_for": [
+        "miller_indices"
+      ],
+      "expected_as_specified": {
+        "miller_indices": [
+          2,
+          4,
+          1
+        ]
+      },
+      "expected_SI": {
+        "miller_indices": [
+          2,
+          4,
+          1
+        ]
+      },
+      "actual_SI": {
+        "miller_indices": {
+          "value": [
+            2,
+            4,
+            1
+          ],
+          "kind": "derived",
+          "method": "mechcalc materials_sci.miller_indices (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "miller_indices": [
+          {
+            "absolute_error": 0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.004,
+            "passed": true
+          },
+          {
+            "absolute_error": 0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.008,
+            "passed": true
+          },
+          {
+            "absolute_error": 0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Reciprocal intercepts: 1/0.5 : 1/0.25 : 1/1 = 2 : 4 : 1 (already smallest integers)"
+      }
+    },
+    {
+      "id": "materials_sci-005",
+      "calculator": "materials_sci.miller_indices",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "intercepts": [
+          1,
+          1,
+          1
+        ]
+      },
+      "solve_for": [
+        "miller_indices"
+      ],
+      "expected_as_specified": {
+        "miller_indices": [
+          1,
+          1,
+          1
+        ]
+      },
+      "expected_SI": {
+        "miller_indices": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actual_SI": {
+        "miller_indices": {
+          "value": [
+            1,
+            1,
+            1
+          ],
+          "kind": "derived",
+          "method": "mechcalc materials_sci.miller_indices (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "miller_indices": [
+          {
+            "absolute_error": 0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          },
+          {
+            "absolute_error": 0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          },
+          {
+            "absolute_error": 0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Reciprocals 1:1:1 -> (111)"
+      }
+    },
+    {
+      "id": "materials_sci-006",
+      "calculator": "materials_sci.interplanar_spacing_cubic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a": "0.3615 nm",
+        "h": 1,
+        "k": 1,
+        "l": 1
+      },
+      "solve_for": [
+        "d"
+      ],
+      "expected_as_specified": {
+        "d": "0.208712 nm"
+      },
+      "expected_SI": {
+        "d": 2.0871200000000001e-10
+      },
+      "actual_SI": {
+        "d": {
+          "value": 2.0871212231204972e-10,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.interplanar_spacing_cubic (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "d": {
+          "absolute_error": 1.2231204970428665e-16,
+          "relative_error": 5.860326656075675e-07,
+          "allowed_absolute_error": 4.1742400000000004e-13,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "d = a/sqrt(h^2+k^2+l^2) = 0.3615e-9/sqrt(3) = 0.3615e-9/1.73205 = 2.08712e-10 m"
+      }
+    },
+    {
+      "id": "materials_sci-007",
+      "calculator": "materials_sci.bragg_law",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 1,
+        "lam": "0.154 nm",
+        "theta": "20 deg"
+      },
+      "solve_for": [
+        "d"
+      ],
+      "expected_as_specified": {
+        "d": "0.225133 nm"
+      },
+      "expected_SI": {
+        "d": 2.25133e-10
+      },
+      "actual_SI": {
+        "d": {
+          "value": 2.2513293881255774e-10,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.bragg_law (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "d": {
+          "absolute_error": 6.118744225748264e-17,
+          "relative_error": 2.7178353354453876e-07,
+          "allowed_absolute_error": 4.50266e-13,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "d = n lambda/(2 sin theta) = 1 x 0.154e-9/(2 x sin 20\u00b0) = 0.154e-9/(2 x 0.342020) = 0.154e-9/0.684040 = 2.25133e-10 m"
+      }
+    },
+    {
+      "id": "materials_sci-008",
+      "calculator": "materials_sci.bragg_law",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 1,
+        "lam": "0.154 nm",
+        "d": "0.225133 nm"
+      },
+      "solve_for": [
+        "theta"
+      ],
+      "expected_as_specified": {
+        "theta": "20 deg"
+      },
+      "expected_SI": {
+        "theta": 0.3490658503988659
+      },
+      "actual_SI": {
+        "theta": {
+          "value": 0.3490657514777513,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.bragg_law (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "theta": {
+          "absolute_error": 9.892111457743269e-08,
+          "relative_error": 2.833881185008469e-07,
+          "allowed_absolute_error": 0.00034906585039886593,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sin theta = n lambda/(2d) = 0.154e-9/(2 x 0.225133e-9) = 0.342020 -> theta = 20\u00b0"
+      }
+    },
+    {
+      "id": "materials_sci-009",
+      "calculator": "materials_sci.diffusion_arrhenius",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "D0": "2.8e-5 m^2/s",
+        "Q": "251 kJ/mol",
+        "T": "1200 K"
+      },
+      "solve_for": [
+        "D"
+      ],
+      "expected_as_specified": {
+        "D": "3.3237e-16 m^2/s"
+      },
+      "expected_SI": {
+        "D": 3.3237e-16
+      },
+      "actual_SI": {
+        "D": {
+          "value": 3.323730654634915e-16,
+          "unit": "m^2/s",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.diffusion_arrhenius (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "D": {
+          "absolute_error": 3.0654634914682887e-21,
+          "relative_error": 9.223045074670663e-06,
+          "allowed_absolute_error": 6.6474e-19,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = D0 exp(-Q/RT) = 2.8e-5 exp(-251000/(8.314462618 x 1200)) = 2.8e-5 exp(-25.1570) = 2.8e-5 x 1.18705e-11 = 3.3237e-16 m^2/s"
+      }
+    },
+    {
+      "id": "materials_sci-010",
+      "calculator": "materials_sci.fick_first_law",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "D": "2e-9 m^2/s",
+        "C1": "5 kg/m^3",
+        "C2": "1 kg/m^3",
+        "x": "2 mm"
+      },
+      "solve_for": [
+        "J"
+      ],
+      "expected_as_specified": {
+        "J": "4e-6 kg/(m^2*s)"
+      },
+      "expected_SI": {
+        "J": 4e-06
+      },
+      "actual_SI": {
+        "J": {
+          "value": 4e-06,
+          "unit": "kg/(m^2*s)",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.fick_first_law (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "J": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 8e-09,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "J = D(C1 - C2)/x = 2e-9 x (5 - 1)/0.002 = 2e-9 x 4/0.002 = 4e-6 kg/(m^2 s)"
+      }
+    },
+    {
+      "id": "materials_sci-011",
+      "calculator": "materials_sci.fick_second_law",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C0": "0.2 kg/m^3",
+        "Cs": "1 kg/m^3",
+        "D": "3e-11 m^2/s",
+        "x": "0.5 mm",
+        "t": "1 h"
+      },
+      "solve_for": [
+        "C",
+        "diffusion_length"
+      ],
+      "expected_as_specified": {
+        "C": "0.42560 kg/m^3",
+        "diffusion_length": "0.32863 mm"
+      },
+      "expected_SI": {
+        "C": 0.4256,
+        "diffusion_length": 0.00032863
+      },
+      "actual_SI": {
+        "C": {
+          "value": 0.42560309674238206,
+          "unit": "kg/m^3",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.fick_second_law (procedure)"
+        },
+        "diffusion_length": {
+          "value": 0.00032863353450309965,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.fick_second_law (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "C": {
+          "absolute_error": 3.096742382080464e-06,
+          "relative_error": 7.276180409023647e-06,
+          "allowed_absolute_error": 0.0004256,
+          "passed": true
+        },
+        "diffusion_length": {
+          "absolute_error": 3.5345030996512643e-09,
+          "relative_error": 1.075526610367667e-05,
+          "allowed_absolute_error": 3.2863e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sqrt(D t) = sqrt(3e-11 x 3600) = sqrt(1.08e-7) = 3.28633e-4 m; C = Cs - (Cs - C0) erf(x/(2 sqrt(D t))) = 1 - 0.8 erf(0.0005/(2 x 3.28633e-4)) = 1 - 0.8 erf(0.76073) = 1 - 0.8 x 0.71800 = 0.42560 kg/m^3"
+      }
+    },
+    {
+      "id": "materials_sci-012",
+      "calculator": "materials_sci.lever_rule",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C_0": 0.35,
+        "C_alpha": 0.1,
+        "C_beta": 0.9
+      },
+      "solve_for": [
+        "W_alpha",
+        "W_beta"
+      ],
+      "expected_as_specified": {
+        "W_alpha": 0.6875,
+        "W_beta": 0.3125
+      },
+      "expected_SI": {
+        "W_alpha": 0.6875,
+        "W_beta": 0.3125
+      },
+      "actual_SI": {
+        "W_alpha": {
+          "value": 0.6875,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.lever_rule (symbolic)"
+        },
+        "W_beta": {
+          "value": 0.31249999999999994,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.lever_rule (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "W_alpha": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001375,
+          "passed": true
+        },
+        "W_beta": {
+          "absolute_error": 5.551115123125783e-17,
+          "relative_error": 1.7763568394002506e-16,
+          "allowed_absolute_error": 0.000625,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "W_alpha = (C_beta - C_0)/(C_beta - C_alpha) = (0.9 - 0.35)/(0.9 - 0.1) = 0.55/0.8 = 0.6875; W_beta = (0.35 - 0.1)/0.8 = 0.3125"
+      }
+    },
+    {
+      "id": "materials_sci-013",
+      "calculator": "materials_sci.lever_rule",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W_alpha": 0.6875,
+        "C_alpha": 0.1,
+        "C_beta": 0.9
+      },
+      "solve_for": [
+        "C_0",
+        "W_beta"
+      ],
+      "expected_as_specified": {
+        "C_0": 0.35
+      },
+      "expected_SI": {
+        "C_0": 0.35
+      },
+      "actual_SI": {
+        "C_0": {
+          "value": 0.35,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.lever_rule (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "C_0": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00035,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C_0 = C_beta - W_alpha(C_beta - C_alpha) = 0.9 - 0.6875 x 0.8 = 0.9 - 0.55 = 0.35; W_beta = 1 - W_alpha = 0.3125"
+      }
+    },
+    {
+      "id": "materials_sci-014",
+      "calculator": "materials_sci.hall_petch",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma0": "50 MPa",
+        "k": "0.74 MPa*m^0.5",
+        "d": "100 um"
+      },
+      "solve_for": [
+        "sigma_y"
+      ],
+      "expected_as_specified": {
+        "sigma_y": "124 MPa"
+      },
+      "expected_SI": {
+        "sigma_y": 124000000.0
+      },
+      "actual_SI": {
+        "sigma_y": {
+          "value": 124000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.hall_petch (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_y": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 248000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma_y = sigma0 + k/sqrt(d) = 50e6 + 0.74e6/sqrt(100e-6) = 50e6 + 0.74e6/0.01 = 50e6 + 74e6 = 124 MPa"
+      }
+    },
+    {
+      "id": "materials_sci-015",
+      "calculator": "materials_sci.hall_petch",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_y": "124 MPa",
+        "sigma0": "50 MPa",
+        "k": "0.74 MPa*m^0.5"
+      },
+      "solve_for": [
+        "d"
+      ],
+      "expected_as_specified": {
+        "d": "100 um"
+      },
+      "expected_SI": {
+        "d": 9.999999999999999e-05
+      },
+      "actual_SI": {
+        "d": {
+          "value": 0.0001,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.hall_petch (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "d": {
+          "absolute_error": 1.3552527156068805e-20,
+          "relative_error": 1.3552527156068805e-16,
+          "allowed_absolute_error": 1e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sqrt(d) = k/(sigma_y - sigma0) = 0.74e6/(124e6 - 50e6) = 0.74e6/74e6 = 0.01 -> d = 1e-4 m = 100 um"
+      }
+    },
+    {
+      "id": "materials_sci-016",
+      "calculator": "materials_sci.true_stress_strain",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_eng": "300 MPa",
+        "eps_eng": 0.1
+      },
+      "solve_for": [
+        "sigma_true",
+        "eps_true"
+      ],
+      "expected_as_specified": {
+        "sigma_true": "330 MPa",
+        "eps_true": 0.09531
+      },
+      "expected_SI": {
+        "sigma_true": 330000000.0,
+        "eps_true": 0.09531
+      },
+      "actual_SI": {
+        "sigma_true": {
+          "value": 330000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.true_stress_strain (symbolic)"
+        },
+        "eps_true": {
+          "value": 0.09531017980432493,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.true_stress_strain (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_true": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 660000.0,
+          "passed": true
+        },
+        "eps_true": {
+          "absolute_error": 1.7980432492903375e-07,
+          "relative_error": 1.8865210883331627e-06,
+          "allowed_absolute_error": 0.00019062000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma_true = sigma_eng(1 + eps) = 300 x 1.1 = 330 MPa; eps_true = ln(1.1) = 0.095310"
+      }
+    },
+    {
+      "id": "materials_sci-017",
+      "calculator": "materials_sci.strain_hardening",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma1": "250 MPa",
+        "eps1": 0.05,
+        "sigma2": "350 MPa",
+        "eps2": 0.2
+      },
+      "solve_for": [
+        "n",
+        "K"
+      ],
+      "expected_as_specified": {
+        "n": 0.242713,
+        "K": "517.27 MPa"
+      },
+      "expected_SI": {
+        "n": 0.242713,
+        "K": 517270000.0
+      },
+      "actual_SI": {
+        "n": {
+          "value": 0.24271341358512086,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.strain_hardening (symbolic)"
+        },
+        "K": {
+          "value": 517270177.0425554,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.strain_hardening (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "n": {
+          "absolute_error": 4.1358512084532784e-07,
+          "relative_error": 1.7040089358432709e-06,
+          "allowed_absolute_error": 0.0001213565,
+          "passed": true
+        },
+        "K": {
+          "absolute_error": 177.04255539178848,
+          "relative_error": 3.422633351862441e-07,
+          "allowed_absolute_error": 258635.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "n = ln(sigma2/sigma1)/ln(eps2/eps1) = ln(350/250)/ln(0.2/0.05) = ln(1.4)/ln(4) = 0.336472/1.386294 = 0.242713; K = sigma1/eps1^n = 250e6/0.05^0.242713 = 250e6/0.483297 = 5.1727e8 Pa"
+      }
+    },
+    {
+      "id": "materials_sci-018",
+      "calculator": "materials_sci.ductility",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L_0": "50 mm",
+        "L_f": "60 mm",
+        "A_0": "100 mm^2",
+        "A_f": "60 mm^2"
+      },
+      "solve_for": [
+        "EL",
+        "RA"
+      ],
+      "expected_as_specified": {
+        "EL": 0.2,
+        "RA": 0.4
+      },
+      "expected_SI": {
+        "EL": 0.2,
+        "RA": 0.4
+      },
+      "actual_SI": {
+        "EL": {
+          "value": 0.1999999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.ductility (symbolic)"
+        },
+        "RA": {
+          "value": 0.4,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.ductility (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "EL": {
+          "absolute_error": 1.1102230246251565e-16,
+          "relative_error": 5.551115123125783e-16,
+          "allowed_absolute_error": 0.0004,
+          "passed": true
+        },
+        "RA": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0008,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "EL = (60 - 50)/50 = 0.2; RA = (100 - 60)/100 = 0.4"
+      }
+    },
+    {
+      "id": "materials_sci-019",
+      "calculator": "materials_sci.brinell_hardness",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": "30 kN",
+        "D": "10 mm",
+        "d": "5 mm"
+      },
+      "solve_for": [
+        "HB"
+      ],
+      "expected_as_specified": {
+        "HB": "1.4255 GPa"
+      },
+      "expected_SI": {
+        "HB": 1425500000.0
+      },
+      "actual_SI": {
+        "HB": {
+          "value": 1425538401.3472493,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.brinell_hardness (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "HB": {
+          "absolute_error": 38401.347249269485,
+          "relative_error": 2.693886162698666e-05,
+          "allowed_absolute_error": 1425500.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "HB = 2P/(pi D (D - sqrt(D^2 - d^2))) = 2 x 30000/(pi x 0.01 x (0.01 - sqrt(1e-4 - 2.5e-5))) = 60000/(pi x 0.01 x (0.01 - 0.008660254)) = 60000/(pi x 0.01 x 0.001339746) = 60000/4.2090e-5 = 1.4255e9 Pa (conventional HB number = 145.4 kgf/mm^2)"
+      }
+    },
+    {
+      "id": "materials_sci-020",
+      "calculator": "materials_sci.hardness_uts",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "HB": 200
+      },
+      "solve_for": [
+        "UTS"
+      ],
+      "expected_as_specified": {
+        "UTS": "690 MPa"
+      },
+      "expected_SI": {
+        "UTS": 690000000.0
+      },
+      "actual_SI": {
+        "UTS": {
+          "value": 690000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.hardness_uts (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "UTS": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1380000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "UTS = 3.45 MPa x HB = 3.45 x 200 = 690 MPa (approximate, steels)"
+      }
+    },
+    {
+      "id": "materials_sci-021",
+      "calculator": "materials_sci.charpy_impact",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "50 J",
+        "A": "80 mm^2"
+      },
+      "solve_for": [
+        "toughness"
+      ],
+      "expected_as_specified": {
+        "toughness": "625 kJ/m^2"
+      },
+      "expected_SI": {
+        "toughness": 625000.0
+      },
+      "actual_SI": {
+        "toughness": {
+          "value": 625000.0,
+          "unit": "J/m^2",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.charpy_impact (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "toughness": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1250.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "toughness = E/A = 50/(80e-6) = 6.25e5 J/m^2 = 625 kJ/m^2"
+      }
+    },
+    {
+      "id": "materials_sci-022",
+      "calculator": "materials_sci.creep_rate",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A": 1e-15,
+        "sigma": "100 MPa",
+        "n": 3,
+        "Q": "280 kJ/mol",
+        "T": "1000 K"
+      },
+      "solve_for": [
+        "edot"
+      ],
+      "expected_as_specified": {
+        "edot": "2.3691e-6 1/s"
+      },
+      "expected_SI": {
+        "edot": 2.3691e-06
+      },
+      "actual_SI": {
+        "edot": {
+          "value": 2.369116219239185e-06,
+          "unit": "1/s",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.creep_rate (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "edot": {
+          "absolute_error": 1.6219239185235056e-11,
+          "relative_error": 6.846160645491983e-06,
+          "allowed_absolute_error": 4.7382e-09,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "edot = A sigma^n exp(-Q/RT) = 1e-15 x (100e6)^3 x exp(-280000/(8.314462618 x 1000)) = 1e-15 x 1e24 x exp(-33.6763) = 1e9 x 2.36912e-15 = 2.3691e-6 1/s"
+      }
+    },
+    {
+      "id": "materials_sci-023",
+      "calculator": "materials_sci.larson_miller",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T": "900 K",
+        "C": 20,
+        "t_r": 1000
+      },
+      "solve_for": [
+        "LMP"
+      ],
+      "expected_as_specified": {
+        "LMP": "20700 K"
+      },
+      "expected_SI": {
+        "LMP": 20700.0
+      },
+      "actual_SI": {
+        "LMP": {
+          "value": 20700.0,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.larson_miller (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "LMP": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 41.4,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "LMP = T(C + log10 t_r) = 900 x (20 + 3) = 900 x 23 = 20700 K"
+      }
+    },
+    {
+      "id": "materials_sci-024",
+      "calculator": "materials_sci.larson_miller",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "LMP": "20700 K",
+        "T": "900 K",
+        "C": 20
+      },
+      "solve_for": [
+        "t_r"
+      ],
+      "expected_as_specified": {
+        "t_r": 1000
+      },
+      "expected_SI": {
+        "t_r": 1000.0
+      },
+      "actual_SI": {
+        "t_r": {
+          "value": 1000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.larson_miller (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "t_r": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "t_r = 10^(LMP/T - C) = 10^(23 - 20) = 1000 hours"
+      }
+    },
+    {
+      "id": "materials_sci-025",
+      "calculator": "materials_sci.corrosion_rate",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "1 g",
+        "rho": "7.8 g/cm^3",
+        "A": "100 cm^2",
+        "t": "365 day"
+      },
+      "solve_for": [
+        "CR"
+      ],
+      "expected_as_specified": {
+        "CR": "4.0654e-13 m/s"
+      },
+      "expected_SI": {
+        "CR": 4.0654e-13
+      },
+      "actual_SI": {
+        "CR": {
+          "value": 4.0653579466364865e-13,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.corrosion_rate (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "CR": {
+          "absolute_error": 4.205336351351247e-18,
+          "relative_error": 1.034421299589523e-05,
+          "allowed_absolute_error": 4.0654e-16,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "CR = W/(rho A t) = 1e-3/(7800 x 0.01 x 3.1536e7) = 1e-3/2.45981e9 = 4.0654e-13 m/s (about 0.0128 mm/yr)"
+      }
+    },
+    {
+      "id": "materials_sci-026",
+      "calculator": "materials_sci.galvanic_potential",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E_cathode": "-0.13 V",
+        "E_anode": "-0.76 V"
+      },
+      "solve_for": [
+        "E_cell"
+      ],
+      "expected_as_specified": {
+        "E_cell": "0.63 V"
+      },
+      "expected_SI": {
+        "E_cell": 0.63
+      },
+      "actual_SI": {
+        "E_cell": {
+          "value": 0.63,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.galvanic_potential (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "E_cell": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00126,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "E_cell = E_cathode - E_anode = -0.13 - (-0.76) = 0.63 V"
+      }
+    },
+    {
+      "id": "materials_sci-027",
+      "calculator": "materials_sci.composite_modulus",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V_f": 0.4,
+        "E_f": "230 GPa",
+        "E_m": "3.5 GPa"
+      },
+      "solve_for": [
+        "E_L",
+        "E_T",
+        "V_m"
+      ],
+      "expected_as_specified": {
+        "E_L": "94.1 GPa",
+        "E_T": "5.7747 GPa",
+        "V_m": 0.6
+      },
+      "expected_SI": {
+        "E_L": 94100000000.0,
+        "E_T": 5774700000.0,
+        "V_m": 0.6
+      },
+      "actual_SI": {
+        "E_L": {
+          "value": 94100000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.composite_modulus (symbolic)"
+        },
+        "E_T": {
+          "value": 5774748923.959827,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.composite_modulus (symbolic)"
+        },
+        "V_m": {
+          "value": 0.6,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.composite_modulus (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "E_L": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 188200000.0,
+          "passed": true
+        },
+        "E_T": {
+          "absolute_error": 48923.959827423096,
+          "relative_error": 8.472121465603944e-06,
+          "allowed_absolute_error": 11549400.0,
+          "passed": true
+        },
+        "V_m": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0012,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V_m = 1 - 0.4 = 0.6; E_L = 0.4 x 230e9 + 0.6 x 3.5e9 = 92e9 + 2.1e9 = 94.1 GPa; E_T = 1/(0.4/230e9 + 0.6/3.5e9) = 1/(1.73913e-12 + 1.71429e-10) = 1/1.73168e-10 = 5.7747e9 Pa"
+      }
+    },
+    {
+      "id": "materials_sci-028",
+      "calculator": "materials_sci.composite_strength",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V_f": 0.4,
+        "sigma_f": "3.5 GPa",
+        "sigma_m": "30 MPa"
+      },
+      "solve_for": [
+        "sigma_L",
+        "V_m"
+      ],
+      "expected_as_specified": {
+        "sigma_L": "1.418 GPa",
+        "V_m": 0.6
+      },
+      "expected_SI": {
+        "sigma_L": 1418000000.0,
+        "V_m": 0.6
+      },
+      "actual_SI": {
+        "sigma_L": {
+          "value": 1418000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.composite_strength (symbolic)"
+        },
+        "V_m": {
+          "value": 0.6,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.composite_strength (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_L": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2836000.0,
+          "passed": true
+        },
+        "V_m": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0012,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma_L = V_f sigma_f + V_m sigma_m = 0.4 x 3.5e9 + 0.6 x 30e6 = 1.4e9 + 1.8e7 = 1.418e9 Pa"
+      }
+    },
+    {
+      "id": "materials_sci-029",
+      "calculator": "materials_sci.elastic_bounds",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K1": "165 GPa",
+        "G1": "80 GPa",
+        "K2": "2.5 GPa",
+        "G2": "1 GPa",
+        "f1": 0.4
+      },
+      "solve_for": [
+        "E_voigt",
+        "E_reuss",
+        "K_voigt",
+        "K_reuss",
+        "K_hs_upper",
+        "K_hs_lower",
+        "G_voigt",
+        "G_reuss",
+        "G_hs_upper",
+        "G_hs_lower"
+      ],
+      "expected_as_specified": {
+        "E_voigt": "84.239 GPa",
+        "E_reuss": "4.3744 GPa",
+        "K_voigt": "67.5 GPa",
+        "K_reuss": "4.125 GPa",
+        "K_hs_upper": "36.835 GPa",
+        "K_hs_lower": "4.9589 GPa",
+        "G_voigt": "32.6 GPa",
+        "G_reuss": "1.6529 GPa",
+        "G_hs_upper": "21.552 GPa",
+        "G_hs_lower": "2.3587 GPa"
+      },
+      "expected_SI": {
+        "E_voigt": 84239000000.0,
+        "E_reuss": 4374400000.0,
+        "K_voigt": 67500000000.0,
+        "K_reuss": 4125000000.0,
+        "K_hs_upper": 36835000000.0,
+        "K_hs_lower": 4958900000.0,
+        "G_voigt": 32600000000.0,
+        "G_reuss": 1652900000.0,
+        "G_hs_upper": 21552000000.0,
+        "G_hs_lower": 2358700000.0
+      },
+      "actual_SI": {
+        "E_voigt": {
+          "value": 84238621863.03702,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.elastic_bounds (procedure)"
+        },
+        "E_reuss": {
+          "value": 4374401649.6060095,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.elastic_bounds (procedure)"
+        },
+        "K_voigt": {
+          "value": 67500000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.elastic_bounds (procedure)"
+        },
+        "K_reuss": {
+          "value": 4125000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.elastic_bounds (procedure)"
+        },
+        "K_hs_upper": {
+          "value": 36834677419.35482,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.elastic_bounds (procedure)"
+        },
+        "K_hs_lower": {
+          "value": 4958881578.947369,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.elastic_bounds (procedure)"
+        },
+        "G_voigt": {
+          "value": 32600000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.elastic_bounds (procedure)"
+        },
+        "G_reuss": {
+          "value": 1652892561.9834712,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.elastic_bounds (procedure)"
+        },
+        "G_hs_upper": {
+          "value": 21552311067.40298,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.elastic_bounds (procedure)"
+        },
+        "G_hs_lower": {
+          "value": 2358707844.163614,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.elastic_bounds (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "E_voigt": {
+          "absolute_error": 378136.96298217773,
+          "relative_error": 4.488858640085682e-06,
+          "allowed_absolute_error": 84239000.0,
+          "passed": true
+        },
+        "E_reuss": {
+          "absolute_error": 1649.6060094833374,
+          "relative_error": 3.7710451935884634e-07,
+          "allowed_absolute_error": 4374400.0,
+          "passed": true
+        },
+        "K_voigt": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 67500000.0,
+          "passed": true
+        },
+        "K_reuss": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4125000.0,
+          "passed": true
+        },
+        "K_hs_upper": {
+          "absolute_error": 322580.64517974854,
+          "relative_error": 8.757449305816439e-06,
+          "allowed_absolute_error": 36835000.0,
+          "passed": true
+        },
+        "K_hs_lower": {
+          "absolute_error": 18421.052631378174,
+          "relative_error": 3.714745736227424e-06,
+          "allowed_absolute_error": 4958900.0,
+          "passed": true
+        },
+        "G_voigt": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 32600000.0,
+          "passed": true
+        },
+        "G_reuss": {
+          "absolute_error": 7438.016528844833,
+          "relative_error": 4.499979750042249e-06,
+          "allowed_absolute_error": 1652900.0,
+          "passed": true
+        },
+        "G_hs_upper": {
+          "absolute_error": 311067.40298080444,
+          "relative_error": 1.4433342751522106e-05,
+          "allowed_absolute_error": 21552000.0,
+          "passed": true
+        },
+        "G_hs_lower": {
+          "absolute_error": 7844.163613796234,
+          "relative_error": 3.3256300563006037e-06,
+          "allowed_absolute_error": 2358700.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Stiffer phase 1 (K1=165, G1=80 GPa), softer phase 2, f1=0.4, f2=0.6. Voigt: K = 0.4x165 + 0.6x2.5 = 67.5 GPa, G = 0.4x80 + 0.6x1 = 32.6 GPa. Reuss: K = 1/(0.4/165 + 0.6/2.5) = 1/2.42424e-10 = 4.125 GPa, G = 1/(0.4/80 + 0.6/1) = 1/6.05e-10 = 1.6529 GPa. Hashin-Shtrikman (phase 2 stiffer convention): K_up = 165 + 0.6/(1/(2.5-165) + 3x0.4/(3x165+4x80)) = 165 + 0.6/(-4.68146e-12) = 165 - 128.16 = 36.835 GPa; K_lo = 2.5 + 0.4/(1/(165-2.5) + 3x0.6/(3x2.5+4x1)) = 2.5 + 0.4/1.62676e-10 = 2.5 + 2.4589 = 4.9589 GPa; G_up = 80 + 0.6/(1/(1-80) + 6x0.4x(165+160)/(5x80x(495+320))) = 80 + 0.6/(-1.02656e-11) = 80 - 58.448 = 21.552 GPa; G_lo = 1 + 0.4/(1/(80-1) + 6x0.6x(2.5+2)/(5x1x(7.5+4))) = 1 + 0.4/2.94297e-10 = 1 + 1.3592 = 2.3587 GPa. E = 9KG/(3K+G) for each pair."
+      }
+    },
+    {
+      "id": "materials_sci-030",
+      "calculator": "materials_sci.laminate_clt",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "plies": [
+          [
+            0.001,
+            0
+          ]
+        ],
+        "E1": "100 GPa",
+        "E2": "10 GPa",
+        "nu12": 0.3,
+        "G12": "5 GPa"
+      },
+      "solve_for": [
+        "E_x",
+        "E_y",
+        "nu_xy",
+        "G_xy",
+        "h",
+        "A",
+        "B",
+        "D"
+      ],
+      "expected_as_specified": {
+        "E_x": "100 GPa",
+        "E_y": "10 GPa",
+        "nu_xy": 0.3,
+        "G_xy": "5 GPa",
+        "h": "1 mm",
+        "A": [
+          [
+            100908173.56,
+            3027245.21,
+            0.0
+          ],
+          [
+            3027245.21,
+            10090817.36,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            5000000.0
+          ]
+        ],
+        "B": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "D": [
+          [
+            8.4090145,
+            0.2522704,
+            0.0
+          ],
+          [
+            0.2522704,
+            0.8409014,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.4166667
+          ]
+        ]
+      },
+      "expected_SI": {
+        "E_x": 100000000000.0,
+        "E_y": 10000000000.0,
+        "nu_xy": 0.3,
+        "G_xy": 5000000000.0,
+        "h": 0.001,
+        "A": [
+          [
+            100908173.56,
+            3027245.21,
+            0.0
+          ],
+          [
+            3027245.21,
+            10090817.36,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            5000000.0
+          ]
+        ],
+        "B": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "D": [
+          [
+            8.4090145,
+            0.2522704,
+            0.0
+          ],
+          [
+            0.2522704,
+            0.8409014,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.4166667
+          ]
+        ]
+      },
+      "actual_SI": {
+        "E_x": {
+          "value": 100000000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "E_y": {
+          "value": 10000000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "nu_xy": {
+          "value": 0.3,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "G_xy": {
+          "value": 5000000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "h": {
+          "value": 0.001,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "A": {
+          "value": [
+            [
+              100908173.56205854,
+              3027245.206861756,
+              0.0
+            ],
+            [
+              3027245.206861756,
+              10090817.356205853,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              5000000.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)",
+          "unit": ""
+        },
+        "B": {
+          "value": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)",
+          "unit": ""
+        },
+        "D": {
+          "value": [
+            [
+              8.409014463504878,
+              0.2522704339051463,
+              0.0
+            ],
+            [
+              0.2522704339051463,
+              0.8409014463504878,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.4166666666666667
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "E_x": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 100000000.0,
+          "passed": true
+        },
+        "E_y": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 10000000.0,
+          "passed": true
+        },
+        "nu_xy": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0003,
+          "passed": true
+        },
+        "G_xy": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5000000.0,
+          "passed": true
+        },
+        "h": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1e-06,
+          "passed": true
+        },
+        "A": [
+          [
+            {
+              "absolute_error": 0.0020585358142852783,
+              "relative_error": 2.040008991998327e-11,
+              "allowed_absolute_error": 100908.17356000001,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.003138244152069092,
+              "relative_error": 1.0366666504921456e-09,
+              "allowed_absolute_error": 3027.24521,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.003138244152069092,
+              "relative_error": 1.0366666504921456e-09,
+              "allowed_absolute_error": 3027.24521,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.003794146701693535,
+              "relative_error": 3.7599993799645336e-10,
+              "allowed_absolute_error": 10090.81736,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 5000.0,
+              "passed": true
+            }
+          ]
+        ],
+        "B": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ]
+        ],
+        "D": [
+          [
+            {
+              "absolute_error": 3.649512159142887e-08,
+              "relative_error": 4.339999840817122e-09,
+              "allowed_absolute_error": 0.008409014499999999,
+              "passed": true
+            },
+            {
+              "absolute_error": 3.390514630163821e-08,
+              "relative_error": 1.3440001800305628e-07,
+              "allowed_absolute_error": 0.0002522704,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 3.390514630163821e-08,
+              "relative_error": 1.3440001800305628e-07,
+              "allowed_absolute_error": 0.0002522704,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.635048778123263e-08,
+              "relative_error": 5.5120003107656416e-08,
+              "allowed_absolute_error": 0.0008409014,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 3.333333331578814e-08,
+              "relative_error": 7.999999355789205e-08,
+              "allowed_absolute_error": 0.0004166667,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Single 0-deg ply: Qbar = Q. nu21 = 0.3x10/100 = 0.03; denom = 1 - 0.3x0.03 = 0.991. Q11 = 100e9/0.991 = 100.908e9, Q22 = 10e9/0.991 = 10.0908e9, Q12 = 3e9/0.991 = 3.0272e9, Q66 = 5e9. A = Q t (t=1 mm), B = 0 (single ply at mid-plane), D = Q t^3/12. In-plane constants: E_x = Q11 - Q12^2/Q22 = E1 exactly = 100 GPa, E_y = E2 = 10 GPa, nu_xy = Q12/Q22 = 0.3, G_xy = Q66 = 5 GPa."
+      }
+    },
+    {
+      "id": "materials_sci-031",
+      "calculator": "materials_sci.laminate_clt",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "plies": [
+          [
+            0.001,
+            45
+          ]
+        ],
+        "E1": "100 GPa",
+        "E2": "10 GPa",
+        "nu12": 0.3,
+        "G12": "5 GPa"
+      },
+      "solve_for": [
+        "E_x",
+        "E_y",
+        "nu_xy",
+        "G_xy",
+        "h",
+        "A",
+        "B",
+        "D"
+      ],
+      "expected_as_specified": {
+        "A": [
+          [
+            34263370.33,
+            24263370.33,
+            22704339.05
+          ],
+          [
+            24263370.33,
+            34263370.33,
+            22704339.05
+          ],
+          [
+            22704339.05,
+            22704339.05,
+            26236125.13
+          ]
+        ]
+      },
+      "expected_SI": {
+        "A": [
+          [
+            34263370.33,
+            24263370.33,
+            22704339.05
+          ],
+          [
+            24263370.33,
+            34263370.33,
+            22704339.05
+          ],
+          [
+            22704339.05,
+            22704339.05,
+            26236125.13
+          ]
+        ]
+      },
+      "actual_SI": {
+        "A": {
+          "value": [
+            [
+              34263370.33299698,
+              24263370.332996976,
+              22704339.05146317
+            ],
+            [
+              24263370.332996976,
+              34263370.332996964,
+              22704339.051463164
+            ],
+            [
+              22704339.05146317,
+              22704339.051463164,
+              26236125.12613522
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "A": [
+          [
+            {
+              "absolute_error": 0.002996981143951416,
+              "relative_error": 8.746895343588974e-11,
+              "allowed_absolute_error": 34263.37033,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0029969774186611176,
+              "relative_error": 1.235185952281147e-10,
+              "allowed_absolute_error": 24263.370329999998,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0014631710946559906,
+              "relative_error": 6.444455799544583e-11,
+              "allowed_absolute_error": 22704.339050000002,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0029969774186611176,
+              "relative_error": 1.235185952281147e-10,
+              "allowed_absolute_error": 24263.370329999998,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.002996966242790222,
+              "relative_error": 8.746851853526408e-11,
+              "allowed_absolute_error": 34263.37033,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0014631636440753937,
+              "relative_error": 6.444422983876263e-11,
+              "allowed_absolute_error": 22704.339050000002,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0014631710946559906,
+              "relative_error": 6.444455799544583e-11,
+              "allowed_absolute_error": 22704.339050000002,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0014631636440753937,
+              "relative_error": 6.444422983876263e-11,
+              "allowed_absolute_error": 22704.339050000002,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.003864780068397522,
+              "relative_error": 1.4730757873914447e-10,
+              "allowed_absolute_error": 26236.12513,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "45-deg ply: m = n = 0.707107, m^2 = n^2 = 0.5, m^4 = n^4 = 0.25, m^3 n = m n^3 = 0.25. With Q11 = 100.908e9, Q22 = 10.0908e9, Q12 = 3.0272e9, Q66 = 5e9: Qbar11 = Qbar22 = 0.25(Q11 + Q22 + 2Q12 + 4Q66) = 34.2634e9; Qbar12 = 0.25(Q11 + Q22 - 4Q66) + 0.5 Q12 = 24.2634e9; Qbar16 = Qbar26 = 0.25(Q11 - Q22) = 22.7043e9; Qbar66 = 0.25(Q11 + Q22 - 2Q12) = 26.2361e9. A = Qbar x 0.001 m."
+      }
+    },
+    {
+      "id": "materials_sci-032",
+      "calculator": "materials_sci.laminate_clt",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "plies": [
+          [
+            0.001,
+            30
+          ]
+        ],
+        "E1": "100 GPa",
+        "E2": "10 GPa",
+        "nu12": 0.3,
+        "G12": "5 GPa"
+      },
+      "solve_for": [
+        "E_x",
+        "E_y",
+        "nu_xy",
+        "G_xy",
+        "h",
+        "A",
+        "B",
+        "D"
+      ],
+      "expected_as_specified": {
+        "E_x": "20.725 GPa",
+        "E_y": "10.724 GPa",
+        "nu_xy": 0.3886,
+        "G_xy": "7.2993 GPa",
+        "h": "1 mm"
+      },
+      "expected_SI": {
+        "E_x": 20725000000.0,
+        "E_y": 10724000000.0,
+        "nu_xy": 0.3886,
+        "G_xy": 7299300000.0,
+        "h": 0.001
+      },
+      "actual_SI": {
+        "E_x": {
+          "value": 20725388601.03627,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "E_y": {
+          "value": 10723860589.812334,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "nu_xy": {
+          "value": 0.38860103626943004,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "G_xy": {
+          "value": 7299270072.9927,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "h": {
+          "value": 0.001,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "E_x": {
+          "absolute_error": 388601.0362701416,
+          "relative_error": 1.8750351569126254e-05,
+          "allowed_absolute_error": 20725000.0,
+          "passed": true
+        },
+        "E_y": {
+          "absolute_error": 139410.18766593933,
+          "relative_error": 1.2999831002045815e-05,
+          "allowed_absolute_error": 10724000.0,
+          "passed": true
+        },
+        "nu_xy": {
+          "absolute_error": 1.036269430043646e-06,
+          "relative_error": 2.666673777775723e-06,
+          "allowed_absolute_error": 0.0003886,
+          "passed": true
+        },
+        "G_xy": {
+          "absolute_error": 29927.007300376892,
+          "relative_error": 4.099983190220555e-06,
+          "allowed_absolute_error": 7299300.0,
+          "passed": true
+        },
+        "h": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Single off-axis ply (30 deg) has shear-extension coupling A16, A26 != 0, so the membrane constants need the full compliance a = A^-1 (E_x = 1/(h a11), G_xy = 1/(h a66), nu_xy = -a12/a11). Reference computed with a numpy 3x3 inverse of A = Qbar(30 deg) x 1 mm (independent of mechcalc): E_x = 20.725 GPa, E_y = 10.724 GPa, G_xy = 7.2993 GPa, nu_xy = 0.38860."
+      }
+    },
+    {
+      "id": "materials_sci-033",
+      "calculator": "materials_sci.laminate_clt",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "plies": [
+          [
+            0.001,
+            0
+          ],
+          [
+            0.001,
+            45
+          ],
+          [
+            0.001,
+            0
+          ]
+        ],
+        "E1": "100 GPa",
+        "E2": "10 GPa",
+        "nu12": 0.3,
+        "G12": "5 GPa"
+      },
+      "solve_for": [
+        "E_x",
+        "E_y",
+        "nu_xy",
+        "G_xy",
+        "h",
+        "A",
+        "B",
+        "D"
+      ],
+      "expected_as_specified": {
+        "E_x": "71.805 GPa",
+        "E_y": "13.017 GPa",
+        "nu_xy": 0.40011,
+        "G_xy": "8.7688 GPa",
+        "h": "3 mm"
+      },
+      "expected_SI": {
+        "E_x": 71805000000.0,
+        "E_y": 13017000000.0,
+        "nu_xy": 0.40011,
+        "G_xy": 8768800000.0,
+        "h": 0.003
+      },
+      "actual_SI": {
+        "E_x": {
+          "value": 71805116567.2989,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "E_y": {
+          "value": 13017331990.698677,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "nu_xy": {
+          "value": 0.40010922436552254,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "G_xy": {
+          "value": 8768755855.205564,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        },
+        "h": {
+          "value": 0.003,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc materials_sci.laminate_clt (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "E_x": {
+          "absolute_error": 116567.29890441895,
+          "relative_error": 1.6233869355117186e-06,
+          "allowed_absolute_error": 71805000.0,
+          "passed": true
+        },
+        "E_y": {
+          "absolute_error": 331990.698677063,
+          "relative_error": 2.5504394152036796e-05,
+          "allowed_absolute_error": 13017000.0,
+          "passed": true
+        },
+        "nu_xy": {
+          "absolute_error": 7.756344774789703e-07,
+          "relative_error": 1.9385530915972363e-06,
+          "allowed_absolute_error": 0.00040011,
+          "passed": true
+        },
+        "G_xy": {
+          "absolute_error": 44144.7944355011,
+          "relative_error": 5.034302804887909e-06,
+          "allowed_absolute_error": 8768800.0,
+          "passed": true
+        },
+        "h": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 3e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Symmetric [0/45/0] layup (3 plies x 1 mm): A = Qbar(0) t + Qbar(45) t + Qbar(0) t, B = 0 by symmetry. Membrane constants from a = A^-1 (numpy 3x3 inverse, independent of mechcalc): E_x = 71.805 GPa, E_y = 13.017 GPa, G_xy = 8.7688 GPa, nu_xy = 0.40011."
+      }
+    }
+  ],
+  "passed": 33,
+  "failed": 0
+}

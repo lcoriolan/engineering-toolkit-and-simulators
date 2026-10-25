@@ -1,0 +1,630 @@
+{
+  "PROJECT": "Engineering simulation reference data",
+  "DESCRIPTION": "Cited thermoset system library for science toolkit thermoset screens.",
+  "records": [
+    {
+      "id": "dgbea_deta",
+      "name": "DGEBA + DETA",
+      "kind": "epoxy-amine",
+      "resin_eew_g_eq": {
+        "value": 187.0,
+        "unit": "g/eq",
+        "kind": "unverified",
+        "source": "epoxy datasheet (recalled) epoxy equivalent weight (recalled)"
+      },
+      "hardener_ahew_g_eq": {
+        "value": 20.6,
+        "unit": "g/eq",
+        "kind": "unverified",
+        "source": "epoxy datasheet (recalled) amine H equivalent weight (recalled)"
+      },
+      "functionality_resin": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "epoxy datasheet (recalled) epoxy functionality (recalled)"
+      },
+      "functionality_hardener": {
+        "value": 5.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "epoxy datasheet (recalled) amine functionality (recalled)"
+      },
+      "stoichiometric_ratio": {
+        "value": 11.0,
+        "unit": "phr hardener",
+        "kind": "unverified",
+        "source": "derived phr = 100 * AHEW/EEW"
+      },
+      "tg_inf_c": {
+        "value": 125,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "epoxy datasheet (recalled) Tg infinity (recalled)"
+      },
+      "cure_schedule": {
+        "value": "RT gel, 24 h at 25 C + 2 h at 100 C post-cure",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "epoxy datasheet (recalled) cure schedule (recalled)"
+      },
+      "pot_life": {
+        "value": "20-30 min (25 C, 100 g)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "epoxy datasheet (recalled) pot life (recalled)"
+      },
+      "hazards": [
+        "DETA: corrosive, skin sensitizer, acute toxicity; amine blush on humid cure"
+      ],
+      "notes": "DETA = diethylenetriamine, 5 active H (2 primary + 1 secondary); AHEW = 103.17/5 = 20.6. EEW 187 is the DGEBA standard (DER 331 / EPON 828)."
+    },
+    {
+      "id": "dgbea_ipda",
+      "name": "DGEBA + IPDA",
+      "kind": "epoxy-amine",
+      "resin_eew_g_eq": {
+        "value": 187.0,
+        "unit": "g/eq",
+        "kind": "unverified",
+        "source": "Evonik Vestamin IPD / epoxy datasheet (recalled) epoxy equivalent weight (recalled)"
+      },
+      "hardener_ahew_g_eq": {
+        "value": 42.6,
+        "unit": "g/eq",
+        "kind": "unverified",
+        "source": "Evonik Vestamin IPD / epoxy datasheet (recalled) amine H equivalent weight (recalled)"
+      },
+      "functionality_resin": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Evonik Vestamin IPD / epoxy datasheet (recalled) epoxy functionality (recalled)"
+      },
+      "functionality_hardener": {
+        "value": 4.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Evonik Vestamin IPD / epoxy datasheet (recalled) amine functionality (recalled)"
+      },
+      "stoichiometric_ratio": {
+        "value": 22.8,
+        "unit": "phr hardener",
+        "kind": "unverified",
+        "source": "derived phr = 100 * AHEW/EEW"
+      },
+      "tg_inf_c": {
+        "value": 160,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Evonik Vestamin IPD / epoxy datasheet (recalled) Tg infinity (recalled)"
+      },
+      "cure_schedule": {
+        "value": "2 h at 60 C + 2 h at 150 C post-cure (or 2 h at 80 C + 2 h at 150 C)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Evonik Vestamin IPD / epoxy datasheet (recalled) cure schedule (recalled)"
+      },
+      "pot_life": {
+        "value": "several hours (25 C)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Evonik Vestamin IPD / epoxy datasheet (recalled) pot life (recalled)"
+      },
+      "hazards": [
+        "IPDA: irritant, corrosive, skin sensitizer; handle with nitrile gloves"
+      ],
+      "notes": "IPDA = isophoronediamine, 4 active H (2 primary NH2); AHEW = 170.30/4 = 42.6. phr = 100*42.6/187 = 22.8. High Tg, low-viscosity amine."
+    },
+    {
+      "id": "dgbea_dds",
+      "name": "DGEBA + DDS",
+      "kind": "epoxy-amine",
+      "resin_eew_g_eq": {
+        "value": 187.0,
+        "unit": "g/eq",
+        "kind": "unverified",
+        "source": "epoxy/DDS datasheet (recalled) epoxy equivalent weight (recalled)"
+      },
+      "hardener_ahew_g_eq": {
+        "value": 62.1,
+        "unit": "g/eq",
+        "kind": "unverified",
+        "source": "epoxy/DDS datasheet (recalled) amine H equivalent weight (recalled)"
+      },
+      "functionality_resin": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "epoxy/DDS datasheet (recalled) epoxy functionality (recalled)"
+      },
+      "functionality_hardener": {
+        "value": 4.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "epoxy/DDS datasheet (recalled) amine functionality (recalled)"
+      },
+      "stoichiometric_ratio": {
+        "value": 33.2,
+        "unit": "phr hardener",
+        "kind": "unverified",
+        "source": "derived phr = 100 * AHEW/EEW"
+      },
+      "tg_inf_c": {
+        "value": 220,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "epoxy/DDS datasheet (recalled) Tg infinity (recalled)"
+      },
+      "cure_schedule": {
+        "value": "1 h at 100 C + 2 h at 177 C + 2 h at 200 C",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "epoxy/DDS datasheet (recalled) cure schedule (recalled)"
+      },
+      "pot_life": {
+        "value": "solid aromatic amine; melt-mix at ~130 C",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "epoxy/DDS datasheet (recalled) pot life (recalled)"
+      },
+      "hazards": [
+        "DDS: skin sensitizer; high cure temperature needed (aromatic amine is sluggish)"
+      ],
+      "notes": "DDS = 4,4'-diaminodiphenyl sulfone, 4 active H; AHEW = 248.30/4 = 62.1. High-Tg aerospace cure."
+    },
+    {
+      "id": "dgbea_mthpa",
+      "name": "DGEBA + MTHPA anhydride",
+      "kind": "epoxy-amine",
+      "resin_eew_g_eq": {
+        "value": 187.0,
+        "unit": "g/eq",
+        "kind": "unverified",
+        "source": "Huntsman Aradur HY 917 / Lindau MTHPA datasheet (recalled) epoxy equivalent weight (recalled)"
+      },
+      "hardener_ahew_g_eq": {
+        "value": 166.0,
+        "unit": "g/eq",
+        "kind": "unverified",
+        "source": "Huntsman Aradur HY 917 / Lindau MTHPA datasheet (recalled) amine H equivalent weight (recalled)"
+      },
+      "functionality_resin": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Huntsman Aradur HY 917 / Lindau MTHPA datasheet (recalled) epoxy functionality (recalled)"
+      },
+      "functionality_hardener": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Huntsman Aradur HY 917 / Lindau MTHPA datasheet (recalled) amine functionality (recalled)"
+      },
+      "stoichiometric_ratio": {
+        "value": 88.8,
+        "unit": "phr hardener",
+        "kind": "unverified",
+        "source": "derived phr = 100 * AHEW/EEW"
+      },
+      "tg_inf_c": {
+        "value": 140,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Huntsman Aradur HY 917 / Lindau MTHPA datasheet (recalled) Tg infinity (recalled)"
+      },
+      "cure_schedule": {
+        "value": "2 h at 80 C + 2 h at 150 C (with tertiary-amine accelerator)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Huntsman Aradur HY 917 / Lindau MTHPA datasheet (recalled) cure schedule (recalled)"
+      },
+      "pot_life": {
+        "value": "24 h+ (25 C, accelerated)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Huntsman Aradur HY 917 / Lindau MTHPA datasheet (recalled) pot life (recalled)"
+      },
+      "hazards": [
+        "MTHPA: irritant; use with accelerator (1-3 phr tertiary amine / imidazole)"
+      ],
+      "notes": "MTHPA = methyltetrahydrophthalic anhydride (MW 166), difunctional toward epoxy-OH; AHEW 166. Ester-forming cure gives good electrical properties."
+    },
+    {
+      "id": "novolac_epoxy_dds",
+      "name": "Novolac epoxy + DDS",
+      "kind": "epoxy-amine",
+      "resin_eew_g_eq": {
+        "value": 178.0,
+        "unit": "g/eq",
+        "kind": "unverified",
+        "source": "Huntsman epoxy novolac datasheet (recalled) epoxy equivalent weight (recalled)"
+      },
+      "hardener_ahew_g_eq": {
+        "value": 62.1,
+        "unit": "g/eq",
+        "kind": "unverified",
+        "source": "Huntsman epoxy novolac datasheet (recalled) amine H equivalent weight (recalled)"
+      },
+      "functionality_resin": {
+        "value": 2.6,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Huntsman epoxy novolac datasheet (recalled) epoxy functionality (recalled)"
+      },
+      "functionality_hardener": {
+        "value": 4.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Huntsman epoxy novolac datasheet (recalled) amine functionality (recalled)"
+      },
+      "stoichiometric_ratio": {
+        "value": 34.9,
+        "unit": "phr hardener",
+        "kind": "unverified",
+        "source": "derived phr = 100 * AHEW/EEW"
+      },
+      "tg_inf_c": {
+        "value": 235,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Huntsman epoxy novolac datasheet (recalled) Tg infinity (recalled)"
+      },
+      "cure_schedule": {
+        "value": "2 h at 100 C + 2 h at 177 C + 2 h at 220 C",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Huntsman epoxy novolac datasheet (recalled) cure schedule (recalled)"
+      },
+      "pot_life": {
+        "value": "melt-mix at ~150 C",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Huntsman epoxy novolac datasheet (recalled) pot life (recalled)"
+      },
+      "hazards": [
+        "novolac epoxy: phenol-formaldehyde backbone; DDS skin sensitizer"
+      ],
+      "notes": "Epoxy novolac (EEW 178, functionality ~2.6) + DDS gives higher crosslink density and Tg than DGEBA."
+    },
+    {
+      "id": "pu_mdi_polyether",
+      "name": "PU (MDI + polyether polyol)",
+      "kind": "polyurethane",
+      "isocyanate_nco_pct": {
+        "value": 31.0,
+        "unit": "% NCO",
+        "kind": "unverified",
+        "source": "MDI-based isocyanate NCO content (recalled)"
+      },
+      "polyol_oh_number": {
+        "value": 56.0,
+        "unit": "mg KOH/g",
+        "kind": "unverified",
+        "source": "polyether polyol OH number (recalled)"
+      },
+      "functionality_resin": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "polyol OH functionality (recalled)"
+      },
+      "functionality_hardener": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "MDI NCO functionality (recalled)"
+      },
+      "stoichiometric_ratio": {
+        "value": 1.05,
+        "unit": "NCO index",
+        "kind": "unverified",
+        "source": "isocyanate index (NCO/OH, recalled)"
+      },
+      "tg_inf_c": {
+        "value": 70,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "polyether PU Tg (recalled)"
+      },
+      "cure_schedule": {
+        "value": "demould 5-15 min at 60-80 C; full cure 24 h",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "PU processing guide (recalled)"
+      },
+      "pot_life": {
+        "value": "30 s - 3 min (fast RIM)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "PU processing guide (recalled)"
+      },
+      "hazards": [
+        "MDI: respiratory sensitizer (isocyanate asthma); moisture-cures; use extraction"
+      ],
+      "notes": "Parts polyol per 100 parts isocyanate from OH number and NCO %: phr_polyol = 100 * NCO_index * (NCO% * 42.02) / (OH_number * 1000 / 56.1)."
+    },
+    {
+      "id": "pu_hdi_polyester",
+      "name": "PU (HDI + polyester polyol)",
+      "kind": "polyurethane",
+      "isocyanate_nco_pct": {
+        "value": 23.0,
+        "unit": "% NCO",
+        "kind": "unverified",
+        "source": "HDI-based isocyanate NCO content (recalled)"
+      },
+      "polyol_oh_number": {
+        "value": 280.0,
+        "unit": "mg KOH/g",
+        "kind": "unverified",
+        "source": "polyester polyol OH number (recalled)"
+      },
+      "functionality_resin": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "polyol OH functionality (recalled)"
+      },
+      "functionality_hardener": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "HDI NCO functionality (recalled)"
+      },
+      "stoichiometric_ratio": {
+        "value": 1.05,
+        "unit": "NCO index",
+        "kind": "unverified",
+        "source": "isocyanate index (NCO/OH, recalled)"
+      },
+      "tg_inf_c": {
+        "value": 45,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "polyester PU Tg (recalled)"
+      },
+      "cure_schedule": {
+        "value": "demould 10-30 min at 60 C; full cure 24 h",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "PU processing guide (recalled)"
+      },
+      "pot_life": {
+        "value": "5-30 min (25 C)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "PU processing guide (recalled)"
+      },
+      "hazards": [
+        "HDI: respiratory sensitizer; more volatile than MDI"
+      ],
+      "notes": "Aliphatic HDI gives light-stable (non-yellowing) coatings/elastomers."
+    },
+    {
+      "id": "silicone_addition_pt",
+      "name": "Silicone (addition cure, Pt)",
+      "kind": "silicone-addition",
+      "vinyl_pdms": {
+        "value": 1.0,
+        "unit": "functional (vinyl)",
+        "kind": "unverified",
+        "source": "two-part RTV silicone (recalled)"
+      },
+      "hydride_pdms": {
+        "value": 1.0,
+        "unit": "functional (Si-H)",
+        "kind": "unverified",
+        "source": "two-part RTV silicone (recalled)"
+      },
+      "functionality_resin": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "vinyl functionality (recalled)"
+      },
+      "functionality_hardener": {
+        "value": 3.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Si-H functionality (recalled)"
+      },
+      "stoichiometric_ratio": {
+        "value": 1.0,
+        "unit": "SiH:vinyl",
+        "kind": "unverified",
+        "source": "hydrosilylation stoichiometry (recalled)"
+      },
+      "tg_inf_c": {
+        "value": -120,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "PDMS Tg (recalled)"
+      },
+      "cure_schedule": {
+        "value": "RT or 10 min at 100 C (Pt-catalysed hydrosilylation)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "RTV silicone datasheet (recalled)"
+      },
+      "pot_life": {
+        "value": "30 min - 2 h (25 C)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "RTV silicone datasheet (recalled)"
+      },
+      "hazards": [
+        "Pt catalyst poisoned by amines, sulfur, tin; no exotherm concern"
+      ],
+      "notes": "Hydrosilylation: Si-H adds across vinyl, catalysed by Karstedt Pt. No volatile by-products (no shrinkage)."
+    },
+    {
+      "id": "silicone_condensation",
+      "name": "Silicone (condensation cure)",
+      "kind": "silicone-condensation",
+      "functionality_resin": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "silanol functionality (recalled)"
+      },
+      "functionality_hardener": {
+        "value": 3.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "alkoxysilane crosslinker functionality (recalled)"
+      },
+      "stoichiometric_ratio": {
+        "value": 1.0,
+        "unit": "crosslinker:silanol",
+        "kind": "unverified",
+        "source": "condensation stoichiometry (recalled)"
+      },
+      "tg_inf_c": {
+        "value": -115,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "PDMS Tg (recalled)"
+      },
+      "cure_schedule": {
+        "value": "24-72 h at RT (moisture-cure, tin/titanate catalysed)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "RTV silicone datasheet (recalled)"
+      },
+      "pot_life": {
+        "value": "20-60 min (25 C)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "RTV silicone datasheet (recalled)"
+      },
+      "hazards": [
+        "releases alcohol/acetic acid by-product (shrinks slightly)",
+        "tin catalysts restricted in some food/medical use"
+      ],
+      "notes": "Acetoxy/alkoxy condensation cure liberates small molecules; slower and shrinks more than addition cure.",
+      "crosslinker": {
+        "value": "alkoxysilane (condensation cure)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "RTV silicone datasheet (recalled)"
+      }
+    },
+    {
+      "id": "up_resin_styrene",
+      "name": "Unsaturated polyester + styrene",
+      "kind": "UP-styrene",
+      "up_mw_g_mol": {
+        "value": 1000.0,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "UP oligomer Mn (recalled)"
+      },
+      "styrene_content": {
+        "value": 35.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "styrene monomer content (recalled)"
+      },
+      "functionality_resin": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "C=C functionality of UP (recalled)"
+      },
+      "functionality_hardener": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "styrene C=C functionality (recalled)"
+      },
+      "stoichiometric_ratio": {
+        "value": 35.0,
+        "unit": "phr styrene",
+        "kind": "unverified",
+        "source": "styrene loading (recalled)"
+      },
+      "tg_inf_c": {
+        "value": 120,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "UP-styrene Tg (recalled)"
+      },
+      "cure_schedule": {
+        "value": "MEKP initiator 1-2 phr, RT cure + 2 h at 80 C post-cure",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "UP resin datasheet (recalled)"
+      },
+      "pot_life": {
+        "value": "10-30 min (25 C, MEKP)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "UP resin datasheet (recalled)"
+      },
+      "hazards": [
+        "styrene: flammable, suspected reprotoxic, strong odour; MEKP peroxide: oxidiser, explosive on concentration"
+      ],
+      "notes": "Styrene copolymerises with the fumarate C=C in the UP backbone; MEKP (methyl ethyl ketone peroxide) initiates free-radical cure."
+    },
+    {
+      "id": "phenolic_resol",
+      "name": "Phenolic (resol)",
+      "kind": "phenolic",
+      "phenol_formaldehyde": {
+        "value": 1.0,
+        "unit": "resol (self-curing)",
+        "kind": "unverified",
+        "source": "phenolic resin (recalled)"
+      },
+      "hexamine_phr": {
+        "value": 10.0,
+        "unit": "phr hexamine",
+        "kind": "unverified",
+        "source": "novolac + hexamine (recalled)"
+      },
+      "functionality_resin": {
+        "value": 3.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "methylol functionality (recalled)"
+      },
+      "functionality_hardener": {
+        "value": 3.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "hexamine functionality (recalled)"
+      },
+      "stoichiometric_ratio": {
+        "value": 10.0,
+        "unit": "phr hexamine",
+        "kind": "unverified",
+        "source": "novolac cure (recalled)"
+      },
+      "tg_inf_c": {
+        "value": 200,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "cured phenolic Tg (recalled)"
+      },
+      "cure_schedule": {
+        "value": "150-180 C under pressure (water/ammonia by-products)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "phenolic datasheet (recalled)"
+      },
+      "pot_life": {
+        "value": "months (novolac, latent)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "phenolic datasheet (recalled)"
+      },
+      "hazards": [
+        "formaldehyde release during cure",
+        "phenol skin sensitizer",
+        "cure releases water (needs vented mould)"
+      ],
+      "notes": "Resol self-cures on heating via methylol condensation; novolac needs hexamine (10 phr). Char-forming, high flame resistance."
+    }
+  ]
+}

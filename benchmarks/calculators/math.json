@@ -1,0 +1,3712 @@
+{
+  "section": "math",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k math",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "math.circle_area": {
+      "title": "Circle: area and circumference",
+      "variables": [
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "m",
+          "desc": "circumference",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "A = pi*r**2",
+        "C = 2*pi*r"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A",
+        "C"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Area and circumference of a circle (Euclidean geometry; recalled)"
+      ],
+      "synthetic_example": {
+        "r": 1.0
+      }
+    },
+    "math.sphere_volume": {
+      "title": "Sphere: volume and surface area",
+      "variables": [
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m^3",
+          "desc": "volume",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "surface area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "V = 4*pi*r**3/3",
+        "A = 4*pi*r**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "V",
+        "A"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Volume and surface area of a sphere (Euclidean geometry; recalled)"
+      ],
+      "synthetic_example": {
+        "r": 1.0
+      }
+    },
+    "math.arc_length": {
+      "title": "Circular arc length (s = r\u00b7\u03b8)",
+      "variables": [
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "central angle",
+          "lo": null,
+          "hi": 6.283185307179586,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "arc length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "s = r*theta"
+      ],
+      "procedure": null,
+      "outputs": [
+        "s"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Circular arc length s = r\u03b8 (\u03b8 in radians; recalled)"
+      ],
+      "synthetic_example": {
+        "r": 0.5,
+        "theta": 1.0471975511965976
+      }
+    },
+    "math.curvature": {
+      "title": "Curvature of a circle (\u03ba = 1/R)",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "m",
+          "desc": "radius of curvature",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "kappa",
+          "unit": "1/m",
+          "desc": "curvature",
+          "lo": null,
+          "hi": null,
+          "label": "\u03ba",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "kappa = 1/R"
+      ],
+      "procedure": null,
+      "outputs": [
+        "kappa"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Curvature of a circular arc, \u03ba = 1/R (recalled)"
+      ],
+      "synthetic_example": {
+        "R": 0.25
+      }
+    },
+    "math.triangle_centroid": {
+      "title": "Centroid of a triangle (average of vertices)",
+      "variables": [
+        {
+          "name": "vertices",
+          "unit": "",
+          "desc": "three [x, y] vertex rows (m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "x_bar",
+          "unit": "m",
+          "desc": "x\u0304 of the centroid",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_bar",
+          "unit": "m",
+          "desc": "\u0233 of the centroid",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _triangle_centroid(v):\n    \"\"\"Centroid (average of vertices) of a triangle given by three [x, y] vertices.\"\"\"\n    verts = v['vertices']\n    if not isinstance(verts, (list, tuple)) or len(verts) != 3 or not all(\n            isinstance(p, (list, tuple)) and len(p) == 2 for p in verts):\n        raise MechError('vertices: give three [x, y] JSON rows')\n    pts = [[_finite(p[0], 'x'), _finite(p[1], 'y')] for p in verts]\n    return {'x_bar': sum(p[0] for p in pts) / 3.0, 'y_bar': sum(p[1] for p in pts) / 3.0}\n",
+        "source": "math.py",
+        "line": 353
+      },
+      "outputs": [
+        "x_bar",
+        "y_bar"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Centroid of a triangle = mean of its vertices (recalled)"
+      ],
+      "synthetic_example": {
+        "vertices": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            1,
+            3
+          ]
+        ]
+      }
+    },
+    "math.vector_components": {
+      "title": "Vector components from magnitude and direction",
+      "variables": [
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "direction from +x, CCW +",
+          "lo": -6.283185307179586,
+          "hi": 6.283185307179586,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x",
+          "unit": "",
+          "desc": "x component",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y",
+          "unit": "",
+          "desc": "y component",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "x = r*cos(theta)",
+        "y = r*sin(theta)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "x",
+        "y"
+      ],
+      "assumptions": [
+        "Dimensionless vector; inverse solves for \u03b8 return the root closest to the example (check the quadrant)."
+      ],
+      "method_references": [
+        "Rectangular components of a vector"
+      ],
+      "synthetic_example": {
+        "r": 5.0,
+        "theta": 0.5235987755982988
+      }
+    },
+    "math.det2": {
+      "title": "Determinant of a 2\u00d72 matrix (ad \u2212 bc)",
+      "variables": [
+        {
+          "name": "a",
+          "unit": "",
+          "desc": "row 1, col 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "desc": "row 1, col 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "",
+          "desc": "row 2, col 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "",
+          "desc": "row 2, col 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "det",
+          "unit": "",
+          "desc": "determinant ad \u2212 bc",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "det = a*d - b*c"
+      ],
+      "procedure": null,
+      "outputs": [
+        "det"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Determinant of a 2\u00d72 matrix (recalled)"
+      ],
+      "synthetic_example": {
+        "a": 1.0,
+        "b": 2.0,
+        "c": 3.0,
+        "d": 4.0
+      }
+    },
+    "math.vector_ops": {
+      "title": "3-D vector algebra: magnitudes, dot, cross, resultant, angle",
+      "variables": [
+        {
+          "name": "a",
+          "unit": "",
+          "desc": "first vector [ax, ay, az]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "desc": "second vector [bx, by, bz]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "dot",
+          "unit": "",
+          "desc": "dot product a\u00b7b",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cross",
+          "unit": "",
+          "desc": "cross product a\u00d7b as [cx, cy, cz]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "mag_a",
+          "unit": "",
+          "desc": "|a|",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mag_b",
+          "unit": "",
+          "desc": "|b|",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "angle",
+          "unit": "rad",
+          "desc": "angle between a and b",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sum",
+          "unit": "",
+          "desc": "resultant a + b as [sx, sy, sz]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "sum_mag",
+          "unit": "",
+          "desc": "|a + b|",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _vector_ops(v):\n    \"\"\"3-D vector algebra: magnitudes, dot and cross products, resultant and included angle.\"\"\"\n    a, b = v['a'], v['b']\n    if not isinstance(a, (list, tuple)) or len(a) != 3 or not isinstance(b, (list, tuple)) or len(b) != 3:\n        raise MechError('a and b: give two 3-component JSON lists')\n    a = [_finite(x, 'a component') for x in a]\n    b = [_finite(x, 'b component') for x in b]\n    dot = sum(ai * bi for ai, bi in zip(a, b))\n    cross = [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]\n    ma, mb = math.sqrt(sum(x * x for x in a)), math.sqrt(sum(x * x for x in b))\n    if ma == 0 or mb == 0:\n        raise MechError('a and b must be non-zero vectors')\n    ang = math.acos(max(-1.0, min(1.0, dot / (ma * mb))))\n    return {'dot': dot, 'cross': cross, 'mag_a': ma, 'mag_b': mb, 'angle': ang,\n            'sum': [a[0] + b[0], a[1] + b[1], a[2] + b[2]],\n            'sum_mag': math.sqrt(sum((a[i] + b[i]) ** 2 for i in range(3)))}\n",
+        "source": "math.py",
+        "line": 305
+      },
+      "outputs": [
+        "dot",
+        "cross",
+        "mag_a",
+        "mag_b",
+        "angle",
+        "sum",
+        "sum_mag"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Dot product, cross product, vector magnitude and included angle (recalled)"
+      ],
+      "synthetic_example": {
+        "a": [
+          1,
+          2,
+          3
+        ],
+        "b": [
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    "math.matrix_ops": {
+      "title": "Matrix determinant, trace and inverse (2\u00d72 or 3\u00d73)",
+      "variables": [
+        {
+          "name": "matrix",
+          "unit": "",
+          "desc": "square matrix as a JSON list of rows",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "det",
+          "unit": "",
+          "desc": "determinant",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "trace",
+          "unit": "",
+          "desc": "trace (sum of diagonal)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "inverse",
+          "unit": "",
+          "desc": "inverse matrix as a JSON list of rows",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _matrix_ops(v):\n    \"\"\"Determinant, trace and inverse of a square 2x2 or 3x3 matrix.\"\"\"\n    m = v['matrix']\n    if not isinstance(m, (list, tuple)) or len(m) not in (2, 3) or not all(\n            isinstance(row, (list, tuple)) and len(row) == len(m) for row in m):\n        raise MechError('matrix: give a square 2x2 or 3x3 JSON list of rows')\n    a = np.array([[float(x) for x in row] for row in m])\n    det = float(np.linalg.det(a))\n    if abs(det) < 1e-15:\n        raise MechError('matrix is singular (zero determinant); inverse is undefined')\n    inv = np.linalg.inv(a).tolist()\n    return {'det': det, 'trace': float(np.trace(a)), 'inverse': inv}\n",
+        "source": "math.py",
+        "line": 323
+      },
+      "outputs": [
+        "det",
+        "trace",
+        "inverse"
+      ],
+      "assumptions": [
+        "Raises an error for a singular matrix."
+      ],
+      "method_references": [
+        "Determinant, trace and inverse of a square matrix (recalled)"
+      ],
+      "synthetic_example": {
+        "matrix": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      }
+    },
+    "math.eigen": {
+      "title": "Eigenvalues and eigenvectors (real symmetric 2\u00d72 or 3\u00d73)",
+      "variables": [
+        {
+          "name": "matrix",
+          "unit": "",
+          "desc": "symmetric matrix as a JSON list of rows",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "eigenvalues",
+          "unit": "",
+          "desc": "eigenvalues, descending",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "eigenvectors",
+          "unit": "",
+          "desc": "unit eigenvectors (columns, same order as eigenvalues)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _eigen(v):\n    \"\"\"Eigenvalues (descending) and unit eigenvectors of a real symmetric 2x2 or 3x3 matrix.\"\"\"\n    m = v['matrix']\n    if not isinstance(m, (list, tuple)) or len(m) not in (2, 3) or not all(\n            isinstance(row, (list, tuple)) and len(row) == len(m) for row in m):\n        raise MechError('matrix: give a square 2x2 or 3x3 JSON list of rows')\n    a = np.array([[float(x) for x in row] for row in m])\n    if not np.allclose(a, a.T, atol=1e-12):\n        raise MechError('eigen: eigenvalues/eigenvectors require a symmetric matrix '\n                        '(off-diagonal symmetry violated)')\n    w, vec = np.linalg.eigh(a)\n    order = np.argsort(w)[::-1]\n    return {'eigenvalues': [float(w[i]) for i in order],\n            'eigenvectors': [vec[:, i].tolist() for i in order]}\n",
+        "source": "math.py",
+        "line": 337
+      },
+      "outputs": [
+        "eigenvalues",
+        "eigenvectors"
+      ],
+      "assumptions": [
+        "Restricted to real symmetric matrices so the eigen-decomposition is real and the eigenvectors are orthogonal."
+      ],
+      "method_references": [
+        "Eigendecomposition of a real symmetric matrix (recalled)"
+      ],
+      "synthetic_example": {
+        "matrix": [
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    },
+    "math.derivative": {
+      "title": "Derivative of f(x): symbolic and numeric",
+      "variables": [
+        {
+          "name": "expr",
+          "unit": "",
+          "desc": "expression in x, as a one-element JSON list [\"f(x)\"]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "at",
+          "unit": "",
+          "desc": "x value at which to evaluate the derivative",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "derivative_expr",
+          "unit": "",
+          "desc": "symbolic derivative (expression string)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "value",
+          "unit": "",
+          "desc": "f'(x) evaluated at x = at",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _derivative(v):\n    \"\"\"Symbolic and numeric derivative of f(x): derivative_expr (string) and its value at x = at.\"\"\"\n    expr, syms = _parse(_expr_text(v['expr']), 'x')\n    x = syms['x']\n    d = _sym_op(lambda: sp.diff(expr, x), 'symbolic differentiation')\n    fn = _lambdified(d, syms, (x,))\n    return {'derivative_expr': sp.sstr(d), 'value': _finite(fn(_finite(v['at'], 'at')))}\n",
+        "source": "math.py",
+        "line": 110
+      },
+      "outputs": [
+        "derivative_expr",
+        "value"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Symbolic differentiation (sympy); derivative by the power rule (recalled)"
+      ],
+      "synthetic_example": {
+        "expr": [
+          "x**2 + 3*x"
+        ],
+        "at": 3.0
+      }
+    },
+    "math.integral": {
+      "title": "Definite and indefinite integral of f(x)",
+      "variables": [
+        {
+          "name": "expr",
+          "unit": "",
+          "desc": "expression in x, as a one-element JSON list [\"f(x)\"]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "",
+          "desc": "lower limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "desc": "upper limit (b > a)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "integral_expr",
+          "unit": "",
+          "desc": "indefinite integral (expression string)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "definite",
+          "unit": "",
+          "desc": "definite integral over [a, b]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _integral(v):\n    \"\"\"Indefinite integral (string) and the definite integral of f(x) over [a, b].\"\"\"\n    expr, syms = _parse(_expr_text(v['expr']), 'x')\n    x = syms['x']\n    a, b = _finite(v['a'], 'a'), _finite(v['b'], 'b')\n    if b <= a:\n        raise MechError('integral: need b > a')\n    indef = _sym_op(lambda: sp.integrate(expr, x), 'indefinite integration')\n    val = _sym_op(lambda: sp.integrate(expr, (x, a, b)), 'definite integration')\n    # Refuse a complex result outright: silently taking .real would hide a sign/branch error.\n    return {'integral_expr': sp.sstr(indef), 'definite': _real_value(val, 'integral: definite value')}\n",
+        "source": "math.py",
+        "line": 119
+      },
+      "outputs": [
+        "integral_expr",
+        "definite"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Fundamental theorem of calculus; symbolic integration (recalled)"
+      ],
+      "synthetic_example": {
+        "expr": [
+          "x"
+        ],
+        "a": 0.0,
+        "b": 2.0
+      }
+    },
+    "math.laplace_transform": {
+      "title": "Laplace transform L{f(t)}(s): symbolic and numeric",
+      "variables": [
+        {
+          "name": "expr",
+          "unit": "",
+          "desc": "expression in t, as a one-element JSON list [\"f(t)\"]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "s_val",
+          "unit": "",
+          "desc": "s value at which to evaluate the transform",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "transform",
+          "unit": "",
+          "desc": "Laplace transform (expression string in s)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "value",
+          "unit": "",
+          "desc": "transform evaluated at s = s_val",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _laplace(v):\n    \"\"\"Laplace transform L{f(t)}(s) (string) and its value at s = s_val.\"\"\"\n    expr, syms = _parse(_expr_text(v['expr']), 't')\n    t = syms['t']\n    s = sp.Symbol('s', real=True)\n    F = _sym_op(lambda: sp.laplace_transform(expr, t, s, noconds=True), 'Laplace transform')\n    sval = _finite(v['s_val'], 's_val')\n    try:\n        fn = _lambdified(F, syms, (s,))\n        val = fn(sval)\n    except MechError:\n        raise\n    except Exception:\n        val = F.subs(s, sval)\n    return {'transform': sp.sstr(F), 'value': _real_value(val, 'laplace_transform: value')}\n",
+        "source": "math.py",
+        "line": 132
+      },
+      "outputs": [
+        "transform",
+        "value"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Unilateral Laplace transform L{f(t)} = \u222b\u2080^\u221e f(t)e^(\u2212st) dt (recalled)"
+      ],
+      "synthetic_example": {
+        "expr": [
+          "exp(-3*t)"
+        ],
+        "s_val": 1.0
+      }
+    },
+    "math.fourier_transform": {
+      "title": "Fourier transform F{f(x)}(k): symbolic and numeric",
+      "variables": [
+        {
+          "name": "expr",
+          "unit": "",
+          "desc": "expression in x, as a one-element JSON list [\"f(x)\"]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "k_val",
+          "unit": "",
+          "desc": "k value at which to evaluate the transform",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "transform",
+          "unit": "",
+          "desc": "Fourier transform (expression string in k)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "value",
+          "unit": "",
+          "desc": "transform evaluated at k = k_val",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _fourier(v):\n    \"\"\"Fourier transform F{f(x)}(k) (sympy convention F(k)=\u222bf(x)e^(-2\u03c0ikx)dx); value at k = k_val.\"\"\"\n    expr, syms = _parse(_expr_text(v['expr']), 'x')\n    x = syms['x']\n    k = sp.Symbol('k', real=True)\n    F = _sym_op(lambda: sp.fourier_transform(expr, x, k), 'Fourier transform')\n    kval = _finite(v['k_val'], 'k_val')\n    try:\n        fn = _lambdified(F, syms, (k,))\n        val = fn(kval)\n    except MechError:\n        raise\n    except Exception:\n        val = F.subs(k, kval)\n    return {'transform': sp.sstr(F), 'value': _real_value(val, 'fourier_transform: value')}\n",
+        "source": "math.py",
+        "line": 149
+      },
+      "outputs": [
+        "transform",
+        "value"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Fourier transform F(k) = \u222b f(x)e^(\u22122\u03c0ikx) dx (sympy convention; recalled)"
+      ],
+      "synthetic_example": {
+        "expr": [
+          "exp(-x**2)"
+        ],
+        "k_val": 1.0
+      }
+    },
+    "math.newton_raphson": {
+      "title": "Newton\u2013Raphson root of f(x) = 0",
+      "variables": [
+        {
+          "name": "expr",
+          "unit": "",
+          "desc": "expression in x, as a one-element JSON list [\"f(x)\"]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "x0",
+          "unit": "",
+          "desc": "starting guess",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "root",
+          "unit": "",
+          "desc": "converged root",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "iterations",
+          "unit": "",
+          "desc": "iterations used",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _newton(v):\n    \"\"\"Newton\u2013Raphson root of f(x)=0 from a starting guess x0 (iterated to 1e-12 relative tolerance).\"\"\"\n    expr, syms = _parse(_expr_text(v['expr']), 'x')\n    x = syms['x']\n    f = _lambdified(expr, syms, (x,))\n    df = _lambdified(_sym_op(lambda: sp.diff(expr, x), 'symbolic differentiation'), syms, (x,))\n    xn = _finite(v['x0'], 'x0')\n    for i in range(100):\n        fx, d = f(xn), df(xn)\n        if not (math.isfinite(fx) and math.isfinite(d)) or d == 0:\n            raise MechError(f'Newton\u2013Raphson broke down at x = {xn:.6g} (derivative vanished); '\n                            f'pick another x0')\n        xn1 = xn - fx / d\n        if abs(xn1 - xn) <= 1e-12 * max(1.0, abs(xn1)):\n            xn = xn1\n            break\n        xn = xn1\n    else:\n        raise MechError('Newton\u2013Raphson did not converge in 100 iterations')\n    if not math.isfinite(xn):\n        raise MechError('Newton\u2013Raphson diverged; pick a starting guess nearer a root')\n    return {'root': xn, 'iterations': i + 1}\n",
+        "source": "math.py",
+        "line": 166
+      },
+      "outputs": [
+        "root",
+        "iterations"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Newton\u2013Raphson iteration x_{n+1} = x_n \u2212 f(x_n)/f\u2032(x_n) (recalled)"
+      ],
+      "synthetic_example": {
+        "expr": [
+          "x**2 - 2"
+        ],
+        "x0": 1.0
+      }
+    },
+    "math.simpson_rule": {
+      "title": "Composite Simpson's rule (n even panels)",
+      "variables": [
+        {
+          "name": "expr",
+          "unit": "",
+          "desc": "integrand in x, as a one-element JSON list [\"f(x)\"]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "",
+          "desc": "lower limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "desc": "upper limit (b > a)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of panels (even)",
+          "lo": 2,
+          "hi": 1000,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "integral",
+          "unit": "",
+          "desc": "approximate integral",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _simpson(v):\n    \"\"\"Composite Simpson's rule for \u222b_a^b f(x) dx with n equal panels (n even). Exact for cubics.\"\"\"\n    expr, syms = _parse(_expr_text(v['expr']), 'x')\n    x = syms['x']\n    f = _lambdified(expr, syms, (x,))\n    a, b = _finite(v['a'], 'a'), _finite(v['b'], 'b')\n    n = int(v['n'])\n    if b <= a:\n        raise MechError('simpson: need b > a')\n    if n < 2 or n % 2 != 0:\n        raise MechError('simpson: n must be an even integer >= 2')\n    h = (b - a) / n\n    ys = [f(a + i * h) for i in range(n + 1)]\n    if any(not math.isfinite(y) for y in ys):\n        raise MechError('simpson: integrand is not finite somewhere on [a, b]')\n    total = ys[0] + ys[-1] + 4.0 * sum(ys[1:-1:2]) + 2.0 * sum(ys[2:-1:2])\n    return {'integral': total * h / 3.0}\n",
+        "source": "math.py",
+        "line": 190
+      },
+      "outputs": [
+        "integral"
+      ],
+      "assumptions": [
+        "Exact for polynomials of degree \u2264 3."
+      ],
+      "method_references": [
+        "Composite Simpson's rule (recalled)"
+      ],
+      "synthetic_example": {
+        "expr": [
+          "x**3"
+        ],
+        "a": 0.0,
+        "b": 1.0,
+        "n": 4
+      }
+    },
+    "math.runge_kutta": {
+      "title": "Classic 4th-order Runge\u2013Kutta for y' = f(x, y)",
+      "variables": [
+        {
+          "name": "expr",
+          "unit": "",
+          "desc": "right-hand side f(x, y), as a one-element JSON list ['f(x, y)']",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "x0",
+          "unit": "",
+          "desc": "initial x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y0",
+          "unit": "",
+          "desc": "initial y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "",
+          "desc": "step size",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of steps",
+          "lo": 1,
+          "hi": 100000,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_final",
+          "unit": "",
+          "desc": "y at x = x0 + n\u00b7h",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _runge_kutta(v):\n    \"\"\"Classic 4th-order Runge\u2013Kutta for y' = f(x, y) over n steps of size h from (x0, y0).\"\"\"\n    expr, syms = _parse(_expr_text(v['expr']), 'x', extra_syms=('y',))\n    x, y = syms['x'], syms['y']\n    f = _lambdified(expr, syms, (x, y))\n    xn, yn = _finite(v['x0'], 'x0'), _finite(v['y0'], 'y0')\n    h = _finite(v['h'], 'h')\n    n = int(v['n'])\n    if n < 1:\n        raise MechError('runge_kutta: n must be >= 1')\n    for _ in range(n):\n        k1 = f(xn, yn)\n        k2 = f(xn + h / 2.0, yn + h * k1 / 2.0)\n        k3 = f(xn + h / 2.0, yn + h * k2 / 2.0)\n        k4 = f(xn + h, yn + h * k3)\n        if not all(math.isfinite(k) for k in (k1, k2, k3, k4)):\n            raise MechError('runge_kutta: right-hand side is not finite on this step')\n        yn = yn + h * (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0\n        xn = xn + h\n    return {'y_final': yn}\n",
+        "source": "math.py",
+        "line": 209
+      },
+      "outputs": [
+        "y_final"
+      ],
+      "assumptions": [
+        "Fixed step size h; global error O(h\u2074). Exact when f depends only on x."
+      ],
+      "method_references": [
+        "Classic fourth-order Runge\u2013Kutta method (recalled)"
+      ],
+      "synthetic_example": {
+        "expr": [
+          "x"
+        ],
+        "x0": 0.0,
+        "y0": 0.0,
+        "h": 0.25,
+        "n": 4
+      }
+    },
+    "math.stats_basic": {
+      "title": "Mean, variance and standard deviation of a data set",
+      "variables": [
+        {
+          "name": "data",
+          "unit": "",
+          "desc": "JSON list of numbers (one consistent unit)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "mean",
+          "unit": "",
+          "desc": "arithmetic mean",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sample_std",
+          "unit": "",
+          "desc": "sample standard deviation (n\u22121)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sample_var",
+          "unit": "",
+          "desc": "sample variance (n\u22121)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "pop_var",
+          "unit": "",
+          "desc": "population variance (n)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "count",
+          "unit": "",
+          "desc": "number of data points",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _stats(v):\n    \"\"\"Mean, sample/population variance and standard deviation of a data list (sample std uses n-1).\"\"\"\n    data = v['data']\n    if not isinstance(data, list) or len(data) < 2:\n        raise MechError('data: give a JSON list of at least 2 numbers')\n    xs = [_finite(x, 'data entry') for x in data]\n    n = len(xs)\n    mean = sum(xs) / n\n    var_s = sum((x - mean) ** 2 for x in xs) / (n - 1)\n    var_p = sum((x - mean) ** 2 for x in xs) / n\n    return {'mean': mean, 'sample_std': math.sqrt(var_s), 'sample_var': var_s, 'pop_var': var_p,\n            'count': n}\n",
+        "source": "math.py",
+        "line": 231
+      },
+      "outputs": [
+        "mean",
+        "sample_std",
+        "sample_var",
+        "pop_var",
+        "count"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Sample and population variance/standard deviation (recalled)"
+      ],
+      "synthetic_example": {
+        "data": [
+          2,
+          4,
+          4,
+          4,
+          5,
+          5,
+          7,
+          9
+        ]
+      }
+    },
+    "math.linear_regression": {
+      "title": "Least-squares line fit: slope, intercept, correlation",
+      "variables": [
+        {
+          "name": "points",
+          "unit": "",
+          "desc": "JSON list of [x, y] rows",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "slope",
+          "unit": "",
+          "desc": "best-fit slope",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "intercept",
+          "unit": "",
+          "desc": "best-fit intercept",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "Pearson correlation coefficient (\u22121..1)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r2",
+          "unit": "",
+          "desc": "coefficient of determination r\u00b2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _regression(v):\n    \"\"\"Ordinary least-squares fit y = slope*x + intercept with Pearson r and r\u00b2.\"\"\"\n    pts = v['points']\n    if not isinstance(pts, list) or len(pts) < 2:\n        raise MechError('points: give a JSON list of at least 2 [x, y] rows')\n    xs, ys = [], []\n    for p in pts:\n        if not isinstance(p, (list, tuple)) or len(p) != 2:\n            raise MechError('points: each row must be [x, y]')\n        xs.append(_finite(p[0], 'x')); ys.append(_finite(p[1], 'y'))\n    n = len(xs)\n    mx, my = sum(xs) / n, sum(ys) / n\n    sxx = sum((x - mx) ** 2 for x in xs)\n    sxy = sum((x - mx) * (y - my) for x, y in zip(xs, ys))\n    syy = sum((y - my) ** 2 for y in ys)\n    if sxx == 0:\n        raise MechError('points: x values are identical (vertical line); fit is undefined')\n    slope = sxy / sxx\n    intercept = my - slope * mx\n    r = sxy / math.sqrt(sxx * syy) if syy > 0 else 0.0\n    return {'slope': slope, 'intercept': intercept, 'r': r, 'r2': r * r}\n",
+        "source": "math.py",
+        "line": 245
+      },
+      "outputs": [
+        "slope",
+        "intercept",
+        "r",
+        "r2"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Ordinary least-squares regression; Pearson correlation (recalled)"
+      ],
+      "synthetic_example": {
+        "points": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      }
+    },
+    "math.confidence_interval": {
+      "title": "Confidence interval for the mean (Student-t)",
+      "variables": [
+        {
+          "name": "data",
+          "unit": "",
+          "desc": "JSON list of numbers (one consistent unit)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "conf",
+          "unit": "",
+          "desc": "confidence level (0 < conf < 1)",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "margin",
+          "unit": "",
+          "desc": "half-width t*\u00b7s/\u221an",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mean",
+          "unit": "",
+          "desc": "sample mean",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lower",
+          "unit": "",
+          "desc": "lower bound mean \u2212 margin",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "upper",
+          "unit": "",
+          "desc": "upper bound mean + margin",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _confidence(v):\n    \"\"\"Two-sided confidence interval for the mean of a data list using a Student-t quantile.\"\"\"\n    data = v['data']\n    conf = _finite(v['conf'], 'conf')\n    if not (0 < conf < 1):\n        raise MechError('conf must be strictly between 0 and 1')\n    if not isinstance(data, list) or len(data) < 2:\n        raise MechError('data: give a JSON list of at least 2 numbers')\n    xs = [_finite(x, 'data entry') for x in data]\n    n = len(xs)\n    mean = sum(xs) / n\n    sd = math.sqrt(sum((x - mean) ** 2 for x in xs) / (n - 1))\n    t = float(stats.t.ppf(1.0 - (1.0 - conf) / 2.0, n - 1))\n    margin = t * sd / math.sqrt(n)\n    return {'margin': margin, 'mean': mean, 'lower': mean - margin, 'upper': mean + margin}\n",
+        "source": "math.py",
+        "line": 268
+      },
+      "outputs": [
+        "margin",
+        "mean",
+        "lower",
+        "upper"
+      ],
+      "assumptions": [
+        "Assumes the data are independent samples from a normal population."
+      ],
+      "method_references": [
+        "Student-t confidence interval for a mean; t-quantile from scipy.stats (recalled)"
+      ],
+      "synthetic_example": {
+        "data": [
+          2,
+          4,
+          4,
+          4,
+          5,
+          5,
+          7,
+          9
+        ],
+        "conf": 0.95
+      }
+    },
+    "math.unit_convert": {
+      "title": "Unit conversion via the shared pint registry",
+      "variables": [
+        {
+          "name": "value",
+          "unit": "",
+          "desc": "numeric value to convert",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "unit_from",
+          "unit": "",
+          "desc": "source unit, as a one-element JSON list [\"in\"]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "unit_to",
+          "unit": "",
+          "desc": "target unit, as a one-element JSON list [\"mm\"]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "value_out",
+          "unit": "",
+          "desc": "converted value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _unit_convert(v):\n    \"\"\"Convert a value between any two pint units via the shared core registry (offset units supported).\"\"\"\n    value = _finite(v['value'], 'value')\n    frm = v['unit_from']\n    to = v['unit_to']\n    if not isinstance(frm, (list, tuple)) or len(frm) != 1 or not isinstance(frm[0], str):\n        raise MechError('unit_from: pass a one-element JSON list, e.g. unit_from=[\"in\"]')\n    if not isinstance(to, (list, tuple)) or len(to) != 1 or not isinstance(to[0], str):\n        raise MechError('unit_to: pass a one-element JSON list, e.g. unit_to=[\"mm\"]')\n    frm, to = frm[0], to[0]\n    frm = {'%': 'percent'}.get(frm, frm)\n    to = {'%': 'percent'}.get(to, to)\n    try:\n        q = Q_(value, frm or 'dimensionless')\n        out = q.to(to or 'dimensionless').magnitude\n    except Exception as exc:\n        raise MechError(f'cannot convert {frm!r} to {to!r}: {exc}')\n    return {'value_out': _finite(out, 'value_out')}\n",
+        "source": "math.py",
+        "line": 285
+      },
+      "outputs": [
+        "value_out"
+      ],
+      "assumptions": [
+        "Uses the shared core.Q_ registry (no second unit table). Temperature offset units (degC, degF) are handled."
+      ],
+      "method_references": [
+        "pint unit conversion (the one registry shared with the rest of mechcalc)"
+      ],
+      "synthetic_example": {
+        "value": 12.0,
+        "unit_from": [
+          "in"
+        ],
+        "unit_to": [
+          "mm"
+        ]
+      }
+    },
+    "math.percent_error": {
+      "title": "Percent error of a measurement vs a true value",
+      "variables": [
+        {
+          "name": "measured",
+          "unit": "",
+          "desc": "measured (or approximate) value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "true",
+          "unit": "",
+          "desc": "true (or reference) value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "pct",
+          "unit": "",
+          "desc": "percent error (%)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "pct = (measured - true)/true*100"
+      ],
+      "procedure": null,
+      "outputs": [
+        "pct"
+      ],
+      "assumptions": [
+        "Enter measured and true in the same units (the ratio is dimensionless)."
+      ],
+      "method_references": [
+        "Percent error = (measured \u2212 true)/true \u00d7 100% (recalled)"
+      ],
+      "synthetic_example": {
+        "measured": 10.5,
+        "true": 10.0
+      }
+    },
+    "math.linear_interp": {
+      "title": "Linear interpolation between two points",
+      "variables": [
+        {
+          "name": "x0",
+          "unit": "m",
+          "desc": "first x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y0",
+          "unit": "",
+          "desc": "first y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x1",
+          "unit": "m",
+          "desc": "second x (x1 \u2260 x0)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y1",
+          "unit": "",
+          "desc": "second y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x",
+          "unit": "m",
+          "desc": "query x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y",
+          "unit": "",
+          "desc": "interpolated y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "y = y0 + (x - x0)*(y1 - y0)/(x1 - x0)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "y"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Linear interpolation between two points (recalled)"
+      ],
+      "synthetic_example": {
+        "x0": 0.0,
+        "y0": 0.0,
+        "x1": 2.0,
+        "y1": 10.0,
+        "x": 1.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "math-001",
+      "calculator": "math.circle_area",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "r": "10 cm"
+      },
+      "solve_for": [
+        "A",
+        "C"
+      ],
+      "expected_as_specified": {
+        "A": "0.03141593 m^2",
+        "C": "0.6283185 m"
+      },
+      "expected_SI": {
+        "A": 0.03141593,
+        "C": 0.6283185
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.031415926535897934,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc math.circle_area (symbolic)"
+        },
+        "C": {
+          "value": 0.6283185307179586,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc math.circle_area (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 3.4641020676962064e-09,
+          "relative_error": 1.1026578133119746e-07,
+          "allowed_absolute_error": 6.283186e-05,
+          "passed": true
+        },
+        "C": {
+          "absolute_error": 3.071795862119586e-08,
+          "relative_error": 4.88891519527053e-08,
+          "allowed_absolute_error": 0.0012566370000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 0.10 m; A = pi*0.01 = 0.0314159 m^2; C = 2*pi*0.1 = 0.628319 m"
+      }
+    },
+    {
+      "id": "math-002",
+      "calculator": "math.circle_area",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A": "3.14159265 m^2"
+      },
+      "solve_for": [
+        "r",
+        "C"
+      ],
+      "expected_as_specified": {
+        "r": "1 m"
+      },
+      "expected_SI": {
+        "r": 1.0
+      },
+      "actual_SI": {
+        "r": {
+          "value": 0.9999999994286668,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc math.circle_area (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "r": {
+          "absolute_error": 5.713332029699814e-10,
+          "relative_error": 5.713332029699814e-10,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = sqrt(A/pi) = sqrt(1) = 1 m"
+      }
+    },
+    {
+      "id": "math-003",
+      "calculator": "math.sphere_volume",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "r": "1 m"
+      },
+      "solve_for": [
+        "V",
+        "A"
+      ],
+      "expected_as_specified": {
+        "V": "4.188790 m^3",
+        "A": "12.56637 m^2"
+      },
+      "expected_SI": {
+        "V": 4.18879,
+        "A": 12.56637
+      },
+      "actual_SI": {
+        "V": {
+          "value": 4.1887902047863905,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc math.sphere_volume (symbolic)"
+        },
+        "A": {
+          "value": 12.566370614359172,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc math.sphere_volume (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V": {
+          "absolute_error": 2.0478639051191294e-07,
+          "relative_error": 4.88891518820263e-08,
+          "allowed_absolute_error": 0.00837758,
+          "passed": true
+        },
+        "A": {
+          "absolute_error": 6.143591733120957e-07,
+          "relative_error": 4.8889152023384294e-08,
+          "allowed_absolute_error": 0.025132739999999997,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = 4/3*pi = 4.188790; A = 4*pi = 12.56637"
+      }
+    },
+    {
+      "id": "math-004",
+      "calculator": "math.arc_length",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "r": "0.5 m",
+        "theta": "60 deg"
+      },
+      "solve_for": [
+        "s"
+      ],
+      "expected_as_specified": {
+        "s": "0.5235988 m"
+      },
+      "expected_SI": {
+        "s": 0.5235988
+      },
+      "actual_SI": {
+        "s": {
+          "value": 0.5235987755982988,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc math.arc_length (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "s": {
+          "absolute_error": 2.440170121520424e-08,
+          "relative_error": 4.6603814247099573e-08,
+          "allowed_absolute_error": 0.0010471976000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta = pi/3 rad; s = 0.5*pi/3 = 0.5235988 m"
+      }
+    },
+    {
+      "id": "math-005",
+      "calculator": "math.arc_length",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "r": "0.5 m",
+        "s": "0.5235988 m"
+      },
+      "solve_for": [
+        "theta"
+      ],
+      "expected_as_specified": {
+        "theta": "1.0471976 rad"
+      },
+      "expected_SI": {
+        "theta": 1.0471976
+      },
+      "actual_SI": {
+        "theta": {
+          "value": 1.0471976,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc math.arc_length (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "theta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0020943952000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta = s/r = 0.5235988/0.5 = 1.0471976 rad = 60 deg"
+      }
+    },
+    {
+      "id": "math-006",
+      "calculator": "math.curvature",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R": "250 mm"
+      },
+      "solve_for": [
+        "kappa"
+      ],
+      "expected_as_specified": {
+        "kappa": "4 1/m"
+      },
+      "expected_SI": {
+        "kappa": 4.0
+      },
+      "actual_SI": {
+        "kappa": {
+          "value": 4.0,
+          "unit": "1/m",
+          "kind": "derived",
+          "method": "mechcalc math.curvature (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "kappa": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.008,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "kappa = 1/0.25 = 4 m^-1"
+      }
+    },
+    {
+      "id": "math-007",
+      "calculator": "math.curvature",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "kappa": "4 1/m"
+      },
+      "solve_for": [
+        "R"
+      ],
+      "expected_as_specified": {
+        "R": "0.25 m"
+      },
+      "expected_SI": {
+        "R": 0.25
+      },
+      "actual_SI": {
+        "R": {
+          "value": 0.25,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc math.curvature (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = 1/kappa = 0.25 m"
+      }
+    },
+    {
+      "id": "math-008",
+      "calculator": "math.triangle_centroid",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "vertices": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            1,
+            3
+          ]
+        ]
+      },
+      "solve_for": [
+        "x_bar",
+        "y_bar"
+      ],
+      "expected_as_specified": {
+        "x_bar": "1.6666667 m",
+        "y_bar": "1 m"
+      },
+      "expected_SI": {
+        "x_bar": 1.6666667,
+        "y_bar": 1.0
+      },
+      "actual_SI": {
+        "x_bar": {
+          "value": 1.6666666666666667,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc math.triangle_centroid (procedure)"
+        },
+        "y_bar": {
+          "value": 1.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc math.triangle_centroid (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "x_bar": {
+          "absolute_error": 3.3333333204765836e-08,
+          "relative_error": 1.9999999522859512e-08,
+          "allowed_absolute_error": 0.0033333334,
+          "passed": true
+        },
+        "y_bar": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "x_bar = (0+4+1)/3 = 5/3 = 1.666667; y_bar = (0+0+3)/3 = 1"
+      }
+    },
+    {
+      "id": "math-009",
+      "calculator": "math.vector_components",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "r": 5,
+        "theta": "30 deg"
+      },
+      "solve_for": [
+        "x",
+        "y"
+      ],
+      "expected_as_specified": {
+        "x": 4.330127,
+        "y": 2.5
+      },
+      "expected_SI": {
+        "x": 4.330127,
+        "y": 2.5
+      },
+      "actual_SI": {
+        "x": {
+          "value": 4.330127018922194,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.vector_components (symbolic)"
+        },
+        "y": {
+          "value": 2.4999999999999996,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.vector_components (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "x": {
+          "absolute_error": 1.892219358978764e-08,
+          "relative_error": 4.36989344418481e-09,
+          "allowed_absolute_error": 0.008660254000000001,
+          "passed": true
+        },
+        "y": {
+          "absolute_error": 4.440892098500626e-16,
+          "relative_error": 1.7763568394002506e-16,
+          "allowed_absolute_error": 0.005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "x = 5*cos30 = 5*0.8660254 = 4.330127; y = 5*sin30 = 2.5"
+      }
+    },
+    {
+      "id": "math-010",
+      "calculator": "math.vector_components",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "x": 4.330127,
+        "y": 2.5
+      },
+      "solve_for": [
+        "r",
+        "theta"
+      ],
+      "expected_as_specified": {
+        "r": 5,
+        "theta": "30 deg"
+      },
+      "expected_SI": {
+        "r": 5.0,
+        "theta": 0.5235987755982988
+      },
+      "actual_SI": {
+        "r": {
+          "value": 4.999999983612899,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.vector_components (numeric)"
+        },
+        "theta": {
+          "value": 0.5235987774905183,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc math.vector_components (numeric)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "r": {
+          "absolute_error": 1.638710056539594e-08,
+          "relative_error": 3.277420113079188e-09,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        },
+        "theta": {
+          "absolute_error": 1.892219492205527e-09,
+          "relative_error": 3.613873027192149e-09,
+          "allowed_absolute_error": 0.0010471975511965976,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = sqrt(4.330127^2 + 2.5^2) = 5; theta = atan2(2.5, 4.330127) = 30 deg"
+      }
+    },
+    {
+      "id": "math-011",
+      "calculator": "math.det2",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a": 1,
+        "b": 2,
+        "c": 3,
+        "d": 4
+      },
+      "solve_for": [
+        "det"
+      ],
+      "expected_as_specified": {
+        "det": -2
+      },
+      "expected_SI": {
+        "det": -2.0
+      },
+      "actual_SI": {
+        "det": {
+          "value": -2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.det2 (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "det": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "det = 1*4 - 2*3 = 4 - 6 = -2"
+      }
+    },
+    {
+      "id": "math-012",
+      "calculator": "math.det2",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "det": -2,
+        "b": 2,
+        "c": 3,
+        "d": 4
+      },
+      "solve_for": [
+        "a"
+      ],
+      "expected_as_specified": {
+        "a": 1
+      },
+      "expected_SI": {
+        "a": 1.0
+      },
+      "actual_SI": {
+        "a": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.det2 (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = (det + b*c)/d = (-2 + 6)/4 = 1"
+      }
+    },
+    {
+      "id": "math-013",
+      "calculator": "math.vector_ops",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a": [
+          1,
+          2,
+          3
+        ],
+        "b": [
+          4,
+          5,
+          6
+        ]
+      },
+      "solve_for": [
+        "dot",
+        "cross",
+        "mag_a",
+        "mag_b",
+        "angle",
+        "sum",
+        "sum_mag"
+      ],
+      "expected_as_specified": {
+        "dot": 32,
+        "cross": [
+          -3,
+          6,
+          -3
+        ],
+        "mag_a": 3.7416574,
+        "mag_b": 8.7749644,
+        "angle": "0.2257261 rad"
+      },
+      "expected_SI": {
+        "dot": 32.0,
+        "cross": [
+          -3,
+          6,
+          -3
+        ],
+        "mag_a": 3.7416574,
+        "mag_b": 8.7749644,
+        "angle": 0.2257261
+      },
+      "actual_SI": {
+        "dot": {
+          "value": 32.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.vector_ops (procedure)"
+        },
+        "cross": {
+          "value": [
+            -3.0,
+            6.0,
+            -3.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc math.vector_ops (procedure)",
+          "unit": ""
+        },
+        "mag_a": {
+          "value": 3.7416573867739413,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.vector_ops (procedure)"
+        },
+        "mag_b": {
+          "value": 8.774964387392123,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.vector_ops (procedure)"
+        },
+        "angle": {
+          "value": 0.2257261285527342,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc math.vector_ops (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "dot": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0032,
+          "passed": true
+        },
+        "cross": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.00030000000000000003,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.0006000000000000001,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.00030000000000000003,
+            "passed": true
+          }
+        ],
+        "mag_a": {
+          "absolute_error": 1.322605847065006e-08,
+          "relative_error": 3.534812799977374e-09,
+          "allowed_absolute_error": 0.00037416574,
+          "passed": true
+        },
+        "mag_b": {
+          "absolute_error": 1.2607877408754575e-08,
+          "relative_error": 1.4368009753697207e-09,
+          "allowed_absolute_error": 0.00087749644,
+          "passed": true
+        },
+        "angle": {
+          "absolute_error": 2.8552734177011985e-08,
+          "relative_error": 1.2649283435549536e-07,
+          "allowed_absolute_error": 2.2572610000000002e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "dot = 1*4+2*5+3*6 = 32; cross = (2*6-3*5, 3*4-1*6, 1*5-2*4) = (-3, 6, -3); |a| = sqrt(14) = 3.741657; |b| = sqrt(77) = 8.774964; angle = acos(32/(sqrt14*sqrt77)) = acos(0.9746318) = 0.225726 rad"
+      }
+    },
+    {
+      "id": "math-014",
+      "calculator": "math.matrix_ops",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "matrix": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      "solve_for": [
+        "det",
+        "trace",
+        "inverse"
+      ],
+      "expected_as_specified": {
+        "det": -2,
+        "trace": 5,
+        "inverse": [
+          [
+            -2,
+            1
+          ],
+          [
+            1.5,
+            -0.5
+          ]
+        ]
+      },
+      "expected_SI": {
+        "det": -2.0,
+        "trace": 5.0,
+        "inverse": [
+          [
+            -2,
+            1
+          ],
+          [
+            1.5,
+            -0.5
+          ]
+        ]
+      },
+      "actual_SI": {
+        "det": {
+          "value": -2.0000000000000004,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.matrix_ops (procedure)"
+        },
+        "trace": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.matrix_ops (procedure)"
+        },
+        "inverse": {
+          "value": [
+            [
+              -1.9999999999999996,
+              0.9999999999999998
+            ],
+            [
+              1.4999999999999998,
+              -0.4999999999999999
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc math.matrix_ops (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "det": {
+          "absolute_error": 4.440892098500626e-16,
+          "relative_error": 2.220446049250313e-16,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        },
+        "trace": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        },
+        "inverse": [
+          [
+            {
+              "absolute_error": 4.440892098500626e-16,
+              "relative_error": 2.220446049250313e-16,
+              "allowed_absolute_error": 0.0002,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.220446049250313e-16,
+              "relative_error": 2.220446049250313e-16,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 2.220446049250313e-16,
+              "relative_error": 1.4802973661668753e-16,
+              "allowed_absolute_error": 0.00015000000000000001,
+              "passed": true
+            },
+            {
+              "absolute_error": 1.1102230246251565e-16,
+              "relative_error": 2.220446049250313e-16,
+              "allowed_absolute_error": 5e-05,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "det = 1*4 - 2*3 = -2; trace = 1+4 = 5; inverse = (1/det)*[[4,-2],[-3,1]] = [[-2,1],[1.5,-0.5]]"
+      }
+    },
+    {
+      "id": "math-015",
+      "calculator": "math.eigen",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "matrix": [
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      "solve_for": [
+        "eigenvalues",
+        "eigenvectors"
+      ],
+      "expected_as_specified": {
+        "eigenvalues": [
+          3,
+          1
+        ]
+      },
+      "expected_SI": {
+        "eigenvalues": [
+          3,
+          1
+        ]
+      },
+      "actual_SI": {
+        "eigenvalues": {
+          "value": [
+            3.0,
+            1.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc math.eigen (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "eigenvalues": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.00030000000000000003,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.0001,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Characteristic polynomial (2-lam)^2 - 1 = 0 -> lam = 2 +/- 1 = 3, 1 (eigenvector signs are arbitrary so only the eigenvalues are checked)"
+      }
+    },
+    {
+      "id": "math-016",
+      "calculator": "math.derivative",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "expr": [
+          "x**2 + 3*x"
+        ],
+        "at": 3
+      },
+      "solve_for": [
+        "derivative_expr",
+        "value"
+      ],
+      "expected_as_specified": {
+        "value": 9
+      },
+      "expected_SI": {
+        "value": 9.0
+      },
+      "actual_SI": {
+        "value": {
+          "value": 9.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.derivative (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "value": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.018000000000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "d/dx(x^2+3x) = 2x+3; at x=3 -> 2*3+3 = 9"
+      }
+    },
+    {
+      "id": "math-017",
+      "calculator": "math.integral",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "expr": [
+          "x"
+        ],
+        "a": 0,
+        "b": 2
+      },
+      "solve_for": [
+        "integral_expr",
+        "definite"
+      ],
+      "expected_as_specified": {
+        "definite": 2
+      },
+      "expected_SI": {
+        "definite": 2.0
+      },
+      "actual_SI": {
+        "definite": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.integral (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "definite": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "integral_0^2 x dx = 2^2/2 = 2"
+      }
+    },
+    {
+      "id": "math-018",
+      "calculator": "math.integral",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "expr": [
+          "x"
+        ],
+        "a": 0,
+        "definite": 2
+      },
+      "solve_for": [
+        "b"
+      ],
+      "expected_as_specified": {
+        "b": 2
+      },
+      "expected_SI": {
+        "b": 2.0
+      },
+      "actual_SI": {
+        "b": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.integral (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "b": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "integral_0^b x dx = b^2/2 = 2 -> b = 2"
+      }
+    },
+    {
+      "id": "math-019",
+      "calculator": "math.laplace_transform",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "expr": [
+          "exp(-3*t)"
+        ],
+        "s_val": 1
+      },
+      "solve_for": [
+        "transform",
+        "value"
+      ],
+      "expected_as_specified": {
+        "value": 0.25
+      },
+      "expected_SI": {
+        "value": 0.25
+      },
+      "actual_SI": {
+        "value": {
+          "value": 0.25,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.laplace_transform (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "value": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L{exp(-3t)} = 1/(s+3); at s=1 -> 1/4 = 0.25"
+      }
+    },
+    {
+      "id": "math-020",
+      "calculator": "math.fourier_transform",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "expr": [
+          "exp(-x**2)"
+        ],
+        "k_val": 1
+      },
+      "solve_for": [
+        "transform",
+        "value"
+      ],
+      "expected_as_specified": {
+        "value": 9.167696e-05
+      },
+      "expected_SI": {
+        "value": 9.167696e-05
+      },
+      "actual_SI": {
+        "value": {
+          "value": 9.167696056805023e-05,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.fourier_transform (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "value": {
+          "absolute_error": 5.680502319612216e-13,
+          "relative_error": 6.196215842685246e-09,
+          "allowed_absolute_error": 4.583848e-08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Gaussian landmark: F{exp(-x^2)} = sqrt(pi)*exp(-pi^2 k^2); at k=1 -> 1.772454*exp(-9.869604) = 9.167696e-5"
+      }
+    },
+    {
+      "id": "math-021",
+      "calculator": "math.newton_raphson",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "expr": [
+          "x**2 - 2"
+        ],
+        "x0": 1
+      },
+      "solve_for": [
+        "root",
+        "iterations"
+      ],
+      "expected_as_specified": {
+        "root": 1.4142136
+      },
+      "expected_SI": {
+        "root": 1.4142136
+      },
+      "actual_SI": {
+        "root": {
+          "value": 1.414213562373095,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.newton_raphson (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "root": {
+          "absolute_error": 3.7626905147192247e-08,
+          "relative_error": 2.660623907675067e-08,
+          "allowed_absolute_error": 0.00014142136000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Landmark: Newton's method for sqrt(2) from x0 = 1 converges to 1.41421356"
+      }
+    },
+    {
+      "id": "math-022",
+      "calculator": "math.simpson_rule",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "expr": [
+          "x**3"
+        ],
+        "a": 0,
+        "b": 1,
+        "n": 4
+      },
+      "solve_for": [
+        "integral"
+      ],
+      "expected_as_specified": {
+        "integral": 0.25
+      },
+      "expected_SI": {
+        "integral": 0.25
+      },
+      "actual_SI": {
+        "integral": {
+          "value": 0.25,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.simpson_rule (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "integral": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.5e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "integral_0^1 x^3 dx = 1/4 = 0.25; Simpson is exact for cubics at any even n"
+      }
+    },
+    {
+      "id": "math-023",
+      "calculator": "math.runge_kutta",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "expr": [
+          "x"
+        ],
+        "x0": 0,
+        "y0": 0,
+        "h": 0.25,
+        "n": 4
+      },
+      "solve_for": [
+        "y_final"
+      ],
+      "expected_as_specified": {
+        "y_final": 0.5
+      },
+      "expected_SI": {
+        "y_final": 0.5
+      },
+      "actual_SI": {
+        "y_final": {
+          "value": 0.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.runge_kutta (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "y_final": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "y' = x has solution y = x^2/2; RK4 integrates y'=f(x) exactly, so y(1) = 0.5"
+      }
+    },
+    {
+      "id": "math-024",
+      "calculator": "math.stats_basic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "data": [
+          2,
+          4,
+          4,
+          4,
+          5,
+          5,
+          7,
+          9
+        ]
+      },
+      "solve_for": [
+        "mean",
+        "sample_std",
+        "sample_var",
+        "pop_var",
+        "count"
+      ],
+      "expected_as_specified": {
+        "mean": 5,
+        "sample_std": 2.1380899,
+        "sample_var": 4.5714286,
+        "pop_var": 4,
+        "count": 8
+      },
+      "expected_SI": {
+        "mean": 5.0,
+        "sample_std": 2.1380899,
+        "sample_var": 4.5714286,
+        "pop_var": 4.0,
+        "count": 8.0
+      },
+      "actual_SI": {
+        "mean": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.stats_basic (procedure)"
+        },
+        "sample_std": {
+          "value": 2.138089935299395,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.stats_basic (procedure)"
+        },
+        "sample_var": {
+          "value": 4.571428571428571,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.stats_basic (procedure)"
+        },
+        "pop_var": {
+          "value": 4.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.stats_basic (procedure)"
+        },
+        "count": {
+          "value": 8.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.stats_basic (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "mean": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        },
+        "sample_std": {
+          "absolute_error": 3.529939496260681e-08,
+          "relative_error": 1.6509780511383926e-08,
+          "allowed_absolute_error": 0.00021380899000000004,
+          "passed": true
+        },
+        "sample_var": {
+          "absolute_error": 2.8571428778434438e-08,
+          "relative_error": 6.250000006220033e-09,
+          "allowed_absolute_error": 0.00045714286000000004,
+          "passed": true
+        },
+        "pop_var": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0004,
+          "passed": true
+        },
+        "count": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0008,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "mean = 40/8 = 5; deviations squared sum 32; sample var = 32/7 = 4.57143 (s = 2.13809); pop var = 32/8 = 4 (the classic textbook set)"
+      }
+    },
+    {
+      "id": "math-025",
+      "calculator": "math.linear_regression",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "points": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      },
+      "solve_for": [
+        "slope",
+        "intercept",
+        "r",
+        "r2"
+      ],
+      "expected_as_specified": {
+        "slope": 2,
+        "intercept": -1,
+        "r": 1,
+        "r2": 1
+      },
+      "expected_SI": {
+        "slope": 2.0,
+        "intercept": -1.0,
+        "r": 1.0,
+        "r2": 1.0
+      },
+      "actual_SI": {
+        "slope": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.linear_regression (procedure)"
+        },
+        "intercept": {
+          "value": -1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.linear_regression (procedure)"
+        },
+        "r": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.linear_regression (procedure)"
+        },
+        "r2": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.linear_regression (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "slope": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        },
+        "intercept": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0001,
+          "passed": true
+        },
+        "r": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0001,
+          "passed": true
+        },
+        "r2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Points lie exactly on y = 2x - 1, so slope 2, intercept -1, r = r2 = 1"
+      }
+    },
+    {
+      "id": "math-026",
+      "calculator": "math.confidence_interval",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "data": [
+          2,
+          4,
+          4,
+          4,
+          5,
+          5,
+          7,
+          9
+        ],
+        "conf": 0.95
+      },
+      "solve_for": [
+        "margin",
+        "mean",
+        "lower",
+        "upper"
+      ],
+      "expected_as_specified": {
+        "margin": 1.7874879,
+        "mean": 5,
+        "lower": 3.2125121,
+        "upper": 6.7874879
+      },
+      "expected_SI": {
+        "margin": 1.7874879,
+        "mean": 5.0,
+        "lower": 3.2125121,
+        "upper": 6.7874879
+      },
+      "actual_SI": {
+        "margin": {
+          "value": 1.7874879182362098,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.confidence_interval (procedure)"
+        },
+        "mean": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.confidence_interval (procedure)"
+        },
+        "lower": {
+          "value": 3.21251208176379,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.confidence_interval (procedure)"
+        },
+        "upper": {
+          "value": 6.787487918236209,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.confidence_interval (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "margin": {
+          "absolute_error": 1.8236209875510667e-08,
+          "relative_error": 1.020214451550171e-08,
+          "allowed_absolute_error": 0.00017874879,
+          "passed": true
+        },
+        "mean": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        },
+        "lower": {
+          "absolute_error": 1.8236209875510667e-08,
+          "relative_error": 5.676619825186236e-09,
+          "allowed_absolute_error": 0.00032125121,
+          "passed": true
+        },
+        "upper": {
+          "absolute_error": 1.8236208987332247e-08,
+          "relative_error": 2.6867390787292965e-09,
+          "allowed_absolute_error": 0.0006787487900000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s = 2.13809, n = 8, se = s/sqrt(8) = 0.755929; t(0.975, 7) = 2.364624; margin = 2.364624*0.755929 = 1.787488; mean = 5"
+      }
+    },
+    {
+      "id": "math-027",
+      "calculator": "math.unit_convert",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "value": 12,
+        "unit_from": [
+          "in"
+        ],
+        "unit_to": [
+          "mm"
+        ]
+      },
+      "solve_for": [
+        "value_out"
+      ],
+      "expected_as_specified": {
+        "value_out": 304.8
+      },
+      "expected_SI": {
+        "value_out": 304.8
+      },
+      "actual_SI": {
+        "value_out": {
+          "value": 304.79999999999995,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.unit_convert (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "value_out": {
+          "absolute_error": 5.684341886080802e-14,
+          "relative_error": 1.8649415636748036e-16,
+          "allowed_absolute_error": 0.030480000000000004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "1 in = 25.4 mm exactly; 12*25.4 = 304.8"
+      }
+    },
+    {
+      "id": "math-028",
+      "calculator": "math.unit_convert",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "value_out": 20,
+        "unit_from": [
+          "degF"
+        ],
+        "unit_to": [
+          "degC"
+        ]
+      },
+      "solve_for": [
+        "value"
+      ],
+      "expected_as_specified": {
+        "value": 68
+      },
+      "expected_SI": {
+        "value": 68.0
+      },
+      "actual_SI": {
+        "value": {
+          "value": 67.99999999999991,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.unit_convert (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "value": {
+          "absolute_error": 8.526512829121202e-14,
+          "relative_error": 1.2538989454590004e-15,
+          "allowed_absolute_error": 0.0068000000000000005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse of the offset round-trip: 68 degF -> 20 degC (degC = (degF - 32)*5/9), so value = 68 recovers value_out = 20"
+      }
+    },
+    {
+      "id": "math-029",
+      "calculator": "math.percent_error",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "measured": 10.5,
+        "true": 10
+      },
+      "solve_for": [
+        "pct"
+      ],
+      "expected_as_specified": {
+        "pct": 5
+      },
+      "expected_SI": {
+        "pct": 5.0
+      },
+      "actual_SI": {
+        "pct": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.percent_error (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "pct": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "(10.5 - 10)/10*100 = 5%"
+      }
+    },
+    {
+      "id": "math-030",
+      "calculator": "math.percent_error",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "measured": 10.5,
+        "pct": 5
+      },
+      "solve_for": [
+        "true"
+      ],
+      "expected_as_specified": {
+        "true": 10
+      },
+      "expected_SI": {
+        "true": 10.0
+      },
+      "actual_SI": {
+        "true": {
+          "value": 10.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.percent_error (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "true": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "true = measured/(1 + pct/100) = 10.5/1.05 = 10"
+      }
+    },
+    {
+      "id": "math-031",
+      "calculator": "math.linear_interp",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "x0": "0 m",
+        "y0": 0,
+        "x1": "2 m",
+        "y1": 10,
+        "x": "100 cm"
+      },
+      "solve_for": [
+        "y"
+      ],
+      "expected_as_specified": {
+        "y": 5
+      },
+      "expected_SI": {
+        "y": 5.0
+      },
+      "actual_SI": {
+        "y": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc math.linear_interp (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "y": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "y = 0 + (1-0)*(10-0)/(2-0) = 5 (x in mixed units: 100 cm = 1 m)"
+      }
+    }
+  ],
+  "passed": 31,
+  "failed": 0
+}

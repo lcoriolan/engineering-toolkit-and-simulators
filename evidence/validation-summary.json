@@ -1,0 +1,92 @@
+{
+  "package_scope": "runnable-engineering-implementations-and-synthetic-validation",
+  "package_version": "0.1.0",
+  "public_pytest": {
+    "passed": 1348,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 2,
+    "seconds": 177.04,
+    "python": "3.12.3",
+    "platform": "Linux x86-64",
+    "breakdown": {
+      "calculator_reference_and_registry": 1235,
+      "execution_browser_http": 19,
+      "core_numerics": 12,
+      "scientific_workers": 54,
+      "finite_element": 3,
+      "parametric": 8,
+      "extended_algorithms": 12,
+      "configuration_and_portable_export": 5
+    },
+    "warning_scope": "SciPy frequency-response divide-by-zero/invalid values at a pole in stability-margin reference; reference passed."
+  },
+  "calculator_benchmarks": {
+    "cases": 1232,
+    "calculators": 827,
+    "families": 50,
+    "passed": 1232,
+    "failed": 0,
+    "uncovered_registered_calculators": 0,
+    "included_in_pytest": true
+  },
+  "solver_benchmarks": {
+    "passed": 20,
+    "failed": 0,
+    "record": "../benchmarks/solvers.json",
+    "overlaps_pytest_methods": true
+  },
+  "native_cad": {
+    "passed": 27,
+    "failed": 0,
+    "FreeCAD": "1.1.3",
+    "breakdown": {
+      "import_build_export": 15,
+      "fit_motion_contact_gear": 8,
+      "feature_hydrostatics": 4
+    },
+    "synthetic_gear_poses_within_one_check": 13,
+    "included_in_pytest": false
+  },
+  "public_webgl_ui": {
+    "checks_passed": 6,
+    "record": "public-browser-validation.json",
+    "classification": "integration and finite-state smoke checks"
+  },
+  "installed_wheel": {
+    "built": true,
+    "pip_check": "passed",
+    "cpu_world_demo": "passed",
+    "water_molecule_science_demo": "passed",
+    "modules_enumerated_excluding_root": 246,
+    "imported": 241,
+    "separate_FreeCAD_interpreter": 4,
+    "flat_export_only_bridge": 1,
+    "failed": 0,
+    "record": "installed-module-check.json"
+  },
+  "gpu": {
+    "passed": true,
+    "device": "Tesla P4",
+    "warp": "1.9.1",
+    "cuda_toolkit": "12.8",
+    "steps": 200,
+    "cpu_gpu_max_component_difference": 0.0,
+    "record": "gpu-validation.json",
+    "scope": "One synthetic freefall; no all-domain or all-device claim."
+  },
+  "qualification_limits": [
+    "External SU2 numerical solve not run.",
+    "Full aircraft trim, land/contact scenarios, mold-routing studies and advanced science workflows are not comprehensively benchmarked.",
+    "No experimental, hardware or manufacturing qualification claimed.",
+    "Unimplemented image-reconstruction stages remain a documented source blocker.",
+    "Archive contents and an inaccessible evidence location remain outside full inspection."
+  ],
+  "counting_note": "Suite counts overlap in numerical methods. Do not sum these rows into a count of independent physical validations.",
+  "validation_date": "2026-10-24",
+  "configuration_and_export_checks": {
+    "included_in_pytest": true,
+    "checks": 5,
+    "scope": "Caller-selected inventory and local stock; configured retrosynthesis paths; offline synthetic chemical export, isolated subprocess replay and deterministic archive bytes."
+  }
+}

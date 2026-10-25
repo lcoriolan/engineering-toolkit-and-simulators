@@ -1,0 +1,2800 @@
+{
+  "section": "instrumentation",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k instrumentation",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "instrumentation.sensor_sensitivity": {
+      "title": "Sensor sensitivity (\u0394output / \u0394input)",
+      "variables": [
+        {
+          "name": "S",
+          "unit": "",
+          "desc": "sensitivity = output change per input change [output]/[input]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dy",
+          "unit": "",
+          "desc": "output span \u0394output (in the sensor output units)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dx",
+          "unit": "",
+          "desc": "input span \u0394input (in the measurand units)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "S = dy/dx"
+      ],
+      "procedure": null,
+      "outputs": [
+        "S"
+      ],
+      "assumptions": [
+        "Static sensitivity over the linear range: S = (y_max \u2212 y_min)/(x_max \u2212 x_min). Enter \u0394output and \u0394input in the sensor\u2019s own units; S carries [output]/[input]."
+      ],
+      "method_references": [
+        "S = \u0394output/\u0394input (slope of the calibration curve)"
+      ],
+      "synthetic_example": {
+        "dy": 5.0,
+        "dx": 10.0
+      }
+    },
+    "instrumentation.sensor_span": {
+      "title": "Sensor range and span",
+      "variables": [
+        {
+          "name": "span",
+          "unit": "",
+          "desc": "span = x_max \u2212 x_min (in measurand units)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_max",
+          "unit": "",
+          "desc": "upper range limit (full-scale input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_min",
+          "unit": "",
+          "desc": "lower range limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "span = x_max - x_min"
+      ],
+      "procedure": null,
+      "outputs": [
+        "span"
+      ],
+      "assumptions": [
+        "The measurement range is the interval [x_min, x_max]; its width is the span."
+      ],
+      "method_references": [
+        "Span = upper range limit \u2212 lower range limit"
+      ],
+      "synthetic_example": {
+        "x_max": 100.0,
+        "x_min": 20.0
+      }
+    },
+    "instrumentation.adc_resolution": {
+      "title": "Quantisation resolution of an n-bit ADC",
+      "variables": [
+        {
+          "name": "res",
+          "unit": "",
+          "desc": "resolution = one least-significant bit (LSB), in the input units",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "span",
+          "unit": "",
+          "desc": "full-scale input range (span)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of bits",
+          "lo": 1.0,
+          "hi": 32.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "res = span/(2**n)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "res"
+      ],
+      "assumptions": [
+        "Uniform quantisation: Q = FS/2\u207f. Some texts use FS/(2\u207f \u2212 1) when full scale maps to the top code; the difference is negligible for n \u2273 8."
+      ],
+      "method_references": [
+        "Quantisation step Q = FS/2\u207f for a uniform n-bit converter"
+      ],
+      "synthetic_example": {
+        "span": 10.0,
+        "n": 8
+      }
+    },
+    "instrumentation.strain_gauge": {
+      "title": "Strain gauge factor (GF = (\u0394R/R)/\u03b5)",
+      "variables": [
+        {
+          "name": "GF",
+          "unit": "",
+          "desc": "gauge factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eps",
+          "unit": "",
+          "desc": "strain (\u0394L/L)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b5",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dR",
+          "unit": "ohm",
+          "desc": "change in gauge resistance",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394R",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "ohm",
+          "desc": "unstrained gauge resistance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "GF = (dR/R)/eps"
+      ],
+      "procedure": null,
+      "outputs": [
+        "GF"
+      ],
+      "assumptions": [
+        "Linear gauge response; typical metal-foil gauge factors are near 2 (user input). \u03b5 is the engineering strain along the gauge axis."
+      ],
+      "method_references": [
+        "GF = (\u0394R/R)/\u03b5"
+      ],
+      "synthetic_example": {
+        "dR": 0.24,
+        "R": 120.0,
+        "eps": 0.001
+      }
+    },
+    "instrumentation.wheatstone_bridge": {
+      "title": "Wheatstone bridge output voltage (strain gauges)",
+      "variables": [
+        {
+          "name": "V_out",
+          "unit": "V",
+          "desc": "bridge output voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_ex",
+          "unit": "V",
+          "desc": "bridge excitation voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "GF",
+          "unit": "",
+          "desc": "gauge factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eps",
+          "unit": "",
+          "desc": "strain magnitude at each active gauge",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b5",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "desc": "number of active arms (1, 2 or 4)",
+          "lo": 1.0,
+          "hi": 4.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "V_out = V_ex*GF*eps*k/4"
+      ],
+      "procedure": null,
+      "outputs": [
+        "V_out"
+      ],
+      "assumptions": [
+        "Linearised bridge (\u0394R/R \u226a 1). Active gauges must be arranged to add: adjacent arms of opposite sign (bending pair) or all four arms with the right signs. Quarter (k = 1), half (k = 2), full (k = 4) bridge."
+      ],
+      "method_references": [
+        "V_o = V_ex/4 \u00b7 (\u0394R1/R1 \u2212 \u0394R2/R2 + \u0394R3/R3 \u2212 \u0394R4/R4)"
+      ],
+      "synthetic_example": {
+        "V_ex": 10.0,
+        "GF": 2.0,
+        "eps": 0.0005,
+        "k": 1
+      }
+    },
+    "instrumentation.thermocouple_seebeck": {
+      "title": "Thermocouple voltage (linear Seebeck approximation)",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "desc": "thermocouple emf (negative when the junction is colder than the reference)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S",
+          "unit": "V/K",
+          "desc": "Seebeck coefficient (enter e.g. 41e-6 V/K)",
+          "lo": null,
+          "hi": null,
+          "label": "S",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_junction",
+          "unit": "K",
+          "desc": "measuring (hot) junction temperature",
+          "lo": null,
+          "hi": null,
+          "label": "Tj",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_ref",
+          "unit": "K",
+          "desc": "reference (cold) junction temperature",
+          "lo": null,
+          "hi": null,
+          "label": "Tref",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "V = S*(T_junction - T_ref)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "V"
+      ],
+      "assumptions": [
+        "Linear (constant-Seebeck) approximation, valid over a small temperature span. The Seebeck coefficient is a user input (a single value, not the NIST ITS-90 table)."
+      ],
+      "method_references": [
+        "V = S\u00b7(T_j \u2212 T_ref) (linear thermocouple law)"
+      ],
+      "synthetic_example": {
+        "S": 4.1e-05,
+        "T_junction": 373.15,
+        "T_ref": 273.15
+      }
+    },
+    "instrumentation.thermocouple_polynomial": {
+      "title": "Thermocouple voltage (user polynomial coefficients)",
+      "variables": [
+        {
+          "name": "coeffs",
+          "unit": "",
+          "desc": "polynomial coefficients [c0, c1, \u2026] in V/K^i (V = \u03a3 c_i (T\u2212Tref)^i)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "T_junction",
+          "unit": "K",
+          "desc": "measuring (hot) junction temperature",
+          "lo": null,
+          "hi": null,
+          "label": "Tj",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_ref",
+          "unit": "K",
+          "desc": "reference (cold) junction temperature",
+          "lo": null,
+          "hi": null,
+          "label": "Tref",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "V",
+          "desc": "thermocouple emf (negative when the junction is colder than the reference)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _thermocouple_poly(v):\n    \"\"\"Thermocouple emf from a user-supplied polynomial in the junction\u2212reference temperature difference.\n\n    V = \u03a3 c_i (T_junction \u2212 T_ref)^i, with coefficients c_i in V/K^i (c0 in V, c1 in V/K, \u2026). The\n    coefficients are user inputs from a calibration or a published table (e.g. NIST ITS-90); none are built\n    in because the standard coefficients are temperature-range specific and must not be recalled.\n    \"\"\"\n    coeffs = v['coeffs']\n    if not isinstance(coeffs, (list, tuple)) or not coeffs:\n        raise MechError('coeffs: give coefficients [c0, c1, \u2026] of V = \u03a3 c_i (T\u2212Tref)^i (V/K^i)')\n    dT = v['T_junction'] - v['T_ref']\n    volts = 0.0\n    for i, c in enumerate(coeffs):\n        volts += float(c) * dT ** i\n    return {'V': volts}\n",
+        "source": "instrumentation.py",
+        "line": 30
+      },
+      "outputs": [
+        "V"
+      ],
+      "assumptions": [
+        "Coefficients are user inputs from a calibration or a published table (e.g. NIST ITS-90 sub-range polynomials, whose coefficients are temperature-range specific and are not built in here). V = \u03a3 c_i (T_j \u2212 T_ref)^i."
+      ],
+      "method_references": [
+        "Thermocouple reference-function polynomial (user coefficients)"
+      ],
+      "synthetic_example": {
+        "coeffs": [
+          0.0,
+          4e-05,
+          1e-08
+        ],
+        "T_junction": 373.15,
+        "T_ref": 273.15
+      }
+    },
+    "instrumentation.rtd_cvd": {
+      "title": "RTD resistance (Callendar\u2013Van Dusen)",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "ohm",
+          "desc": "resistance at temperature T",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R0",
+          "unit": "ohm",
+          "desc": "resistance at 0 \u00b0C (e.g. 100 \u03a9 for a Pt100)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "1/K",
+          "desc": "Callendar\u2013Van Dusen coefficient A (IEC 60751 nominally 3.9083e-3 1/K)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "B",
+          "unit": "1/K^2",
+          "desc": "Callendar\u2013Van Dusen coefficient B (IEC 60751 nominally -5.775e-7 1/K^2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "1/K^4",
+          "desc": "Callendar\u2013Van Dusen coefficient C, used below 0 \u00b0C (IEC 60751 nominally -4.183e-12 1/K^4)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "absolute temperature (enter e.g. -50 degC or 223.15 K; converted internally to \u00b0C)",
+          "lo": null,
+          "hi": null,
+          "label": "T",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _rtd_cvd(v):\n    \"\"\"Platinum RTD resistance by the Callendar\u2013Van Dusen equation.\n\n    T is an absolute temperature (K); it is converted internally to T_C = T \u2212 273.15 (\u00b0C). Then\n    R = R0 (1 + A\u00b7T_C + B\u00b7T_C\u00b2 + C\u00b7(T_C \u2212 100)\u00b7T_C\u00b3) for T_C < 0 \u00b0C and R = R0 (1 + A\u00b7T_C + B\u00b7T_C\u00b2) for\n    T_C \u2265 0 \u00b0C. A, B, C are user inputs; IEC 60751 nominals (A = 3.9083e-3, B = \u22125.775e-7,\n    C = \u22124.183e-12) are commonly quoted but not built in.\n    \"\"\"\n    R0, A, B, C, T = v['R0'], v['A'], v['B'], v['C'], v['T']\n    T_C = T - 273.15\n    if T_C < 0.0:\n        R = R0 * (1.0 + A * T_C + B * T_C ** 2 + C * (T_C - 100.0) * T_C ** 3)\n    else:\n        R = R0 * (1.0 + A * T_C + B * T_C ** 2)\n    return {'R': R}\n",
+        "source": "instrumentation.py",
+        "line": 47
+      },
+      "outputs": [
+        "R"
+      ],
+      "assumptions": [
+        "Callendar\u2013Van Dusen with T_C = T \u2212 273.15 (\u00b0C): R = R0(1 + A\u00b7T_C + B\u00b7T_C\u00b2) for T_C \u2265 0 \u00b0C, and R = R0(1 + A\u00b7T_C + B\u00b7T_C\u00b2 + C(T_C \u2212 100)T_C\u00b3) for T_C < 0 \u00b0C. A, B, C are user inputs \u2014 the IEC 60751 nominal values are quoted in the descriptions only."
+      ],
+      "method_references": [
+        "Callendar\u2013Van Dusen equation for platinum RTDs"
+      ],
+      "synthetic_example": {
+        "R0": 100.0,
+        "A": 0.0039083,
+        "B": -5.775e-07,
+        "C": -4.183e-12,
+        "T": 223.15
+      }
+    },
+    "instrumentation.lvdt": {
+      "title": "LVDT output voltage (V_out = S\u00b7x)",
+      "variables": [
+        {
+          "name": "V_out",
+          "unit": "V",
+          "desc": "output voltage (about the null, sign follows displacement)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S",
+          "unit": "V/m",
+          "desc": "LVDT sensitivity (volts per metre of core displacement)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x",
+          "unit": "m",
+          "desc": "core displacement from null",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "V_out = S*x"
+      ],
+      "procedure": null,
+      "outputs": [
+        "V_out"
+      ],
+      "assumptions": [
+        "Linear region of the LVDT, displacement measured from the null (zero) position."
+      ],
+      "method_references": [
+        "V_out = S\u00b7x (linear differential transformer)"
+      ],
+      "synthetic_example": {
+        "S": 2000.0,
+        "x": 0.001
+      }
+    },
+    "instrumentation.accelerometer": {
+      "title": "Accelerometer output voltage (V_out = S\u00b7a)",
+      "variables": [
+        {
+          "name": "V_out",
+          "unit": "V",
+          "desc": "output voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S",
+          "unit": "V/(m/s^2)",
+          "desc": "accelerometer sensitivity (e.g. 10 mV/g \u2248 1.02e-3 V/(m/s\u00b2))",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m/s^2",
+          "desc": "acceleration (enter m/s^2 or g0)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "V_out = S*a"
+      ],
+      "procedure": null,
+      "outputs": [
+        "V_out"
+      ],
+      "assumptions": [
+        "Charge/voltage sensitivity is the ratio of output to applied acceleration; the relation is linear within the sensor bandwidth."
+      ],
+      "method_references": [
+        "S = V_out/a (accelerometer sensitivity)"
+      ],
+      "synthetic_example": {
+        "S": 0.00102,
+        "a": 9.80665
+      }
+    },
+    "instrumentation.snr": {
+      "title": "Signal-to-noise ratio (power) and decibels",
+      "variables": [
+        {
+          "name": "SNR",
+          "unit": "",
+          "desc": "signal-to-noise ratio (power ratio, linear)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "SNR_dB",
+          "unit": "",
+          "desc": "signal-to-noise ratio in dB (negative when the signal is below the noise)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_sig",
+          "unit": "W",
+          "desc": "signal power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_noise",
+          "unit": "W",
+          "desc": "noise power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "SNR = P_sig/P_noise",
+        "SNR_dB = 10*log(SNR)/log(10)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "SNR",
+        "SNR_dB"
+      ],
+      "assumptions": [
+        "Power ratio: SNR_dB = 10 log10(P_sig/P_noise). For amplitude (voltage) ratios use 20 log10 (see the decibel calculator)."
+      ],
+      "method_references": [
+        "SNR = P_sig/P_noise; SNR_dB = 10 log10(SNR)"
+      ],
+      "synthetic_example": {
+        "P_sig": 0.001,
+        "P_noise": 1e-06
+      }
+    },
+    "instrumentation.decibel": {
+      "title": "Decibels from a voltage (amplitude) ratio",
+      "variables": [
+        {
+          "name": "dB",
+          "unit": "",
+          "desc": "level in decibels (negative for attenuation)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "desc": "voltage of interest",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V1",
+          "unit": "V",
+          "desc": "reference voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "dB = 20*log(V2/V1)/log(10)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "dB"
+      ],
+      "assumptions": [
+        "Amplitude ratio: dB = 20 log10(V2/V1). For power ratios use 10 log10 (see the SNR calculator)."
+      ],
+      "method_references": [
+        "dB = 20 log10(V2/V1)"
+      ],
+      "synthetic_example": {
+        "V2": 10.0,
+        "V1": 1.0
+      }
+    },
+    "instrumentation.nyquist": {
+      "title": "Nyquist frequency from the sampling rate",
+      "variables": [
+        {
+          "name": "f_N",
+          "unit": "Hz",
+          "desc": "Nyquist frequency (half the sampling rate)",
+          "lo": null,
+          "hi": null,
+          "label": "fN",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_s",
+          "unit": "Hz",
+          "desc": "sampling frequency",
+          "lo": null,
+          "hi": null,
+          "label": "fs",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "f_N = f_s/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "f_N"
+      ],
+      "assumptions": [
+        "To represent a signal without aliasing the highest signal frequency must be below f_s/2 (Nyquist\u2013Shannon)."
+      ],
+      "method_references": [
+        "f_N = f_s/2"
+      ],
+      "synthetic_example": {
+        "f_s": 2000.0
+      }
+    },
+    "instrumentation.aliased_frequency": {
+      "title": "Aliased (folded) frequency of an undersampled signal",
+      "variables": [
+        {
+          "name": "f_alias",
+          "unit": "Hz",
+          "desc": "apparent (aliased) frequency in the sampled record",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_s",
+          "unit": "Hz",
+          "desc": "sampling frequency",
+          "lo": null,
+          "hi": null,
+          "label": "fs",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_sig",
+          "unit": "Hz",
+          "desc": "true signal frequency",
+          "lo": null,
+          "hi": null,
+          "label": "fsig",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _alias(v):\n    \"\"\"Aliased frequency when a signal at f_sig is sampled at f_s (fold-back / undersampling).\n\n    f_alias = |f_sig \u2212 f_s \u00b7 round(f_sig/f_s)|: the distance from f_sig to the nearest multiple of the\n    sample rate. For f_sig \u2264 f_s/2 (satisfying Nyquist) this returns f_sig unchanged.\n    \"\"\"\n    fs, f = v['f_s'], v['f_sig']\n    if fs <= 0:\n        raise MechError('f_s must be positive')\n    m = round(f / fs)\n    return {'f_alias': abs(f - m * fs)}\n",
+        "source": "instrumentation.py",
+        "line": 64
+      },
+      "outputs": [
+        "f_alias"
+      ],
+      "assumptions": [
+        "Closed form f_alias = |f_sig \u2212 f_s\u00b7round(f_sig/f_s)|. The mapping is many-to-one (folding), so the true frequency is not recoverable from the alias alone."
+      ],
+      "method_references": [
+        "f_alias = |f_sig \u2212 f_s\u00b7round(f_sig/f_s)|"
+      ],
+      "synthetic_example": {
+        "f_s": 100.0,
+        "f_sig": 130.0
+      }
+    },
+    "instrumentation.uncertainty_propagation": {
+      "title": "Uncertainty propagation (sympy partial derivatives)",
+      "variables": [
+        {
+          "name": "setup",
+          "unit": "",
+          "desc": "{\"expr\": \"a*b + c**2\", \"variables\": {\"a\": [value, uncertainty], \u2026}}",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "value",
+          "unit": "",
+          "desc": "computed value of the expression",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "uncertainty",
+          "unit": "",
+          "desc": "combined standard uncertainty (quadrature)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sensitivities",
+          "unit": "",
+          "desc": "{\"name\": \u2202f/\u2202name} at the given values",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _uncertainty(v):\n    \"\"\"Combined standard uncertainty of a function of measured variables by first-order propagation.\n\n    setup = {\"expr\": \"a*b + c**2\", \"variables\": {\"a\": [value, uncertainty], \u2026}}. Partial derivatives are\n    taken with sympy; for uncorrelated inputs u_y = sqrt(\u03a3 (\u2202f/\u2202x_i \u00b7 u_i)\u00b2). All values are plain numbers\n    (consistent units, stated by the user); sensitivities are returned in the same output/input units.\n    \"\"\"\n    import sympy as sp\n    setup = v['setup']\n    if not isinstance(setup, dict) or 'expr' not in setup or 'variables' not in setup:\n        raise MechError('setup: give {\"expr\": \"a*b + c**2\", \"variables\": {\"a\": [value, uncertainty], \u2026}}')\n    expr = setup['expr']\n    variables = setup['variables']\n    if not isinstance(variables, dict) or not variables:\n        raise MechError('setup.variables: give {\"name\": [value, uncertainty], \u2026}')\n    for name, vv in variables.items():\n        if not isinstance(vv, (list, tuple)) or len(vv) != 2:\n            raise MechError(f'setup.variables.{name}: give [value, uncertainty]')\n    # Parse the user expression with the AST whitelist (no eval); rejects attribute access, lambdas, etc.\n    try:\n        f, syms = safe_expr(str(expr), list(variables.keys()))\n    except MechError as exc:\n        raise MechError(f'setup.expr: cannot parse {expr!r} ({exc})')\n    subs = {syms[name]: float(variables[name][0]) for name in variables}\n    value = float(f.subs(subs))\n    unc2 = 0.0\n    sens = {}\n    for name in variables:\n        dfv = float(sp.diff(f, syms[name]).subs(subs))\n        sens[name] = dfv\n        unc2 += (dfv * float(variables[name][1])) ** 2\n    return {'value': value, 'uncertainty': math.sqrt(unc2), 'sensitivities': sens}\n",
+        "source": "instrumentation.py",
+        "line": 77
+      },
+      "outputs": [
+        "value",
+        "uncertainty",
+        "sensitivities"
+      ],
+      "assumptions": [
+        "First-order (linearised) propagation for uncorrelated inputs: u_y = sqrt(\u03a3 (\u2202f/\u2202x_i \u00b7 u_i)\u00b2). Values and uncertainties are plain numbers in consistent units."
+      ],
+      "method_references": [
+        "Law of propagation of uncertainty (GUM, uncorrelated case)"
+      ],
+      "synthetic_example": {
+        "setup": {
+          "expr": "a*b + c**2",
+          "variables": {
+            "a": [
+              2.0,
+              0.1
+            ],
+            "b": [
+              3.0,
+              0.2
+            ],
+            "c": [
+              4.0,
+              0.05
+            ]
+          }
+        }
+      }
+    },
+    "instrumentation.standard_error": {
+      "title": "Standard error of the mean (SE = \u03c3/\u221an)",
+      "variables": [
+        {
+          "name": "SE",
+          "unit": "",
+          "desc": "standard error of the mean",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "",
+          "desc": "sample standard deviation (in the data units)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of measurements",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "SE = sigma/sqrt(n)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "SE"
+      ],
+      "assumptions": [
+        "For n independent measurements of the same quantity; the standard error of the mean shrinks as 1/\u221an."
+      ],
+      "method_references": [
+        "SE = \u03c3/\u221an"
+      ],
+      "synthetic_example": {
+        "sigma": 0.5,
+        "n": 16
+      }
+    },
+    "instrumentation.first_order_response": {
+      "title": "First-order sensor step response and time constant",
+      "variables": [
+        {
+          "name": "y",
+          "unit": "",
+          "desc": "output at time t (in the output units)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "frac",
+          "unit": "",
+          "desc": "fraction of the final value reached, y/y_ss",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_ss",
+          "unit": "",
+          "desc": "steady-state (final) output",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "elapsed time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau",
+          "unit": "s",
+          "desc": "time constant (63.2 % rise time)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "y = y_ss*(1 - exp(-t/tau))",
+        "frac = y/y_ss"
+      ],
+      "procedure": null,
+      "outputs": [
+        "y",
+        "frac"
+      ],
+      "assumptions": [
+        "First-order (single-lag) system: at t = \u03c4 the output reaches 1 \u2212 e\u207b\u00b9 \u2248 63.2 % of the final value. The output y carries the same units as y_ss."
+      ],
+      "method_references": [
+        "y(t) = y_ss (1 \u2212 exp(\u2212t/\u03c4))"
+      ],
+      "synthetic_example": {
+        "y_ss": 10.0,
+        "t": 2.0,
+        "tau": 2.0
+      }
+    },
+    "instrumentation.second_order_params": {
+      "title": "Second-order sensor natural frequency and damping ratio (m, c, k)",
+      "variables": [
+        {
+          "name": "wn",
+          "unit": "rad/s",
+          "desc": "undamped natural frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio (\u03b6 < 1 underdamped, \u03b6 = 1 critical, \u03b6 > 1 overdamped)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "seismic mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "N*s/m",
+          "desc": "damping coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "N/m",
+          "desc": "spring stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "wn = sqrt(k/m)",
+        "zeta = c/(2*sqrt(k*m))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "wn",
+        "zeta"
+      ],
+      "assumptions": [
+        "Single-degree-of-freedom mass\u2013spring\u2013damper model of a seismic sensor (accelerometer, geophone). \u03b6 < 1 underdamped (the usual design); \u03b6 = 1 critically damped; \u03b6 > 1 overdamped."
+      ],
+      "method_references": [
+        "\u03c9n = \u221a(k/m); \u03b6 = c/(2\u221a(km))"
+      ],
+      "synthetic_example": {
+        "m": 1.0,
+        "k": 100.0,
+        "c": 2.0
+      }
+    },
+    "instrumentation.second_order_freq_response": {
+      "title": "Second-order sensor frequency response (amplitude ratio and phase)",
+      "variables": [
+        {
+          "name": "AR",
+          "unit": "",
+          "desc": "amplitude ratio |y|/|x_ss| = 1/\u221a((1\u2212r\u00b2)\u00b2 + (2\u03b6r)\u00b2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phase",
+          "unit": "rad",
+          "desc": "phase lag of the output relative to the input (\u2212atan2(2\u03b6r, 1\u2212r\u00b2))",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio (any \u03b6 \u2265 0)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "frequency ratio r = \u03c9/\u03c9n",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "AR = 1/sqrt((1 - r**2)**2 + (2*zeta*r)**2)",
+        "phase = -atan2(2*zeta*r, 1 - r**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "AR",
+        "phase"
+      ],
+      "assumptions": [
+        "Steady-state sinusoidal response of a second-order sensor; r = \u03c9/\u03c9n is the excitation frequency normalised by the undamped natural frequency. At resonance r = 1 the amplitude ratio is 1/(2\u03b6) and the phase is \u221290\u00b0."
+      ],
+      "method_references": [
+        "Second-order frequency response AR = 1/\u221a((1\u2212r\u00b2)\u00b2 + (2\u03b6r)\u00b2); \u03c6 = \u2212atan2(2\u03b6r, 1\u2212r\u00b2)"
+      ],
+      "synthetic_example": {
+        "zeta": 0.1,
+        "r": 0.5
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "instrumentation-001",
+      "calculator": "instrumentation.sensor_sensitivity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dy": 5.0,
+        "dx": 10.0
+      },
+      "solve_for": [
+        "S"
+      ],
+      "expected_as_specified": {
+        "S": 0.5
+      },
+      "expected_SI": {
+        "S": 0.5
+      },
+      "actual_SI": {
+        "S": {
+          "value": 0.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.sensor_sensitivity (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "S": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "S = \u0394out/\u0394in = 5/10 = 0.5 [output]/[input]"
+      }
+    },
+    {
+      "id": "instrumentation-002",
+      "calculator": "instrumentation.sensor_span",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "x_max": 100.0,
+        "x_min": 20.0
+      },
+      "solve_for": [
+        "span"
+      ],
+      "expected_as_specified": {
+        "span": 80.0
+      },
+      "expected_SI": {
+        "span": 80.0
+      },
+      "actual_SI": {
+        "span": {
+          "value": 80.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.sensor_span (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "span": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.16,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "span = 100 \u2212 20 = 80"
+      }
+    },
+    {
+      "id": "instrumentation-003",
+      "calculator": "instrumentation.adc_resolution",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "span": 10.0,
+        "n": 8
+      },
+      "solve_for": [
+        "res"
+      ],
+      "expected_as_specified": {
+        "res": 0.0390625
+      },
+      "expected_SI": {
+        "res": 0.0390625
+      },
+      "actual_SI": {
+        "res": {
+          "value": 0.0390625,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.adc_resolution (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "res": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 7.8125e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "res = 10/2\u2078 = 10/256 = 0.0390625"
+      }
+    },
+    {
+      "id": "instrumentation-004",
+      "calculator": "instrumentation.adc_resolution",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "span": 10.0,
+        "n": 12
+      },
+      "solve_for": [
+        "res"
+      ],
+      "expected_as_specified": {
+        "res": 0.00244140625
+      },
+      "expected_SI": {
+        "res": 0.00244140625
+      },
+      "actual_SI": {
+        "res": {
+          "value": 0.00244140625,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.adc_resolution (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "res": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4.8828125e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "res = 10/2\u00b9\u00b2 = 10/4096 = 0.00244140625"
+      }
+    },
+    {
+      "id": "instrumentation-005",
+      "calculator": "instrumentation.strain_gauge",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dR": "240 mohm",
+        "R": "120 ohm",
+        "eps": 0.001
+      },
+      "solve_for": [
+        "GF"
+      ],
+      "expected_as_specified": {
+        "GF": 2.0
+      },
+      "expected_SI": {
+        "GF": 2.0
+      },
+      "actual_SI": {
+        "GF": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.strain_gauge (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "GF": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u0394R/R = 0.24/120 = 0.002; GF = 0.002/0.001 = 2.0"
+      }
+    },
+    {
+      "id": "instrumentation-006",
+      "calculator": "instrumentation.wheatstone_bridge",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V_ex": "10 V",
+        "GF": 2.0,
+        "eps": 0.0005,
+        "k": 1
+      },
+      "solve_for": [
+        "V_out"
+      ],
+      "expected_as_specified": {
+        "V_out": "2.5 mV"
+      },
+      "expected_SI": {
+        "V_out": 0.0025
+      },
+      "actual_SI": {
+        "V_out": {
+          "value": 0.0025,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.wheatstone_bridge (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V_out": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "quarter bridge: V_o = 10\u00b72\u00b7500e-6/4 = 2.5e-3 V = 2.5 mV"
+      }
+    },
+    {
+      "id": "instrumentation-007",
+      "calculator": "instrumentation.wheatstone_bridge",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V_ex": "5 V",
+        "GF": 2.05,
+        "eps": 0.001,
+        "k": 4
+      },
+      "solve_for": [
+        "V_out"
+      ],
+      "expected_as_specified": {
+        "V_out": "10.25 mV"
+      },
+      "expected_SI": {
+        "V_out": 0.01025
+      },
+      "actual_SI": {
+        "V_out": {
+          "value": 0.01025,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.wheatstone_bridge (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V_out": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.05e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "full bridge: V_o = 5\u00b72.05\u00b71000e-6\u00b74/4 = 10.25e-3 V = 10.25 mV"
+      }
+    },
+    {
+      "id": "instrumentation-008",
+      "calculator": "instrumentation.thermocouple_seebeck",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "S": "41 uV/K",
+        "T_junction": "100 degC",
+        "T_ref": "0 degC"
+      },
+      "solve_for": [
+        "V"
+      ],
+      "expected_as_specified": {
+        "V": "4.1 mV"
+      },
+      "expected_SI": {
+        "V": 0.0040999999999999995
+      },
+      "actual_SI": {
+        "V": {
+          "value": 0.0040999999999999995,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.thermocouple_seebeck (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 8.2e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u0394T = 100 \u2212 0 = 100 K; V = 41e-6\u00b7100 = 4.1e-3 V = 4.1 mV"
+      }
+    },
+    {
+      "id": "instrumentation-009",
+      "calculator": "instrumentation.thermocouple_seebeck",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "S": "41 uV/K",
+        "T_junction": "20 degC",
+        "T_ref": "100 degC"
+      },
+      "solve_for": [
+        "V"
+      ],
+      "expected_as_specified": {
+        "V": "-3.28 mV"
+      },
+      "expected_SI": {
+        "V": -0.00328
+      },
+      "actual_SI": {
+        "V": {
+          "value": -0.00328,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.thermocouple_seebeck (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 6.56e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u0394T = 20 \u2212 100 = \u221280 K; V = 41e-6\u00b7(\u221280) = \u22123.28e-3 V = \u22123.28 mV (junction colder than reference \u2192 negative emf)"
+      }
+    },
+    {
+      "id": "instrumentation-010",
+      "calculator": "instrumentation.thermocouple_seebeck",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V": "4.1 mV",
+        "S": "41 uV/K",
+        "T_ref": "0 degC"
+      },
+      "solve_for": [
+        "T_junction"
+      ],
+      "expected_as_specified": {
+        "T_junction": "373.15 K"
+      },
+      "expected_SI": {
+        "T_junction": 373.15
+      },
+      "actual_SI": {
+        "T_junction": {
+          "value": 373.15,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.thermocouple_seebeck (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "T_junction": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.037315,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T_j = T_ref + V/S = 273.15 + 4.1e-3/41e-6 = 273.15 + 100 = 373.15 K (inverse)"
+      }
+    },
+    {
+      "id": "instrumentation-011",
+      "calculator": "instrumentation.thermocouple_polynomial",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "coeffs": [
+          0.0,
+          4e-05,
+          1e-08
+        ],
+        "T_junction": "373.15 K",
+        "T_ref": "273.15 K"
+      },
+      "solve_for": [
+        "V"
+      ],
+      "expected_as_specified": {
+        "V": "4.1 mV"
+      },
+      "expected_SI": {
+        "V": 0.0040999999999999995
+      },
+      "actual_SI": {
+        "V": {
+          "value": 0.0041,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.thermocouple_polynomial (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V": {
+          "absolute_error": 8.673617379884035e-19,
+          "relative_error": 2.1155164341180577e-16,
+          "allowed_absolute_error": 8.2e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = 4e-5\u00b7100 + 1e-8\u00b7100\u00b2 = 4e-3 + 1e-4 = 4.1e-3 V"
+      }
+    },
+    {
+      "id": "instrumentation-012",
+      "calculator": "instrumentation.thermocouple_polynomial",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "coeffs": [
+          0.0,
+          4e-05
+        ],
+        "T_junction": "20 degC",
+        "T_ref": "100 degC"
+      },
+      "solve_for": [
+        "V"
+      ],
+      "expected_as_specified": {
+        "V": "-3.2 mV"
+      },
+      "expected_SI": {
+        "V": -0.0032
+      },
+      "actual_SI": {
+        "V": {
+          "value": -0.0032,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.thermocouple_polynomial (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 6.4000000000000006e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = 4e-5\u00b7(20 \u2212 100) = 4e-5\u00b7(\u221280) = \u22123.2e-3 V = \u22123.2 mV (junction colder than reference \u2192 negative emf)"
+      }
+    },
+    {
+      "id": "instrumentation-013",
+      "calculator": "instrumentation.rtd_cvd",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R0": "100 ohm",
+        "A": 0.0039083,
+        "B": -5.775e-07,
+        "C": -4.183e-12,
+        "T": "100 degC"
+      },
+      "solve_for": [
+        "R"
+      ],
+      "expected_as_specified": {
+        "R": "138.5055 ohm"
+      },
+      "expected_SI": {
+        "R": 138.5055
+      },
+      "actual_SI": {
+        "R": {
+          "value": 138.50549999999998,
+          "unit": "ohm",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.rtd_cvd (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R": {
+          "absolute_error": 2.842170943040401e-14,
+          "relative_error": 2.052027495688186e-16,
+          "allowed_absolute_error": 0.277011,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = 100 \u00b0C \u2192 T_C = 100; R = 100(1 + 3.9083e-3\u00b7100 \u2212 5.775e-7\u00b710000) = 100\u00b71.385055 = 138.5055 \u03a9 (Pt100 at 100 \u00b0C)"
+      }
+    },
+    {
+      "id": "instrumentation-014",
+      "calculator": "instrumentation.rtd_cvd",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R0": "100 ohm",
+        "A": 0.0039083,
+        "B": -5.775e-07,
+        "C": -4.183e-12,
+        "T": "-50 degC"
+      },
+      "solve_for": [
+        "R"
+      ],
+      "expected_as_specified": {
+        "R": "80.3063 ohm"
+      },
+      "expected_SI": {
+        "R": 80.3063
+      },
+      "actual_SI": {
+        "R": {
+          "value": 80.30628187500001,
+          "unit": "ohm",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.rtd_cvd (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R": {
+          "absolute_error": 1.8124999982660484e-05,
+          "relative_error": 2.256983571981337e-07,
+          "allowed_absolute_error": 0.1606126,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = \u221250 \u00b0C \u2192 T_C = \u221250 (< 0, C term active): R = 100(1 + 3.9083e-3(\u221250) \u2212 5.775e-7\u00b72500 \u2212 4.183e-12\u00b7(\u2212150)(\u2212125000)) = 100\u00b70.8030628 = 80.3063 \u03a9 (Pt100 at \u221250 \u00b0C)"
+      }
+    },
+    {
+      "id": "instrumentation-015",
+      "calculator": "instrumentation.lvdt",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "S": "2 V/mm",
+        "x": "1 mm"
+      },
+      "solve_for": [
+        "V_out"
+      ],
+      "expected_as_specified": {
+        "V_out": "2 V"
+      },
+      "expected_SI": {
+        "V_out": 2.0
+      },
+      "actual_SI": {
+        "V_out": {
+          "value": 2.0,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.lvdt (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V_out": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V_out = 2000 V/m \u00b7 0.001 m = 2 V"
+      }
+    },
+    {
+      "id": "instrumentation-016",
+      "calculator": "instrumentation.accelerometer",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "S": "10 mV/g0",
+        "a": "1 g0"
+      },
+      "solve_for": [
+        "V_out"
+      ],
+      "expected_as_specified": {
+        "V_out": "10 mV"
+      },
+      "expected_SI": {
+        "V_out": 0.01
+      },
+      "actual_SI": {
+        "V_out": {
+          "value": 0.010000000000000002,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.accelerometer (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V_out": {
+          "absolute_error": 1.734723475976807e-18,
+          "relative_error": 1.734723475976807e-16,
+          "allowed_absolute_error": 2e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "10 mV/g \u00b7 1 g = 10 mV (sensitivity times one standard gravity)"
+      }
+    },
+    {
+      "id": "instrumentation-017",
+      "calculator": "instrumentation.snr",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P_sig": "1 mW",
+        "P_noise": "1 uW"
+      },
+      "solve_for": [
+        "SNR",
+        "SNR_dB"
+      ],
+      "expected_as_specified": {
+        "SNR": 1000.0,
+        "SNR_dB": 30.0
+      },
+      "expected_SI": {
+        "SNR": 1000.0,
+        "SNR_dB": 30.0
+      },
+      "actual_SI": {
+        "SNR": {
+          "value": 1000.0000000000001,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.snr (symbolic)"
+        },
+        "SNR_dB": {
+          "value": 29.999999999999996,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.snr (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "SNR": {
+          "absolute_error": 1.1368683772161603e-13,
+          "relative_error": 1.1368683772161603e-16,
+          "allowed_absolute_error": 2.0,
+          "passed": true
+        },
+        "SNR_dB": {
+          "absolute_error": 3.552713678800501e-15,
+          "relative_error": 1.1842378929335003e-16,
+          "allowed_absolute_error": 0.06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "SNR = 1e-3/1e-6 = 1000; SNR_dB = 10 log10(1000) = 30 dB"
+      }
+    },
+    {
+      "id": "instrumentation-018",
+      "calculator": "instrumentation.snr",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P_sig": "1 uW",
+        "P_noise": "1 mW"
+      },
+      "solve_for": [
+        "SNR",
+        "SNR_dB"
+      ],
+      "expected_as_specified": {
+        "SNR": 0.001,
+        "SNR_dB": -30.0
+      },
+      "expected_SI": {
+        "SNR": 0.001,
+        "SNR_dB": -30.0
+      },
+      "actual_SI": {
+        "SNR": {
+          "value": 0.001,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.snr (symbolic)"
+        },
+        "SNR_dB": {
+          "value": -29.999999999999993,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.snr (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "SNR": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2e-06,
+          "passed": true
+        },
+        "SNR_dB": {
+          "absolute_error": 7.105427357601002e-15,
+          "relative_error": 2.3684757858670006e-16,
+          "allowed_absolute_error": 0.06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "SNR = 1e-6/1e-3 = 0.001 (signal below noise); SNR_dB = 10 log10(0.001) = \u221230 dB"
+      }
+    },
+    {
+      "id": "instrumentation-019",
+      "calculator": "instrumentation.decibel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V2": "10 V",
+        "V1": "1 V"
+      },
+      "solve_for": [
+        "dB"
+      ],
+      "expected_as_specified": {
+        "dB": 20.0
+      },
+      "expected_SI": {
+        "dB": 20.0
+      },
+      "actual_SI": {
+        "dB": {
+          "value": 20.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.decibel (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dB": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.04,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "dB = 20 log10(10/1) = 20 dB"
+      }
+    },
+    {
+      "id": "instrumentation-020",
+      "calculator": "instrumentation.decibel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V2": "0.1 V",
+        "V1": "1 V"
+      },
+      "solve_for": [
+        "dB"
+      ],
+      "expected_as_specified": {
+        "dB": -20.0
+      },
+      "expected_SI": {
+        "dB": -20.0
+      },
+      "actual_SI": {
+        "dB": {
+          "value": -19.999999999999996,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.decibel (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dB": {
+          "absolute_error": 3.552713678800501e-15,
+          "relative_error": 1.7763568394002506e-16,
+          "allowed_absolute_error": 0.04,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "dB = 20 log10(0.1/1) = 20\u00b7(\u22121) = \u221220 dB (attenuation)"
+      }
+    },
+    {
+      "id": "instrumentation-021",
+      "calculator": "instrumentation.nyquist",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f_s": "2 kHz"
+      },
+      "solve_for": [
+        "f_N"
+      ],
+      "expected_as_specified": {
+        "f_N": "1 kHz"
+      },
+      "expected_SI": {
+        "f_N": 1000.0
+      },
+      "actual_SI": {
+        "f_N": {
+          "value": 1000.0,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.nyquist (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "f_N": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "f_N = 2000/2 = 1000 Hz"
+      }
+    },
+    {
+      "id": "instrumentation-022",
+      "calculator": "instrumentation.nyquist",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f_N": "1 kHz"
+      },
+      "solve_for": [
+        "f_s"
+      ],
+      "expected_as_specified": {
+        "f_s": "2 kHz"
+      },
+      "expected_SI": {
+        "f_s": 2000.0
+      },
+      "actual_SI": {
+        "f_s": {
+          "value": 2000.0,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.nyquist (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "f_s": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "f_s = 2 f_N = 2000 Hz (inverse)"
+      }
+    },
+    {
+      "id": "instrumentation-023",
+      "calculator": "instrumentation.aliased_frequency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f_s": "100 Hz",
+        "f_sig": "130 Hz"
+      },
+      "solve_for": [
+        "f_alias"
+      ],
+      "expected_as_specified": {
+        "f_alias": "30 Hz"
+      },
+      "expected_SI": {
+        "f_alias": 30.0
+      },
+      "actual_SI": {
+        "f_alias": {
+          "value": 30.0,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.aliased_frequency (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "f_alias": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "round(130/100) = 1; f_alias = |130 \u2212 100\u00b71| = 30 Hz (classic undersampling fold)"
+      }
+    },
+    {
+      "id": "instrumentation-024",
+      "calculator": "instrumentation.aliased_frequency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f_s": "100 Hz",
+        "f_sig": "30 Hz"
+      },
+      "solve_for": [
+        "f_alias"
+      ],
+      "expected_as_specified": {
+        "f_alias": "30 Hz"
+      },
+      "expected_SI": {
+        "f_alias": 30.0
+      },
+      "actual_SI": {
+        "f_alias": {
+          "value": 30.0,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.aliased_frequency (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "f_alias": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "30 Hz < 50 Hz (Nyquist) \u2192 no aliasing; f_alias = 30 Hz unchanged"
+      }
+    },
+    {
+      "id": "instrumentation-025",
+      "calculator": "instrumentation.uncertainty_propagation",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "setup": {
+          "expr": "a*b + c**2",
+          "variables": {
+            "a": [
+              2.0,
+              0.1
+            ],
+            "b": [
+              3.0,
+              0.2
+            ],
+            "c": [
+              4.0,
+              0.05
+            ]
+          }
+        }
+      },
+      "solve_for": [
+        "value",
+        "uncertainty",
+        "sensitivities"
+      ],
+      "expected_as_specified": {
+        "value": 22.0,
+        "uncertainty": 0.6403124
+      },
+      "expected_SI": {
+        "value": 22.0,
+        "uncertainty": 0.6403124
+      },
+      "actual_SI": {
+        "value": {
+          "value": 22.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.uncertainty_propagation (procedure)"
+        },
+        "uncertainty": {
+          "value": 0.6403124237432849,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.uncertainty_propagation (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "value": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0022,
+          "passed": true
+        },
+        "uncertainty": {
+          "absolute_error": 2.3743284893740224e-08,
+          "relative_error": 3.7080782589467615e-08,
+          "allowed_absolute_error": 6.403124e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "value = 2\u00b73 + 16 = 22; \u2202/\u2202a = 3, \u2202/\u2202b = 2, \u2202/\u2202c = 8; u = \u221a((3\u00b70.1)\u00b2 + (2\u00b70.2)\u00b2 + (8\u00b70.05)\u00b2) = \u221a(0.09 + 0.16 + 0.16) = \u221a0.41 = 0.64031"
+      }
+    },
+    {
+      "id": "instrumentation-026",
+      "calculator": "instrumentation.standard_error",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma": 0.5,
+        "n": 16
+      },
+      "solve_for": [
+        "SE"
+      ],
+      "expected_as_specified": {
+        "SE": 0.125
+      },
+      "expected_SI": {
+        "SE": 0.125
+      },
+      "actual_SI": {
+        "SE": {
+          "value": 0.125,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.standard_error (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "SE": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00025,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "SE = 0.5/\u221a16 = 0.5/4 = 0.125"
+      }
+    },
+    {
+      "id": "instrumentation-027",
+      "calculator": "instrumentation.first_order_response",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "y_ss": 10.0,
+        "t": "2 s",
+        "tau": "2 s"
+      },
+      "solve_for": [
+        "y",
+        "frac"
+      ],
+      "expected_as_specified": {
+        "y": 6.321206,
+        "frac": 0.6321206
+      },
+      "expected_SI": {
+        "y": 6.321206,
+        "frac": 0.6321206
+      },
+      "actual_SI": {
+        "y": {
+          "value": 6.321205588285576,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.first_order_response (symbolic)"
+        },
+        "frac": {
+          "value": 0.6321205588285577,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.first_order_response (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "y": {
+          "absolute_error": 4.117144243309667e-07,
+          "relative_error": 6.513225867515894e-08,
+          "allowed_absolute_error": 0.012642412,
+          "passed": true
+        },
+        "frac": {
+          "absolute_error": 4.117144236648329e-08,
+          "relative_error": 6.513225856977813e-08,
+          "allowed_absolute_error": 0.0012642412,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "at t = \u03c4: y = 10(1 \u2212 e\u207b\u00b9) = 6.32121; frac = 1 \u2212 e\u207b\u00b9 = 0.63212 (63.2 % landmark)"
+      }
+    },
+    {
+      "id": "instrumentation-028",
+      "calculator": "instrumentation.first_order_response",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "y_ss": 10.0,
+        "t": "2 s",
+        "frac": 0.6321206
+      },
+      "solve_for": [
+        "tau",
+        "y"
+      ],
+      "expected_as_specified": {
+        "tau": "2 s",
+        "y": 6.321206
+      },
+      "expected_SI": {
+        "tau": 2.0,
+        "y": 6.321206
+      },
+      "actual_SI": {
+        "tau": {
+          "value": 1.9999997761688453,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.first_order_response (symbolic)"
+        },
+        "y": {
+          "value": 6.321206,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.first_order_response (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "tau": {
+          "absolute_error": 2.2383115472202064e-07,
+          "relative_error": 1.1191557736101032e-07,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        },
+        "y": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0006321206,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c4 = \u2212t/ln(1 \u2212 frac) = \u22122/ln(0.367879) = \u22122/(\u22121) = 2 s; y = y_ss\u00b7frac = 6.32121 (inverse)"
+      }
+    },
+    {
+      "id": "instrumentation-029",
+      "calculator": "instrumentation.second_order_params",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "1 kg",
+        "k": "100 N/m",
+        "c": "2 N*s/m"
+      },
+      "solve_for": [
+        "wn",
+        "zeta"
+      ],
+      "expected_as_specified": {
+        "wn": "10 rad/s",
+        "zeta": 0.1
+      },
+      "expected_SI": {
+        "wn": 10.0,
+        "zeta": 0.1
+      },
+      "actual_SI": {
+        "wn": {
+          "value": 10.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.second_order_params (symbolic)"
+        },
+        "zeta": {
+          "value": 0.1,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.second_order_params (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "wn": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02,
+          "passed": true
+        },
+        "zeta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c9n = \u221a(100/1) = 10 rad/s; \u03b6 = 2/(2\u221a(100\u00b71)) = 2/20 = 0.1"
+      }
+    },
+    {
+      "id": "instrumentation-030",
+      "calculator": "instrumentation.second_order_params",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "1 kg",
+        "k": "100 N/m",
+        "c": "40 N*s/m"
+      },
+      "solve_for": [
+        "wn",
+        "zeta"
+      ],
+      "expected_as_specified": {
+        "wn": "10 rad/s",
+        "zeta": 2.0
+      },
+      "expected_SI": {
+        "wn": 10.0,
+        "zeta": 2.0
+      },
+      "actual_SI": {
+        "wn": {
+          "value": 10.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.second_order_params (symbolic)"
+        },
+        "zeta": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.second_order_params (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "wn": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02,
+          "passed": true
+        },
+        "zeta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c9n = \u221a(100/1) = 10 rad/s; \u03b6 = 40/(2\u221a(100\u00b71)) = 40/20 = 2 (overdamped: \u03b6 \u2265 1 is allowed)"
+      }
+    },
+    {
+      "id": "instrumentation-031",
+      "calculator": "instrumentation.second_order_freq_response",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "zeta": 0.1,
+        "r": 0.5
+      },
+      "solve_for": [
+        "AR",
+        "phase"
+      ],
+      "expected_as_specified": {
+        "AR": 1.3216372,
+        "phase": "-0.1325515 rad"
+      },
+      "expected_SI": {
+        "AR": 1.3216372,
+        "phase": -0.1325515
+      },
+      "actual_SI": {
+        "AR": {
+          "value": 1.3216372009101796,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.second_order_freq_response (symbolic)"
+        },
+        "phase": {
+          "value": -0.13255153229667402,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc instrumentation.second_order_freq_response (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "AR": {
+          "absolute_error": 9.10179487334517e-10,
+          "relative_error": 6.886757480301834e-10,
+          "allowed_absolute_error": 0.00013216372000000002,
+          "passed": true
+        },
+        "phase": {
+          "absolute_error": 3.229667402959713e-08,
+          "relative_error": 2.4365378007489263e-07,
+          "allowed_absolute_error": 1.325515e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "AR = 1/\u221a((1\u22120.25)\u00b2 + (2\u00b70.1\u00b70.5)\u00b2) = 1/\u221a(0.5625 + 0.01) = 1/\u221a0.5725 = 1.3216372; \u03c6 = \u2212atan2(0.1, 0.75) = \u2212atan(0.133333) = \u22120.1325515 rad"
+      }
+    }
+  ],
+  "passed": 31,
+  "failed": 0
+}

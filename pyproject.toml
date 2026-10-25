@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "engineering-toolkit-and-simulators"
+version = "0.1.0"
+description = "Reusable engineering solvers, a shared simulation world, controlled WebGL flow, and exact CAD pipelines"
+readme = "README.md"
+license = "PolyForm-Noncommercial-1.0.0"
+license-files = ["LICENSE", "NOTICE", "LICENSE_STATUS.md", "COMMERCIAL_LICENSE.md", "THIRD_PARTY_NOTICES.md"]
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26,<3", "scipy>=1.12,<2", "pint>=0.24,<1", "sympy>=1.13,<2", "warp-lang>=1.9,<2"]
+
+[project.optional-dependencies]
+science = ["rdkit>=2024.9", "biopython>=1.84", "primer3-py>=2.0", "CoolProp>=7", "cantera>=3.1", "iapws>=1.5"]
+advanced-science = ["pyscf>=2.8", "tblite>=0.4", "ase>=3.23", "openmm>=8.2", "pdbfixer>=1.10", "gemmi>=0.7", "meeko>=0.6", "vina>=1.2", "pymatgen>=2024.10", "pycalphad>=0.11"]
+fea = ["ngsolve>=6.2", "scikit-fem>=11", "gmsh>=4.13"]
+space = ["sgp4>=2.23", "pymsis>=0.10"]
+plots = ["matplotlib>=3.9", "PyYAML>=6"]
+test = ["pytest>=8", "build>=1.2"]
+
+[project.scripts]
+engineering-sim = "engineering_sim.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+engineering_sim = ["web/*.js", "web/*.html", "web/*.css", "cad/*.txt", "science/data/*.json", "science/data/tdb/*.json", "science/data/oracles/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

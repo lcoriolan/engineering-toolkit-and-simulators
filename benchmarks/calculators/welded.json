@@ -1,0 +1,1209 @@
+{
+  "section": "welded",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k welded",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "welded.fillet_throat": {
+      "title": "Fillet weld throat and throat area",
+      "variables": [
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "throat dimension (h/\u221a2 for a 45\u00b0 equal-leg fillet)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "leg size",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "weld length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "throat area (t\u00b7L)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "t = h/sqrt(2)",
+        "A = t*L"
+      ],
+      "procedure": null,
+      "outputs": [
+        "t",
+        "A"
+      ],
+      "assumptions": [
+        "Equal-leg fillet with a 45\u00b0 throat. For unequal legs or another flank angle use the measured throat dimension directly in place of h/\u221a2."
+      ],
+      "method_references": [
+        "Fillet weld throat = 0.707 \u00d7 leg (45\u00b0 equal-leg fillet; standard)"
+      ],
+      "synthetic_example": {
+        "h": 0.006,
+        "L": 0.1
+      }
+    },
+    "welded.weld_direct_shear": {
+      "title": "Direct (primary) shear stress in a weld",
+      "variables": [
+        {
+          "name": "tau",
+          "unit": "Pa",
+          "desc": "direct shear stress on the throat",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "N",
+          "desc": "load (magnitude)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "throat area (0.707\u00b7h\u00b7L for one fillet)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "tau = P/A"
+      ],
+      "procedure": null,
+      "outputs": [
+        "tau"
+      ],
+      "assumptions": [
+        "Uniform direct shear through the throat area. For a weld group use the total throat area A = 0.707\u00b7h\u00b7A_u from the group calculator."
+      ],
+      "method_references": [
+        "\u03c4 = P/A (direct weld shear)"
+      ],
+      "synthetic_example": {
+        "P": 20000.0,
+        "A": 0.00042
+      }
+    },
+    "welded.weld_group_props": {
+      "title": "Weld-group unit properties (welds treated as lines)",
+      "variables": [
+        {
+          "name": "segs",
+          "unit": "",
+          "desc": "weld centrelines [[x1, y1, x2, y2] (m), ...] in a local frame",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "A_u",
+          "unit": "m",
+          "desc": "unit length (sum of weld lengths)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_bar",
+          "unit": "m",
+          "desc": "centroid x",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_bar",
+          "unit": "m",
+          "desc": "centroid y",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I_xu",
+          "unit": "m^3",
+          "desc": "unit second moment about the horizontal centroidal axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I_yu",
+          "unit": "m^3",
+          "desc": "unit second moment about the vertical centroidal axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J_u",
+          "unit": "m^3",
+          "desc": "unit polar second moment (I_xu + I_yu)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _weld_group_props(values):\n    return _weld_units(values['segs'])\n",
+        "source": "welded.py",
+        "line": 66
+      },
+      "outputs": [
+        "A_u",
+        "x_bar",
+        "y_bar",
+        "I_xu",
+        "I_yu",
+        "J_u"
+      ],
+      "assumptions": [
+        "Each weld is idealised as a line along its throat centreline; properties are per unit throat width (multiply by 0.707\u00b7h for physical area / moments). Single-line, two-parallel, box, C and L patterns are all covered by the same segment list."
+      ],
+      "method_references": [
+        "Weld-as-a-line unit properties (Blodgett / Shigley; e.g. box J_u = (b+d)\u00b3/6)"
+      ],
+      "synthetic_example": {
+        "segs": [
+          [
+            0,
+            0,
+            0,
+            0.15
+          ],
+          [
+            0.1,
+            0,
+            0.1,
+            0.15
+          ],
+          [
+            0,
+            0,
+            0.1,
+            0
+          ],
+          [
+            0,
+            0.15,
+            0.1,
+            0.15
+          ]
+        ]
+      }
+    },
+    "welded.eccentric_weld": {
+      "title": "Eccentrically loaded weld group (direct + torsional shear)",
+      "variables": [
+        {
+          "name": "segs",
+          "unit": "",
+          "desc": "weld centrelines [[x1, y1, x2, y2] (m), ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "leg size",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "N",
+          "desc": "load magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "load direction from +x, CCW positive",
+          "lo": -3.141592653589793,
+          "hi": 3.141592653589793,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_P",
+          "unit": "m",
+          "desc": "load application point x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_P",
+          "unit": "m",
+          "desc": "load application point y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "total throat area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment of the throat area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_bar",
+          "unit": "m",
+          "desc": "centroid x",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_bar",
+          "unit": "m",
+          "desc": "centroid y",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "torque about the centroid (r \u00d7 F, CCW +)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_direct",
+          "unit": "Pa",
+          "desc": "direct shear magnitude P/A",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_max",
+          "unit": "Pa",
+          "desc": "maximum resultant shear at the critical point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_crit",
+          "unit": "m",
+          "desc": "critical point x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_crit",
+          "unit": "m",
+          "desc": "critical point y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "points",
+          "unit": "",
+          "desc": "[[x, y, \u03c4 (Pa)], ...] at every weld endpoint, largest first",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _eccentric_weld(values):\n    \"\"\"In-plane eccentric load on a weld group: direct shear + torsional shear, vector-summed.\n\n    The load P at angle \u03b8 applied at (x_P, y_P) is reduced to a force at the centroid plus a torque\n    T = (x_P \u2212 x\u0304)Fy \u2212 (y_P \u2212 \u0233)Fx (CCW positive). Direct shear is uniform (P/A); torsional shear at a\n    point is \u03c4 = (T/J)(\u2212y', x') with x', y' measured from the centroid. The resultant magnitude is\n    evaluated at every weld endpoint \u2014 the critical point is the one with the largest resultant.\n    \"\"\"\n    u = _weld_units(values['segs'])\n    h, P, th = values['h'], values['P'], values['theta']\n    xp, yp = values['x_P'], values['y_P']\n    t = THROAT * h\n    A = t * u['A_u']\n    J = t * u['J_u']\n    xb, yb = u['x_bar'], u['y_bar']\n    Fx, Fy = P * math.cos(th), P * math.sin(th)\n    T = (xp - xb) * Fy - (yp - yb) * Fx          # r \u00d7 F about the centroid, CCW positive\n    tdx, tdy = Fx / A, Fy / A                    # uniform direct-shear components\n    points = {}\n    for s in values['segs']:\n        for (px, py) in ((s[0], s[1]), (s[2], s[3])):\n            tx = -T * (py - yb) / J               # torsional shear components (T CCW +)\n            ty = T * (px - xb) / J\n            tau = math.hypot(tdx + tx, tdy + ty)\n            points.setdefault((px, py), tau)\n    (xc, yc), tau_max = max(points.items(), key=lambda kv: kv[1])\n    return {'A': A, 'J': J, 'x_bar': xb, 'y_bar': yb, 'T': T,\n            'tau_direct': math.hypot(tdx, tdy), 'tau_max': tau_max,\n            'x_crit': xc, 'y_crit': yc,\n            'points': [[px, py, points[(px, py)]] for px, py in\n                       sorted(points, key=lambda k: -points[k])]}\n",
+        "source": "welded.py",
+        "line": 70
+      },
+      "outputs": [
+        "A",
+        "J",
+        "x_bar",
+        "y_bar",
+        "T",
+        "tau_direct",
+        "tau_max",
+        "x_crit",
+        "y_crit",
+        "points"
+      ],
+      "assumptions": [
+        "In-plane eccentric load: uniform direct shear from the load components plus torsional shear from the torque T about the weld-group centroid; the resultant is the vector sum evaluated at every weld endpoint (the critical point has the largest resultant). Out-of-plane bending loads are a separate case not covered here.",
+        "Equal-leg 45\u00b0 fillets; every stress scales as 1/(0.707 h), so the critical point does not depend on the leg size."
+      ],
+      "method_references": [
+        "Direct + torsional shear vector sum at weld-group endpoints (Shigley sec. 9-2 form, recalled)"
+      ],
+      "synthetic_example": {
+        "segs": [
+          [
+            0,
+            0,
+            0,
+            0.15
+          ],
+          [
+            0.1,
+            0,
+            0.1,
+            0.15
+          ]
+        ],
+        "h": 0.006,
+        "P": 30000.0,
+        "theta": -1.5707963267948966,
+        "x_P": 0.15,
+        "y_P": 0.075
+      }
+    },
+    "welded.fillet_weld_strength": {
+      "title": "Fillet weld allowable strength (per length and total)",
+      "variables": [
+        {
+          "name": "q",
+          "unit": "N/m",
+          "desc": "allowable load per unit weld length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_allow",
+          "unit": "N",
+          "desc": "allowable total load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "leg size",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_allow",
+          "unit": "Pa",
+          "desc": "allowable shear stress in the weld throat (code/material; user input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "weld length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "q = h*tau_allow/sqrt(2)",
+        "P_allow = q*L"
+      ],
+      "procedure": null,
+      "outputs": [
+        "q",
+        "P_allow"
+      ],
+      "assumptions": [
+        "q = 0.707\u00b7h\u00b7\u03c4_allow is the allowable force per unit weld length of a 45\u00b0 fillet; solve for h to size a weld from a required load and allowable. The allowable stress \u03c4_allow is a user input from the governing code, not a built-in table."
+      ],
+      "method_references": [
+        "Fillet weld strength per unit length = 0.707\u00b7h\u00b7\u03c4_allow"
+      ],
+      "synthetic_example": {
+        "h": 0.006,
+        "tau_allow": 124000000.0,
+        "L": 0.1
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "welded-001",
+      "calculator": "welded.fillet_throat",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h": "6 mm",
+        "L": "100 mm"
+      },
+      "solve_for": [
+        "t",
+        "A"
+      ],
+      "expected_as_specified": {
+        "t": "4.24264 mm",
+        "A": "424.264 mm^2"
+      },
+      "expected_SI": {
+        "t": 0.00424264,
+        "A": 0.000424264
+      },
+      "actual_SI": {
+        "t": {
+          "value": 0.004242640687119286,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc welded.fillet_throat (symbolic)"
+        },
+        "A": {
+          "value": 0.0004242640687119286,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc welded.fillet_throat (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "t": {
+          "absolute_error": 6.871192859483899e-10,
+          "relative_error": 1.6195559508899882e-07,
+          "allowed_absolute_error": 8.48528e-06,
+          "passed": true
+        },
+        "A": {
+          "absolute_error": 6.871192861652303e-11,
+          "relative_error": 1.619555951401086e-07,
+          "allowed_absolute_error": 8.48528e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "t = h/\u221a2 = 6/1.41421356 = 4.24264 mm; A = t\u00b7L = 4.24264e-3 \u00d7 0.1 = 4.24264e-4 m\u00b2 = 424.264 mm\u00b2"
+      }
+    },
+    {
+      "id": "welded-002",
+      "calculator": "welded.weld_direct_shear",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": "20 kN",
+        "A": "424.264 mm^2"
+      },
+      "solve_for": [
+        "tau"
+      ],
+      "expected_as_specified": {
+        "tau": "47.1405 MPa"
+      },
+      "expected_SI": {
+        "tau": 47140500.0
+      },
+      "actual_SI": {
+        "tau": {
+          "value": 47140459.71376313,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc welded.weld_direct_shear (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "tau": {
+          "absolute_error": 40.28623686730862,
+          "relative_error": 8.545992695730554e-07,
+          "allowed_absolute_error": 94281.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c4 = P/A = 20000 / 4.24264e-4 = 4.71405e7 Pa = 47.1405 MPa"
+      }
+    },
+    {
+      "id": "welded-003",
+      "calculator": "welded.weld_group_props",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "segs": [
+          [
+            0,
+            0,
+            0,
+            0.15
+          ],
+          [
+            0.1,
+            0,
+            0.1,
+            0.15
+          ],
+          [
+            0,
+            0,
+            0.1,
+            0
+          ],
+          [
+            0,
+            0.15,
+            0.1,
+            0.15
+          ]
+        ]
+      },
+      "solve_for": [
+        "A_u",
+        "x_bar",
+        "y_bar",
+        "I_xu",
+        "I_yu",
+        "J_u"
+      ],
+      "expected_as_specified": {
+        "A_u": 0.5,
+        "x_bar": "0.05 m",
+        "y_bar": "0.075 m",
+        "I_xu": "1.6875e-3 m^3",
+        "J_u": "2.604167e-3 m^3"
+      },
+      "expected_SI": {
+        "A_u": 0.5,
+        "x_bar": 0.05,
+        "y_bar": 0.075,
+        "I_xu": 0.0016875,
+        "J_u": 0.002604167
+      },
+      "actual_SI": {
+        "A_u": {
+          "value": 0.5,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc welded.weld_group_props (procedure)"
+        },
+        "x_bar": {
+          "value": 0.05,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc welded.weld_group_props (procedure)"
+        },
+        "y_bar": {
+          "value": 0.075,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc welded.weld_group_props (procedure)"
+        },
+        "I_xu": {
+          "value": 0.0016874999999999998,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc welded.weld_group_props (procedure)"
+        },
+        "J_u": {
+          "value": 0.0026041666666666665,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc welded.weld_group_props (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A_u": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "x_bar": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0001,
+          "passed": true
+        },
+        "y_bar": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00015,
+          "passed": true
+        },
+        "I_xu": {
+          "absolute_error": 2.168404344971009e-19,
+          "relative_error": 1.2849803525754127e-16,
+          "allowed_absolute_error": 3.375e-06,
+          "passed": true
+        },
+        "J_u": {
+          "absolute_error": 3.3333333359156225e-10,
+          "relative_error": 1.27999983715162e-07,
+          "allowed_absolute_error": 5.208334e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Box b=0.1, d=0.15: A_u = 2(b+d) = 0.5; x\u0304 = b/2 = 0.05; \u0233 = d/2 = 0.075; I_xu = d\u00b2(3b+d)/6 = 0.0225\u00b70.45/6 = 1.6875e-3 m\u00b3; J_u = (b+d)\u00b3/6 = 0.25\u00b3/6 = 2.604167e-3 m\u00b3"
+      }
+    },
+    {
+      "id": "welded-004",
+      "calculator": "welded.weld_group_props",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "segs": [
+          [
+            0,
+            0,
+            0,
+            0.15
+          ],
+          [
+            0,
+            0,
+            0.1,
+            0
+          ]
+        ]
+      },
+      "solve_for": [
+        "A_u",
+        "x_bar",
+        "y_bar",
+        "I_xu",
+        "I_yu",
+        "J_u"
+      ],
+      "expected_as_specified": {
+        "A_u": 0.25,
+        "x_bar": "0.02 m",
+        "y_bar": "0.045 m",
+        "I_xu": "6.1875e-4 m^3",
+        "J_u": "8.52083e-4 m^3"
+      },
+      "expected_SI": {
+        "A_u": 0.25,
+        "x_bar": 0.02,
+        "y_bar": 0.045,
+        "I_xu": 0.00061875,
+        "J_u": 0.000852083
+      },
+      "actual_SI": {
+        "A_u": {
+          "value": 0.25,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc welded.weld_group_props (procedure)"
+        },
+        "x_bar": {
+          "value": 0.020000000000000004,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc welded.weld_group_props (procedure)"
+        },
+        "y_bar": {
+          "value": 0.045,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc welded.weld_group_props (procedure)"
+        },
+        "I_xu": {
+          "value": 0.0006187499999999999,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc welded.weld_group_props (procedure)"
+        },
+        "J_u": {
+          "value": 0.0008520833333333334,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc welded.weld_group_props (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A_u": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        },
+        "x_bar": {
+          "absolute_error": 3.469446951953614e-18,
+          "relative_error": 1.734723475976807e-16,
+          "allowed_absolute_error": 4e-05,
+          "passed": true
+        },
+        "y_bar": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 8.999999999999999e-05,
+          "passed": true
+        },
+        "I_xu": {
+          "absolute_error": 1.0842021724855044e-19,
+          "relative_error": 1.752245935330108e-16,
+          "allowed_absolute_error": 1.2375000000000002e-06,
+          "passed": true
+        },
+        "J_u": {
+          "absolute_error": 3.333333333747218e-10,
+          "relative_error": 3.9119819709432276e-07,
+          "allowed_absolute_error": 1.704166e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L-shape (vertical 0.15 at x=0, horizontal 0.1 at y=0): A_u = 0.25; x\u0304 = (0.15\u00b70 + 0.1\u00b70.05)/0.25 = 0.02; \u0233 = (0.15\u00b70.075 + 0.1\u00b70)/0.25 = 0.045; vertical I_xu = 0.15(0.045\u00b2 \u2212 0.045\u00b70.15 + 0.15\u00b2/3) = 4.1625e-4, horizontal I_xu = 0.1\u00b70.045\u00b2 = 2.025e-4 \u2192 I_xu = 6.1875e-4; I_yu = 0.15\u00b70.02\u00b2 + 0.1(0.02\u00b2 \u2212 0.02\u00b70.1 + 0.1\u00b2/3) = 6e-5 + 1.73333e-4 = 2.33333e-4 \u2192 J_u = 8.52083e-4 m\u00b3"
+      }
+    },
+    {
+      "id": "welded-005",
+      "calculator": "welded.eccentric_weld",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "segs": [
+          [
+            0,
+            0,
+            0,
+            0.15
+          ],
+          [
+            0.1,
+            0,
+            0.1,
+            0.15
+          ]
+        ],
+        "h": "6 mm",
+        "P": "30 kN",
+        "theta": "-90 deg",
+        "x_P": "0.15 m",
+        "y_P": "0.075 m"
+      },
+      "solve_for": [
+        "A",
+        "J",
+        "x_bar",
+        "y_bar",
+        "T",
+        "tau_direct",
+        "tau_max",
+        "x_crit",
+        "y_crit",
+        "points"
+      ],
+      "expected_as_specified": {
+        "A": "1.27279e-3 m^2",
+        "J": "5.56847e-6 m^4",
+        "T": "-3000 N*m",
+        "tau_direct": "23.5702 MPa",
+        "tau_max": "64.6813 MPa"
+      },
+      "expected_SI": {
+        "A": 0.00127279,
+        "J": 5.56847e-06,
+        "T": -3000.0,
+        "tau_direct": 23570200.0,
+        "tau_max": 64681299.99999999
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.0012727922061357853,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc welded.eccentric_weld (procedure)"
+        },
+        "J": {
+          "value": 5.5684659018440616e-06,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc welded.eccentric_weld (procedure)"
+        },
+        "T": {
+          "value": -2999.9999999999995,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc welded.eccentric_weld (procedure)"
+        },
+        "tau_direct": {
+          "value": 23570226.03955159,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc welded.eccentric_weld (procedure)"
+        },
+        "tau_max": {
+          "value": 64681322.41526727,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc welded.eccentric_weld (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "A": {
+          "absolute_error": 2.2061357853389585e-09,
+          "relative_error": 1.733306975493961e-06,
+          "allowed_absolute_error": 6.36395e-07,
+          "passed": true
+        },
+        "J": {
+          "absolute_error": 4.0981559381727075e-12,
+          "relative_error": 7.359572626184047e-07,
+          "allowed_absolute_error": 2.784235e-09,
+          "passed": true
+        },
+        "T": {
+          "absolute_error": 4.547473508864641e-13,
+          "relative_error": 1.5158245029548803e-16,
+          "allowed_absolute_error": 1.5,
+          "passed": true
+        },
+        "tau_direct": {
+          "absolute_error": 26.039551589637995,
+          "relative_error": 1.104765830991591e-06,
+          "allowed_absolute_error": 11785.1,
+          "passed": true
+        },
+        "tau_max": {
+          "absolute_error": 22.415267273783684,
+          "relative_error": 3.465494242351914e-07,
+          "allowed_absolute_error": 32340.649999999998,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two vertical welds d=0.15 at x=0 and x=0.1: A_u = 0.3, x\u0304 = 0.05, \u0233 = 0.075, J_u = d(3b\u00b2+d\u00b2)/6 = 0.15(0.03+0.0225)/6 = 1.3125e-3 m\u00b3. Throat 0.7071\u00b76 mm: A = 0.7071\u00b70.006\u00b70.3 = 1.27279e-3 m\u00b2, J = 0.7071\u00b70.006\u00b71.3125e-3 = 5.56847e-6 m\u2074. Load down (\u03b8=\u221290\u00b0): Fx=0, Fy=\u221230000; T = (0.15\u22120.05)(\u221230000) \u2212 0 = \u22123000 N\u00b7m. Direct \u03c4 = P/A = 30000/1.27279e-3 = 23.570 MPa. At corner (0.1,0): torsional \u03c4x = \u2212T(0\u22120.075)/J = 3000\u00b70.075/5.56847e-6 = 4.0406e7, \u03c4y = T(0.1\u22120.05)/J = \u22122.6937e7; resultant = \u221a(4.0406e7\u00b2 + (\u22122.3570e7 \u2212 2.6937e7)\u00b2) = 6.46813e7 Pa (largest of the four endpoints)"
+      }
+    },
+    {
+      "id": "welded-006",
+      "calculator": "welded.fillet_weld_strength",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h": "6 mm",
+        "tau_allow": "124 MPa",
+        "L": "100 mm"
+      },
+      "solve_for": [
+        "q",
+        "P_allow"
+      ],
+      "expected_as_specified": {
+        "q": "526087 N/m",
+        "P_allow": "52608.7 N"
+      },
+      "expected_SI": {
+        "q": 526087.0,
+        "P_allow": 52608.7
+      },
+      "actual_SI": {
+        "q": {
+          "value": 526087.4452027915,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc welded.fillet_weld_strength (symbolic)"
+        },
+        "P_allow": {
+          "value": 52608.74452027915,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc welded.fillet_weld_strength (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "q": {
+          "absolute_error": 0.44520279148127884,
+          "relative_error": 8.462531700674581e-07,
+          "allowed_absolute_error": 1052.174,
+          "passed": true
+        },
+        "P_allow": {
+          "absolute_error": 0.04452027915249346,
+          "relative_error": 8.462531701504402e-07,
+          "allowed_absolute_error": 105.2174,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "q = 0.7071\u00b7h\u00b7\u03c4_allow = 0.70710678\u00b70.006\u00b7124e6 = 526087 N/m; P_allow = q\u00b7L = 526087\u00b70.1 = 52608.7 N"
+      }
+    },
+    {
+      "id": "welded-007",
+      "calculator": "welded.fillet_weld_strength",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "q": "600 kN/m",
+        "tau_allow": "124 MPa",
+        "L": "100 mm"
+      },
+      "solve_for": [
+        "h",
+        "P_allow"
+      ],
+      "expected_as_specified": {
+        "h": "6.84297 mm",
+        "P_allow": "60000 N"
+      },
+      "expected_SI": {
+        "h": 0.00684297,
+        "P_allow": 60000.0
+      },
+      "actual_SI": {
+        "h": {
+          "value": 0.006842968850192396,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc welded.fillet_weld_strength (symbolic)"
+        },
+        "P_allow": {
+          "value": 60000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc welded.fillet_weld_strength (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "h": {
+          "absolute_error": 1.149807604163e-09,
+          "relative_error": 1.680275675858582e-07,
+          "allowed_absolute_error": 1.3685940000000002e-05,
+          "passed": true
+        },
+        "P_allow": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 120.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Weld size required: h = q\u00b7\u221a2/\u03c4_allow = 600e3\u00b71.41421356/124e6 = 6.84297e-3 m; P_allow = q\u00b7L = 600e3\u00b70.1 = 60000 N"
+      }
+    }
+  ],
+  "passed": 7,
+  "failed": 0
+}

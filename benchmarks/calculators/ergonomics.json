@@ -1,0 +1,1519 @@
+{
+  "section": "ergonomics",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k ergonomics",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "ergonomics.niosh_lifting": {
+      "title": "NIOSH lifting equation: recommended weight limit and lifting index",
+      "variables": [
+        {
+          "name": "H",
+          "unit": "m",
+          "desc": "horizontal location of the hands from the ankles",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m",
+          "desc": "vertical location of the hands at the lift origin",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "vertical travel distance (origin to destination)",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "rad",
+          "desc": "asymmetry angle",
+          "lo": 0.0,
+          "hi": 3.141592653589793,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "FM",
+          "unit": "",
+          "desc": "frequency multiplier (NIOSH FM table, user input)",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "CM",
+          "unit": "",
+          "desc": "coupling multiplier (NIOSH CM table: 1.0 good, 0.95 fair, 0.90 poor)",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Load",
+          "unit": "kg",
+          "desc": "actual lifted load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "li",
+          "unit": "",
+          "desc": "lifting index = Load/RWL",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rwl",
+          "unit": "kg",
+          "desc": "recommended weight limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "hm",
+          "unit": "",
+          "desc": "horizontal multiplier 25/H",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "vm",
+          "unit": "",
+          "desc": "vertical multiplier",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dm",
+          "unit": "",
+          "desc": "distance multiplier",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "am",
+          "unit": "",
+          "desc": "asymmetric multiplier",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _niosh(values):\n    \"\"\"Revised NIOSH lifting equation (metric): RWL = LC\u00b7HM\u00b7VM\u00b7DM\u00b7AM\u00b7FM\u00b7CM, LI = Load/RWL.\n\n    Multiplier bounds (NIOSH safety limits): HM = 25/H capped at 1 for H < 25 cm and 0 for H > 63 cm;\n    VM = 1 \u2212 0.003|V \u2212 75|, zero for V > 175 cm; DM = 0.82 + 4.5/D capped at 1 for D < 25 cm (D = 0 is\n    allowed) and 0 for D > 175 cm; AM = 1 \u2212 0.0032\u00b7A, zero for A > 135\u00b0 (H, V, D in cm, A in degrees).\n    \"\"\"\n    H, V, D, A = values['H'], values['V'], values['D'], values['A']\n    FM, CM, Load = values['FM'], values['CM'], values['Load']\n    LC = 23.0  # NIOSH load constant, kg\n    H_cm, V_cm, D_cm = H * 100.0, V * 100.0, D * 100.0\n    A_deg = math.degrees(A)\n    if H_cm <= 0:\n        raise MechError('H must be positive (horizontal distance from the ankles)')\n    if V_cm < 0 or D_cm < 0:\n        raise MechError('V and D must be non-negative')\n    # HM: cap at 1 below 25 cm; out of reach (zero) above 63 cm.\n    HM = 0.0 if H_cm > 63.0 else min(1.0, 25.0 / H_cm)\n    # VM: zero beyond 175 cm.\n    VM = 0.0 if V_cm > 175.0 else 1.0 - 0.003 * abs(V_cm - 75.0)\n    # DM: cap at 1 below 25 cm (D = 0 allowed); zero beyond 175 cm.\n    if D_cm > 175.0:\n        DM = 0.0\n    elif D_cm < 25.0:\n        DM = 1.0\n    else:\n        DM = 0.82 + 4.5 / D_cm\n    # AM: zero beyond 135\u00b0.\n    AM = 0.0 if A_deg > 135.0 else 1.0 - 0.0032 * A_deg\n    RWL = LC * HM * VM * DM * AM * FM * CM\n    warnings = []\n    if H_cm < 25.0:\n        warnings.append(f'H = {H_cm:.2f} cm is below 25 cm (HM capped at 1)')\n    elif H_cm > 63.0:\n        warnings.append(f'H = {H_cm:.2f} cm exceeds 63 cm (HM = 0)')\n    if V_cm > 175.0:\n        warnings.append(f'V = {V_cm:.2f} cm exceeds 175 cm (VM = 0)')\n    if D_cm < 25.0:\n        warnings.append(f'D = {D_cm:.2f} cm is below 25 cm (DM capped at 1)')\n    elif D_cm > 175.0:\n        warnings.append(f'D = {D_cm:.2f} cm exceeds 175 cm (DM = 0)')\n    if A_deg > 135.0:\n        warnings.append(f'A = {A_deg:.2f}\u00b0 exceeds 135\u00b0 (AM = 0)')\n    if RWL <= 0:\n        out = {'rwl': 0.0, 'hm': HM, 'vm': VM, 'dm': DM, 'am': AM, 'li': float('inf')}\n        out['_warnings'] = warnings + ['RWL = 0: the lifting index is unbounded '\n                                       '(any nonzero load exceeds the recommended limit)']\n        return out\n    out = {'li': Load / RWL, 'rwl': RWL, 'hm': HM, 'vm': VM, 'dm': DM, 'am': AM}\n    if warnings:\n        out['_warnings'] = warnings\n    return out\n",
+        "source": "ergonomics.py",
+        "line": 23
+      },
+      "outputs": [
+        "li",
+        "rwl",
+        "hm",
+        "vm",
+        "dm",
+        "am"
+      ],
+      "assumptions": [
+        "Revised NIOSH equation, metric form: LC = 23 kg, HM = 25/H, VM = 1 \u2212 0.003|V \u2212 75|, DM = 0.82 + 4.5/D, AM = 1 \u2212 0.0032\u00b7A (H, V, D in cm, A in degrees). FM and CM are table inputs (not built in). NIOSH bounds are applied: HM = 1 for H < 25 cm and 0 for H > 63 cm, VM = 0 for V > 175 cm, DM = 1 for D < 25 cm (D = 0 allowed) and 0 for D > 175 cm, AM = 0 for A > 135\u00b0. When RWL = 0 the lifting index is unbounded (a warning is returned rather than a finite value). LI > 1 indicates an increased risk of lifting injury."
+      ],
+      "method_references": [
+        "Revised NIOSH lifting equation (Waters et al. 1993; closed forms and bounds recalled)"
+      ],
+      "synthetic_example": {
+        "H": 0.4,
+        "V": 0.75,
+        "D": 0.5,
+        "A": 0.0,
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      }
+    },
+    "ergonomics.safety_distance": {
+      "title": "Machine safety distance (ISO 13855: S = K\u00b7T + C)",
+      "variables": [
+        {
+          "name": "S",
+          "unit": "m",
+          "desc": "minimum safety distance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "m/s",
+          "desc": "approach (hand) speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "s",
+          "desc": "total stopping/response time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "m",
+          "desc": "intrusion/reach distance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "S = K*T + C"
+      ],
+      "procedure": null,
+      "outputs": [
+        "S"
+      ],
+      "assumptions": [
+        "K (e.g. 2 m/s walking, 1.6 m/s for some applications) and C (e.g. 8(d\u221214) mm for a light curtain) are user inputs from ISO 13855. Solving for K gives the permissible approach speed for a given distance."
+      ],
+      "method_references": [
+        "ISO 13855 positioning of safeguards: S = K\u00b7T + C (recalled)"
+      ],
+      "synthetic_example": {
+        "K": 2.0,
+        "T": 0.2,
+        "C": 0.05
+      }
+    },
+    "ergonomics.stored_pressure_energy": {
+      "title": "Stored energy of a compressed gas (isentropic expansion work)",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "J",
+          "desc": "isentropic expansion energy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P1",
+          "unit": "Pa",
+          "desc": "absolute vessel pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P2",
+          "unit": "Pa",
+          "desc": "discharge (atmospheric) pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m^3",
+          "desc": "vessel volume",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "ratio of specific heats cp/cv",
+          "lo": 1.01,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "E = P1*V/(gamma - 1)*(1 - (P2/P1)**((gamma - 1)/gamma))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "E"
+      ],
+      "assumptions": [
+        "One common model of pressure-vessel burst energy: reversible adiabatic (isentropic) expansion of an ideal gas from P1 to P2 with P2 \u2264 P1 and both pressures absolute. Other models exist (Brode, isothermal) and give different values \u2014 choose the model that matches the release process."
+      ],
+      "method_references": [
+        "W = P1\u00b7V/(\u03b3\u22121)\u00b7[1 \u2212 (P2/P1)^((\u03b3\u22121)/\u03b3)] (isentropic expansion, recalled; one of several models)"
+      ],
+      "synthetic_example": {
+        "P1": 1000000.0,
+        "P2": 101325.0,
+        "V": 0.1,
+        "gamma": 1.4
+      }
+    },
+    "ergonomics.lifting_safety": {
+      "title": "Working load limit from a lifting-equipment safety factor (n = F_ult/F_wll)",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "design factor from the applicable lifting standard (user input)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_ult",
+          "unit": "N",
+          "desc": "breaking (ultimate) strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_wll",
+          "unit": "N",
+          "desc": "working load limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "n = F_ult/F_wll"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F_wll"
+      ],
+      "assumptions": [
+        "This is the same factor-of-safety relation as design_fund.factor_of_safety. The design factor n is a user input selected from the applicable standard (e.g. 5:1 for general rigging hardware); for a multi-leg sling the WLL is shared between legs and reduced by the leg angle. This relation does not certify equipment \u2014 follow the governing code."
+      ],
+      "method_references": [
+        "n = F_ult/F_wll (safety factor, recalled)"
+      ],
+      "synthetic_example": {
+        "n": 5.0,
+        "F_ult": 50000.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "ergonomics-001",
+      "calculator": "ergonomics.niosh_lifting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "50 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "solve_for": [
+        "li",
+        "rwl",
+        "hm",
+        "vm",
+        "dm",
+        "am"
+      ],
+      "expected_as_specified": {
+        "li": 1.528906,
+        "rwl": 13.08125,
+        "hm": 0.625,
+        "vm": 1.0,
+        "dm": 0.91,
+        "am": 1.0
+      },
+      "expected_SI": {
+        "li": 1.528906,
+        "rwl": 13.08125,
+        "hm": 0.625,
+        "vm": 1.0,
+        "dm": 0.91,
+        "am": 1.0
+      },
+      "actual_SI": {
+        "li": {
+          "value": 1.5289058767319639,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "rwl": {
+          "value": 13.081249999999999,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "hm": {
+          "value": 0.625,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "vm": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "dm": {
+          "value": 0.9099999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "am": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "li": {
+          "absolute_error": 1.2326803622286775e-07,
+          "relative_error": 8.062499344162933e-08,
+          "allowed_absolute_error": 0.0030578120000000005,
+          "passed": true
+        },
+        "rwl": {
+          "absolute_error": 1.7763568394002505e-15,
+          "relative_error": 1.3579412054660298e-16,
+          "allowed_absolute_error": 0.0261625,
+          "passed": true
+        },
+        "hm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00125,
+          "passed": true
+        },
+        "vm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "dm": {
+          "absolute_error": 1.1102230246251565e-16,
+          "relative_error": 1.2200253017858862e-16,
+          "allowed_absolute_error": 0.00182,
+          "passed": true
+        },
+        "am": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "HM = 25/40 = 0.625; VM = 1 \u2212 0.003|75\u221275| = 1; DM = 0.82 + 4.5/50 = 0.91; AM = 1; RWL = 23\u00b70.625\u00b71\u00b70.91\u00b71\u00b71\u00b71 = 13.08125 kg; LI = 20/13.08125 = 1.5289"
+      }
+    },
+    {
+      "id": "ergonomics-002",
+      "calculator": "ergonomics.niosh_lifting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "0.5 m",
+        "V": "0.9 m",
+        "D": "0.8 m",
+        "A": "45 deg",
+        "FM": 0.85,
+        "CM": 0.95,
+        "Load": 15.0
+      },
+      "solve_for": [
+        "li",
+        "rwl",
+        "hm",
+        "vm",
+        "dm",
+        "am"
+      ],
+      "expected_as_specified": {
+        "li": 2.254996,
+        "rwl": 6.651897,
+        "hm": 0.5,
+        "vm": 0.955,
+        "dm": 0.87625,
+        "am": 0.856
+      },
+      "expected_SI": {
+        "li": 2.254996,
+        "rwl": 6.651897,
+        "hm": 0.5,
+        "vm": 0.955,
+        "dm": 0.87625,
+        "am": 0.856
+      },
+      "actual_SI": {
+        "li": {
+          "value": 2.2549957124346345,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "rwl": {
+          "value": 6.6518973483125,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "hm": {
+          "value": 0.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "vm": {
+          "value": 0.955,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "dm": {
+          "value": 0.87625,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "am": {
+          "value": 0.856,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "li": {
+          "absolute_error": 2.8756536529783716e-07,
+          "relative_error": 1.2752366979712477e-07,
+          "allowed_absolute_error": 0.004509992,
+          "passed": true
+        },
+        "rwl": {
+          "absolute_error": 3.4831249973166223e-07,
+          "relative_error": 5.236288230735717e-08,
+          "allowed_absolute_error": 0.013303794,
+          "passed": true
+        },
+        "hm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "vm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00191,
+          "passed": true
+        },
+        "dm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0017525,
+          "passed": true
+        },
+        "am": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001712,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "HM = 25/50 = 0.5; VM = 1 \u2212 0.003\u00b715 = 0.955; DM = 0.82 + 4.5/80 = 0.87625; AM = 1 \u2212 0.0032\u00b745 = 0.856; RWL = 23\u00b70.5\u00b70.955\u00b70.87625\u00b70.856\u00b70.85\u00b70.95 = 6.6519 kg; LI = 15/6.6519 = 2.2550"
+      }
+    },
+    {
+      "id": "ergonomics-003",
+      "calculator": "ergonomics.niosh_lifting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "50 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "li": 1.528906
+      },
+      "solve_for": [
+        "Load"
+      ],
+      "expected_as_specified": {
+        "Load": 20.0
+      },
+      "expected_SI": {
+        "Load": 20.0
+      },
+      "actual_SI": {
+        "Load": {
+          "value": 20.0000016125,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Load": {
+          "absolute_error": 1.6125000001920853e-06,
+          "relative_error": 8.062500000960426e-08,
+          "allowed_absolute_error": 0.04,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Load = LI\u00b7RWL = 1.528906\u00b713.08125 = 20 kg"
+      }
+    },
+    {
+      "id": "ergonomics-004",
+      "calculator": "ergonomics.safety_distance",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K": "2 m/s",
+        "T": "200 ms",
+        "C": "50 mm"
+      },
+      "solve_for": [
+        "S"
+      ],
+      "expected_as_specified": {
+        "S": "0.45 m"
+      },
+      "expected_SI": {
+        "S": 0.45
+      },
+      "actual_SI": {
+        "S": {
+          "value": 0.45,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.safety_distance (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "S": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0009000000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "S = 2\u00b70.2 + 0.05 = 0.45 m"
+      }
+    },
+    {
+      "id": "ergonomics-005",
+      "calculator": "ergonomics.safety_distance",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "S": "450 mm",
+        "T": "0.2 s",
+        "C": "50 mm"
+      },
+      "solve_for": [
+        "K"
+      ],
+      "expected_as_specified": {
+        "K": "2 m/s"
+      },
+      "expected_SI": {
+        "K": 2.0
+      },
+      "actual_SI": {
+        "K": {
+          "value": 2.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.safety_distance (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "K": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "K = (S \u2212 C)/T = (0.45 \u2212 0.05)/0.2 = 2 m/s (permissible approach speed)"
+      }
+    },
+    {
+      "id": "ergonomics-006",
+      "calculator": "ergonomics.stored_pressure_energy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P1": "1 MPa",
+        "P2": "101.325 kPa",
+        "V": "100 L",
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "E"
+      ],
+      "expected_as_specified": {
+        "E": 120025.2
+      },
+      "expected_SI": {
+        "E": 120025.2
+      },
+      "actual_SI": {
+        "E": {
+          "value": 120025.23502779173,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.stored_pressure_energy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "E": {
+          "absolute_error": 0.0350277917314088,
+          "relative_error": 2.9183697866288745e-07,
+          "allowed_absolute_error": 60.0126,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "E = 1e6\u00b70.1/0.4\u00b7(1 \u2212 (101325/1e6)^0.285714) = 250000\u00b7(1 \u2212 0.519899) = 250000\u00b70.480101 = 120025 J"
+      }
+    },
+    {
+      "id": "ergonomics-007",
+      "calculator": "ergonomics.lifting_safety",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 5.0,
+        "F_ult": "50 kN"
+      },
+      "solve_for": [
+        "F_wll"
+      ],
+      "expected_as_specified": {
+        "F_wll": "10 kN"
+      },
+      "expected_SI": {
+        "F_wll": 10000.0
+      },
+      "actual_SI": {
+        "F_wll": {
+          "value": 10000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.lifting_safety (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_wll": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 20.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F_wll = 50000/5 = 10000 N = 10 kN"
+      }
+    },
+    {
+      "id": "ergonomics-008",
+      "calculator": "ergonomics.niosh_lifting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "20 cm",
+        "V": "75 cm",
+        "D": "50 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "solve_for": [
+        "li",
+        "rwl",
+        "hm",
+        "vm",
+        "dm",
+        "am"
+      ],
+      "expected_as_specified": {
+        "li": 0.955566,
+        "rwl": 20.93,
+        "hm": 1.0,
+        "vm": 1.0,
+        "dm": 0.91,
+        "am": 1.0
+      },
+      "expected_SI": {
+        "li": 0.955566,
+        "rwl": 20.93,
+        "hm": 1.0,
+        "vm": 1.0,
+        "dm": 0.91,
+        "am": 1.0
+      },
+      "actual_SI": {
+        "li": {
+          "value": 0.9555661729574774,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "rwl": {
+          "value": 20.93,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "hm": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "vm": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "dm": {
+          "value": 0.9099999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "am": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "li": {
+          "absolute_error": 1.72957477340141e-07,
+          "relative_error": 1.810000327974635e-07,
+          "allowed_absolute_error": 0.001911132,
+          "passed": true
+        },
+        "rwl": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.04186,
+          "passed": true
+        },
+        "hm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "vm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "dm": {
+          "absolute_error": 1.1102230246251565e-16,
+          "relative_error": 1.2200253017858862e-16,
+          "allowed_absolute_error": 0.00182,
+          "passed": true
+        },
+        "am": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "H = 20 cm < 25 cm \u2192 HM capped at 1 (not 25/20 = 1.25). VM = 1, DM = 0.82 + 4.5/50 = 0.91, AM = 1. RWL = 23\u00b71\u00b71\u00b70.91\u00b71\u00b71\u00b71 = 20.93 kg; LI = 20/20.93 = 0.95557"
+      }
+    },
+    {
+      "id": "ergonomics-009",
+      "calculator": "ergonomics.niosh_lifting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "70 cm",
+        "V": "75 cm",
+        "D": "50 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "solve_for": [
+        "li",
+        "rwl",
+        "hm",
+        "vm",
+        "dm",
+        "am"
+      ],
+      "expected_as_specified": {
+        "rwl": 0.0,
+        "hm": 0.0,
+        "vm": 1.0,
+        "dm": 0.91,
+        "am": 1.0
+      },
+      "expected_SI": {
+        "rwl": 0.0,
+        "hm": 0.0,
+        "vm": 1.0,
+        "dm": 0.91,
+        "am": 1.0
+      },
+      "actual_SI": {
+        "rwl": {
+          "value": 0.0,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "hm": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "vm": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "dm": {
+          "value": 0.9099999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "am": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "rwl": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "hm": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "vm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "dm": {
+          "absolute_error": 1.1102230246251565e-16,
+          "relative_error": 1.2200253017858862e-16,
+          "allowed_absolute_error": 0.00182,
+          "passed": true
+        },
+        "am": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "H = 70 cm > 63 cm \u2192 HM = 0 (beyond reach), so RWL = 0 and the lifting index is unbounded"
+      }
+    },
+    {
+      "id": "ergonomics-010",
+      "calculator": "ergonomics.niosh_lifting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "40 cm",
+        "V": "180 cm",
+        "D": "50 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "solve_for": [
+        "li",
+        "rwl",
+        "hm",
+        "vm",
+        "dm",
+        "am"
+      ],
+      "expected_as_specified": {
+        "rwl": 0.0,
+        "vm": 0.0,
+        "hm": 0.625
+      },
+      "expected_SI": {
+        "rwl": 0.0,
+        "vm": 0.0,
+        "hm": 0.625
+      },
+      "actual_SI": {
+        "rwl": {
+          "value": 0.0,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "vm": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "hm": {
+          "value": 0.625,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "rwl": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "vm": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "hm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00125,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = 180 cm > 175 cm \u2192 VM = 0 (beyond reach overhead), so RWL = 0"
+      }
+    },
+    {
+      "id": "ergonomics-011",
+      "calculator": "ergonomics.niosh_lifting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "20 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "solve_for": [
+        "li",
+        "rwl",
+        "hm",
+        "vm",
+        "dm",
+        "am"
+      ],
+      "expected_as_specified": {
+        "li": 1.391304,
+        "rwl": 14.375,
+        "hm": 0.625,
+        "dm": 1.0
+      },
+      "expected_SI": {
+        "li": 1.391304,
+        "rwl": 14.375,
+        "hm": 0.625,
+        "dm": 1.0
+      },
+      "actual_SI": {
+        "li": {
+          "value": 1.391304347826087,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "rwl": {
+          "value": 14.375,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "hm": {
+          "value": 0.625,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "dm": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "li": {
+          "absolute_error": 3.47826086821712e-07,
+          "relative_error": 2.500000624031211e-07,
+          "allowed_absolute_error": 0.002782608,
+          "passed": true
+        },
+        "rwl": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02875,
+          "passed": true
+        },
+        "hm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00125,
+          "passed": true
+        },
+        "dm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 20 cm < 25 cm \u2192 DM capped at 1 (not 0.82 + 4.5/20 = 1.045). HM = 0.625, VM = 1, AM = 1. RWL = 23\u00b70.625\u00b71\u00b71\u00b71\u00b71\u00b71 = 14.375 kg; LI = 20/14.375 = 1.39130"
+      }
+    },
+    {
+      "id": "ergonomics-012",
+      "calculator": "ergonomics.niosh_lifting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "0 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "solve_for": [
+        "li",
+        "rwl",
+        "hm",
+        "vm",
+        "dm",
+        "am"
+      ],
+      "expected_as_specified": {
+        "rwl": 14.375,
+        "dm": 1.0
+      },
+      "expected_SI": {
+        "rwl": 14.375,
+        "dm": 1.0
+      },
+      "actual_SI": {
+        "rwl": {
+          "value": 14.375,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "dm": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "rwl": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02875,
+          "passed": true
+        },
+        "dm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 0 is allowed (no vertical travel) \u2192 DM capped at 1; RWL = 23\u00b70.625\u00b71\u00b71\u00b71 = 14.375 kg"
+      }
+    },
+    {
+      "id": "ergonomics-013",
+      "calculator": "ergonomics.niosh_lifting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "200 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "solve_for": [
+        "li",
+        "rwl",
+        "hm",
+        "vm",
+        "dm",
+        "am"
+      ],
+      "expected_as_specified": {
+        "rwl": 0.0,
+        "dm": 0.0,
+        "hm": 0.625
+      },
+      "expected_SI": {
+        "rwl": 0.0,
+        "dm": 0.0,
+        "hm": 0.625
+      },
+      "actual_SI": {
+        "rwl": {
+          "value": 0.0,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "dm": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "hm": {
+          "value": 0.625,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "rwl": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "dm": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "hm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00125,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 200 cm > 175 cm \u2192 DM = 0, so RWL = 0"
+      }
+    },
+    {
+      "id": "ergonomics-014",
+      "calculator": "ergonomics.niosh_lifting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "50 cm",
+        "A": "150 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "solve_for": [
+        "li",
+        "rwl",
+        "hm",
+        "vm",
+        "dm",
+        "am"
+      ],
+      "expected_as_specified": {
+        "rwl": 0.0,
+        "am": 0.0,
+        "hm": 0.625,
+        "dm": 0.91
+      },
+      "expected_SI": {
+        "rwl": 0.0,
+        "am": 0.0,
+        "hm": 0.625,
+        "dm": 0.91
+      },
+      "actual_SI": {
+        "rwl": {
+          "value": 0.0,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "am": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "hm": {
+          "value": 0.625,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        },
+        "dm": {
+          "value": 0.9099999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ergonomics.niosh_lifting (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "rwl": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "am": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "hm": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00125,
+          "passed": true
+        },
+        "dm": {
+          "absolute_error": 1.1102230246251565e-16,
+          "relative_error": 1.2200253017858862e-16,
+          "allowed_absolute_error": 0.00182,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 150\u00b0 > 135\u00b0 \u2192 AM = 0, so RWL = 0"
+      }
+    }
+  ],
+  "passed": 14,
+  "failed": 0
+}

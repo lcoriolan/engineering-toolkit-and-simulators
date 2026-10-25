@@ -1,0 +1,486 @@
+{
+  "section": "gears",
+  "cases": [
+    {
+      "calc": "gears.spur_geometry",
+      "inputs": {
+        "d": "80 mm",
+        "N": 20
+      },
+      "expect": {
+        "m": "4 mm",
+        "p": "12.5664 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "m = d/N = 0.08/20 = 0.004 m; p = pi*m = pi*0.004 = 0.0125664 m"
+      }
+    },
+    {
+      "calc": "gears.spur_geometry",
+      "inputs": {
+        "m": "4 mm",
+        "d": "80 mm"
+      },
+      "solve_for": [
+        "N",
+        "p"
+      ],
+      "expect": {
+        "N": 20,
+        "p": "12.5664 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "N = d/m = 80/4 = 20; p = pi*m = 12.5664 mm"
+      }
+    },
+    {
+      "calc": "gears.diametral_pitch",
+      "inputs": {
+        "N": 20,
+        "d": "2.5 in"
+      },
+      "expect": {
+        "P_d": "314.9606 1/m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P_d = N/d = 20/0.0635 = 314.9606 1/m (equals 8 teeth/inch since 314.9606 x 0.0254 = 8.0)"
+      }
+    },
+    {
+      "calc": "gears.tooth_proportions",
+      "inputs": {
+        "m": "4 mm"
+      },
+      "expect": {
+        "a": "4 mm",
+        "b": "5 mm",
+        "c": "1 mm",
+        "h_t": "9 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a = m = 4; b = 1.25 m = 5; c = 0.25 m = 1; h_t = a + b = 9 mm (full-depth 20 deg system)"
+      }
+    },
+    {
+      "calc": "gears.center_distance",
+      "inputs": {
+        "m": "4 mm",
+        "N1": 20,
+        "N2": 40
+      },
+      "expect": {
+        "d1": "80 mm",
+        "d2": "160 mm",
+        "C": "120 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "d1 = 4*20 = 80 mm; d2 = 4*40 = 160 mm; C = (80+160)/2 = 120 mm"
+      }
+    },
+    {
+      "calc": "gears.gear_ratio",
+      "inputs": {
+        "N1": 20,
+        "N2": 40,
+        "omega1": "100 rad/s",
+        "T1": "10 N*m"
+      },
+      "expect": {
+        "i": 2,
+        "omega2": "50 rad/s",
+        "T2": "20 N*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "i = 40/20 = 2; omega2 = 100/2 = 50 rad/s; T2 = 2*10 = 20 N.m"
+      }
+    },
+    {
+      "calc": "gears.contact_ratio",
+      "inputs": {
+        "m": "4 mm",
+        "phi": "20 deg",
+        "N1": 20,
+        "N2": 40
+      },
+      "expect": {
+        "r1": "40 mm",
+        "r2": "80 mm",
+        "m_c": 1.63519
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "r1 = 0.004*20/2 = 0.04; r2 = 0.08. sqrt((0.044^2 - 0.037588^2)) + sqrt((0.084^2 - 0.075175^2)) - 0.12*sin20 = 0.022873 + 0.037479 - 0.041042 = 0.019310; base pitch pi*0.004*cos20 = 0.011809; m_c = 0.019310/0.011809 = 1.6352"
+      }
+    },
+    {
+      "calc": "gears.min_teeth_interference",
+      "inputs": {
+        "k": 1.0,
+        "phi": "20 deg"
+      },
+      "expect": {
+        "N_min": 17.0973
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: minimum teeth to avoid undercut with a rack, N_min = 2/sin^2(phi) = 2/0.116978 = 17.10 for standard 20 deg full-depth teeth (universal textbook result; recalled, not re-read)."
+      }
+    },
+    {
+      "calc": "gears.min_teeth_interference",
+      "inputs": {
+        "N_min": 17.0973,
+        "k": 1.0
+      },
+      "solve_for": [
+        "phi"
+      ],
+      "expect": {
+        "phi": "20 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "sin^2(phi) = 2k/N_min = 2/17.0973 = 0.116978 -> phi = asin(0.342020) = 20 deg"
+      }
+    },
+    {
+      "calc": "gears.min_teeth_pinion",
+      "inputs": {
+        "k": 1.0,
+        "m_G": 2.0,
+        "phi": "20 deg"
+      },
+      "expect": {
+        "N_P": 14.1608
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: minimum pinion teeth meshing with a gear of ratio m_G = 2 at 20 deg full-depth is N_P = 14.16 (machine-design texts; recalled, not re-read). Verified by independent arithmetic: 2/((1+4) sin^2 20) x (2 + sqrt(4 + 5 sin^2 20)) = 2/0.584889 x 4.141240 = 14.1608."
+      }
+    },
+    {
+      "calc": "gears.min_teeth_pinion",
+      "inputs": {
+        "N_P": 14.1608,
+        "k": 1.0,
+        "m_G": 2.0
+      },
+      "solve_for": [
+        "phi"
+      ],
+      "expect": {
+        "phi": "20 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: N_P = 14.1608 at m_G = 2, k = 1 solves to sin^2(phi) = 0.116978 -> phi = 20 deg (monotonic in phi)"
+      }
+    },
+    {
+      "calc": "gears.spur_tooth_forces",
+      "inputs": {
+        "T": "200 N*m",
+        "d": "80 mm",
+        "phi": "20 deg"
+      },
+      "expect": {
+        "W_t": "5 kN",
+        "W_r": "1819.85 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "W_t = 2*200/0.08 = 5000 N; W_r = 5000*tan20 = 5000*0.363970 = 1819.85 N"
+      }
+    },
+    {
+      "calc": "gears.helical_pitch",
+      "inputs": {
+        "m_n": "4 mm",
+        "psi": "30 deg",
+        "N": 20
+      },
+      "expect": {
+        "p_n": "12.5664 mm",
+        "m_t": "4.61880 mm",
+        "p_t": "14.5104 mm",
+        "d": "92.3760 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "p_n = pi*4 = 12.5664 mm; m_t = 4/cos30 = 4/0.866025 = 4.61880 mm; p_t = pi*4.61880 = 14.5104 mm; d = 4.61880*20 = 92.3760 mm"
+      }
+    },
+    {
+      "calc": "gears.helical_angles",
+      "inputs": {
+        "phi_n": "20 deg",
+        "psi": "30 deg"
+      },
+      "expect": {
+        "phi_t": "22.7959 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "tan(phi_t) = tan20/cos30 = 0.363970/0.866025 = 0.420276 -> phi_t = atan(0.420276) = 22.7959 deg"
+      }
+    },
+    {
+      "calc": "gears.helical_tooth_forces",
+      "inputs": {
+        "T": "200 N*m",
+        "d": "80 mm",
+        "phi_n": "20 deg",
+        "psi": "30 deg"
+      },
+      "expect": {
+        "W_t": "5 kN",
+        "W_r": "2101.38 N",
+        "W_a": "2886.75 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "W_t = 5000 N; W_r = 5000*tan20/cos30 = 5000*0.363970/0.866025 = 2101.38 N; W_a = 5000*tan30 = 5000*0.577350 = 2886.75 N"
+      }
+    },
+    {
+      "calc": "gears.bevel_angles",
+      "inputs": {
+        "N1": 20,
+        "N2": 40,
+        "Sigma": "90 deg"
+      },
+      "expect": {
+        "gamma1": "26.5651 deg",
+        "gamma2": "63.4349 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Right angle: tan(gamma1) = N1/N2 = 0.5 -> gamma1 = 26.565 deg; gamma2 = 90 - 26.565 = 63.435 deg"
+      }
+    },
+    {
+      "calc": "gears.bevel_forces",
+      "inputs": {
+        "T": "200 N*m",
+        "d_m": "80 mm",
+        "phi": "20 deg",
+        "gamma": "26.5651 deg"
+      },
+      "expect": {
+        "W_t": "5 kN",
+        "W_r": "1627.72 N",
+        "W_a": "813.86 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "W_t = 5000 N; cos(gamma) = 0.894427, sin(gamma) = 0.447214; W_r = 5000*tan20*0.894427 = 1627.72 N; W_a = 5000*tan20*0.447214 = 813.86 N"
+      }
+    },
+    {
+      "calc": "gears.worm_geometry",
+      "inputs": {
+        "p_x": "10 mm",
+        "N_w": 2,
+        "d_w": "40 mm"
+      },
+      "expect": {
+        "L_w": "20 mm",
+        "lam": "9.0431 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L_w = 10*2 = 20 mm; lam = atan(0.02/(pi*0.04)) = atan(0.159155) = 9.0431 deg"
+      }
+    },
+    {
+      "calc": "gears.worm_geometry",
+      "inputs": {
+        "p_x": "10 mm",
+        "N_w": 2,
+        "lam": "9.0431 deg"
+      },
+      "solve_for": [
+        "d_w",
+        "L_w"
+      ],
+      "expect": {
+        "d_w": "40 mm",
+        "L_w": "20 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L_w = 10*2 = 20 mm; d_w = L_w/(pi*tan(lam)) = 0.02/(pi*0.159155) = 0.04 m"
+      }
+    },
+    {
+      "calc": "gears.worm_efficiency",
+      "inputs": {
+        "phi_n": "20 deg",
+        "f": 0.05,
+        "lam": "9.0431 deg"
+      },
+      "expect": {
+        "eta": 0.7431
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "cos20 = 0.939693, tan(lam) = 0.159155, 1/tan = 6.28319; eta = (0.939693 - 0.05*0.159155)/(0.939693 + 0.05*6.28319) = (0.939693 - 0.007958)/(0.939693 + 0.314160) = 0.931735/1.253853 = 0.74310"
+      }
+    },
+    {
+      "calc": "gears.worm_heat",
+      "inputs": {
+        "P_in": "2 kW",
+        "eta": 0.74,
+        "h": "15 W/(m^2*K)",
+        "A": "0.3 m^2",
+        "dT": "40 K"
+      },
+      "expect": {
+        "H_loss": "520 W",
+        "H_diss": "180 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "H_loss = (1 - 0.74)*2000 = 520 W; H_diss = 15*0.3*40 = 180 W"
+      }
+    },
+    {
+      "calc": "gears.planetary_torques",
+      "inputs": {
+        "Z_S": 20,
+        "Z_R": 60,
+        "T_S": "10 N*m"
+      },
+      "expect": {
+        "R": 3,
+        "T_R": "30 N*m",
+        "T_C": "-40 N*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = 60/20 = 3; T_R = 3*10 = 30 N.m; T_C = -(1 + 3)*10 = -40 N.m (sum of torques = 0)"
+      }
+    },
+    {
+      "calc": "gears.lewis_bending",
+      "inputs": {
+        "W_t": "5 kN",
+        "F": "40 mm",
+        "m": "4 mm",
+        "Y": 0.3
+      },
+      "expect": {
+        "sigma": "104.167 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma = 5000/(0.04*0.004*0.30) = 5000/4.8e-5 = 1.04167e8 Pa"
+      }
+    },
+    {
+      "calc": "gears.barth_velocity_factor",
+      "inputs": {
+        "V": "5 m/s"
+      },
+      "expect": {
+        "Kv_cast": 2.63934,
+        "Kv_cut": 1.81967,
+        "Kv_hobbed": 1.62811,
+        "Kv_shaved": 1.40217
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Multiplying Barth forms at V = 5 m/s (arithmetic in a plain-Python scratch script): Kv_cast = (3.05+5)/3.05 = 8.05/3.05 = 2.63934; Kv_cut = (6.1+5)/6.1 = 11.1/6.1 = 1.81967; Kv_hobbed = (3.56+sqrt(5))/3.56 = 5.79607/3.56 = 1.62811; Kv_shaved = (5.56+sqrt(5))/5.56 = 7.79607/5.56 = 1.40217. All >= 1 and decrease toward 1 as V -> 0."
+      }
+    },
+    {
+      "calc": "gears.agma_bending",
+      "inputs": {
+        "W_t": "5 kN",
+        "Ko": 1.25,
+        "Kv": 1.1,
+        "Ks": 1.0,
+        "Km": 1.3,
+        "KB": 1.0,
+        "F": "40 mm",
+        "m": "4 mm",
+        "J": 0.3
+      },
+      "expect": {
+        "sigma_b": "186.20 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "product = 1.25*1.1*1.3 = 1.7875; sigma_b = 5000*1.7875/(0.04*0.004*0.30) = 8937.5/4.8e-5 = 1.86198e8 Pa"
+      }
+    },
+    {
+      "calc": "gears.agma_contact",
+      "inputs": {
+        "W_t": "4 kN",
+        "Ko": 1.25,
+        "Kv": 1.1,
+        "Ks": 1.0,
+        "Km": 1.3,
+        "Cf": 1.0,
+        "Cp": "191 MPa^0.5",
+        "d_p": "80 mm",
+        "F": "40 mm",
+        "I": 0.1
+      },
+      "expect": {
+        "sigma_c": "902.84 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ratio = 4000*1.25*1.1*1.3/(0.08*0.04*0.10) = 7150/0.00032 = 2.23438e7; sqrt = 4726.9; sigma_c = 191000*4726.9 = 9.0284e8 Pa"
+      }
+    },
+    {
+      "calc": "gears.gear_safety_factors",
+      "inputs": {
+        "sigma_b": "186.2 MPa",
+        "sigma_c": "902.8 MPa",
+        "S_t": "300 MPa",
+        "S_c": "1.2 GPa",
+        "YN": 1.0,
+        "ZN": 1.0,
+        "CH": 1.0,
+        "KT": 1.0,
+        "KR": 1.0
+      },
+      "expect": {
+        "n_b": 1.61117,
+        "n_c": 1.3292
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "n_b = 300/186.2 = 1.61117; n_c = 1200/902.8 = 1.32920"
+      }
+    },
+    {
+      "calc": "gears.gear_life_cycles",
+      "inputs": {
+        "L_h": "5000 h",
+        "n": "1800 1/min"
+      },
+      "expect": {
+        "N": 540000000
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "n = 1800/60 = 30 rev/s; N = 5000*3600*30 = 5.4e8 cycles"
+      }
+    }
+  ]
+}

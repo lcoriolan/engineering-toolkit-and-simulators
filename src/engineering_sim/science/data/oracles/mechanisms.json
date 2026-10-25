@@ -1,0 +1,702 @@
+{
+  "section": "mechanisms",
+  "cases": [
+    {
+      "calc": "mechanisms.dof_planar",
+      "inputs": {
+        "n": 4,
+        "j1": 4,
+        "j2": 0
+      },
+      "expect": {
+        "F": 1
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 3(4-1) - 2*4 - 0 = 9 - 8 = 1 (a four-bar has one degree of freedom)"
+      }
+    },
+    {
+      "calc": "mechanisms.dof_planar",
+      "inputs": {
+        "F": 1,
+        "j1": 4,
+        "j2": 0
+      },
+      "solve_for": [
+        "n"
+      ],
+      "expect": {
+        "n": 4
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "n = (F + 2*j1 + j2 + 3)/3 = (1 + 8 + 0 + 3)/3 = 12/3 = 4 links"
+      }
+    },
+    {
+      "calc": "mechanisms.dof_spatial",
+      "inputs": {
+        "n": 5,
+        "j1": 3,
+        "j2": 2,
+        "j3": 0,
+        "j4": 0,
+        "j5": 0
+      },
+      "expect": {
+        "F": 1
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 6(5-1) - 5*3 - 4*2 - 3*0 - 2*0 - 0 = 24 - 15 - 8 = 1"
+      }
+    },
+    {
+      "calc": "mechanisms.grashof",
+      "inputs": {
+        "links": [
+          2,
+          7,
+          9,
+          6
+        ]
+      },
+      "expect": {
+        "s": 2,
+        "l": 9,
+        "p": 6,
+        "q": 7,
+        "s_plus_l": 11,
+        "p_plus_q": 13,
+        "is_grashof": 1,
+        "type": "crank-rocker"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Sorted lengths [2,6,7,9]: s+l = 2+9 = 11 <= p+q = 6+7 = 13, so Grashof. Shortest link (2) is the input crank a adjacent to ground -> crank-rocker"
+      }
+    },
+    {
+      "calc": "mechanisms.grashof",
+      "inputs": {
+        "links": [
+          3,
+          10,
+          4,
+          5
+        ]
+      },
+      "expect": {
+        "s": 3,
+        "l": 10,
+        "s_plus_l": 13,
+        "p_plus_q": 9,
+        "is_grashof": 0,
+        "type": "non-Grashof (double-rocker)"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "s+l = 3+10 = 13 > p+q = 4+5 = 9, so no link can make a full revolution"
+      }
+    },
+    {
+      "calc": "mechanisms.fourbar_transmission",
+      "inputs": {
+        "a": 2,
+        "b": 7,
+        "c": 9,
+        "d": 6,
+        "theta2": "60 deg"
+      },
+      "expect": {
+        "s": "5.291502622 m",
+        "mu": "35.9505676 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "s = sqrt(a^2+d^2-2ad cos60) = sqrt(4+36-12) = sqrt(28) = 5.29150 m; cos(mu) = (b^2+c^2-s^2)/(2bc) = (49+81-28)/126 = 102/126 = 0.80952 -> mu = 35.9506 deg"
+      }
+    },
+    {
+      "calc": "mechanisms.fourbar_toggle",
+      "inputs": {
+        "links": [
+          2,
+          7,
+          9,
+          6
+        ]
+      },
+      "expect": {
+        "theta_t1": "1.230959417 rad",
+        "theta_t2": "5.052225890 rad",
+        "theta4_1": "3.692878252 rad",
+        "theta4_2": "4.372552071 rad",
+        "time_ratio": 1.5521497
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Toggle where crank and coupler are collinear (sin(theta2-theta3)=0). Extended: triangle O2-O4-B with O2B = a+b = 9 gives cos(theta2) = (d^2+(a+b)^2-c^2)/(2d(a+b)) = (36+81-81)/108 = 1/3 -> theta2 = acos(1/3) = 1.2309594 rad; the other toggle is at 2*pi - acos(1/3) = 5.0522259 rad. Rocker extremes from the crossed branch (theta4 = phi + beta) at each toggle: 3.6928783 and 4.3725521 rad (the open branch phi - beta gives different, non-extreme rocker angles there). Crank arc = 5.0522259-1.2309594 = 3.8212665 rad, return = 2.4619188 rad -> time ratio 1.5521"
+      }
+    },
+    {
+      "calc": "mechanisms.fourbar_position",
+      "inputs": {
+        "links": [
+          2,
+          7,
+          9,
+          6
+        ],
+        "theta2": "60 deg",
+        "branch": "open"
+      },
+      "expect": {
+        "theta4": "1.918800123 rad",
+        "theta3": "1.291344350 rad",
+        "mu": "35.9505676 deg",
+        "s": "5.291502622 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "s = sqrt(28) = 5.2915026 m; phi = atan2(2 sin60, 2 cos60 - 6) = atan2(1.73205, -5) = 2.8081195 rad; cos(beta) = (s^2+c^2-b^2)/(2sc) = (28+81-49)/(2*5.29150*9) = 60/95.24705 = 0.6299417 -> beta = 0.8893194 rad; OPEN branch theta4 = phi - beta = 1.9188001 rad; B = (6+9cos(theta4), 9sin(theta4)); theta3 = atan2(By-Ay, Bx-Ax) = 1.2913444 rad; mu = acos((b^2+c^2-s^2)/(2bc)) = 35.9506 deg"
+      }
+    },
+    {
+      "calc": "mechanisms.fourbar_position",
+      "inputs": {
+        "links": [
+          2,
+          7,
+          9,
+          6
+        ],
+        "theta2": "60 deg",
+        "branch": "crossed"
+      },
+      "expect": {
+        "theta4": "3.697438839 rad",
+        "theta3": "-1.958290695 rad",
+        "mu": "35.9505676 deg",
+        "s": "5.291502622 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Same s, phi, beta as the open case: CROSSED branch theta4 = phi + beta = 2.8081195 + 0.8893194 = 3.6974388 rad; B = (6+9cos(theta4), 9sin(theta4)); theta3 = atan2(By-Ay, Bx-Ax) = -1.9582907 rad (negative coupler angle); mu and s are branch-independent: 35.9506 deg and 5.2915026 m"
+      }
+    },
+    {
+      "calc": "mechanisms.fourbar_velocity",
+      "inputs": {
+        "a": 2,
+        "b": 7,
+        "c": 9,
+        "theta2": "60 deg",
+        "theta3": "1.291344350 rad",
+        "theta4": "1.918800123 rad",
+        "omega2": 30
+      },
+      "expect": {
+        "omega3": "-11.1742203 rad/s",
+        "omega4": "-2.74494802 rad/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta3, theta4 are the open-branch position solution (theta4 = phi-beta = 1.9188001 rad). omega3 = a omega2 sin(theta4-theta2)/(b sin(theta3-theta4)) = 2*30*sin(0.8716027)/(7*sin(-0.6274558)) = 45.91836/(-4.3921906) = -11.17422 rad/s; omega4 = a omega2 sin(theta2-theta3)/(c sin(theta4-theta3)) = 2*30*sin(-0.2441461)/(9*sin(0.6274558)) = -14.50370/5.28351 = -2.74495 rad/s"
+      }
+    },
+    {
+      "calc": "mechanisms.fourbar_ma",
+      "inputs": {
+        "a": 2,
+        "c": 9,
+        "theta2": "60 deg",
+        "theta3": "1.291344350 rad",
+        "theta4": "1.918800123 rad"
+      },
+      "expect": {
+        "MA": 10.9291687,
+        "VR": -10.9291687
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "VR = c sin(theta4-theta3)/(a sin(theta2-theta3)) = 9*sin(0.6274558)/(2*sin(-0.2441461)) = 5.28351/(-0.48346) = -10.92917; MA = T4/T2 = -omega2/omega4 = -VR = +10.92917"
+      }
+    },
+    {
+      "calc": "mechanisms.slider_crank",
+      "inputs": {
+        "geometry": [
+          0.05,
+          0.2,
+          0.0
+        ],
+        "theta2": "30 deg",
+        "omega": 100,
+        "branch": "open"
+      },
+      "expect": {
+        "x": "0.2417326185 m",
+        "v": "-3.045544726 m/s",
+        "a": "-497.5066397 m/s^2",
+        "phi": "7.18075578 deg",
+        "omega_phi": "21.82178902 rad/s",
+        "alpha_phi": "-1199.887216 rad/s^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "In-line (e=0): g = r sin30 = 0.025; h = sqrt(L^2-g^2) = sqrt(0.04-0.000625) = 0.1984313 m; x = r cos30 + h = 0.0433013+0.1984313 = 0.2417326 m; v = -r w sin30 - r w cos30 g/h = -2.5 - 100*0.0433013*0.025/0.1984313 = -2.5 - 0.545545 = -3.045545 m/s; a = -r w^2 cos30 + r w^2 sin30 g/h - r^2 w^2 cos^2 30 L^2/h^3 = -433.013 + 6.301 - 70.795 = -497.507 m/s^2; phi = atan2(g, h) = atan2(0.025, 0.1984313) = 7.1808 deg; omega_phi = r w cos30/h = 21.8218 rad/s"
+      }
+    },
+    {
+      "calc": "mechanisms.slider_crank",
+      "inputs": {
+        "geometry": [
+          0.05,
+          0.2,
+          0.0
+        ],
+        "theta2": "30 deg",
+        "omega": 100,
+        "branch": "crossed"
+      },
+      "expect": {
+        "x": "-0.155130078 m",
+        "v": "-1.954455274 m/s",
+        "a": "-368.5187640 m/s^2",
+        "phi": "172.8192442 deg",
+        "omega_phi": "-21.82178902 rad/s",
+        "alpha_phi": "1199.887216 rad/s^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Crossed branch: h = -sqrt(L^2-g^2) = -0.1984313 m. x = r cos30 + h = 0.0433013 - 0.1984313 = -0.1551301 m; v = -r w sin30 - r w cos30 g/h = -2.5 - 4.330127*(-0.125988) = -2.5 + 0.545545 = -1.954455 m/s; a = -433.013 + 500*0.5*(-0.125988) - 0.75/(-0.00781335) = -433.013 - 31.497 + 95.989 = -368.519 m/s^2; phi = atan2(g, h) = atan2(0.025, -0.1984313) = 172.8192 deg (second-quadrant rod angle, NOT asin(g/L)); omega_phi = r w cos30/h = 4.330127/(-0.1984313) = -21.8218 rad/s (opposite sign to the open branch)"
+      }
+    },
+    {
+      "calc": "mechanisms.cam_profile",
+      "inputs": {
+        "h": 0.01,
+        "beta": "60 deg",
+        "theta": "20 deg",
+        "omega": 50,
+        "law": "shm"
+      },
+      "expect": {
+        "s": "0.0025 m",
+        "v": "0.64951905 m/s",
+        "a": "56.25 m/s^2",
+        "j": "-14614.17869 m/s^3"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "SHM rise, y = theta/beta = 1/3: s = h/2 (1-cos(pi/3)) = 0.005*(1-0.5) = 0.0025 m; v = pi h w/(2 beta) sin(pi/3) = pi*0.01*50/(2*pi/3)*0.866025 = 0.75*0.866025 = 0.649519 m/s; a = pi^2 h w^2/(2 beta^2) cos(pi/3) = (pi^2*0.01*2500)/(2*(pi/3)^2)*0.5 = 56.25 m/s^2; j = -pi^3 h w^3/(2 beta^3) sin(pi/3) = -14614.18 m/s^3"
+      }
+    },
+    {
+      "calc": "mechanisms.cam_profile",
+      "inputs": {
+        "h": 0.008,
+        "beta": "90 deg",
+        "theta": "30 deg",
+        "omega": 40,
+        "law": "cycloidal"
+      },
+      "expect": {
+        "s": "0.0015640089 m",
+        "v": "0.30557749 m/s",
+        "a": "28.22803945 m/s^2",
+        "j": "-2607.594588 m/s^3"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Cycloidal, y = 1/3: s = h(y - sin(2 pi y)/(2 pi)) = 0.008*(1/3 - sin(2pi/3)/(2pi)) = 0.008*(0.333333 - 0.866025/6.283185) = 0.008*0.195501 = 0.0015640 m; v = h w/beta (1-cos(2 pi y)) = 0.008*40/(pi/2)*(1-cos(2pi/3)) = 0.203718*(1+0.5) = 0.305577 m/s; a = 2 pi h w^2/beta^2 sin(2 pi y) = 2 pi*0.008*1600/(pi^2/4)*0.866025 = 28.2280 m/s^2; j = 4 pi^2 h w^3/beta^3 cos(2 pi y) = 4 pi^2*0.008*64000/(pi^3/8)*(-0.5) = -2607.59 m/s^3"
+      }
+    },
+    {
+      "calc": "mechanisms.cam_profile",
+      "inputs": {
+        "h": 0.01,
+        "beta": "60 deg",
+        "theta": "20 deg",
+        "omega": 50,
+        "law": "poly345"
+      },
+      "expect": {
+        "s": "0.0020987654 m",
+        "v": "0.70735530 m/s",
+        "a": "101.321184 m/s^2",
+        "j": "-21769.78574 m/s^3"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "3-4-5 polynomial, y = 1/3: s = h(10y^3 - 15y^4 + 6y^5) = 0.01*(10/27 - 15/81 + 6/243) = 0.01*0.2098765 = 0.00209877 m; v = (h w/beta)(30y^2 - 60y^3 + 30y^4) = (0.5/(pi/3))*(30/9 - 60/27 + 30/81) = 0.477465*1.481481 = 0.707355 m/s; a = (h w^2/beta^2)(60y - 180y^2 + 120y^3) = (25/(pi/3)^2)*(20 - 20 + 120/27) = 22.79726*4.444444 = 101.321 m/s^2; j = (h w^3/beta^3)(60 - 360y + 360y^2) = (1250/(pi/3)^3)*(60 - 120 + 40) = 1088.49*(-20) = -21769.8 m/s^3"
+      }
+    },
+    {
+      "calc": "mechanisms.cam_pressure_angle",
+      "inputs": {
+        "ds_dtheta": 0.008,
+        "R_b": 0.02,
+        "R_r": 0.01,
+        "s": 0.004
+      },
+      "expect": {
+        "alpha": "13.2405199 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "alpha = atan((ds/dtheta)/(R_b + R_r + s)) = atan(0.008/0.034) = atan(0.2352941) = 13.2405 deg"
+      }
+    },
+    {
+      "calc": "mechanisms.cam_base_circle",
+      "inputs": {
+        "ds_dtheta": 0.02,
+        "alpha_max": "30 deg",
+        "R_r": 0.01,
+        "s": 0.004
+      },
+      "expect": {
+        "R_b": "0.020641016 m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "R_b = (ds/dtheta)/tan(alpha_max) - R_r - s = 0.02/tan(30 deg) - 0.01 - 0.004 = 0.0346410 - 0.014 = 0.0206410 m"
+      }
+    },
+    {
+      "calc": "mechanisms.cam_base_circle",
+      "inputs": {
+        "ds_dtheta": 0.005,
+        "alpha_max": "30 deg",
+        "R_r": 0.01,
+        "s": 0.004
+      },
+      "expect": {
+        "R_b": "-0.005339745 m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Negative case: R_b = 0.005/tan(30 deg) - 0.01 - 0.004 = 0.00866025 - 0.014 = -0.00533975 m (the chosen roller/slope already meets the pressure-angle limit with a zero base circle, so the required base radius is negative)"
+      }
+    },
+    {
+      "calc": "mechanisms.gear_pair",
+      "inputs": {
+        "omega_in": "1500 rpm",
+        "T_in": 20,
+        "T_out": 40
+      },
+      "expect": {
+        "omega_out": "-750 rpm"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_out = -omega_in T_in/T_out = -1500*20/40 = -750 rpm (external pair reverses)"
+      }
+    },
+    {
+      "calc": "mechanisms.gear_train_value",
+      "inputs": {
+        "drivers": [
+          20,
+          30
+        ],
+        "driven": [
+          40,
+          50
+        ],
+        "external_meshes": "2"
+      },
+      "expect": {
+        "train_value": 0.3
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "e = (20*30)/(40*50) * (-1)^2 = 600/2000 = 0.3 (two external meshes keep the sign positive)"
+      }
+    },
+    {
+      "calc": "mechanisms.planetary_trains",
+      "inputs": {
+        "omega_R": 0,
+        "omega_C": "375 rpm",
+        "Z_S": 20,
+        "Z_R": 60
+      },
+      "solve_for": [
+        "omega_S"
+      ],
+      "expect": {
+        "omega_S": "1500 rpm"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Ring fixed (omega_R = 0): omega_S - omega_C = -(60/20)(0 - omega_C) = 3 omega_C, so omega_S = 4 omega_C = 4*375 = 1500 rpm (the 1 + Z_R/Z_S = 4 overdrive ratio with ring fixed)"
+      }
+    },
+    {
+      "calc": "mechanisms.geneva",
+      "inputs": {
+        "n": 4
+      },
+      "expect": {
+        "theta_index": "90 deg",
+        "crank_angle": "90 deg",
+        "dwell_angle": "270 deg",
+        "time_ratio": 0.25
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "4-slot Geneva: index angle = 2*pi/4 = 90 deg; crank angle of action = pi - 2*pi/4 = 90 deg; dwell = 360 - 90 = 270 deg; indexing fraction = 90/360 = 0.25"
+      }
+    },
+    {
+      "calc": "mechanisms.quick_return",
+      "inputs": {
+        "phi_cut": "220 deg"
+      },
+      "expect": {
+        "Q": 1.5714286,
+        "phi_return": "140 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "phi_return = 360 - 220 = 140 deg; Q = 220/140 = 1.5714"
+      }
+    },
+    {
+      "calc": "mechanisms.quick_return",
+      "inputs": {
+        "Q": 1.5
+      },
+      "solve_for": [
+        "phi_cut",
+        "phi_return"
+      ],
+      "expect": {
+        "phi_cut": "216 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "phi_cut = 2 pi Q/(1+Q) = 2 pi*1.5/2.5 = 216 deg"
+      }
+    },
+    {
+      "calc": "mechanisms.fourbar_acceleration",
+      "inputs": {
+        "a": 2,
+        "b": 7,
+        "c": 9,
+        "theta2": "60 deg",
+        "theta3": "1.291344350340649 rad",
+        "theta4": "1.9188001232638396 rad",
+        "omega2": 30,
+        "omega3": "-11.17422032596634 rad/s",
+        "omega4": "-2.7449480217310938 rad/s",
+        "alpha2": 0
+      },
+      "expect": {
+        "alpha3": "437.5664008 rad/s^2",
+        "alpha4": "485.5924794 rad/s^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Independent finite-difference check (not the closed form): with omega2 = 30 rad/s and alpha2 = 0, alpha3 = omega2^2 dg3/dtheta2 where g3 = a sin(theta4-theta2)/(b sin(theta3-theta4)). Solving the position loop at theta2 = 60 deg +/- 1e-6 rad (open branch) gives g3 = -0.372474011 and dg3/dtheta2 = 0.48618489, so alpha3 = 30^2*0.48618489 = 437.5664 rad/s^2; likewise g4 = a sin(theta2-theta3)/(c sin(theta4-theta3)) = -0.091498267, dg4/dtheta2 = 0.53954720, alpha4 = 30^2*0.53954720 = 485.5925 rad/s^2."
+      }
+    },
+    {
+      "calc": "mechanisms.fourbar_static_force",
+      "inputs": {
+        "T4": 20,
+        "a": 2,
+        "c": 9,
+        "theta2": "60 deg",
+        "theta3": "1.291344350 rad",
+        "theta4": "1.918800123 rad"
+      },
+      "expect": {
+        "T2": "1.82996535 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Virtual work T2*omega2 + T4*omega4 = 0 gives T2 = -T4*(omega4/omega2) = -T4*a*sin(theta2-theta3)/(c*sin(theta4-theta3)) = -20*2*sin(-0.2441461)/(9*sin(0.6274558)) = -40*(-0.241728)/5.28351 = +1.82997 N*m (the input and output torques share a sign here because the open-branch rocker rotates opposite the crank)."
+      }
+    },
+    {
+      "calc": "mechanisms.balance_one_plane",
+      "inputs": {
+        "masses": [
+          [
+            0.4,
+            0.1,
+            0
+          ],
+          [
+            0.4,
+            0.1,
+            120
+          ]
+        ]
+      },
+      "expect": {
+        "U": "0.04 kg*m",
+        "theta_U": "60 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two equal 0.04 kg*m unbalances at 0 and 120 deg: sum = 0.04(1 + e^{i120}) = 0.04*(0.5 + 0.866025i); |U| = 0.04*1.0 = 0.04 kg*m at 60 deg (equilateral triangle)"
+      }
+    },
+    {
+      "calc": "mechanisms.balance_two_plane",
+      "inputs": {
+        "masses": [
+          [
+            0.3,
+            0.1,
+            0,
+            0.0
+          ],
+          [
+            0.3,
+            0.1,
+            90,
+            0.3
+          ]
+        ],
+        "planes": [
+          0.1,
+          0.2
+        ]
+      },
+      "expect": {
+        "uA_mag": "0.067082039 kg*m",
+        "uA_ang": "153.4349488 deg",
+        "uB_mag": "0.067082039 kg*m",
+        "uB_ang": "296.5650512 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "u1 = 0.03, u2 = 0.03j. F = 0.03+0.03j, M = 0*0.03 + 0.3*0.03j = 0.009j. uA = (M - z_B F)/(z_B - z_A) = (0.009j - 0.2(0.03+0.03j))/0.1 = -0.06 + 0.03j (mag 0.0670820, ang 153.435 deg); uB = -F - uA = 0.03 - 0.06j (mag 0.0670820, ang 296.565 deg)"
+      }
+    },
+    {
+      "calc": "mechanisms.reciprocating_unbalance",
+      "inputs": {
+        "m": 0.5,
+        "r": "50 mm",
+        "L": "0.2 m",
+        "omega": "3000 rpm",
+        "theta": "30 deg"
+      },
+      "expect": {
+        "F_x": "2445.25717 N"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = 314.1593 rad/s; F_x = m r omega^2 (cos(theta) + (r/L) cos(2 theta)) = 0.5*0.05*98696.0*(0.866025 + 0.25*0.5) = 2467.40*0.991025 = 2445.26 N"
+      }
+    },
+    {
+      "calc": "mechanisms.crank_effort",
+      "inputs": {
+        "F_p": 5000,
+        "r": "50 mm",
+        "L": "0.2 m",
+        "theta": "30 deg"
+      },
+      "expect": {
+        "T": "152.27724 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = F_p r sin(theta) (1 + r cos(theta)/sqrt(L^2 - r^2 sin^2(theta))) = 5000*0.025*(1 + 0.0433013/sqrt(0.039375)) = 125*(1 + 0.0433013/0.1984313) = 125*1.218218 = 152.277 N*m"
+      }
+    },
+    {
+      "calc": "mechanisms.slider_crank_dynamic",
+      "inputs": {
+        "geometry": [
+          0.05,
+          0.2,
+          0.0
+        ],
+        "theta2": "30 deg",
+        "omega": 100,
+        "F_gas": 5000,
+        "m_piston": 0.0,
+        "m_rod": 0.0,
+        "l_cg": 0.1,
+        "m_crankpin": 0.0
+      },
+      "expect": {
+        "T": "152.2772363 N*m",
+        "F_rod": "5039.526307 N",
+        "F_wall": "629.9407883 N",
+        "O2x": "5000.0 N",
+        "O2y": "-629.9407883 N",
+        "m_recip": 0.0,
+        "m_rot": 0.0
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Quasi-static landmark (all masses zero, omega irrelevant): the crank torque must equal crank_effort. g = 0.025 m, h = sqrt(0.04-0.000625) = 0.1984313 m. Two-force rod in compression: F_rod = F_gas L/h = 5000*0.2/0.1984313 = 5039.5263 N; side thrust F_wall = F_rod g/L = 5039.5263*0.025/0.2 = 629.9408 N; bearing O2x = F_rod h/L = 5000.0 N, O2y = -F_rod g/L = -629.9408 N (m_rot = 0); T = F_rod r (g cos30 + h sin30)/L = 5039.5263*0.05*(0.0216506+0.0992157)/0.2 = 152.2772 N*m = crank_effort at F_p = 5000."
+      }
+    },
+    {
+      "calc": "mechanisms.slider_crank_dynamic",
+      "inputs": {
+        "geometry": [
+          0.05,
+          0.2,
+          0.0
+        ],
+        "theta2": "30 deg",
+        "omega": 100,
+        "F_gas": 5000,
+        "m_piston": 0.5,
+        "m_rod": 0.4,
+        "l_cg": 0.1,
+        "m_crankpin": 0.2
+      },
+      "expect": {
+        "T": "141.6709852 N*m",
+        "F_rod": "4688.518615 N",
+        "F_wall": "586.0648269 N",
+        "O2x": "4478.540271 N",
+        "O2y": "-686.0648269 N",
+        "m_recip": "0.7 kg",
+        "m_rot": "0.4 kg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two-mass rod model with masses. m_recip = m_piston + m_rod l_cg/L = 0.5 + 0.4*0.1/0.2 = 0.7 kg; m_rot = m_crankpin + m_rod(1-l_cg/L) = 0.2 + 0.4*0.5 = 0.4 kg. Exact slider acceleration (open branch, omega = 100) a = -497.50664 m/s^2 (from slider_crank). Effective force toward the crank = F_gas + m_recip a = 5000 + 0.7*(-497.50664) = 4651.7454 N -> F_rod = (m_recip a + F_gas) L/h = 4651.7454*0.2/0.1984313 = 4688.5186 N; F_wall = 4688.5186*0.025/0.2 = 586.0648 N; O2x = F_rod h/L - m_rot r w^2 cos30 = 4651.7454 - 0.4*0.05*10000*0.866025 = 4478.5403 N; O2y = -F_wall - m_rot r w^2 sin30 = -586.0648 - 100 = -686.0648 N; T = F_rod r (g cos30 + h sin30)/L = 4688.5186*0.05*0.1208663/0.2 = 141.6710 N*m (inertia reduces the crank torque below the static 152.28 N*m)."
+      }
+    }
+  ]
+}

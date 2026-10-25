@@ -1,0 +1,225 @@
+{
+  "section": "tribology",
+  "cases": [
+    {
+      "calc": "tribology.friction_power",
+      "inputs": {
+        "mu": 0.3,
+        "N": "1 kN",
+        "v": "2 m/s"
+      },
+      "expect": {
+        "F": "300 N",
+        "P": "600 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = μN = 0.3·1000 = 300 N; P = F·v = 300·2 = 600 W"
+      }
+    },
+    {
+      "calc": "tribology.friction_power",
+      "inputs": {
+        "F": "300 N",
+        "N": "1 kN",
+        "v": "2 m/s"
+      },
+      "solve_for": [
+        "mu",
+        "P"
+      ],
+      "expect": {
+        "mu": 0.3
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "μ = F/N = 300/1000 = 0.3"
+      }
+    },
+    {
+      "calc": "tribology.archard_wear",
+      "inputs": {
+        "K": 0.0002,
+        "W": "100 N",
+        "s": "500 m",
+        "H": "1 GPa"
+      },
+      "expect": {
+        "V": "1e-8 m^3",
+        "w": "2e-11 m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V = K·W·s/H = 2e-4·100·500/1e9 = 10/1e9 = 1e-8 m³; w = V/s = 1e-8/500 = 2e-11 m³/m (= m²)"
+      }
+    },
+    {
+      "calc": "tribology.walther_viscosity",
+      "inputs": {
+        "T1": "40 degC",
+        "nu1": "40 mm^2/s",
+        "T2": "100 degC",
+        "nu2": "6 mm^2/s",
+        "T_query": "80 degC"
+      },
+      "expect": {
+        "nu_query": "9.74059 mm^2/s",
+        "A": 9.703661,
+        "B": 3.805243
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "W = log10(log10(ν_cSt + 0.7)), y = log10(T_K). (313.15 K, 40 cSt): W1 = log10(log10 40.7) = log10 1.609594 = 0.206716; (373.15 K, 6 cSt): W2 = log10(log10 6.7) = log10 0.826075 = −0.082981. y1 = 2.495752, y2 = 2.571883. B = (W1−W2)/(y2−y1) = 0.289697/0.076131 = 3.80524; A = W1 + B·y1 = 0.206716 + 9.496945 = 9.70366. At 353.15 K: yq = 2.547959, Wq = A − B·yq = 0.008057 → ν = 10^(10^0.008057) − 0.7 = 10.44059 − 0.7 = 9.74059 cSt = 9.74059 mm²/s"
+      }
+    },
+    {
+      "calc": "tribology.viscosity_index",
+      "inputs": {
+        "U": "40 mm^2/s",
+        "L": "100 mm^2/s",
+        "H": "25 mm^2/s"
+      },
+      "expect": {
+        "VI": 80
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "VI = 100(L−U)/(L−H) = 100(100−40)/(100−25) = 100·60/75 = 80 (inputs varied away from the example)"
+      }
+    },
+    {
+      "calc": "tribology.viscosity_index",
+      "inputs": {
+        "VI": 80,
+        "L": "100 mm^2/s",
+        "H": "25 mm^2/s"
+      },
+      "solve_for": [
+        "U"
+      ],
+      "expect": {
+        "U": "40 mm^2/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "U = L − VI(L−H)/100 = 100 − 80·75/100 = 100 − 60 = 40 mm²/s"
+      }
+    },
+    {
+      "calc": "tribology.viscosity_index",
+      "inputs": {
+        "U": "150 mm^2/s",
+        "L": "100 mm^2/s",
+        "H": "60 mm^2/s"
+      },
+      "expect": {
+        "VI": -125
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "VI = 100(L−U)/(L−H) = 100(100−150)/(100−60) = 100·(−50)/40 = −125 (an oil thicker at 40 °C than the 0-VI reference gives negative VI)"
+      }
+    },
+    {
+      "calc": "tribology.ehl_film_thickness",
+      "inputs": {
+        "E1": "207 GPa",
+        "nu1": 0.3,
+        "E2": "207 GPa",
+        "nu2": 0.3,
+        "eta0": "0.05 Pa*s",
+        "alpha": "2.2e-8 1/Pa",
+        "u": "1 m/s",
+        "F": "1000 N",
+        "R_x": "20 mm",
+        "R_y": "60 mm"
+      },
+      "expect": {
+        "h_min": "2.90153e-7 m",
+        "H_min": 1.45077e-05,
+        "U": 1.09903e-11,
+        "G": 5004.4,
+        "W": 1.09903e-05,
+        "k": 2.08063
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "E′ = 2/((1−0.3²)/207e9·2) = 2/8.7923e-12 = 2.27473e11 Pa. U = η0·u/(E′·R_x) = 0.05/(2.27473e11·0.02) = 1.09903e-11. G = α·E′ = 2.2e-8·2.27473e11 = 5004.4. W = F/(E′·R_x²) = 1000/(2.27473e11·4e-4) = 1.09903e-5. k = 1.03·(R_y/R_x)^0.64 = 1.03·3^0.64 = 2.08063. H_min = 3.63·U^0.68·G^0.49·W^−0.073·(1−e^(−0.68k)) = 3.63·(3.5444e-8)·(64.74)·(2.2963)·(0.7570) = 1.45077e-5; h_min = H_min·R_x = 1.45077e-5·0.02 = 2.90153e-7 m (290 nm)"
+      }
+    },
+    {
+      "calc": "tribology.lambda_ratio",
+      "inputs": {
+        "h_min": "0.3 um",
+        "sigma1": "50 nm",
+        "sigma2": "50 nm"
+      },
+      "expect": {
+        "Lambda": 4.24264
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Λ = h_min/√(σ1² + σ2²) = 0.3/√(0.05² + 0.05²) = 0.3/√0.005 = 0.3/0.0707107 = 4.24264 (µm and nm both converted to m; the ratio is dimensionless)"
+      }
+    },
+    {
+      "calc": "tribology.lambda_ratio",
+      "inputs": {
+        "Lambda": 4.24264,
+        "h_min": "0.3 um",
+        "sigma2": "50 nm"
+      },
+      "solve_for": [
+        "sigma1"
+      ],
+      "expect": {
+        "sigma1": "50 nm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ1 = √((h_min/Λ)² − σ2²) = √((0.3/4.24264)² − 0.05²) = √(0.005 − 0.0025) = √0.0025 = 0.05 µm = 50 nm"
+      }
+    },
+    {
+      "calc": "tribology.flash_temperature",
+      "inputs": {
+        "mu": 0.2,
+        "F": "50 N",
+        "v_s": "4 m/s",
+        "a": "0.4 mm",
+        "k1": "40 W/(m*K)",
+        "k2": "60 W/(m*K)"
+      },
+      "expect": {
+        "dT_flash": "250 K"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ΔT = μFv/(4a(k1+k2)) = 0.2·50·4/(4·4e-4·100) = 40/0.16 = 250 K (inputs varied away from the example)"
+      }
+    },
+    {
+      "calc": "tribology.flash_temperature",
+      "inputs": {
+        "dT_flash": "250 K",
+        "F": "50 N",
+        "v_s": "4 m/s",
+        "a": "0.4 mm",
+        "k1": "40 W/(m*K)",
+        "k2": "60 W/(m*K)"
+      },
+      "solve_for": [
+        "mu"
+      ],
+      "expect": {
+        "mu": 0.2
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "μ = ΔT·4a(k1+k2)/(F·v_s) = 250·0.16/(50·4) = 40/200 = 0.2"
+      }
+    }
+  ]
+}

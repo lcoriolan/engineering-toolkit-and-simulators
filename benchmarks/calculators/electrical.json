@@ -1,0 +1,2601 @@
+{
+  "section": "electrical",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k electrical",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "electrical.ohms_law": {
+      "title": "Ohm's law (V = I\u00b7R)",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "desc": "voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "desc": "current",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "ohm",
+          "desc": "resistance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "V = I*R"
+      ],
+      "procedure": null,
+      "outputs": [
+        "V"
+      ],
+      "assumptions": [
+        "Ohmic (linear) conductor at constant temperature."
+      ],
+      "method_references": [
+        "Ohm's law, V = I R"
+      ],
+      "synthetic_example": {
+        "I": 2.0,
+        "R": 50.0
+      }
+    },
+    "electrical.electrical_power": {
+      "title": "Electrical power and energy (P = V\u00b7I, E = P\u00b7t)",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "W",
+          "desc": "power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "V",
+          "desc": "voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "desc": "current",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "J",
+          "desc": "energy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P = V*I",
+        "E = P*t"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P",
+        "E"
+      ],
+      "assumptions": [
+        "DC or unity-power-factor AC (for reactive loads use the AC power calculator)."
+      ],
+      "method_references": [
+        "P = V I; E = P t"
+      ],
+      "synthetic_example": {
+        "V": 230.0,
+        "I": 5.0,
+        "t": 3600.0
+      }
+    },
+    "electrical.resistance_series_parallel": {
+      "title": "Series and parallel resistance (two resistors)",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "ohm",
+          "desc": "resistor 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R2",
+          "unit": "ohm",
+          "desc": "resistor 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_s",
+          "unit": "ohm",
+          "desc": "series equivalent",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_p",
+          "unit": "ohm",
+          "desc": "parallel equivalent",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "R_s = R1 + R2",
+        "R_p = R1*R2/(R1 + R2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "R_s",
+        "R_p"
+      ],
+      "assumptions": [
+        "Two resistors; for more, chain the rule (1/Rp = \u03a3 1/Ri)."
+      ],
+      "method_references": [
+        "Series and parallel resistance combinations"
+      ],
+      "synthetic_example": {
+        "R1": 100.0,
+        "R2": 300.0
+      }
+    },
+    "electrical.capacitance_series_parallel": {
+      "title": "Series and parallel capacitance (two capacitors)",
+      "variables": [
+        {
+          "name": "C1",
+          "unit": "F",
+          "desc": "capacitor 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C2",
+          "unit": "F",
+          "desc": "capacitor 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_p",
+          "unit": "F",
+          "desc": "parallel equivalent",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_s",
+          "unit": "F",
+          "desc": "series equivalent",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "C_p = C1 + C2",
+        "C_s = C1*C2/(C1 + C2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "C_p",
+        "C_s"
+      ],
+      "assumptions": [
+        "Two capacitors; note capacitance adds in parallel, the opposite of resistance."
+      ],
+      "method_references": [
+        "Series and parallel capacitance combinations"
+      ],
+      "synthetic_example": {
+        "C1": 1e-06,
+        "C2": 2e-06
+      }
+    },
+    "electrical.inductance_series_parallel": {
+      "title": "Series and parallel inductance (two inductors, no coupling)",
+      "variables": [
+        {
+          "name": "L1",
+          "unit": "H",
+          "desc": "inductor 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L2",
+          "unit": "H",
+          "desc": "inductor 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_s",
+          "unit": "H",
+          "desc": "series equivalent",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_p",
+          "unit": "H",
+          "desc": "parallel equivalent",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "L_s = L1 + L2",
+        "L_p = L1*L2/(L1 + L2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "L_s",
+        "L_p"
+      ],
+      "assumptions": [
+        "Magnetically uncoupled inductors; mutual inductance changes both combinations."
+      ],
+      "method_references": [
+        "Series and parallel inductance combinations"
+      ],
+      "synthetic_example": {
+        "L1": 0.1,
+        "L2": 0.3
+      }
+    },
+    "electrical.rc_transient": {
+      "title": "RC time constant and charging voltage",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "ohm",
+          "desc": "resistance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "desc": "capacitance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau",
+          "unit": "s",
+          "desc": "time constant",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V0",
+          "unit": "V",
+          "desc": "source (final) voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "time after the step",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Vc",
+          "unit": "V",
+          "desc": "capacitor voltage at time t",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "tau = R*C",
+        "t = -tau*log(1 - Vc/V0)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "tau",
+        "Vc"
+      ],
+      "assumptions": [
+        "Series RC, capacitor charging from 0 toward V0 after a step; reaches \u224863% at t = \u03c4 and \u224895% at t = 3\u03c4. Discharge replaces (1 \u2212 e) with e. Solving for t with Vc \u2265 V0 has no finite solution (t \u2192 \u221e) and raises an error."
+      ],
+      "method_references": [
+        "\u03c4 = RC; t = \u2212\u03c4 ln(1 \u2212 Vc/V0) (charging from 0)"
+      ],
+      "synthetic_example": {
+        "R": 1000.0,
+        "C": 1e-06,
+        "V0": 10.0,
+        "t": 0.001
+      }
+    },
+    "electrical.rl_transient": {
+      "title": "RL time constant and current rise",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "ohm",
+          "desc": "series resistance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "desc": "inductance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau",
+          "unit": "s",
+          "desc": "time constant",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V0",
+          "unit": "V",
+          "desc": "source voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "time after the step",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i",
+          "unit": "A",
+          "desc": "inductor current at time t",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "tau = L/R",
+        "i = (V0/R)*(1 - exp(-t/tau))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "tau",
+        "i"
+      ],
+      "assumptions": [
+        "Series RL energised by a step; current rises toward V0/R with the same 63%/95% milestones. Interruption causes an inductive kick \u2014 use a freewheel diode."
+      ],
+      "method_references": [
+        "\u03c4 = L/R; i(t) = (V0/R)(1 \u2212 e^(\u2212Rt/L))"
+      ],
+      "synthetic_example": {
+        "R": 10.0,
+        "L": 0.05,
+        "V0": 12.0,
+        "t": 0.005
+      }
+    },
+    "electrical.dc_motor": {
+      "title": "DC motor: torque, back EMF, speed, no-load and stall points",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "desc": "terminal (supply) voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "ohm",
+          "desc": "armature resistance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ke",
+          "unit": "V*s/rad",
+          "desc": "back-EMF constant (V per rad/s)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "kt",
+          "unit": "N*m/A",
+          "desc": "torque constant",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "load torque at the shaft",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "shaft angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "desc": "armature current",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "V",
+          "desc": "back EMF at the operating speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_out",
+          "unit": "W",
+          "desc": "mechanical output power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_in",
+          "unit": "W",
+          "desc": "electrical input power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "efficiency P_out/P_in",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_nl",
+          "unit": "rad/s",
+          "desc": "no-load speed V/ke (at T = 0)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9_nl",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_stall",
+          "unit": "N*m",
+          "desc": "stall torque kt\u00b7V/R (at \u03c9 = 0)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _dc_motor(v):\n    \"\"\"Steady-state permanent-magnet / separately-excited DC model: V = I\u00b7R + ke\u00b7\u03c9, T = kt\u00b7I.\n\n    Adds the back EMF E = ke\u00b7\u03c9, the no-load speed \u03c9_nl = V/ke (T = 0) and the stall torque\n    T_stall = kt\u00b7V/R (\u03c9 = 0). T above the stall torque would need \u03c9 < 0 and raises MechError; a\n    mismatch between kt and ke is surfaced as a warning (they are equal in coherent SI for an ideal\n    machine).\n    \"\"\"\n    V, R, ke, kt, T = v['V'], v['R'], v['ke'], v['kt'], v['T']\n    if R <= 0 or ke <= 0 or kt <= 0:\n        raise MechError('R, ke and kt must be positive')\n    T_stall = kt * V / R\n    if T > T_stall:\n        raise MechError(f'T = {T:g} N\u00b7m exceeds the stall torque kt\u00b7V/R = {T_stall:g} N\u00b7m at this supply '\n                        f'voltage \u2014 the motor cannot develop this torque (it would need \u03c9 < 0)')\n    I = T / kt\n    omega = (V - I * R) / ke\n    E = ke * omega\n    P_out = T * omega\n    P_in = V * I\n    eta = (P_out / P_in) if P_in != 0.0 else 0.0  # efficiency \u2192 0 as the load vanishes\n    omega_nl = V / ke\n    warnings = []\n    if abs(kt - ke) > 1e-12 * max(1.0, abs(ke)):\n        warnings.append(f'kt = {kt:g} N\u00b7m/A and ke = {ke:g} V\u00b7s/rad differ; in coherent SI units they are '\n                        f'equal for an ideal lossless machine \u2014 check the units or gearing')\n    return {'omega': omega, 'I': I, 'E': E, 'P_out': P_out, 'P_in': P_in, 'eta': eta,\n            'omega_nl': omega_nl, 'T_stall': T_stall, '_warnings': warnings}\n",
+        "source": "electrical.py",
+        "line": 27
+      },
+      "outputs": [
+        "omega",
+        "I",
+        "E",
+        "P_out",
+        "P_in",
+        "eta",
+        "omega_nl",
+        "T_stall"
+      ],
+      "assumptions": [
+        "Steady-state permanent-magnet / separately-excited model; brush and iron losses neglected except as captured by the efficiency. In coherent SI units kt = ke for an ideal machine (kt in N\u00b7m/A equals ke in V\u00b7s/rad); a warning is raised when they differ. A load torque above the stall torque kt\u00b7V/R (which would need \u03c9 < 0) raises an error."
+      ],
+      "method_references": [
+        "DC motor equivalent circuit V = I R + ke\u00b7\u03c9; T = kt\u00b7I; \u03b7 = T\u03c9/(V I); stall torque kt\u00b7V/R; no-load speed V/ke"
+      ],
+      "synthetic_example": {
+        "V": 12.0,
+        "R": 0.5,
+        "ke": 0.05,
+        "kt": 0.05,
+        "T": 0.1
+      }
+    },
+    "electrical.ac_power": {
+      "title": "AC power: apparent, real, reactive and power factor",
+      "variables": [
+        {
+          "name": "V_rms",
+          "unit": "V",
+          "desc": "RMS voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I_rms",
+          "unit": "A",
+          "desc": "RMS current",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "phase angle of current relative to voltage (negative = leading)",
+          "lo": -1.5707963267948966,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S",
+          "unit": "W",
+          "desc": "apparent power (VA)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "W",
+          "desc": "real (active) power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "W",
+          "desc": "reactive power (var; negative = leading/capacitive)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "pf",
+          "unit": "",
+          "desc": "power factor cos \u03c6",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "S = V_rms*I_rms",
+        "P = V_rms*I_rms*cos(phi)",
+        "Q = V_rms*I_rms*sin(phi)",
+        "pf = cos(phi)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "S",
+        "P",
+        "Q",
+        "pf"
+      ],
+      "assumptions": [
+        "Sinusoidal single-phase AC; S, P, Q are dimensionally watts but reported as VA, W, var. \u03c6 > 0 is a lagging (inductive) load, \u03c6 < 0 leading (capacitive). pf = cos \u03c6 ignores harmonic distortion."
+      ],
+      "method_references": [
+        "S = V I; P = V I cos \u03c6; Q = V I sin \u03c6; pf = cos \u03c6"
+      ],
+      "synthetic_example": {
+        "V_rms": 230.0,
+        "I_rms": 10.0,
+        "phi": 0.6435011087932843
+      }
+    },
+    "electrical.stepper_motor": {
+      "title": "Stepper motor step angle and resolution",
+      "variables": [
+        {
+          "name": "m",
+          "unit": "",
+          "desc": "number of phases",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Z_r",
+          "unit": "",
+          "desc": "number of rotor teeth",
+          "lo": 1.0,
+          "hi": null,
+          "label": "Z_r",
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "microstepping factor (1 = full step)",
+          "lo": 1.0,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_step",
+          "unit": "rad",
+          "desc": "full-step angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8_step",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_micro",
+          "unit": "rad",
+          "desc": "microstep angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8_micro",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "res",
+          "unit": "",
+          "desc": "effective resolution (steps per revolution)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "theta_step = 2*pi/(m*Z_r)",
+        "theta_micro = theta_step/mu",
+        "res = m*Z_r*mu"
+      ],
+      "procedure": null,
+      "outputs": [
+        "theta_step",
+        "theta_micro",
+        "res"
+      ],
+      "assumptions": [
+        "Variable-reluctance stepper relation \u03b8 = 2\u03c0/(m\u00b7Z_r): a 4-phase motor with 50 rotor teeth steps 1.8\u00b0 (200 steps/rev). A hybrid stepper with a two-pole rotor halves this (\u03b8 = 2\u03c0/(2\u00b7m\u00b7Z_r)) \u2014 enter the equivalent Z_r. Microstepping divides each full step by \u03bc, raising resolution but not guaranteed positional accuracy."
+      ],
+      "method_references": [
+        "Step angle = 2\u03c0/(m\u00b7Z_r) from the number of phases and rotor teeth; resolution = m\u00b7Z_r\u00b7\u03bc steps/rev"
+      ],
+      "synthetic_example": {
+        "m": 4,
+        "Z_r": 50,
+        "mu": 16
+      }
+    },
+    "electrical.gearmotor_output": {
+      "title": "Gear-motor output torque and speed (gearbox with efficiency)",
+      "variables": [
+        {
+          "name": "omega_in",
+          "unit": "rad/s",
+          "desc": "motor input speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9_in",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i",
+          "unit": "",
+          "desc": "gear reduction ratio (i > 1 reduces speed)",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_in",
+          "unit": "N*m",
+          "desc": "motor input torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "gearbox efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_out",
+          "unit": "rad/s",
+          "desc": "output speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9_out",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_out",
+          "unit": "N*m",
+          "desc": "output torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_out",
+          "unit": "W",
+          "desc": "output power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "omega_out = omega_in/i",
+        "T_out = T_in*i*eta",
+        "P_out = T_out*omega_out"
+      ],
+      "procedure": null,
+      "outputs": [
+        "omega_out",
+        "T_out",
+        "P_out"
+      ],
+      "assumptions": [
+        "Single-stage equivalent; efficiency multiplies torque, not speed. Ideal (\u03b7 = 1) speed/torque ratio alone is gears.gear_ratio."
+      ],
+      "method_references": [
+        "\u03c9_out = \u03c9_in/i; T_out = i\u00b7\u03b7\u00b7T_in; power conservation with loss"
+      ],
+      "synthetic_example": {
+        "omega_in": 314.1592653589793,
+        "i": 50.0,
+        "T_in": 0.05,
+        "eta": 0.75
+      }
+    },
+    "electrical.encoder_resolution": {
+      "title": "Encoder resolution (counts and angle per count)",
+      "variables": [
+        {
+          "name": "N_lines",
+          "unit": "",
+          "desc": "encoder lines (pulses) per revolution",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "",
+          "desc": "decoding multiplier (1, 2 or 4)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cpr",
+          "unit": "",
+          "desc": "counts per revolution",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_res",
+          "unit": "rad",
+          "desc": "angular resolution (rad per count)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8_res",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _encoder(v):\n    \"\"\"Quadrature encoder resolution; the decoding multiplier m is restricted to 1, 2 or 4.\"\"\"\n    N = v['N_lines']\n    m = v['m']\n    if N <= 0:\n        raise MechError('N_lines must be positive')\n    if m not in (1.0, 2.0, 4.0):\n        raise MechError(f'm: decoding multiplier must be 1, 2 or 4 (\u00d71/\u00d72/\u00d74 quadrature), got {m:g}')\n    cpr = m * N\n    return {'cpr': cpr, 'theta_res': 2.0 * PI / cpr}\n",
+        "source": "electrical.py",
+        "line": 57
+      },
+      "outputs": [
+        "cpr",
+        "theta_res"
+      ],
+      "assumptions": [
+        "Quadrature encoders decode both edges of both channels, so \u00d74 gives 4 counts per line. m = 1 (\u00d71) or 2 (\u00d72) if only one channel/edge is used; other multipliers are rejected."
+      ],
+      "method_references": [
+        "CPR = m\u00b7N_lines; angular resolution = 2\u03c0/CPR"
+      ],
+      "synthetic_example": {
+        "N_lines": 1000,
+        "m": 4
+      }
+    },
+    "electrical.pwm_duty_cycle": {
+      "title": "PWM duty cycle, frequency and average voltage",
+      "variables": [
+        {
+          "name": "t_on",
+          "unit": "s",
+          "desc": "on-time per period",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "s",
+          "desc": "period",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "",
+          "desc": "duty cycle t_on/T",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "desc": "switching frequency",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_supply",
+          "unit": "V",
+          "desc": "supply voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_avg",
+          "unit": "V",
+          "desc": "average output voltage",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "D = t_on/T",
+        "f = 1/T",
+        "V_avg = D*V_supply"
+      ],
+      "procedure": null,
+      "outputs": [
+        "D",
+        "f",
+        "V_avg"
+      ],
+      "assumptions": [
+        "Averaging model: the load (e.g. a DC motor) responds to V_avg when the switching frequency is far above the load time constant; current ripple is neglected."
+      ],
+      "method_references": [
+        "D = t_on/T; V_avg = D\u00b7V_supply"
+      ],
+      "synthetic_example": {
+        "t_on": 0.00025,
+        "T": 0.001,
+        "V_supply": 12.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "electrical-001",
+      "calculator": "electrical.ohms_law",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "25 mA",
+        "R": "470 ohm"
+      },
+      "solve_for": [
+        "V"
+      ],
+      "expected_as_specified": {
+        "V": "11.75 V"
+      },
+      "expected_SI": {
+        "V": 11.75
+      },
+      "actual_SI": {
+        "V": {
+          "value": 11.75,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc electrical.ohms_law (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "V": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001175,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = I R = 0.025 A x 470 ohm = 11.75 V"
+      }
+    },
+    {
+      "id": "electrical-002",
+      "calculator": "electrical.ohms_law",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V": "12 V",
+        "I": "25 mA"
+      },
+      "solve_for": [
+        "R"
+      ],
+      "expected_as_specified": {
+        "R": "480 ohm"
+      },
+      "expected_SI": {
+        "R": 480.0
+      },
+      "actual_SI": {
+        "R": {
+          "value": 480.0,
+          "unit": "ohm",
+          "kind": "derived",
+          "method": "mechcalc electrical.ohms_law (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "R": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.048,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = V/I = 12/0.025 = 480 ohm"
+      }
+    },
+    {
+      "id": "electrical-003",
+      "calculator": "electrical.electrical_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V": "120 V",
+        "I": "2.5 A",
+        "t": "10 min"
+      },
+      "solve_for": [
+        "P",
+        "E"
+      ],
+      "expected_as_specified": {
+        "P": "300 W",
+        "E": "180000 J"
+      },
+      "expected_SI": {
+        "P": 300.0,
+        "E": 180000.0
+      },
+      "actual_SI": {
+        "P": {
+          "value": 300.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc electrical.electrical_power (symbolic)"
+        },
+        "E": {
+          "value": 180000.0,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc electrical.electrical_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "P": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.030000000000000002,
+          "passed": true
+        },
+        "E": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 18.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = 120 x 2.5 = 300 W; E = P t = 300 x 600 = 180000 J"
+      }
+    },
+    {
+      "id": "electrical-004",
+      "calculator": "electrical.electrical_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V": "230 V",
+        "P": "1150 W",
+        "t": "1 h"
+      },
+      "solve_for": [
+        "I",
+        "E"
+      ],
+      "expected_as_specified": {
+        "I": "5 A",
+        "E": "4.14 MJ"
+      },
+      "expected_SI": {
+        "I": 5.0,
+        "E": 4139999.9999999995
+      },
+      "actual_SI": {
+        "I": {
+          "value": 5.0,
+          "unit": "A",
+          "kind": "derived",
+          "method": "mechcalc electrical.electrical_power (symbolic)"
+        },
+        "E": {
+          "value": 4140000.0,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc electrical.electrical_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "I": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        },
+        "E": {
+          "absolute_error": 4.656612873077393e-10,
+          "relative_error": 1.124785718134636e-16,
+          "allowed_absolute_error": 414.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "I = P/V = 1150/230 = 5 A; E = P t = 1150 x 3600 = 4.14e6 J"
+      }
+    },
+    {
+      "id": "electrical-005",
+      "calculator": "electrical.resistance_series_parallel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R1": "120 ohm",
+        "R2": "180 ohm"
+      },
+      "solve_for": [
+        "R_s",
+        "R_p"
+      ],
+      "expected_as_specified": {
+        "R_s": "300 ohm",
+        "R_p": "72 ohm"
+      },
+      "expected_SI": {
+        "R_s": 300.0,
+        "R_p": 72.0
+      },
+      "actual_SI": {
+        "R_s": {
+          "value": 300.0,
+          "unit": "ohm",
+          "kind": "derived",
+          "method": "mechcalc electrical.resistance_series_parallel (symbolic)"
+        },
+        "R_p": {
+          "value": 72.0,
+          "unit": "ohm",
+          "kind": "derived",
+          "method": "mechcalc electrical.resistance_series_parallel (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "R_s": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.030000000000000002,
+          "passed": true
+        },
+        "R_p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.007200000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R_s = 120 + 180 = 300; R_p = 120x180/(120+180) = 21600/300 = 72 ohm"
+      }
+    },
+    {
+      "id": "electrical-006",
+      "calculator": "electrical.capacitance_series_parallel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C1": "2 uF",
+        "C2": "3 uF"
+      },
+      "solve_for": [
+        "C_p",
+        "C_s"
+      ],
+      "expected_as_specified": {
+        "C_p": "5 uF",
+        "C_s": "1.2 uF"
+      },
+      "expected_SI": {
+        "C_p": 4.9999999999999996e-06,
+        "C_s": 1.2e-06
+      },
+      "actual_SI": {
+        "C_p": {
+          "value": 4.9999999999999996e-06,
+          "unit": "F",
+          "kind": "derived",
+          "method": "mechcalc electrical.capacitance_series_parallel (symbolic)"
+        },
+        "C_s": {
+          "value": 1.2000000000000002e-06,
+          "unit": "F",
+          "kind": "derived",
+          "method": "mechcalc electrical.capacitance_series_parallel (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "C_p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5e-10,
+          "passed": true
+        },
+        "C_s": {
+          "absolute_error": 2.117582368135751e-22,
+          "relative_error": 1.764651973446459e-16,
+          "allowed_absolute_error": 1.2e-10,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C_p = 2 + 3 = 5 uF; C_s = 2x3/(2+3) = 6/5 = 1.2 uF"
+      }
+    },
+    {
+      "id": "electrical-007",
+      "calculator": "electrical.inductance_series_parallel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L1": "20 mH",
+        "L2": "30 mH"
+      },
+      "solve_for": [
+        "L_s",
+        "L_p"
+      ],
+      "expected_as_specified": {
+        "L_s": "50 mH",
+        "L_p": "12 mH"
+      },
+      "expected_SI": {
+        "L_s": 0.05,
+        "L_p": 0.012
+      },
+      "actual_SI": {
+        "L_s": {
+          "value": 0.05,
+          "unit": "H",
+          "kind": "derived",
+          "method": "mechcalc electrical.inductance_series_parallel (symbolic)"
+        },
+        "L_p": {
+          "value": 0.011999999999999999,
+          "unit": "H",
+          "kind": "derived",
+          "method": "mechcalc electrical.inductance_series_parallel (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "L_s": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5e-06,
+          "passed": true
+        },
+        "L_p": {
+          "absolute_error": 1.734723475976807e-18,
+          "relative_error": 1.4456028966473392e-16,
+          "allowed_absolute_error": 1.2000000000000002e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L_s = 20 + 30 = 50 mH; L_p = 20x30/(20+30) = 600/50 = 12 mH"
+      }
+    },
+    {
+      "id": "electrical-008",
+      "calculator": "electrical.rc_transient",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R": "2 kohm",
+        "C": "1 uF",
+        "V0": "5 V",
+        "t": "2 ms"
+      },
+      "solve_for": [
+        "tau",
+        "Vc"
+      ],
+      "expected_as_specified": {
+        "tau": "2 ms",
+        "Vc": "3.160603 V"
+      },
+      "expected_SI": {
+        "tau": 0.002,
+        "Vc": 3.160603
+      },
+      "actual_SI": {
+        "tau": {
+          "value": 0.002,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc electrical.rc_transient (symbolic)"
+        },
+        "Vc": {
+          "value": 3.1606027941427883,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc electrical.rc_transient (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "tau": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1e-06,
+          "passed": true
+        },
+        "Vc": {
+          "absolute_error": 2.0585721172139415e-07,
+          "relative_error": 6.513225853465119e-08,
+          "allowed_absolute_error": 0.0015803015,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "tau = R C = 2000 x 1e-6 = 2 ms; at t = tau, Vc = V0(1 - e^-1) = 5 x 0.632121 = 3.16060 V"
+      }
+    },
+    {
+      "id": "electrical-009",
+      "calculator": "electrical.rl_transient",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R": "20 ohm",
+        "L": "0.1 H",
+        "V0": "10 V",
+        "t": "5 ms"
+      },
+      "solve_for": [
+        "tau",
+        "i"
+      ],
+      "expected_as_specified": {
+        "tau": "5 ms",
+        "i": "0.316060 A"
+      },
+      "expected_SI": {
+        "tau": 0.005,
+        "i": 0.31606
+      },
+      "actual_SI": {
+        "tau": {
+          "value": 0.005,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc electrical.rl_transient (symbolic)"
+        },
+        "i": {
+          "value": 0.31606027941427883,
+          "unit": "A",
+          "kind": "derived",
+          "method": "mechcalc electrical.rl_transient (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "tau": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.5e-06,
+          "passed": true
+        },
+        "i": {
+          "absolute_error": 2.7941427882538505e-07,
+          "relative_error": 8.840545428886447e-07,
+          "allowed_absolute_error": 0.00015803,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "tau = L/R = 0.1/20 = 5 ms; at t = tau, i = (V0/R)(1 - e^-1) = 0.5 x 0.632121 = 0.31606 A"
+      }
+    },
+    {
+      "id": "electrical-010",
+      "calculator": "electrical.dc_motor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V": "12 V",
+        "R": "1 ohm",
+        "ke": "0.04 V*s/rad",
+        "kt": "0.04 N*m/A",
+        "T": "0.08 N*m"
+      },
+      "solve_for": [
+        "omega",
+        "I",
+        "E",
+        "P_out",
+        "P_in",
+        "eta",
+        "omega_nl",
+        "T_stall"
+      ],
+      "expected_as_specified": {
+        "I": "2 A",
+        "omega": "250 rad/s",
+        "E": "10 V",
+        "P_out": "20 W",
+        "P_in": "24 W",
+        "eta": 0.8333333,
+        "omega_nl": "300 rad/s",
+        "T_stall": "0.48 N*m"
+      },
+      "expected_SI": {
+        "I": 2.0,
+        "omega": 250.0,
+        "E": 10.0,
+        "P_out": 20.0,
+        "P_in": 24.0,
+        "eta": 0.8333333,
+        "omega_nl": 300.0,
+        "T_stall": 0.48
+      },
+      "actual_SI": {
+        "I": {
+          "value": 2.0,
+          "unit": "A",
+          "kind": "derived",
+          "method": "mechcalc electrical.dc_motor (procedure)"
+        },
+        "omega": {
+          "value": 250.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc electrical.dc_motor (procedure)"
+        },
+        "E": {
+          "value": 10.0,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc electrical.dc_motor (procedure)"
+        },
+        "P_out": {
+          "value": 20.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc electrical.dc_motor (procedure)"
+        },
+        "P_in": {
+          "value": 24.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc electrical.dc_motor (procedure)"
+        },
+        "eta": {
+          "value": 0.8333333333333334,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc electrical.dc_motor (procedure)"
+        },
+        "omega_nl": {
+          "value": 300.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc electrical.dc_motor (procedure)"
+        },
+        "T_stall": {
+          "value": 0.48,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc electrical.dc_motor (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "I": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "omega": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.125,
+          "passed": true
+        },
+        "E": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.005,
+          "passed": true
+        },
+        "P_out": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        },
+        "P_in": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.012,
+          "passed": true
+        },
+        "eta": {
+          "absolute_error": 3.333333331578814e-08,
+          "relative_error": 4.0000001578945826e-08,
+          "allowed_absolute_error": 0.00041666665000000006,
+          "passed": true
+        },
+        "omega_nl": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.15,
+          "passed": true
+        },
+        "T_stall": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00024,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "I = T/kt = 0.08/0.04 = 2 A; omega = (V - I R)/ke = (12 - 2 x 1)/0.04 = 250 rad/s; E = ke omega = 0.04 x 250 = 10 V; P_out = T omega = 0.08 x 250 = 20 W; P_in = V I = 12 x 2 = 24 W; eta = 20/24 = 0.8333; no-load omega_nl = V/ke = 12/0.04 = 300 rad/s; stall T_stall = kt V/R = 0.04 x 12/1 = 0.48 N m"
+      }
+    },
+    {
+      "id": "electrical-011",
+      "calculator": "electrical.dc_motor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V": "12 V",
+        "R": "1 ohm",
+        "ke": "0.04 V*s/rad",
+        "kt": "0.04 N*m/A",
+        "omega": "2387.3241 rpm"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expected_as_specified": {
+        "T": "0.08 N*m"
+      },
+      "expected_SI": {
+        "T": 0.08
+      },
+      "actual_SI": {
+        "T": {
+          "value": 0.0800000077707787,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc electrical.dc_motor (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T": {
+          "absolute_error": 7.770778701066128e-09,
+          "relative_error": 9.71347337633266e-08,
+          "allowed_absolute_error": 4e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = 2387.3241 x 2pi/60 = 250 rad/s; solve T from omega = (V - (T/kt) R)/ke: T = kt(V - ke omega)/R = 0.04(12 - 0.04 x 250)/1 = 0.04(12 - 10) = 0.08 N m"
+      }
+    },
+    {
+      "id": "electrical-012",
+      "calculator": "electrical.ac_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V_rms": "230 V",
+        "I_rms": "10 A",
+        "phi": "-36.86989765 deg"
+      },
+      "solve_for": [
+        "S",
+        "P",
+        "Q",
+        "pf"
+      ],
+      "expected_as_specified": {
+        "S": "2300 W",
+        "P": "1840 W",
+        "Q": "-1380 W",
+        "pf": 0.8
+      },
+      "expected_SI": {
+        "S": 2300.0,
+        "P": 1840.0,
+        "Q": -1380.0,
+        "pf": 0.8
+      },
+      "actual_SI": {
+        "S": {
+          "value": 2300.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc electrical.ac_power (symbolic)"
+        },
+        "P": {
+          "value": 1839.9999998999008,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc electrical.ac_power (symbolic)"
+        },
+        "Q": {
+          "value": -1380.0000001334654,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc electrical.ac_power (symbolic)"
+        },
+        "pf": {
+          "value": 0.7999999999564786,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc electrical.ac_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "S": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.1500000000000001,
+          "passed": true
+        },
+        "P": {
+          "absolute_error": 1.0009921425080393e-07,
+          "relative_error": 5.4401746875436915e-11,
+          "allowed_absolute_error": 0.92,
+          "passed": true
+        },
+        "Q": {
+          "absolute_error": 1.3346539162739646e-07,
+          "relative_error": 9.671405190391048e-11,
+          "allowed_absolute_error": 0.6900000000000001,
+          "passed": true
+        },
+        "pf": {
+          "absolute_error": 4.352140869912091e-11,
+          "relative_error": 5.440176087390114e-11,
+          "allowed_absolute_error": 0.0004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Leading (capacitive) 3-4-5: cos(phi) = 0.8, sin(phi) = -0.6. S = 230 x 10 = 2300 VA; P = 2300 x 0.8 = 1840 W; Q = 2300 x (-0.6) = -1380 var (negative = leading); pf = 0.8"
+      }
+    },
+    {
+      "id": "electrical-013",
+      "calculator": "electrical.ac_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V_rms": "120 V",
+        "I_rms": "10 A",
+        "phi": "53.130102 deg"
+      },
+      "solve_for": [
+        "S",
+        "P",
+        "Q",
+        "pf"
+      ],
+      "expected_as_specified": {
+        "S": "1200 W",
+        "P": "720 W",
+        "Q": "960 W",
+        "pf": 0.6
+      },
+      "expected_SI": {
+        "S": 1200.0,
+        "P": 720.0,
+        "Q": 960.0,
+        "pf": 0.6
+      },
+      "actual_SI": {
+        "S": {
+          "value": 1200.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc electrical.ac_power (symbolic)"
+        },
+        "P": {
+          "value": 720.0000059339404,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc electrical.ac_power (symbolic)"
+        },
+        "Q": {
+          "value": 959.9999955495447,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc electrical.ac_power (symbolic)"
+        },
+        "pf": {
+          "value": 0.6000000049449503,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc electrical.ac_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "S": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.6,
+          "passed": true
+        },
+        "P": {
+          "absolute_error": 5.933940428803908e-06,
+          "relative_error": 8.241583928894315e-09,
+          "allowed_absolute_error": 0.36,
+          "passed": true
+        },
+        "Q": {
+          "absolute_error": 4.450455321602931e-06,
+          "relative_error": 4.635890960003053e-09,
+          "allowed_absolute_error": 0.48,
+          "passed": true
+        },
+        "pf": {
+          "absolute_error": 4.944950338092724e-09,
+          "relative_error": 8.241583896821208e-09,
+          "allowed_absolute_error": 0.0003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "cos(phi) = 0.6, sin(phi) = 0.8. S = 120 x 10 = 1200 VA; P = 1200 x 0.6 = 720 W; Q = 1200 x 0.8 = 960 var; pf = 0.6 (3-4-5 triangle)"
+      }
+    },
+    {
+      "id": "electrical-014",
+      "calculator": "electrical.stepper_motor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": 4,
+        "Z_r": 50,
+        "mu": 8
+      },
+      "solve_for": [
+        "theta_step",
+        "theta_micro",
+        "res"
+      ],
+      "expected_as_specified": {
+        "theta_step": "0.03141593 rad",
+        "theta_micro": "0.003926991 rad",
+        "res": 1600
+      },
+      "expected_SI": {
+        "theta_step": 0.03141593,
+        "theta_micro": 0.003926991,
+        "res": 1600.0
+      },
+      "actual_SI": {
+        "theta_step": {
+          "value": 0.031415926535897934,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc electrical.stepper_motor (symbolic)"
+        },
+        "theta_micro": {
+          "value": 0.003926990816987242,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc electrical.stepper_motor (symbolic)"
+        },
+        "res": {
+          "value": 1600.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc electrical.stepper_motor (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "theta_step": {
+          "absolute_error": 3.4641020676962064e-09,
+          "relative_error": 1.1026578133119746e-07,
+          "allowed_absolute_error": 3.141593e-06,
+          "passed": true
+        },
+        "theta_micro": {
+          "absolute_error": 1.8301275859361477e-10,
+          "relative_error": 4.6603814114576465e-08,
+          "allowed_absolute_error": 3.9269910000000003e-07,
+          "passed": true
+        },
+        "res": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.16,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta_step = 2pi/(m Z_r) = 2pi/200 = 0.0314159 rad (1.8 deg); theta_micro = 0.0314159/8 = 0.0039270 rad; res = m Z_r mu = 4 x 50 x 8 = 1600"
+      }
+    },
+    {
+      "id": "electrical-015",
+      "calculator": "electrical.stepper_motor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": 3,
+        "Z_r": 40,
+        "mu": 1
+      },
+      "solve_for": [
+        "theta_step",
+        "theta_micro",
+        "res"
+      ],
+      "expected_as_specified": {
+        "theta_step": "0.05235988 rad",
+        "theta_micro": "0.05235988 rad",
+        "res": 120
+      },
+      "expected_SI": {
+        "theta_step": 0.05235988,
+        "theta_micro": 0.05235988,
+        "res": 120.0
+      },
+      "actual_SI": {
+        "theta_step": {
+          "value": 0.05235987755982988,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc electrical.stepper_motor (symbolic)"
+        },
+        "theta_micro": {
+          "value": 0.05235987755982988,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc electrical.stepper_motor (symbolic)"
+        },
+        "res": {
+          "value": 120.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc electrical.stepper_motor (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "theta_step": {
+          "absolute_error": 2.4401701145815302e-09,
+          "relative_error": 4.660381411457647e-08,
+          "allowed_absolute_error": 5.235988e-06,
+          "passed": true
+        },
+        "theta_micro": {
+          "absolute_error": 2.4401701145815302e-09,
+          "relative_error": 4.660381411457647e-08,
+          "allowed_absolute_error": 5.235988e-06,
+          "passed": true
+        },
+        "res": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.012,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta_step = 2pi/(3 x 40) = 2pi/120 = 0.0523599 rad (3 deg); mu = 1 so theta_micro = theta_step; res = 3 x 40 x 1 = 120"
+      }
+    },
+    {
+      "id": "electrical-016",
+      "calculator": "electrical.gearmotor_output",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega_in": "3600 rpm",
+        "i": 30,
+        "T_in": "0.1 N*m",
+        "eta": 0.8
+      },
+      "solve_for": [
+        "omega_out",
+        "T_out",
+        "P_out"
+      ],
+      "expected_as_specified": {
+        "omega_out": "12.56637 rad/s",
+        "T_out": "2.4 N*m",
+        "P_out": "30.15929 W"
+      },
+      "expected_SI": {
+        "omega_out": 12.56637,
+        "T_out": 2.4,
+        "P_out": 30.15929
+      },
+      "actual_SI": {
+        "omega_out": {
+          "value": 12.56637061435917,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc electrical.gearmotor_output (symbolic)"
+        },
+        "T_out": {
+          "value": 2.4000000000000004,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc electrical.gearmotor_output (symbolic)"
+        },
+        "P_out": {
+          "value": 30.159289474462017,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc electrical.gearmotor_output (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "omega_out": {
+          "absolute_error": 6.143591715357388e-07,
+          "relative_error": 4.88891518820263e-08,
+          "allowed_absolute_error": 0.006283184999999999,
+          "passed": true
+        },
+        "T_out": {
+          "absolute_error": 4.440892098500626e-16,
+          "relative_error": 1.8503717077085943e-16,
+          "allowed_absolute_error": 0.0012,
+          "passed": true
+        },
+        "P_out": {
+          "absolute_error": 5.25537981133084e-07,
+          "relative_error": 1.7425409587993752e-08,
+          "allowed_absolute_error": 0.015079645,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_in = 3600x2pi/60 = 376.99 rad/s; omega_out = 376.99/30 = 12.5664 rad/s; T_out = 0.1 x 30 x 0.8 = 2.4 N m; P_out = 2.4 x 12.5664 = 30.159 W"
+      }
+    },
+    {
+      "id": "electrical-017",
+      "calculator": "electrical.gearmotor_output",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega_in": "3600 rpm",
+        "omega_out": "12.56637 rad/s",
+        "T_in": "0.1 N*m",
+        "eta": 0.8
+      },
+      "solve_for": [
+        "i",
+        "T_out",
+        "P_out"
+      ],
+      "expected_as_specified": {
+        "i": 30
+      },
+      "expected_SI": {
+        "i": 30.0
+      },
+      "actual_SI": {
+        "i": {
+          "value": 30.000001466674558,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc electrical.gearmotor_output (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "i": {
+          "absolute_error": 1.4666745578040263e-06,
+          "relative_error": 4.888915192680088e-08,
+          "allowed_absolute_error": 0.003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "i = omega_in/omega_out = 376.9911/12.56637 = 30"
+      }
+    },
+    {
+      "id": "electrical-018",
+      "calculator": "electrical.encoder_resolution",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "N_lines": 512,
+        "m": 4
+      },
+      "solve_for": [
+        "cpr",
+        "theta_res"
+      ],
+      "expected_as_specified": {
+        "cpr": 2048,
+        "theta_res": "0.003067962 rad"
+      },
+      "expected_SI": {
+        "cpr": 2048.0,
+        "theta_res": 0.003067962
+      },
+      "actual_SI": {
+        "cpr": {
+          "value": 2048.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc electrical.encoder_resolution (procedure)"
+        },
+        "theta_res": {
+          "value": 0.0030679615757712823,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc electrical.encoder_resolution (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "cpr": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.2048,
+          "passed": true
+        },
+        "theta_res": {
+          "absolute_error": 4.2422871769295933e-10,
+          "relative_error": 1.382770444004715e-07,
+          "allowed_absolute_error": 3.067962e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "cpr = 4 x 512 = 2048; theta_res = 2pi/2048 = 0.00306796 rad"
+      }
+    },
+    {
+      "id": "electrical-019",
+      "calculator": "electrical.encoder_resolution",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "N_lines": 512,
+        "m": 2
+      },
+      "solve_for": [
+        "cpr",
+        "theta_res"
+      ],
+      "expected_as_specified": {
+        "cpr": 1024,
+        "theta_res": "0.006135923 rad"
+      },
+      "expected_SI": {
+        "cpr": 1024.0,
+        "theta_res": 0.006135923
+      },
+      "actual_SI": {
+        "cpr": {
+          "value": 1024.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc electrical.encoder_resolution (procedure)"
+        },
+        "theta_res": {
+          "value": 0.006135923151542565,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc electrical.encoder_resolution (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "cpr": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.1024,
+          "passed": true
+        },
+        "theta_res": {
+          "absolute_error": 1.5154256495508722e-10,
+          "relative_error": 2.469759887063238e-08,
+          "allowed_absolute_error": 6.135923e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "cpr = 2 x 512 = 1024; theta_res = 2pi/1024 = 0.00613592 rad"
+      }
+    },
+    {
+      "id": "electrical-020",
+      "calculator": "electrical.pwm_duty_cycle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "t_on": "0.3 ms",
+        "T": "1.2 ms",
+        "V_supply": "24 V"
+      },
+      "solve_for": [
+        "D",
+        "f",
+        "V_avg"
+      ],
+      "expected_as_specified": {
+        "D": 0.25,
+        "f": "833.3333 Hz",
+        "V_avg": "6 V"
+      },
+      "expected_SI": {
+        "D": 0.25,
+        "f": 833.3333,
+        "V_avg": 6.0
+      },
+      "actual_SI": {
+        "D": {
+          "value": 0.25,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc electrical.pwm_duty_cycle (symbolic)"
+        },
+        "f": {
+          "value": 833.3333333333334,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc electrical.pwm_duty_cycle (symbolic)"
+        },
+        "V_avg": {
+          "value": 6.0,
+          "unit": "V",
+          "kind": "derived",
+          "method": "mechcalc electrical.pwm_duty_cycle (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "D": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.000125,
+          "passed": true
+        },
+        "f": {
+          "absolute_error": 3.3333333362861595e-05,
+          "relative_error": 4.000000163543398e-08,
+          "allowed_absolute_error": 0.41666665,
+          "passed": true
+        },
+        "V_avg": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 0.3/1.2 = 0.25; f = 1/0.0012 = 833.33 Hz; V_avg = 0.25 x 24 = 6 V"
+      }
+    }
+  ],
+  "passed": 20,
+  "failed": 0
+}

@@ -1,0 +1,3946 @@
+{
+  "section": "vibrations",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k vibrations",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "vibrations.natural_frequency": {
+      "title": "Undamped natural frequency, cyclic frequency and period",
+      "variables": [
+        {
+          "name": "omega_n",
+          "unit": "rad/s",
+          "desc": "natural (angular) frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_n",
+          "unit": "Hz",
+          "desc": "natural (cyclic) frequency",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "s",
+          "desc": "period",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "N/m",
+          "desc": "stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "omega_n = sqrt(k/m)",
+        "f_n = omega_n/(2*pi)",
+        "T = 1/f_n"
+      ],
+      "procedure": null,
+      "outputs": [
+        "omega_n",
+        "f_n",
+        "T"
+      ],
+      "assumptions": [
+        "Undamped single degree of freedom. omega_n is in rad/s and f_n = omega_n/(2 pi) in Hz (the 2 pi is the physical angular/cyclic relation, not a unit conversion)."
+      ],
+      "method_references": [
+        "omega_n = sqrt(k/m); f_n = omega_n/(2 pi); T = 1/f_n"
+      ],
+      "synthetic_example": {
+        "k": 4000.0,
+        "m": 10.0
+      }
+    },
+    "vibrations.equiv_stiffness": {
+      "title": "Equivalent stiffness of two springs in series or parallel",
+      "variables": [
+        {
+          "name": "k_series",
+          "unit": "N/m",
+          "desc": "equivalent stiffness in series (1/k = sum 1/k_i)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_parallel",
+          "unit": "N/m",
+          "desc": "equivalent stiffness in parallel (k = sum k_i)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k1",
+          "unit": "N/m",
+          "desc": "first spring stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k2",
+          "unit": "N/m",
+          "desc": "second spring stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "k_series = k1*k2/(k1 + k2)",
+        "k_parallel = k1 + k2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "k_series",
+        "k_parallel"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Series: 1/k_eq = 1/k1 + 1/k2; parallel: k_eq = k1 + k2"
+      ],
+      "synthetic_example": {
+        "k1": 2000.0,
+        "k2": 3000.0
+      }
+    },
+    "vibrations.equiv_mass": {
+      "title": "Equivalent mass of a spring-mass system (spring mass correction)",
+      "variables": [
+        {
+          "name": "m_eq",
+          "unit": "kg",
+          "desc": "equivalent mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "attached mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_s",
+          "unit": "kg",
+          "desc": "spring mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "m_eq = m + m_s/3"
+      ],
+      "procedure": null,
+      "outputs": [
+        "m_eq"
+      ],
+      "assumptions": [
+        "Approximate Rayleigh correction for a spring of uniform mass: one third of the spring mass acts at the free end."
+      ],
+      "method_references": [
+        "m_eq = m + m_spring/3 (Rayleigh spring-mass correction, recalled)"
+      ],
+      "synthetic_example": {
+        "m": 10.0,
+        "m_s": 0.3
+      }
+    },
+    "vibrations.damping": {
+      "title": "Damping ratio and critical damping coefficient",
+      "variables": [
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio c/c_c",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c_c",
+          "unit": "N*s/m",
+          "desc": "critical damping coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "N*s/m",
+          "desc": "damping coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "N/m",
+          "desc": "stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "c_c = 2*sqrt(k*m)",
+        "zeta = c/c_c"
+      ],
+      "procedure": null,
+      "outputs": [
+        "c_c",
+        "zeta"
+      ],
+      "assumptions": [
+        "zeta < 1 underdamped, = 1 critically damped, > 1 overdamped."
+      ],
+      "method_references": [
+        "c_c = 2 sqrt(k m) = 2 m omega_n; zeta = c/c_c"
+      ],
+      "synthetic_example": {
+        "c": 50.0,
+        "k": 4000.0,
+        "m": 10.0
+      }
+    },
+    "vibrations.log_decrement": {
+      "title": "Logarithmic decrement and damped natural frequency",
+      "variables": [
+        {
+          "name": "delta",
+          "unit": "",
+          "desc": "logarithmic decrement",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_d",
+          "unit": "rad/s",
+          "desc": "damped natural frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9d",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio (< 1)",
+          "lo": null,
+          "hi": 0.99,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_n",
+          "unit": "rad/s",
+          "desc": "undamped natural frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "delta = 2*pi*zeta/sqrt(1 - zeta**2)",
+        "omega_d = omega_n*sqrt(1 - zeta**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "delta",
+        "omega_d"
+      ],
+      "assumptions": [
+        "Underdamped only (zeta < 1). delta is the natural log of the ratio of two successive same-side peak amplitudes."
+      ],
+      "method_references": [
+        "delta = 2 pi zeta / sqrt(1 - zeta^2); omega_d = omega_n sqrt(1 - zeta^2)"
+      ],
+      "synthetic_example": {
+        "zeta": 0.125,
+        "omega_n": 20.0
+      }
+    },
+    "vibrations.free_response": {
+      "title": "Free-vibration amplitude and phase from initial conditions",
+      "variables": [
+        {
+          "name": "A",
+          "unit": "m",
+          "desc": "response amplitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "phase angle (rad)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_d",
+          "unit": "rad/s",
+          "desc": "damped natural frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9d",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x0",
+          "unit": "m",
+          "desc": "initial displacement",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v0",
+          "unit": "m/s",
+          "desc": "initial velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio (< 1)",
+          "lo": null,
+          "hi": 0.99,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_n",
+          "unit": "rad/s",
+          "desc": "undamped natural frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "omega_d = omega_n*sqrt(1 - zeta**2)",
+        "A = sqrt(x0**2 + ((v0 + zeta*omega_n*x0)/omega_d)**2)",
+        "phi = atan2(v0 + zeta*omega_n*x0, omega_d*x0)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A",
+        "phi",
+        "omega_d"
+      ],
+      "assumptions": [
+        "Underdamped free response x(t) = A e^{-zeta omega_n t} cos(omega_d t - phi) with omega_d = omega_n sqrt(1 - zeta^2) derived from zeta and omega_n."
+      ],
+      "method_references": [
+        "A and phi from the initial displacement and velocity of an underdamped oscillator"
+      ],
+      "synthetic_example": {
+        "x0": 0.01,
+        "v0": 0.2,
+        "zeta": 0.1,
+        "omega_n": 20.0
+      }
+    },
+    "vibrations.forced_response": {
+      "title": "Forced steady-state response: magnification factor, amplitude and phase",
+      "variables": [
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "frequency ratio omega/omega_n",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M",
+          "unit": "",
+          "desc": "magnification factor X/(F0/k)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "X",
+          "unit": "m",
+          "desc": "steady-state amplitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "phase angle (rad, lags the force)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F0",
+          "unit": "N",
+          "desc": "forcing amplitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "N/m",
+          "desc": "stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "forcing frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_n",
+          "unit": "rad/s",
+          "desc": "natural frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "r = omega/omega_n",
+        "M = 1/sqrt((1 - r**2)**2 + (2*zeta*r)**2)",
+        "X = F0/k*M",
+        "phi = atan2(2*zeta*r, 1 - r**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "r",
+        "M",
+        "X",
+        "phi"
+      ],
+      "assumptions": [
+        "Harmonic force F0 sin(omega t); steady-state response at the forcing frequency. M peaks near r = 1 (resonance). The phase lag phi is atan2(2 zeta r, 1 - r^2)."
+      ],
+      "method_references": [
+        "Steady-state forced response of an SDOF oscillator"
+      ],
+      "synthetic_example": {
+        "F0": 100.0,
+        "k": 4000.0,
+        "omega": 15.0,
+        "omega_n": 20.0,
+        "zeta": 0.1
+      }
+    },
+    "vibrations.transmissibility": {
+      "title": "Force transmissibility and isolation efficiency",
+      "variables": [
+        {
+          "name": "TR",
+          "unit": "",
+          "desc": "transmissibility (transmitted/applied force)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "isolation efficiency 1 - TR",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "frequency ratio omega/omega_n",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "TR = sqrt((1 + (2*zeta*r)**2)/((1 - r**2)**2 + (2*zeta*r)**2))",
+        "eta = 1 - TR"
+      ],
+      "procedure": null,
+      "outputs": [
+        "TR",
+        "eta"
+      ],
+      "assumptions": [
+        "Force transmitted through the mount to the foundation. Isolation (TR < 1) requires r > sqrt(2); eta < 0 below that means amplification."
+      ],
+      "method_references": [
+        "TR = sqrt((1 + (2 zeta r)^2)/((1 - r^2)^2 + (2 zeta r)^2))"
+      ],
+      "synthetic_example": {
+        "zeta": 0.05,
+        "r": 2.0
+      }
+    },
+    "vibrations.rotating_unbalance_response": {
+      "title": "Steady-state response to a rotating unbalance",
+      "variables": [
+        {
+          "name": "X",
+          "unit": "m",
+          "desc": "response amplitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "phase angle (rad)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_e",
+          "unit": "kg",
+          "desc": "eccentric (unbalance) mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "e",
+          "unit": "m",
+          "desc": "eccentricity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M",
+          "unit": "kg",
+          "desc": "total mass of the machine",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "frequency ratio omega/omega_n",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "X = m_e*e/M*r**2/sqrt((1 - r**2)**2 + (2*zeta*r)**2)",
+        "phi = atan2(2*zeta*r, 1 - r**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "X",
+        "phi"
+      ],
+      "assumptions": [
+        "Rotating unbalance m_e at radius e. X -> m_e e/M as r -> infinity (independent of damping there)."
+      ],
+      "method_references": [
+        "X = (m_e e/M) r^2 / sqrt((1 - r^2)^2 + (2 zeta r)^2) (recalled)"
+      ],
+      "synthetic_example": {
+        "m_e": 0.5,
+        "e": 0.01,
+        "M": 20.0,
+        "r": 0.8,
+        "zeta": 0.05
+      }
+    },
+    "vibrations.base_excitation": {
+      "title": "Response to harmonic base (support) excitation: absolute and relative displacement",
+      "variables": [
+        {
+          "name": "X",
+          "unit": "m",
+          "desc": "absolute displacement amplitude of the mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Z",
+          "unit": "m",
+          "desc": "relative displacement amplitude between mass and base",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Y",
+          "unit": "m",
+          "desc": "base excitation amplitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "frequency ratio omega/omega_n",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "X = Y*sqrt((1 + (2*zeta*r)**2)/((1 - r**2)**2 + (2*zeta*r)**2))",
+        "Z = Y*r**2/sqrt((1 - r**2)**2 + (2*zeta*r)**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "X",
+        "Z"
+      ],
+      "assumptions": [
+        "X is the ABSOLUTE displacement amplitude of the mass; Z is the relative displacement amplitude between the mass and the base. |X|/Y equals the force transmissibility; |Z|/Y = r^2/sqrt((1 - r^2)^2 + (2 zeta r)^2)."
+      ],
+      "method_references": [
+        "Base-excitation absolute response X/Y = sqrt((1 + (2 zeta r)^2)/((1 - r^2)^2 + (2 zeta r)^2)) and relative response Z/Y = r^2/sqrt((1 - r^2)^2 + (2 zeta r)^2)"
+      ],
+      "synthetic_example": {
+        "Y": 0.002,
+        "zeta": 0.05,
+        "r": 2.0
+      }
+    },
+    "vibrations.mdof": {
+      "title": "Multi-degree-of-freedom natural frequencies and mode shapes",
+      "variables": [
+        {
+          "name": "M",
+          "unit": "",
+          "desc": "mass matrix (json, symmetric, kg)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "stiffness matrix (json, symmetric, N/m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "freqs",
+          "unit": "",
+          "desc": "natural frequencies omega_n (rad/s), ascending",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "f_n",
+          "unit": "",
+          "desc": "natural frequencies f_n (Hz), ascending",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "modes",
+          "unit": "",
+          "desc": "mode shape vectors: modes[j] is the j-th mode vector (mass-normalized)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _mdof(values):\n    \"\"\"Natural frequencies (rad/s, Hz) and mass-normalized mode shapes of an undamped MDOF system.\n\n    Solves the generalized eigenproblem K phi = omega^2 M phi with scipy.linalg.eigh; M and K are\n    symmetric positive-definite matrices (json, kg and N/m respectively).\"\"\"\n    import numpy as np\n    from scipy.linalg import eigh\n    M = np.asarray(values['M'], float)\n    K = np.asarray(values['K'], float)\n    if M.ndim != 2 or M.shape != K.shape or M.shape[0] != M.shape[1]:\n        raise MechError('M and K must be square matrices of the same size')\n    if M.shape[0] < 1:\n        raise MechError('M and K must be non-empty')\n    if not np.allclose(M, M.T, atol=1e-9) or not np.allclose(K, K.T, atol=1e-9):\n        raise MechError('M and K must be symmetric')\n    try:\n        w2, V = eigh(K, M)\n    except Exception as exc:\n        raise MechError('generalized eigenproblem failed: %s' % exc)\n    if np.any(w2 <= 0.0):\n        raise MechError('M and K must be positive definite (a natural frequency <= 0 was found)')\n    omega = np.sqrt(w2)\n    freqs = [float(x) for x in omega]\n    f_n = [float(x) / TWOPI for x in omega]\n    modes = [V[:, j].tolist() for j in range(M.shape[0])]\n    return {'freqs': freqs, 'f_n': f_n, 'modes': modes}\n",
+        "source": "vibrations.py",
+        "line": 39
+      },
+      "outputs": [
+        "freqs",
+        "f_n",
+        "modes"
+      ],
+      "assumptions": [
+        "Undamped, symmetric, positive-definite M and K. Solves the generalized eigenproblem K phi = omega^2 M phi; modes are mass-normalized (phi^T M phi = 1), signs arbitrary."
+      ],
+      "method_references": [
+        "Generalized eigenproblem K phi = omega^2 M phi (scipy.linalg.eigh)"
+      ],
+      "synthetic_example": {
+        "M": [
+          [
+            2.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "K": [
+          [
+            300.0,
+            -100.0
+          ],
+          [
+            -100.0,
+            100.0
+          ]
+        ]
+      }
+    },
+    "vibrations.absorber_tuning": {
+      "title": "Tuned dynamic vibration absorber stiffness",
+      "variables": [
+        {
+          "name": "k_a",
+          "unit": "N/m",
+          "desc": "absorber stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_a",
+          "unit": "kg",
+          "desc": "absorber mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "disturbing frequency to cancel (enter rad/s or rpm)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "k_a = m_a*omega**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "k_a"
+      ],
+      "assumptions": [
+        "The absorber is tuned so its own natural frequency sqrt(k_a/m_a) equals the disturbing frequency omega; at that frequency the main mass stays still."
+      ],
+      "method_references": [
+        "Absorber tuning k_a = m_a omega^2 (Frahm absorber)"
+      ],
+      "synthetic_example": {
+        "m_a": 0.5,
+        "omega": 20.0
+      }
+    },
+    "vibrations.absorber_frequencies": {
+      "title": "Natural frequencies of a main mass with an attached absorber",
+      "variables": [
+        {
+          "name": "omega1",
+          "unit": "rad/s",
+          "desc": "lower natural frequency of the combined system",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c91",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega2",
+          "unit": "rad/s",
+          "desc": "upper natural frequency of the combined system",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c92",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "main mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "N/m",
+          "desc": "main stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_a",
+          "unit": "kg",
+          "desc": "absorber mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_a",
+          "unit": "N/m",
+          "desc": "absorber stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _absorber_frequencies(values):\n    \"\"\"Natural frequencies of a main mass m (spring k) with a tuned/attached absorber m_a, k_a.\n\n    Roots of m m_a omega^4 - [k m_a + k_a (m + m_a)] omega^2 + k k_a = 0 (det of [K - omega^2 M]).\"\"\"\n    m, k, ma, ka = values['m'], values['k'], values['m_a'], values['k_a']\n    A = m * ma\n    Bc = k * ma + ka * (m + ma)\n    C = k * ka\n    disc = Bc * Bc - 4.0 * A * C\n    if disc < 0.0:\n        raise MechError('negative discriminant (check the input units)')\n    Om1 = (Bc - math.sqrt(disc)) / (2.0 * A)\n    Om2 = (Bc + math.sqrt(disc)) / (2.0 * A)\n    return {'omega1': math.sqrt(Om1), 'omega2': math.sqrt(Om2)}\n",
+        "source": "vibrations.py",
+        "line": 67
+      },
+      "outputs": [
+        "omega1",
+        "omega2"
+      ],
+      "assumptions": [
+        "Undamped two-degree-of-freedom system; the two frequencies bracket the tuned absorber frequency (the disturbing frequency should be kept off these peaks)."
+      ],
+      "method_references": [
+        "Characteristic equation det([K - omega^2 M]) = 0 for main + absorber masses"
+      ],
+      "synthetic_example": {
+        "m": 10.0,
+        "k": 4000.0,
+        "m_a": 0.5,
+        "k_a": 200.0
+      }
+    },
+    "vibrations.torsional_vibration": {
+      "title": "Torsional natural frequency of a shaft-disk system",
+      "variables": [
+        {
+          "name": "k_t",
+          "unit": "N*m/rad",
+          "desc": "torsional stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_n",
+          "unit": "rad/s",
+          "desc": "torsional natural frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G",
+          "unit": "Pa",
+          "desc": "shear modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment of area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "shaft length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "kg*m^2",
+          "desc": "mass moment of inertia of the disk",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "k_t = G*J/L",
+        "omega_n = sqrt(k_t/I)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "k_t",
+        "omega_n"
+      ],
+      "assumptions": [
+        "Massless shaft, single rigid disk; free (undamped) torsional vibration."
+      ],
+      "method_references": [
+        "k_t = GJ/L; omega_n = sqrt(k_t/I)"
+      ],
+      "synthetic_example": {
+        "G": 79300000000.0,
+        "J": 2.5e-07,
+        "L": 1.0,
+        "I": 0.02
+      }
+    },
+    "vibrations.critical_speed_shaft": {
+      "title": "Shaft critical speed from static deflection (single disk)",
+      "variables": [
+        {
+          "name": "omega_cr",
+          "unit": "rad/s",
+          "desc": "critical (whirl) speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9cr",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_cr",
+          "unit": "Hz",
+          "desc": "critical speed in Hz",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_st",
+          "unit": "m",
+          "desc": "static deflection under the disk weight",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration (default 9.80665)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "omega_cr = sqrt(g/delta_st)",
+        "f_cr = omega_cr/(2*pi)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "omega_cr",
+        "f_cr"
+      ],
+      "assumptions": [
+        "Single disk (any location along the shaft), weight-loaded; omega_cr = sqrt(g/delta_st) with delta_st the static deflection under the disk. To get rpm, convert the rad/s result. For several disks use rayleigh or dunkerley."
+      ],
+      "method_references": [
+        "omega_cr = sqrt(g/delta_st)"
+      ],
+      "synthetic_example": {
+        "delta_st": 0.001,
+        "g": 9.80665
+      }
+    },
+    "vibrations.rayleigh": {
+      "title": "Rayleigh's method: first critical speed from static deflections",
+      "variables": [
+        {
+          "name": "masses",
+          "unit": "",
+          "desc": "rows [W (N), y (m)]: each load and its static deflection",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "omega_cr",
+          "unit": "rad/s",
+          "desc": "first critical speed (rad/s)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_cr",
+          "unit": "Hz",
+          "desc": "first critical speed (Hz)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _rayleigh(values):\n    \"\"\"First critical speed by Rayleigh's method from measured static deflections.\n\n    masses = [[W (N), y (m)], ...]: load and its static deflection. omega_cr = sqrt(g sum(W y)/sum(W y^2)).\"\"\"\n    masses = values['masses']\n    if not isinstance(masses, list) or not masses:\n        raise MechError('masses: give [[W (N), y (m)], ...]')\n    num = den = 0.0\n    for row in masses:\n        if len(row) != 2:\n            raise MechError('each row must be [W_N, y_m]')\n        W, y = float(row[0]), float(row[1])\n        num += W * y\n        den += W * y * y\n    if den <= 0.0:\n        raise MechError('deflection data must give a positive denominator')\n    w = math.sqrt(9.80665 * num / den)\n    return {'omega_cr': w, 'f_cr': w / TWOPI}\n",
+        "source": "vibrations.py",
+        "line": 83
+      },
+      "outputs": [
+        "omega_cr",
+        "f_cr"
+      ],
+      "assumptions": [
+        "Rayleigh energy method with the static-deflection curve as the assumed mode; gives an upper bound on the fundamental critical speed."
+      ],
+      "method_references": [
+        "Rayleigh's method: omega_cr^2 = g sum(W y)/sum(W y^2)"
+      ],
+      "synthetic_example": {
+        "masses": [
+          [
+            200.0,
+            0.0005
+          ],
+          [
+            150.0,
+            0.0004
+          ]
+        ]
+      }
+    },
+    "vibrations.dunkerley": {
+      "title": "Dunkerley's method: first critical speed from individual speeds",
+      "variables": [
+        {
+          "name": "speeds",
+          "unit": "",
+          "desc": "individual critical speeds (rad/s), one per load acting alone",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "omega_cr",
+          "unit": "rad/s",
+          "desc": "combined first critical speed (rad/s)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_cr",
+          "unit": "Hz",
+          "desc": "combined first critical speed (Hz)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _dunkerley(values):\n    \"\"\"First critical speed by Dunkerley's method from the individual critical speeds (rad/s).\"\"\"\n    speeds = values['speeds']\n    if not isinstance(speeds, list) or not speeds:\n        raise MechError('speeds: give the individual critical speeds in rad/s')\n    s = 0.0\n    for x in speeds:\n        s += 1.0 / (float(x) ** 2)\n    w = 1.0 / math.sqrt(s)\n    return {'omega_cr': w, 'f_cr': w / TWOPI}\n",
+        "source": "vibrations.py",
+        "line": 103
+      },
+      "outputs": [
+        "omega_cr",
+        "f_cr"
+      ],
+      "assumptions": [
+        "Dunkerley's method: 1/omega_cr^2 = sum 1/omega_i^2; gives a lower bound on the fundamental critical speed."
+      ],
+      "method_references": [
+        "Dunkerley's reciprocal formula 1/omega_cr^2 = sum 1/omega_i^2"
+      ],
+      "synthetic_example": {
+        "speeds": [
+          100.0,
+          150.0
+        ]
+      }
+    },
+    "vibrations.string_frequency": {
+      "title": "Natural frequencies of a taut string",
+      "variables": [
+        {
+          "name": "omega_n",
+          "unit": "rad/s",
+          "desc": "natural (angular) frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_n",
+          "unit": "Hz",
+          "desc": "natural (cyclic) frequency",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "mode (harmonic) number",
+          "lo": 1.0,
+          "hi": 20.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "string length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N",
+          "desc": "tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "kg/m",
+          "desc": "mass per unit length",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "omega_n = n*pi/L*sqrt(T/mu)",
+        "f_n = omega_n/(2*pi)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "omega_n",
+        "f_n"
+      ],
+      "assumptions": [
+        "Flexible string, small amplitude, both ends fixed; n is the harmonic number."
+      ],
+      "method_references": [
+        "omega_n = (n pi/L) sqrt(T/mu)"
+      ],
+      "synthetic_example": {
+        "n": 1,
+        "L": 1.0,
+        "T": 100.0,
+        "mu": 0.01
+      }
+    },
+    "vibrations.bar_longitudinal": {
+      "title": "Longitudinal natural frequencies of a bar (fixed-fixed)",
+      "variables": [
+        {
+          "name": "omega_n",
+          "unit": "rad/s",
+          "desc": "natural (angular) frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_n",
+          "unit": "Hz",
+          "desc": "natural (cyclic) frequency",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "mode number",
+          "lo": 1.0,
+          "hi": 20.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "bar length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "omega_n = n*pi/L*sqrt(E/rho)",
+        "f_n = omega_n/(2*pi)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "omega_n",
+        "f_n"
+      ],
+      "assumptions": [
+        "Longitudinal (axial) vibration, fixed-fixed or free-free (same frequencies). A fixed-free bar gives f_n = (2n - 1)/(4L) sqrt(E/rho) instead."
+      ],
+      "method_references": [
+        "omega_n = (n pi/L) sqrt(E/rho) for a bar in longitudinal vibration"
+      ],
+      "synthetic_example": {
+        "n": 1,
+        "L": 1.0,
+        "E": 200000000000.0,
+        "rho": 7850.0
+      }
+    },
+    "vibrations.beam_frequency": {
+      "title": "Beam natural frequency from numerically found betaL roots",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "m^4",
+          "desc": "second moment of area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "beam length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "mode number",
+          "lo": 1.0,
+          "hi": 20.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "bc",
+          "unit": "",
+          "desc": "boundary condition: pinned-pinned, fixed-free, fixed-fixed or free-free",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "pinned-pinned",
+            "fixed-free",
+            "fixed-fixed",
+            "free-free"
+          ]
+        },
+        {
+          "name": "omega_n",
+          "unit": "rad/s",
+          "desc": "natural (angular) frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_n",
+          "unit": "Hz",
+          "desc": "natural (cyclic) frequency",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "betaL",
+          "unit": "",
+          "desc": "beta_n L root of the characteristic equation (dimensionless)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _beam_frequency(values):\n    \"\"\"Natural frequency of a uniform beam from its (numerically found) betaL root.\n\n    bc: 'pinned-pinned', 'fixed-free' (cantilever), 'fixed-fixed' or 'free-free'. The characteristic\n    equation cos(betaL) cosh(betaL) = 1 (fixed-fixed/free-free) or cos(betaL) cosh(betaL) = -1\n    (fixed-free) is root-found per mode; pinned-pinned is closed form n pi. omega_n = beta^2 sqrt(EI/(rho A)).\"\"\"\n    E, I, rho, A, L = values['E'], values['I'], values['rho'], values['A'], values['L']\n    n = int(round(values['n']))\n    bc = values['bc']\n    if bc not in ('pinned-pinned', 'fixed-free', 'fixed-fixed', 'free-free'):\n        raise MechError('bc must be pinned-pinned, fixed-free, fixed-fixed or free-free')\n    if n < 1:\n        raise MechError('n must be a positive mode number')\n    if bc == 'pinned-pinned':\n        betaL = n * PI\n    else:\n        import scipy.optimize as opt\n\n        def g(x):\n            if bc == 'fixed-free':\n                return math.cos(x) + 1.0 / math.cosh(x)\n            return math.cos(x) - 1.0 / math.cosh(x)\n\n        roots = []\n        x = 0.01\n        prev = g(x)\n        while len(roots) < n and x < n * PI + 3.0:\n            x += 0.02\n            y = g(x)\n            if y * prev < 0.0:\n                roots.append(opt.brentq(g, x - 0.02, x))\n            prev = y\n        if len(roots) < n:\n            raise MechError('could not find the mode-%d root' % n)\n        betaL = roots[n - 1]\n    beta = betaL / L\n    omega = beta * beta * math.sqrt(E * I / (rho * A))\n    return {'omega_n': omega, 'f_n': omega / TWOPI, 'betaL': betaL}\n",
+        "source": "vibrations.py",
+        "line": 115
+      },
+      "outputs": [
+        "omega_n",
+        "f_n",
+        "betaL"
+      ],
+      "assumptions": [
+        "Uniform Euler-Bernoulli beam; betaL roots are found by root-finding the characteristic equation (not tabulated). Pinned-pinned betaL = n pi is closed form; fixed-free cos(betaL) cosh(betaL) = -1; fixed-fixed/free-free cos(betaL) cosh(betaL) = 1. omega_n = beta^2 sqrt(EI/(rho A))."
+      ],
+      "method_references": [
+        "Euler-Bernoulli beam frequency equation; omega_n = beta_n^2 sqrt(EI/(rho A)) with beta_n L the roots of the boundary-condition characteristic equation"
+      ],
+      "synthetic_example": {
+        "E": 200000000000.0,
+        "I": 1e-06,
+        "rho": 7850.0,
+        "A": 0.001,
+        "L": 1.0,
+        "n": 1,
+        "bc": "pinned-pinned"
+      }
+    },
+    "vibrations.quality_factor": {
+      "title": "Quality factor and half-power bandwidth",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "",
+          "desc": "quality factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_omega",
+          "unit": "rad/s",
+          "desc": "half-power bandwidth",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_n",
+          "unit": "rad/s",
+          "desc": "natural frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q = 1/(2*zeta)",
+        "delta_omega = omega_n/Q"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q",
+        "delta_omega"
+      ],
+      "assumptions": [
+        "Light damping: Q = 1/(2 zeta) relates damping to the resonance sharpness; the half-power bandwidth is omega_n/Q = 2 zeta omega_n."
+      ],
+      "method_references": [
+        "Q = 1/(2 zeta); half-power bandwidth = omega_n/Q"
+      ],
+      "synthetic_example": {
+        "zeta": 0.05,
+        "omega_n": 100.0
+      }
+    },
+    "vibrations.duhamel": {
+      "title": "Shock/transient response by the Duhamel (convolution) integral",
+      "variables": [
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "N/m",
+          "desc": "stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio (< 1)",
+          "lo": null,
+          "hi": 0.99,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "times",
+          "unit": "",
+          "desc": "time points (s, increasing)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "forces",
+          "unit": "",
+          "desc": "force values (N) at each time point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "response",
+          "unit": "",
+          "desc": "displacement response x(t) at each time point (m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "x_max",
+          "unit": "m",
+          "desc": "extreme (peak) response: the sample with the largest |x|, signed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t_max",
+          "unit": "s",
+          "desc": "time of the extreme response",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _duhamel(values):\n    \"\"\"Response of an underdamped SDOF system to a force history via the Duhamel (convolution) integral.\n\n    times and forces are equal-length json lists (s and N). The force history is treated as\n    piecewise-constant between the given time points (a zero-order hold) and the response is built by\n    superposition of the exact unit-step response h(t) = (1/k)[1 - e^{-zeta wn t}(cos(wd t) +\n    (zeta wn/wd) sin(wd t))], i.e. x(t) = sum_j (F_j - F_{j-1}) h(t - t_j). This is exact for a\n    zero-order-hold force history (and for a step input) and accurate for smooth histories sampled finely.\"\"\"\n    import numpy as np\n    m, k, zeta = values['m'], values['k'], values['zeta']\n    t = np.asarray(values['times'], float)\n    F = np.asarray(values['forces'], float)\n    if t.ndim != 1 or F.ndim != 1 or len(t) != len(F):\n        raise MechError('times and forces must be equal-length lists')\n    if len(t) < 2:\n        raise MechError('need at least two time points')\n    if zeta < 0.0 or zeta >= 1.0:\n        raise MechError('Duhamel integral here covers underdamped systems (0 <= zeta < 1)')\n    if np.any(np.diff(t) <= 0.0):\n        raise MechError('times must be strictly increasing')\n    wn = math.sqrt(k / m)\n    wd = wn * math.sqrt(1.0 - zeta * zeta)\n    coef = zeta * wn / wd\n\n    def step_resp(tau):\n        if tau < 0.0:\n            return 0.0\n        e = math.exp(-zeta * wn * tau)\n        return (1.0 - e * (math.cos(wd * tau) + coef * math.sin(wd * tau))) / k\n\n    resp = []\n    for i in range(len(t)):\n        ti = t[i]\n        x = 0.0\n        prevF = 0.0\n        for j in range(i + 1):\n            dF = F[j] - prevF\n            if dF != 0.0:\n                x += dF * step_resp(ti - t[j])\n            prevF = F[j]\n        resp.append(float(x))\n    # Extreme response = the sample with the largest |x|, reported with its sign and time.\n    i_max = max(range(len(resp)), key=lambda i: abs(resp[i]))\n    x_max = resp[i_max]\n    t_max = float(t[i_max])\n    return {'response': resp, 'x_max': x_max, 't_max': t_max}\n",
+        "source": "vibrations.py",
+        "line": 155
+      },
+      "outputs": [
+        "response",
+        "x_max",
+        "t_max"
+      ],
+      "assumptions": [
+        "Underdamped SDOF at rest initially; the force history is a zero-order hold (piecewise constant between time points) superposed with the exact unit-step response. For a suddenly applied constant force the peak response is twice the static deflection (2 F0/k) \u2014 a useful check."
+      ],
+      "method_references": [
+        "Duhamel integral: x(t) = (1/(m omega_d)) integral_0^t F(tau) e^{-zeta omega_n (t-tau)} sin(omega_d (t-tau)) dtau"
+      ],
+      "synthetic_example": {
+        "m": 1.0,
+        "k": 100.0,
+        "zeta": 0.0,
+        "times": [
+          0.0,
+          0.05,
+          0.1,
+          0.15000000000000002,
+          0.2,
+          0.25,
+          0.30000000000000004,
+          0.35000000000000003,
+          0.4,
+          0.45,
+          0.5,
+          0.55,
+          0.6000000000000001,
+          0.65,
+          0.7000000000000001,
+          0.75,
+          0.8,
+          0.8500000000000001,
+          0.9,
+          0.9500000000000001,
+          1.0,
+          1.05,
+          1.1,
+          1.1500000000000001,
+          1.2000000000000002,
+          1.25,
+          1.3,
+          1.35,
+          1.4000000000000001,
+          1.4500000000000002,
+          1.5,
+          1.55,
+          1.6,
+          1.6500000000000001,
+          1.7000000000000002,
+          1.75,
+          1.8,
+          1.85,
+          1.9000000000000001,
+          1.9500000000000002,
+          2.0,
+          2.0500000000000003,
+          2.1,
+          2.15,
+          2.2,
+          2.25,
+          2.3000000000000003,
+          2.35,
+          2.4000000000000004,
+          2.45,
+          2.5,
+          2.5500000000000003,
+          2.6,
+          2.6500000000000004,
+          2.7,
+          2.75,
+          2.8000000000000003,
+          2.85,
+          2.9000000000000004,
+          2.95,
+          3.0
+        ],
+        "forces": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ]
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "vibrations-001",
+      "calculator": "vibrations.natural_frequency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k": "4 kN/m",
+        "m": "10 kg"
+      },
+      "solve_for": [
+        "omega_n",
+        "f_n",
+        "T"
+      ],
+      "expected_as_specified": {
+        "omega_n": "20 rad/s",
+        "f_n": "3.1830989 Hz",
+        "T": "0.31415927 s"
+      },
+      "expected_SI": {
+        "omega_n": 20.0,
+        "f_n": 3.1830989,
+        "T": 0.31415927
+      },
+      "actual_SI": {
+        "omega_n": {
+          "value": 20.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.natural_frequency (symbolic)"
+        },
+        "f_n": {
+          "value": 3.1830988618379066,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc vibrations.natural_frequency (symbolic)"
+        },
+        "T": {
+          "value": 0.3141592653589793,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.natural_frequency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "omega_n": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.04,
+          "passed": true
+        },
+        "f_n": {
+          "absolute_error": 3.816209348528332e-08,
+          "relative_error": 1.1988975110161774e-08,
+          "allowed_absolute_error": 0.0063661978,
+          "passed": true
+        },
+        "T": {
+          "absolute_error": 4.641020678874952e-09,
+          "relative_error": 1.4772827422456616e-08,
+          "allowed_absolute_error": 0.00062831854,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_n = sqrt(4000/10) = 20 rad/s; f_n = 20/(2 pi) = 3.18310 Hz; T = 1/f_n = 0.314159 s"
+      }
+    },
+    {
+      "id": "vibrations-002",
+      "calculator": "vibrations.natural_frequency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega_n": "20 rad/s",
+        "m": "10 kg"
+      },
+      "solve_for": [
+        "k",
+        "f_n",
+        "T"
+      ],
+      "expected_as_specified": {
+        "k": "4000 N/m"
+      },
+      "expected_SI": {
+        "k": 4000.0
+      },
+      "actual_SI": {
+        "k": {
+          "value": 4000.0,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.natural_frequency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 8.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "k = m omega_n^2 = 10*400 = 4000 N/m"
+      }
+    },
+    {
+      "id": "vibrations-003",
+      "calculator": "vibrations.equiv_stiffness",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k1": "2 kN/m",
+        "k2": "3 kN/m"
+      },
+      "solve_for": [
+        "k_series",
+        "k_parallel"
+      ],
+      "expected_as_specified": {
+        "k_series": "1200 N/m",
+        "k_parallel": "5000 N/m"
+      },
+      "expected_SI": {
+        "k_series": 1200.0,
+        "k_parallel": 5000.0
+      },
+      "actual_SI": {
+        "k_series": {
+          "value": 1200.0,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.equiv_stiffness (symbolic)"
+        },
+        "k_parallel": {
+          "value": 5000.0,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.equiv_stiffness (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "k_series": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.4,
+          "passed": true
+        },
+        "k_parallel": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 10.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "series: 2000*3000/5000 = 1200 N/m; parallel: 2000+3000 = 5000 N/m"
+      }
+    },
+    {
+      "id": "vibrations-004",
+      "calculator": "vibrations.equiv_mass",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "10 kg",
+        "m_s": "0.3 kg"
+      },
+      "solve_for": [
+        "m_eq"
+      ],
+      "expected_as_specified": {
+        "m_eq": "10.1 kg"
+      },
+      "expected_SI": {
+        "m_eq": 10.1
+      },
+      "actual_SI": {
+        "m_eq": {
+          "value": 10.1,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc vibrations.equiv_mass (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "m_eq": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0202,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "m_eq = 10 + 0.3/3 = 10.1 kg"
+      }
+    },
+    {
+      "id": "vibrations-005",
+      "calculator": "vibrations.damping",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "c": "50 N*s/m",
+        "k": "4 kN/m",
+        "m": "10 kg"
+      },
+      "solve_for": [
+        "c_c",
+        "zeta"
+      ],
+      "expected_as_specified": {
+        "c_c": "400 N*s/m",
+        "zeta": 0.125
+      },
+      "expected_SI": {
+        "c_c": 400.0,
+        "zeta": 0.125
+      },
+      "actual_SI": {
+        "c_c": {
+          "value": 400.0,
+          "unit": "N*s/m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.damping (symbolic)"
+        },
+        "zeta": {
+          "value": 0.125,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc vibrations.damping (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "c_c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.8,
+          "passed": true
+        },
+        "zeta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00025,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "c_c = 2 sqrt(4000*10) = 2*200 = 400 N*s/m; zeta = 50/400 = 0.125"
+      }
+    },
+    {
+      "id": "vibrations-006",
+      "calculator": "vibrations.damping",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "zeta": 0.125,
+        "c_c": "400 N*s/m",
+        "m": "10 kg"
+      },
+      "solve_for": [
+        "c",
+        "k"
+      ],
+      "expected_as_specified": {
+        "c": "50 N*s/m"
+      },
+      "expected_SI": {
+        "c": 50.0
+      },
+      "actual_SI": {
+        "c": {
+          "value": 50.0,
+          "unit": "N*s/m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.damping (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.1,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "c = zeta c_c = 0.125*400 = 50 N*s/m"
+      }
+    },
+    {
+      "id": "vibrations-007",
+      "calculator": "vibrations.log_decrement",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "zeta": 0.125,
+        "omega_n": "20 rad/s"
+      },
+      "solve_for": [
+        "delta",
+        "omega_d"
+      ],
+      "expected_as_specified": {
+        "delta": 0.79160694,
+        "omega_d": "19.8431348 rad/s"
+      },
+      "expected_SI": {
+        "delta": 0.79160694,
+        "omega_d": 19.8431348
+      },
+      "actual_SI": {
+        "delta": {
+          "value": 0.7916069411491505,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc vibrations.log_decrement (symbolic)"
+        },
+        "omega_d": {
+          "value": 19.84313483298443,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.log_decrement (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "delta": {
+          "absolute_error": 1.1491505524929835e-09,
+          "relative_error": 1.4516681125774157e-09,
+          "allowed_absolute_error": 0.00158321388,
+          "passed": true
+        },
+        "omega_d": {
+          "absolute_error": 3.298442763366438e-08,
+          "relative_error": 1.6622589105056314e-09,
+          "allowed_absolute_error": 0.039686269600000004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "delta = 2 pi zeta/sqrt(1-zeta^2) = 0.785398/0.992157 = 0.791607; omega_d = 20*0.992157 = 19.84313 rad/s"
+      }
+    },
+    {
+      "id": "vibrations-008",
+      "calculator": "vibrations.free_response",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "x0": "0.01 m",
+        "v0": "0.2 m/s",
+        "zeta": 0.1,
+        "omega_n": "20 rad/s"
+      },
+      "solve_for": [
+        "A",
+        "phi",
+        "omega_d"
+      ],
+      "expected_as_specified": {
+        "A": "0.01490712 m",
+        "phi": "47.8695852 deg",
+        "omega_d": "19.8997487 rad/s"
+      },
+      "expected_SI": {
+        "A": 0.01490712,
+        "phi": 0.8354818733039483,
+        "omega_d": 19.8997487
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.014907119849998597,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.free_response (symbolic)"
+        },
+        "phi": {
+          "value": 0.8354818739782283,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc vibrations.free_response (symbolic)"
+        },
+        "omega_d": {
+          "value": 19.8997487421324,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.free_response (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "A": {
+          "absolute_error": 1.500014019245599e-10,
+          "relative_error": 1.006239984145562e-08,
+          "allowed_absolute_error": 7.45356e-06,
+          "passed": true
+        },
+        "phi": {
+          "absolute_error": 6.742799651959785e-10,
+          "relative_error": 8.070551698859845e-10,
+          "allowed_absolute_error": 0.0004177409366519742,
+          "passed": true
+        },
+        "omega_d": {
+          "absolute_error": 4.213239890304976e-08,
+          "relative_error": 2.1172327117402122e-09,
+          "allowed_absolute_error": 0.00994987435,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_d = omega_n sqrt(1-zeta^2) = 20*sqrt(0.99) = 19.8997487 rad/s (derived, not an input). v0 + zeta omega_n x0 = 0.2 + 0.1*20*0.01 = 0.22; A = sqrt(x0^2 + (0.22/omega_d)^2) = sqrt(1e-4 + (0.22/19.89975)^2) = sqrt(1e-4 + 0.011055^2) = sqrt(2.2221e-4) = 0.0149071 m; phi = atan2(0.22, omega_d x0) = atan2(0.22, 0.198997) = 47.8696 deg"
+      }
+    },
+    {
+      "id": "vibrations-009",
+      "calculator": "vibrations.forced_response",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F0": "100 N",
+        "k": "4 kN/m",
+        "omega": "15 rad/s",
+        "omega_n": "20 rad/s",
+        "zeta": 0.1
+      },
+      "solve_for": [
+        "r",
+        "M",
+        "X",
+        "phi"
+      ],
+      "expected_as_specified": {
+        "r": 0.75,
+        "M": 2.1621622,
+        "X": "0.054054054 m",
+        "phi": "18.9246444 deg"
+      },
+      "expected_SI": {
+        "r": 0.75,
+        "M": 2.1621622,
+        "X": 0.054054054,
+        "phi": 0.33029735454910675
+      },
+      "actual_SI": {
+        "r": {
+          "value": 0.75,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc vibrations.forced_response (symbolic)"
+        },
+        "M": {
+          "value": 2.1621621621621623,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc vibrations.forced_response (symbolic)"
+        },
+        "X": {
+          "value": 0.05405405405405406,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.forced_response (symbolic)"
+        },
+        "phi": {
+          "value": 0.33029735482925365,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc vibrations.forced_response (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "r": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.000375,
+          "passed": true
+        },
+        "M": {
+          "absolute_error": 3.783783775190841e-08,
+          "relative_error": 1.7499999654007646e-08,
+          "allowed_absolute_error": 0.0010810811,
+          "passed": true
+        },
+        "X": {
+          "absolute_error": 5.405405983927025e-11,
+          "relative_error": 1.0000001080264998e-09,
+          "allowed_absolute_error": 2.7027026999999998e-05,
+          "passed": true
+        },
+        "phi": {
+          "absolute_error": 2.801469056734618e-10,
+          "relative_error": 8.481657567493812e-10,
+          "allowed_absolute_error": 0.0001651486772745534,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 15/20 = 0.75; M = 1/sqrt((1-0.5625)^2 + (0.15)^2) = 1/sqrt(0.191406+0.0225) = 1/sqrt(0.213906) = 1/0.4625 = 2.16216; X = (100/4000)*2.16216 = 0.0540541 m; phi = atan2(0.15, 0.4375) = 18.9246 deg"
+      }
+    },
+    {
+      "id": "vibrations-010",
+      "calculator": "vibrations.transmissibility",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "zeta": 0.05,
+        "r": 2.0
+      },
+      "solve_for": [
+        "TR",
+        "eta"
+      ],
+      "expected_as_specified": {
+        "TR": 0.33918173,
+        "eta": 0.66081827
+      },
+      "expected_SI": {
+        "TR": 0.33918173,
+        "eta": 0.66081827
+      },
+      "actual_SI": {
+        "TR": {
+          "value": 0.33918173268560714,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc vibrations.transmissibility (symbolic)"
+        },
+        "eta": {
+          "value": 0.6608182673143929,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc vibrations.transmissibility (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "TR": {
+          "absolute_error": 2.6856071255743075e-09,
+          "relative_error": 7.917900311359067e-09,
+          "allowed_absolute_error": 0.0006783634600000001,
+          "passed": true
+        },
+        "eta": {
+          "absolute_error": 2.6856071810854587e-09,
+          "relative_error": 4.064063151712586e-09,
+          "allowed_absolute_error": 0.0013216365400000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "TR = sqrt((1 + (0.1*2)^2)/((1-4)^2 + (0.1*2)^2)) = sqrt((1+0.04)/(9+0.04)) = sqrt(1.04/9.04) = sqrt(0.115044) = 0.339182; eta = 1 - TR = 0.660818 (r > sqrt(2), so isolation)"
+      }
+    },
+    {
+      "id": "vibrations-011",
+      "calculator": "vibrations.rotating_unbalance_response",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m_e": "0.5 kg",
+        "e": "10 mm",
+        "M": "20 kg",
+        "r": 0.8,
+        "zeta": 0.05
+      },
+      "solve_for": [
+        "X",
+        "phi"
+      ],
+      "expected_as_specified": {
+        "X": "0.43386092 mm",
+        "phi": "12.5288077 deg"
+      },
+      "expected_SI": {
+        "X": 0.00043386092,
+        "phi": 0.21866894571421797
+      },
+      "actual_SI": {
+        "X": {
+          "value": 0.00043386091563731255,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.rotating_unbalance_response (symbolic)"
+        },
+        "phi": {
+          "value": 0.2186689458739421,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc vibrations.rotating_unbalance_response (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "X": {
+          "absolute_error": 4.362687457386966e-12,
+          "relative_error": 1.0055497640550261e-08,
+          "allowed_absolute_error": 2.1693046e-07,
+          "passed": true
+        },
+        "phi": {
+          "absolute_error": 1.5972412281684e-10,
+          "relative_error": 7.304380706421208e-10,
+          "allowed_absolute_error": 0.00010933447285710899,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "X = (m_e e/M) r^2/sqrt((1-r^2)^2 + (2 zeta r)^2) = (0.5*0.01/20)*0.64/sqrt((1-0.64)^2 + 0.0064) = 0.00025*0.64/sqrt(0.1296+0.0064) = 0.00016/sqrt(0.136) = 0.00016/0.368782 = 0.000433861 m; phi = atan2(0.08, 0.36) = 12.5288 deg"
+      }
+    },
+    {
+      "id": "vibrations-012",
+      "calculator": "vibrations.base_excitation",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Y": "2 mm",
+        "zeta": 0.05,
+        "r": 2.0
+      },
+      "solve_for": [
+        "X",
+        "Z"
+      ],
+      "expected_as_specified": {
+        "X": "0.67836347 mm",
+        "Z": "2.66076042 mm"
+      },
+      "expected_SI": {
+        "X": 0.0006783634699999999,
+        "Z": 0.00266076042
+      },
+      "actual_SI": {
+        "X": {
+          "value": 0.0006783634653712143,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.base_excitation (symbolic)"
+        },
+        "Z": {
+          "value": 0.0026607604209509575,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.base_excitation (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "X": {
+          "absolute_error": 4.628785636034971e-12,
+          "relative_error": 6.823459459034507e-09,
+          "allowed_absolute_error": 3.39181735e-07,
+          "passed": true
+        },
+        "Z": {
+          "absolute_error": 9.509576286148569e-13,
+          "relative_error": 3.5740069698378065e-10,
+          "allowed_absolute_error": 1.33038021e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "X is the ABSOLUTE displacement: X = Y sqrt((1+(2 zeta r)^2)/((1-r^2)^2+(2 zeta r)^2)) = 0.002*sqrt(1.04/9.04) = 0.002*0.339182 = 0.000678363 m (same ratio as transmissibility). Z is the RELATIVE displacement between mass and base: Z = Y r^2/sqrt((1-r^2)^2+(2 zeta r)^2) = 0.002*4/3.006659 = 0.002*1.330384 = 0.002660760 m = 2.660760 mm (|Z|/Y = r^2/sqrt((1-r^2)^2+(2 zeta r)^2))."
+      }
+    },
+    {
+      "id": "vibrations-013",
+      "calculator": "vibrations.mdof",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "M": [
+          [
+            2.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "K": [
+          [
+            300.0,
+            -100.0
+          ],
+          [
+            -100.0,
+            100.0
+          ]
+        ]
+      },
+      "solve_for": [
+        "freqs",
+        "f_n",
+        "modes"
+      ],
+      "expected_as_specified": {
+        "freqs": [
+          7.0710678,
+          14.1421356
+        ],
+        "f_n": [
+          1.1253954,
+          2.2507909
+        ]
+      },
+      "expected_SI": {
+        "freqs": [
+          7.0710678,
+          14.1421356
+        ],
+        "f_n": [
+          1.1253954,
+          2.2507909
+        ]
+      },
+      "actual_SI": {
+        "freqs": {
+          "value": [
+            7.0710678118654755,
+            14.14213562373095
+          ],
+          "kind": "derived",
+          "method": "mechcalc vibrations.mdof (procedure)",
+          "unit": ""
+        },
+        "f_n": {
+          "value": [
+            1.1253953951963827,
+            2.250790790392765
+          ],
+          "kind": "derived",
+          "method": "mechcalc vibrations.mdof (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "freqs": [
+          {
+            "absolute_error": 1.1865475713079832e-08,
+            "relative_error": 1.6780316705603971e-09,
+            "allowed_absolute_error": 0.0035355339,
+            "passed": true
+          },
+          {
+            "absolute_error": 2.3730949649802824e-08,
+            "relative_error": 1.6780315449530002e-09,
+            "allowed_absolute_error": 0.0070710678,
+            "passed": true
+          }
+        ],
+        "f_n": [
+          {
+            "absolute_error": 4.803617281723405e-09,
+            "relative_error": 4.268381834263233e-09,
+            "allowed_absolute_error": 0.0005626976999999999,
+            "passed": true
+          },
+          {
+            "absolute_error": 1.0960723528796734e-07,
+            "relative_error": 4.869720918454368e-08,
+            "allowed_absolute_error": 0.00112539545,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "det(K - lambda M) = (300-2L)(100-L) - 10000 = 2L^2 - 500L + 20000 = 0 -> L = 50, 200. omega_n = sqrt(50) = 7.07107 rad/s and sqrt(200) = 14.14214 rad/s; f_n = 1.12540 and 2.25079 Hz (modes[j] are the corresponding mass-normalized mode vectors)"
+      }
+    },
+    {
+      "id": "vibrations-014",
+      "calculator": "vibrations.absorber_tuning",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m_a": "0.5 kg",
+        "omega": "20 rad/s"
+      },
+      "solve_for": [
+        "k_a"
+      ],
+      "expected_as_specified": {
+        "k_a": "200 N/m"
+      },
+      "expected_SI": {
+        "k_a": 200.0
+      },
+      "actual_SI": {
+        "k_a": {
+          "value": 200.0,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.absorber_tuning (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "k_a": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.4,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "k_a = m_a omega^2 = 0.5*400 = 200 N/m"
+      }
+    },
+    {
+      "id": "vibrations-015",
+      "calculator": "vibrations.absorber_frequencies",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "10 kg",
+        "k": "4 kN/m",
+        "m_a": "0.5 kg",
+        "k_a": "200 N/m"
+      },
+      "solve_for": [
+        "omega1",
+        "omega2"
+      ],
+      "expected_as_specified": {
+        "omega1": "17.8885438 rad/s",
+        "omega2": "22.3606798 rad/s"
+      },
+      "expected_SI": {
+        "omega1": 17.8885438,
+        "omega2": 22.3606798
+      },
+      "actual_SI": {
+        "omega1": {
+          "value": 17.88854381999832,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.absorber_frequencies (procedure)"
+        },
+        "omega2": {
+          "value": 22.360679774997898,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.absorber_frequencies (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "omega1": {
+          "absolute_error": 1.999831766852367e-08,
+          "relative_error": 1.1179399448111404e-09,
+          "allowed_absolute_error": 0.0089442719,
+          "passed": true
+        },
+        "omega2": {
+          "absolute_error": 2.5002101722293446e-08,
+          "relative_error": 1.118127979378044e-09,
+          "allowed_absolute_error": 0.0111803399,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "m m_a omega^4 - [k m_a + k_a (m + m_a)] omega^2 + k k_a = 0 -> 5 omega^4 - 4100 omega^2 + 800000 = 0 -> omega^2 = (4100 +/- 900)/10 = 320 or 500 -> omega1 = sqrt(320) = 17.8885, omega2 = sqrt(500) = 22.3607 rad/s (bracketing the 20 rad/s tuned frequency)"
+      }
+    },
+    {
+      "id": "vibrations-016",
+      "calculator": "vibrations.torsional_vibration",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "G": "79.3 GPa",
+        "J": "2.5e-7 m^4",
+        "L": "1 m",
+        "I": "0.02 kg*m^2"
+      },
+      "solve_for": [
+        "k_t",
+        "omega_n"
+      ],
+      "expected_as_specified": {
+        "k_t": "19825 N*m/rad",
+        "omega_n": "995.61539 rad/s"
+      },
+      "expected_SI": {
+        "k_t": 19825.0,
+        "omega_n": 995.61539
+      },
+      "actual_SI": {
+        "k_t": {
+          "value": 19825.0,
+          "unit": "N*m/rad",
+          "kind": "derived",
+          "method": "mechcalc vibrations.torsional_vibration (symbolic)"
+        },
+        "omega_n": {
+          "value": 995.6153875869938,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.torsional_vibration (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "k_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 9.9125,
+          "passed": true
+        },
+        "omega_n": {
+          "absolute_error": 2.4130062001859187e-06,
+          "relative_error": 2.4236328851705665e-09,
+          "allowed_absolute_error": 0.49780769500000005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "k_t = GJ/L = 79.3e9*2.5e-7/1 = 19825 N*m/rad; omega_n = sqrt(19825/0.02) = sqrt(991250) = 995.615 rad/s"
+      }
+    },
+    {
+      "id": "vibrations-017",
+      "calculator": "vibrations.critical_speed_shaft",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "delta_st": "1 mm",
+        "g": "9.80665 m/s^2"
+      },
+      "solve_for": [
+        "omega_cr",
+        "f_cr"
+      ],
+      "expected_as_specified": {
+        "omega_cr": "99.028531 rad/s",
+        "f_cr": "15.760880 Hz"
+      },
+      "expected_SI": {
+        "omega_cr": 99.028531,
+        "f_cr": 15.76088
+      },
+      "actual_SI": {
+        "omega_cr": {
+          "value": 99.02853124226371,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.critical_speed_shaft (symbolic)"
+        },
+        "f_cr": {
+          "value": 15.760880254336461,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc vibrations.critical_speed_shaft (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "omega_cr": {
+          "absolute_error": 2.422637095378377e-07,
+          "relative_error": 2.446403143532824e-09,
+          "allowed_absolute_error": 0.198057062,
+          "passed": true
+        },
+        "f_cr": {
+          "absolute_error": 2.543364612250798e-07,
+          "relative_error": 1.6137199269652444e-08,
+          "allowed_absolute_error": 0.03152176,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_cr = sqrt(9.80665/0.001) = sqrt(9806.65) = 99.0285 rad/s; f_cr = 99.0285/(2 pi) = 15.7609 Hz"
+      }
+    },
+    {
+      "id": "vibrations-018",
+      "calculator": "vibrations.rayleigh",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "masses": [
+          [
+            200.0,
+            0.0005
+          ],
+          [
+            150.0,
+            0.0004
+          ]
+        ]
+      },
+      "solve_for": [
+        "omega_cr",
+        "f_cr"
+      ],
+      "expected_as_specified": {
+        "omega_cr": "145.61445 rad/s",
+        "f_cr": "23.175259 Hz"
+      },
+      "expected_SI": {
+        "omega_cr": 145.61445,
+        "f_cr": 23.175259
+      },
+      "actual_SI": {
+        "omega_cr": {
+          "value": 145.61444834757148,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.rayleigh (procedure)"
+        },
+        "f_cr": {
+          "value": 23.175259240115473,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc vibrations.rayleigh (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "omega_cr": {
+          "absolute_error": 1.6524285229024827e-06,
+          "relative_error": 1.1347970774208759e-08,
+          "allowed_absolute_error": 0.072807225,
+          "passed": true
+        },
+        "f_cr": {
+          "absolute_error": 2.40115472394109e-07,
+          "relative_error": 1.0360853891389477e-08,
+          "allowed_absolute_error": 0.0115876295,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sum(W y) = 200*0.0005 + 150*0.0004 = 0.16; sum(W y^2) = 200*2.5e-7 + 150*1.6e-7 = 7.4e-5; omega_cr = sqrt(9.80665*0.16/7.4e-5) = sqrt(21203.6) = 145.614 rad/s"
+      }
+    },
+    {
+      "id": "vibrations-019",
+      "calculator": "vibrations.dunkerley",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "speeds": [
+          100.0,
+          150.0
+        ]
+      },
+      "solve_for": [
+        "omega_cr",
+        "f_cr"
+      ],
+      "expected_as_specified": {
+        "omega_cr": "83.205029 rad/s",
+        "f_cr": "13.242499 Hz"
+      },
+      "expected_SI": {
+        "omega_cr": 83.205029,
+        "f_cr": 13.242499
+      },
+      "actual_SI": {
+        "omega_cr": {
+          "value": 83.20502943378438,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.dunkerley (procedure)"
+        },
+        "f_cr": {
+          "value": 13.24249172449343,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc vibrations.dunkerley (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "omega_cr": {
+          "absolute_error": 4.3378437908359047e-07,
+          "relative_error": 5.2134394314505976e-09,
+          "allowed_absolute_error": 0.0416025145,
+          "passed": true
+        },
+        "f_cr": {
+          "absolute_error": 7.27550657053655e-06,
+          "relative_error": 5.494058614266498e-07,
+          "allowed_absolute_error": 0.006621249500000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "1/omega_cr^2 = 1/100^2 + 1/150^2 = 1e-4 + 4.4444e-5 = 1.44444e-4 -> omega_cr = 1/sqrt(1.44444e-4) = 83.2050 rad/s"
+      }
+    },
+    {
+      "id": "vibrations-020",
+      "calculator": "vibrations.string_frequency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 1,
+        "L": "1 m",
+        "T": "100 N",
+        "mu": "0.01 kg/m"
+      },
+      "solve_for": [
+        "omega_n",
+        "f_n"
+      ],
+      "expected_as_specified": {
+        "omega_n": "314.15927 rad/s",
+        "f_n": "50 Hz"
+      },
+      "expected_SI": {
+        "omega_n": 314.15927,
+        "f_n": 50.0
+      },
+      "actual_SI": {
+        "omega_n": {
+          "value": 314.15926535897927,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.string_frequency (symbolic)"
+        },
+        "f_n": {
+          "value": 50.0,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc vibrations.string_frequency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "omega_n": {
+          "absolute_error": 4.641020723283873e-06,
+          "relative_error": 1.47728275638146e-08,
+          "allowed_absolute_error": 0.62831854,
+          "passed": true
+        },
+        "f_n": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.1,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_n = (1*pi/1)*sqrt(100/0.01) = pi*100 = 314.159 rad/s; f_n = 314.159/(2 pi) = 50 Hz"
+      }
+    },
+    {
+      "id": "vibrations-021",
+      "calculator": "vibrations.bar_longitudinal",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 1,
+        "L": "1 m",
+        "E": "200 GPa",
+        "rho": "7850 kg/m^3"
+      },
+      "solve_for": [
+        "omega_n",
+        "f_n"
+      ],
+      "expected_as_specified": {
+        "omega_n": "15857.3292 rad/s",
+        "f_n": "2523.7723 Hz"
+      },
+      "expected_SI": {
+        "omega_n": 15857.3292,
+        "f_n": 2523.7723
+      },
+      "actual_SI": {
+        "omega_n": {
+          "value": 15857.329195035616,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.bar_longitudinal (symbolic)"
+        },
+        "f_n": {
+          "value": 2523.772325625344,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc vibrations.bar_longitudinal (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "omega_n": {
+          "absolute_error": 4.964384061167948e-06,
+          "relative_error": 3.1306558617500025e-10,
+          "allowed_absolute_error": 7.9286646,
+          "passed": true
+        },
+        "f_n": {
+          "absolute_error": 2.5625343823776348e-05,
+          "relative_error": 1.0153587874697075e-08,
+          "allowed_absolute_error": 1.26188615,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_n = (pi/1)*sqrt(200e9/7850) = pi*5047.537 = 15857.3 rad/s; f_n = 2523.77 Hz"
+      }
+    },
+    {
+      "id": "vibrations-022",
+      "calculator": "vibrations.beam_frequency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "1e-6 m^4",
+        "rho": "7850 kg/m^3",
+        "A": "0.001 m^2",
+        "L": "1 m",
+        "n": 1,
+        "bc": "pinned-pinned"
+      },
+      "solve_for": [
+        "omega_n",
+        "f_n",
+        "betaL"
+      ],
+      "expected_as_specified": {
+        "betaL": 3.14159265,
+        "omega_n": "1575.3604 rad/s",
+        "f_n": "250.72639 Hz"
+      },
+      "expected_SI": {
+        "betaL": 3.14159265,
+        "omega_n": 1575.3604,
+        "f_n": 250.72639
+      },
+      "actual_SI": {
+        "betaL": {
+          "value": 3.141592653589793,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc vibrations.beam_frequency (procedure)"
+        },
+        "omega_n": {
+          "value": 1575.3603654786675,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.beam_frequency (procedure)"
+        },
+        "f_n": {
+          "value": 250.72638931698478,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc vibrations.beam_frequency (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "betaL": {
+          "absolute_error": 3.589792907376932e-09,
+          "relative_error": 1.142666573076217e-09,
+          "allowed_absolute_error": 0.0015707963250000002,
+          "passed": true
+        },
+        "omega_n": {
+          "absolute_error": 3.452133250902989e-05,
+          "relative_error": 2.191329203719345e-08,
+          "allowed_absolute_error": 0.7876802,
+          "passed": true
+        },
+        "f_n": {
+          "absolute_error": 6.830152301517955e-07,
+          "relative_error": 2.7241457516769398e-09,
+          "allowed_absolute_error": 0.125363195,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Pinned-pinned landmark: betaL = n pi = 3.14159; omega_n = betaL^2 sqrt(EI/(rho A L^4)) = pi^2*sqrt(200e9*1e-6/(7850*0.001*1)) = 9.8696*sqrt(25477.7) = 9.8696*159.614 = 1575.36 rad/s"
+      }
+    },
+    {
+      "id": "vibrations-023",
+      "calculator": "vibrations.beam_frequency",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "1e-6 m^4",
+        "rho": "7850 kg/m^3",
+        "A": "0.001 m^2",
+        "L": "1 m",
+        "n": 1,
+        "bc": "fixed-free"
+      },
+      "solve_for": [
+        "omega_n",
+        "f_n",
+        "betaL"
+      ],
+      "expected_as_specified": {
+        "betaL": 1.8751041,
+        "omega_n": "561.21646 rad/s",
+        "f_n": "89.320545 Hz"
+      },
+      "expected_SI": {
+        "betaL": 1.8751041,
+        "omega_n": 561.21646,
+        "f_n": 89.320545
+      },
+      "actual_SI": {
+        "betaL": {
+          "value": 1.875104068711961,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc vibrations.beam_frequency (procedure)"
+        },
+        "omega_n": {
+          "value": 561.217134275575,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.beam_frequency (procedure)"
+        },
+        "f_n": {
+          "value": 89.32048106782572,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc vibrations.beam_frequency (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "betaL": {
+          "absolute_error": 3.1288039048504857e-08,
+          "relative_error": 1.6686027750941857e-08,
+          "allowed_absolute_error": 0.00093755205,
+          "passed": true
+        },
+        "omega_n": {
+          "absolute_error": 0.0006742755749655771,
+          "relative_error": 1.2014536689917775e-06,
+          "allowed_absolute_error": 0.28060823,
+          "passed": true
+        },
+        "f_n": {
+          "absolute_error": 6.393217427103082e-05,
+          "relative_error": 7.15761130555471e-07,
+          "allowed_absolute_error": 0.0446602725,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Cantilever (fixed-free) first root of cos(betaL) cosh(betaL) = -1 is betaL = 1.875104 (standard textbook value; recalled, not re-read). omega_n = 1.875104^2 * sqrt(EI/(rho A)) = 3.51602*159.614 = 561.216 rad/s"
+      }
+    },
+    {
+      "id": "vibrations-024",
+      "calculator": "vibrations.quality_factor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "zeta": 0.05,
+        "omega_n": "100 rad/s"
+      },
+      "solve_for": [
+        "Q",
+        "delta_omega"
+      ],
+      "expected_as_specified": {
+        "Q": 10,
+        "delta_omega": "10 rad/s"
+      },
+      "expected_SI": {
+        "Q": 10.0,
+        "delta_omega": 10.0
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 10.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc vibrations.quality_factor (symbolic)"
+        },
+        "delta_omega": {
+          "value": 10.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.quality_factor (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02,
+          "passed": true
+        },
+        "delta_omega": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = 1/(2*0.05) = 10; half-power bandwidth = omega_n/Q = 100/10 = 10 rad/s"
+      }
+    },
+    {
+      "id": "vibrations-025",
+      "calculator": "vibrations.duhamel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "1 kg",
+        "k": "100 N/m",
+        "zeta": 0.0,
+        "times": [
+          0.0,
+          0.05,
+          0.1,
+          0.15,
+          0.2,
+          0.25,
+          0.3,
+          0.35,
+          0.4,
+          0.45,
+          0.5,
+          0.55,
+          0.6,
+          0.65,
+          0.7,
+          0.75,
+          0.8,
+          0.85,
+          0.9,
+          0.95,
+          1.0,
+          1.05,
+          1.1,
+          1.15,
+          1.2,
+          1.25,
+          1.3,
+          1.35,
+          1.4,
+          1.45,
+          1.5
+        ],
+        "forces": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ]
+      },
+      "solve_for": [
+        "response",
+        "x_max",
+        "t_max"
+      ],
+      "expected_as_specified": {
+        "x_max": "0.19971722 m",
+        "t_max": "0.95 s"
+      },
+      "expected_SI": {
+        "x_max": 0.19971722,
+        "t_max": 0.95
+      },
+      "actual_SI": {
+        "x_max": {
+          "value": 0.19971721561963784,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.duhamel (procedure)"
+        },
+        "t_max": {
+          "value": 0.95,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.duhamel (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "x_max": {
+          "absolute_error": 4.380362156330975e-09,
+          "relative_error": 2.1932821598112445e-08,
+          "allowed_absolute_error": 0.00039943444000000003,
+          "passed": true
+        },
+        "t_max": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0019,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Undamped step response x(t) = (F0/k)(1 - cos(omega_n t)) = 0.1(1 - cos(10 t)), omega_n = sqrt(100/1) = 10 rad/s. The exact peak is 2 F0/k = 0.2 m at t = pi/10 = 0.314 s, which the 0.05 s grid misses; the LARGEST SAMPLED |x| is at t = 0.95 s where 10 t = 9.5 rad (nearest sample to 3 pi) and x = 0.1(1 - cos 9.5) = 0.1(1 + 0.9971722) = 0.19971722 m."
+      }
+    },
+    {
+      "id": "vibrations-026",
+      "calculator": "vibrations.duhamel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "1 kg",
+        "k": "100 N/m",
+        "zeta": 0.0,
+        "times": [
+          0.0,
+          0.05,
+          0.1,
+          0.15,
+          0.2,
+          0.25,
+          0.3,
+          0.35,
+          0.4,
+          0.45,
+          0.5,
+          0.55,
+          0.6,
+          0.65,
+          0.7,
+          0.75,
+          0.8,
+          0.85,
+          0.9,
+          0.95,
+          1.0,
+          1.05,
+          1.1,
+          1.15,
+          1.2,
+          1.25,
+          1.3,
+          1.35,
+          1.4,
+          1.45,
+          1.5
+        ],
+        "forces": [
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0
+        ]
+      },
+      "solve_for": [
+        "response",
+        "x_max",
+        "t_max"
+      ],
+      "expected_as_specified": {
+        "x_max": "-0.19971722 m",
+        "t_max": "0.95 s"
+      },
+      "expected_SI": {
+        "x_max": -0.19971722,
+        "t_max": 0.95
+      },
+      "actual_SI": {
+        "x_max": {
+          "value": -0.19971721561963784,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc vibrations.duhamel (procedure)"
+        },
+        "t_max": {
+          "value": 0.95,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc vibrations.duhamel (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "x_max": {
+          "absolute_error": 4.380362156330975e-09,
+          "relative_error": 2.1932821598112445e-08,
+          "allowed_absolute_error": 0.00039943444000000003,
+          "passed": true
+        },
+        "t_max": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0019,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Negative step (forces all -10 N): by linearity the response is -0.1(1 - cos(10 t)). The extreme is reported by the largest |x|, so the SAME sample (t = 0.95 s) gives the signed value x_max = -0.19971722 m (the sign follows the load)."
+      }
+    }
+  ],
+  "passed": 26,
+  "failed": 0
+}

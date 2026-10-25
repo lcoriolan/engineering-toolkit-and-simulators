@@ -1,0 +1,295 @@
+{
+  "section": "compressible",
+  "cases": [
+    {
+      "calc": "compressible.speed_of_sound",
+      "inputs": {
+        "gamma": 1.4,
+        "R": "287 J/(kg*K)",
+        "T": "15 degC"
+      },
+      "expect": {
+        "a": "340.2626 m/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = sqrt(1.4 x 287 x 288.15) = sqrt(115775.7) = 340.263 m/s"
+      }
+    },
+    {
+      "calc": "compressible.mach_number",
+      "inputs": {
+        "V": "680 m/s",
+        "a": "340 m/s"
+      },
+      "expect": {
+        "M": 2.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "M = V/a = 680/340 = 2.0"
+      }
+    },
+    {
+      "calc": "compressible.mach_number",
+      "inputs": {
+        "M": 2.5,
+        "a": "340 m/s"
+      },
+      "solve_for": [
+        "V"
+      ],
+      "expect": {
+        "V": "850 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V = M a = 2.5 x 340 = 850 m/s"
+      }
+    },
+    {
+      "calc": "compressible.mach_angle",
+      "inputs": {
+        "M": 2.0
+      },
+      "expect": {
+        "mu": "30 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "mu = asin(1/2) = 30 deg (Mach angle at M = 2)"
+      }
+    },
+    {
+      "calc": "compressible.stagnation_ratios",
+      "inputs": {
+        "M": 2.0,
+        "gamma": 1.4
+      },
+      "expect": {
+        "T0_T": 1.8,
+        "P0_P": 7.82445,
+        "rho0_rho": 4.34692
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "T0/T = 1 + 0.2 x 4 = 1.8; P0/P = 1.8^3.5 = 7.82445; rho0/rho = 1.8^2.5 = 4.34692"
+      }
+    },
+    {
+      "calc": "compressible.isentropic_area_ratio",
+      "inputs": {
+        "M": 2.0,
+        "gamma": 1.4
+      },
+      "expect": {
+        "A_Astar": 1.6875
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "Compressible-flow table landmark: A/A* = 1.688 at M = 2, gamma = 1.4 (recalled; not re-read). Arithmetic check: (1/2) x ((2/2.4) x 1.8)^3 = 0.5 x 1.5^3 = 1.6875"
+      }
+    },
+    {
+      "calc": "compressible.area_ratio_inverse",
+      "inputs": {
+        "A_Astar": 1.6875,
+        "gamma": 1.4
+      },
+      "expect": {
+        "M_sub": 0.372244,
+        "M_super": 2.0
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Solve (1/M)((2/2.4)(1 + 0.2 M^2))^3 = 1.6875 by bisection in plain math: subsonic root 0.37224, supersonic root 2.0"
+      }
+    },
+    {
+      "calc": "compressible.choked_mass_flow",
+      "inputs": {
+        "A_star": "100 cm^2",
+        "P0": "500 kPa",
+        "T0": "300 K",
+        "gamma": 1.4,
+        "R": "287 J/(kg*K)"
+      },
+      "expect": {
+        "mdot": "11.6678 kg/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "mdot = 0.01 x 5e5 / sqrt(300) x sqrt(1.4/287) x (2/2.4)^3 = 288.675 x 0.069843 x 0.578704 = 11.6678 kg/s"
+      }
+    },
+    {
+      "calc": "compressible.normal_shock",
+      "inputs": {
+        "M1": 2.0,
+        "gamma": 1.4
+      },
+      "expect": {
+        "M2": 0.57735,
+        "P2_P1": 4.5,
+        "rho2_rho1": 2.66667,
+        "T2_T1": 1.6875,
+        "p02_p01": 0.72087
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "cited",
+        "ref": "Compressible-flow table landmark at M1 = 2, gamma = 1.4: P2/P1 = 4.50, M2 = 0.5774 (recalled; not re-read). Check: M2^2 = (0.4 x 4 + 2)/(2.8 x 4 - 0.4) = 3.6/10.8 = 1/3; rho2/rho1 = 2.4 x 4/3.6 = 2.6667; T2/T1 = 4.5/2.6667 = 1.6875. p02/p01 = (2.4 x 4/3.6)^3.5 x (2.4/10.8)^2.5 = 2.66667^3.5 x 0.222222^2.5 = 30.9686 x 0.023281 = 0.72087"
+      }
+    },
+    {
+      "calc": "compressible.normal_shock",
+      "inputs": {
+        "P2_P1": 4.5,
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "M1",
+        "M2",
+        "rho2_rho1",
+        "T2_T1",
+        "p02_p01"
+      ],
+      "expect": {
+        "M1": 2.0,
+        "p02_p01": 0.72087
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "M1^2 = ((gamma+1)(P2/P1) + (gamma-1))/(2 gamma) = (2.4 x 4.5 + 0.4)/2.8 = 11.2/2.8 = 4 -> M1 = 2; p02/p01 = (2.4 x 4/3.6)^3.5 x (2.4/10.8)^2.5 = 0.72087"
+      }
+    },
+    {
+      "calc": "compressible.oblique_shock_theta",
+      "inputs": {
+        "M": 2.0,
+        "beta": "40 deg",
+        "gamma": 1.4
+      },
+      "expect": {
+        "theta": "10.6229 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "sin40 = 0.64279, M^2 sin^2 beta - 1 = 4 x 0.41318 - 1 = 0.65272; denom = 4(1.4 + cos80) + 2 = 4 x 1.57365 + 2 = 8.2946; tan(theta) = (2/tan40)(0.65272/8.2946) = 2.3835 x 0.078692 = 0.18756 -> theta = 10.623 deg"
+      }
+    },
+    {
+      "calc": "compressible.oblique_shock",
+      "inputs": {
+        "M": 2.0,
+        "theta": "20 deg",
+        "gamma": 1.4
+      },
+      "expect": {
+        "beta_weak": "53.4229 deg",
+        "beta_strong": "74.2701 deg",
+        "M2_weak": 1.21022,
+        "P2_P1_weak": 2.84286
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Solve tan(theta) = 2 cot(beta)(M^2 sin^2 beta - 1)/(M^2(gamma + cos 2beta) + 2) for beta by bisection in plain math (weak and strong branches): 53.4229 deg and 74.2701 deg. Weak M1n = 2 sin(53.4229) = 1.6060 -> M2n = 0.66845, M2 = M2n/sin(beta - theta) = 0.66845/sin(33.4229) = 1.21022; P2/P1 = (2.8 x 1.6060^2 - 0.4)/2.4 = 2.84286"
+      }
+    },
+    {
+      "calc": "compressible.prandtl_meyer",
+      "inputs": {
+        "M": 2.0,
+        "gamma": 1.4
+      },
+      "expect": {
+        "nu": "26.3798 deg"
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "Compressible-flow table landmark: nu = 26.38 deg at M = 2, gamma = 1.4 (recalled; not re-read). Check: sqrt6 atan(sqrt(0.5)) - atan(sqrt3) = 2.4495 x 0.61548 - 1.04720 = 0.46036 rad = 26.380 deg"
+      }
+    },
+    {
+      "calc": "compressible.fanno_flow",
+      "inputs": {
+        "M": 0.5,
+        "gamma": 1.4
+      },
+      "expect": {
+        "T_Tstar": 1.14286,
+        "P_Pstar": 2.13809,
+        "rho_rhostar": 1.87083,
+        "P0_P0star": 1.33984,
+        "fDL_D": 1.06906
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "T/T* = 2.4/2.1 = 1.14286; P/P* = (1/0.5)sqrt(2.4/2.1) = 2 x 1.06904 = 2.13809; rho/rho* = 2 x sqrt(2.1/2.4) = 1.87083; P0/P0* = 2 x 0.875^3 = 1.33984; f_D L*/D = 0.75/0.35 + (2.4/2.8)ln(0.6/2.1) = 2.14286 - 1.07380 = 1.06906 (Darcy form; equals 4fL*/D with the Fanning factor f_D = 4f)"
+      }
+    },
+    {
+      "calc": "compressible.rayleigh_flow",
+      "inputs": {
+        "M": 0.5,
+        "gamma": 1.4
+      },
+      "expect": {
+        "T_Tstar": 0.790123,
+        "P_Pstar": 1.77778,
+        "rho_rhostar": 2.25,
+        "T0_T0star": 0.691358,
+        "P0_P0star": 1.11405
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "T/T* = 2.4^2 x 0.25/1.35^2 = 1.44/1.8225 = 0.79012; P/P* = 2.4/1.35 = 1.77778; rho/rho* = 1.35/0.6 = 2.25; T0/T0* = 0.6 x 2.1/1.8225 = 0.69136; P0/P0* = 1.77778 x (2.1/2.4)^3.5 = 1.77778 x 0.62674 = 1.11405"
+      }
+    },
+    {
+      "calc": "compressible.nozzle_exit_velocity",
+      "inputs": {
+        "T0": "300 K",
+        "P_e": "101.325 kPa",
+        "P0": "500 kPa",
+        "gamma": 1.4,
+        "R": "287 J/(kg*K)"
+      },
+      "expect": {
+        "V_e": "469.82 m/s",
+        "Te": "190.129 K"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Te = 300 x (101.325/500)^(0.4/1.4) = 300 x 0.20265^0.285714 = 300 x 0.633764 = 190.129 K; V_e = sqrt(7 x 287 x (300 - 190.129)) = sqrt(7 x 287 x 109.871) = sqrt(220731) = 469.82 m/s"
+      }
+    },
+    {
+      "calc": "compressible.nozzle_thrust",
+      "inputs": {
+        "mdot": "50 kg/s",
+        "V_e": "2000 m/s",
+        "P_e": "101.325 kPa",
+        "P_a": "0 Pa",
+        "A_e": "0.5 m^2"
+      },
+      "expect": {
+        "F": "150.6625 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 50 x 2000 + (101325 - 0) x 0.5 = 100000 + 50662.5 = 150662.5 N = 150.6625 kN"
+      }
+    }
+  ]
+}

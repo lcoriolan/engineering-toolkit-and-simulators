@@ -1,0 +1,3183 @@
+{
+  "section": "bolted",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k bolted",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "bolted.tightening_torque": {
+      "title": "Bolt preload from tightening torque (T = K\u00b7F\u00b7d)",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "tightening torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "nut factor (0.2 typical dry steel, lubricated ~0.15)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_i",
+          "unit": "N",
+          "desc": "preload (clamping force)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "nominal bolt diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = K*F_i*d"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T"
+      ],
+      "assumptions": [
+        "T = K\u00b7F_i\u00b7d relates torque to preload through the nut factor K (a user input that depends on thread friction and finish); scatter of \u00b125 % is common. For a reliable preload use torque-angle or direct tensioning."
+      ],
+      "method_references": [
+        "T = K F d (short-form torque\u2013preload relation, recalled)"
+      ],
+      "synthetic_example": {
+        "K": 0.2,
+        "F_i": 20000.0,
+        "d": 0.012
+      }
+    },
+    "bolted.tensile_stress_area": {
+      "title": "Bolt tensile stress area (ISO metric)",
+      "variables": [
+        {
+          "name": "A_t",
+          "unit": "m^2",
+          "desc": "tensile stress area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "nominal (major) diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "m",
+          "desc": "thread pitch",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "A_t = pi/4*(d - 0.9382*p)**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A_t"
+      ],
+      "assumptions": [
+        "ISO metric (coarse and fine): At = \u03c0/4 (d \u2212 0.9382 p)\u00b2, the area of the mean of the pitch and minor diameters. Unified (UN) threads use At = 0.7854 (d \u2212 0.9743/n)\u00b2 with d in inches and n threads/in \u2014 not computed here."
+      ],
+      "method_references": [
+        "ISO metric tensile stress area At = \u03c0/4 (d \u2212 0.9382 p)\u00b2 (recalled)"
+      ],
+      "synthetic_example": {
+        "d": 0.012,
+        "p": 0.00175
+      }
+    },
+    "bolted.bolt_stiffness": {
+      "title": "Bolt stiffness (threaded + unthreaded portions)",
+      "variables": [
+        {
+          "name": "k_b",
+          "unit": "N/m",
+          "desc": "bolt axial stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_d",
+          "unit": "m^2",
+          "desc": "major-diameter (unthreaded) area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "nominal diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_t",
+          "unit": "m^2",
+          "desc": "tensile stress area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus (bolt)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_t",
+          "unit": "m",
+          "desc": "threaded length in grip",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_d",
+          "unit": "m",
+          "desc": "unthreaded length in grip",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "A_d = pi*d**2/4",
+        "k_b = A_d*A_t*E/(A_d*L_t + A_t*L_d)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A_d",
+        "k_b"
+      ],
+      "assumptions": [
+        "Two springs in series (threaded and unthreaded shank): 1/k_b = L_d/(A_d E) + L_t/(A_t E). Head and nut flexibility are neglected."
+      ],
+      "method_references": [
+        "Bolt stiffness k_b = A_d A_t E / (A_d L_t + A_t L_d) (Shigley form, recalled)"
+      ],
+      "synthetic_example": {
+        "d": 0.012,
+        "A_t": 8.43e-05,
+        "E": 200000000000.0,
+        "L_t": 0.03,
+        "L_d": 0.03
+      }
+    },
+    "bolted.member_stiffness_frustum": {
+      "title": "Member stiffness (Shigley 30\u00b0 cone frustum)",
+      "variables": [
+        {
+          "name": "k_m",
+          "unit": "N/m",
+          "desc": "member (clamped material) stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus (member)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "bolt diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "washer/head face diameter (\u22481.5d)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "rad",
+          "desc": "frustum half-apex angle (30\u00b0 typical)",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "grip length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _frustum(values):\n    \"\"\"Member stiffness of a joint with two equal clamped members (equal-member two-frustum form).\n\n    One frustum grows from the head and one from the nut, each of length L/2, in series (hence the\n    factor 2 in the denominator):\n\n    k_m = \u03c0 E d tan\u03b1 / (2 ln[ ((L tan\u03b1 + D \u2212 d)(D + d)) / ((L tan\u03b1 + D + d)(D \u2212 d)) ])\n\n    with D the washer/head face diameter, \u03b1 the cone half-apex angle (\u224830\u00b0), d the bolt diameter and\n    L the total grip length.\n    \"\"\"\n    E, d, D, alpha, L = values['E'], values['d'], values['D'], values['alpha'], values['L']\n    if D <= d:\n        raise MechError('member_stiffness_frustum: washer face diameter D must exceed the bolt diameter d')\n    t = math.tan(alpha)\n    if L * t + D - d <= 0:\n        raise MechError('member_stiffness_frustum: L\u00b7tan(alpha) + D \u2212 d must be positive')\n    arg = ((L * t + D - d) * (D + d)) / ((L * t + D + d) * (D - d))\n    den = 2.0 * math.log(arg)\n    if den <= 0:\n        raise MechError('member_stiffness_frustum: frustum geometry gives a non-positive stiffness')\n    return {'k_m': PI * E * d * t / den}\n",
+        "source": "bolted.py",
+        "line": 29
+      },
+      "outputs": [
+        "k_m"
+      ],
+      "assumptions": [
+        "Axisymmetric frustum, one from the head and one from the nut (two equal clamped members, L/2 each, in series) with half-apex angle \u03b1 (\u224830\u00b0 for steel). Requires D > d. Valid while the frusta do not overlap the full grip."
+      ],
+      "method_references": [
+        "Shigley frustum member stiffness (closed form, recalled)"
+      ],
+      "synthetic_example": {
+        "E": 200000000000.0,
+        "d": 0.012,
+        "D": 0.018,
+        "alpha": 0.5235987755982988,
+        "L": 0.03
+      }
+    },
+    "bolted.member_stiffness_wileman": {
+      "title": "Member stiffness (Wileman exponential)",
+      "variables": [
+        {
+          "name": "k_m",
+          "unit": "N/m",
+          "desc": "member stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus (member)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "bolt diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "grip length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "",
+          "desc": "Wileman coefficient A (tabulated material/aspect input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "B",
+          "unit": "",
+          "desc": "Wileman coefficient B (tabulated material/aspect input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "k_m = E*d*A*exp(B*d/L)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "k_m"
+      ],
+      "assumptions": [
+        "Wileman\u2013Choudury\u2013Green empirical member stiffness k_m = E\u00b7d\u00b7A\u00b7exp(B\u00b7d/L); A and B are tabulated (material and aspect ratio) user inputs."
+      ],
+      "method_references": [
+        "Wileman exponential member stiffness (recalled)"
+      ],
+      "synthetic_example": {
+        "E": 200000000000.0,
+        "d": 0.012,
+        "A": 0.787,
+        "B": 0.629,
+        "L": 0.03
+      }
+    },
+    "bolted.joint_constant": {
+      "title": "Joint constant (C = kb/(kb + km))",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "joint constant (fraction of the external load carried by the bolt)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_b",
+          "unit": "N/m",
+          "desc": "bolt stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_m",
+          "unit": "N/m",
+          "desc": "member stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "C = k_b/(k_b + k_m)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "C"
+      ],
+      "assumptions": [
+        "C is the fraction of an external tensile load that adds to the bolt; (1 \u2212 C) unloads the member. Soft members (small k_m) give a large C."
+      ],
+      "method_references": [
+        "C = k_b/(k_b + k_m)"
+      ],
+      "synthetic_example": {
+        "k_b": 320000000.0,
+        "k_m": 2400000000.0
+      }
+    },
+    "bolted.preload": {
+      "title": "Preload from proof strength, and load/separation factors",
+      "variables": [
+        {
+          "name": "F_i",
+          "unit": "N",
+          "desc": "preload",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "desc": "preload as a fraction of proof load (\u22480.75 reusable, \u22480.9 permanent)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_t",
+          "unit": "m^2",
+          "desc": "tensile stress area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sp",
+          "unit": "Pa",
+          "desc": "proof strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_L",
+          "unit": "",
+          "desc": "load factor (margin to proof strength under external load)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_sep",
+          "unit": "",
+          "desc": "factor of safety against joint separation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "joint constant",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "N",
+          "desc": "applied external (tensile) load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F_i = k*A_t*Sp",
+        "n_L = (Sp*A_t - F_i)/(C*P)",
+        "n_sep = F_i/((1 - C)*P)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F_i",
+        "n_L",
+        "n_sep"
+      ],
+      "assumptions": [
+        "Preload as a fraction k of the proof load Sp\u00b7A_t (k \u2248 0.75 for reusable joints, \u2248 0.9 for permanent joints \u2014 guidance, not a built-in value). The load factor n_L = (Sp A_t \u2212 F_i)/(C P) is the factor by which the external load could grow before the bolt reaches proof strength; n_sep = F_i/((1\u2212C) P) guards separation."
+      ],
+      "method_references": [
+        "Preload F_i = k A_t Sp and the load/separation factors (recalled)"
+      ],
+      "synthetic_example": {
+        "k": 0.75,
+        "A_t": 8.43e-05,
+        "Sp": 600000000.0,
+        "C": 0.1176,
+        "P": 10000.0
+      }
+    },
+    "bolted.load_sharing": {
+      "title": "External-load sharing and separation load",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "joint constant",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_b",
+          "unit": "N",
+          "desc": "bolt load under external load P",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_m",
+          "unit": "N",
+          "desc": "member load under external load P",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_sep",
+          "unit": "N",
+          "desc": "external load that just separates the joint",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_b",
+          "unit": "N/m",
+          "desc": "bolt stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_m",
+          "unit": "N/m",
+          "desc": "member stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_i",
+          "unit": "N",
+          "desc": "preload",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "N",
+          "desc": "applied external (tensile) load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _load_sharing(values):\n    \"\"\"External-load sharing, separation load and a separation warning for a preloaded joint.\n\n    C = k_b/(k_b + k_m); the bolt carries F_i + C P and the member F_i \u2212 (1\u2212C) P. When P exceeds\n    P_sep = F_i/(1\u2212C) the member load reaches zero \u2014 the joint separates and the bolt carries the\n    full external load \u2014 which is surfaced as a warning.\n    \"\"\"\n    kb, km, Fi, P = values['k_b'], values['k_m'], values['F_i'], values['P']\n    if kb <= 0 or km <= 0:\n        raise MechError('load_sharing: bolt and member stiffness must be positive')\n    if Fi < 0 or P < 0:\n        raise MechError('load_sharing: preload and external load must be non-negative')\n    C = kb / (kb + km)\n    F_b = Fi + C * P\n    F_m = Fi - (1.0 - C) * P\n    P_sep = Fi / (1.0 - C)\n    out = {'F_b': F_b, 'F_m': F_m, 'C': C, 'P_sep': P_sep}\n    if P > P_sep:\n        out['_warnings'] = ['load_sharing: P exceeds P_sep \u2014 the joint has separated (F_m <= 0) and '\n                            'the bolt carries the full external load P']\n    return out\n",
+        "source": "bolted.py",
+        "line": 85
+      },
+      "outputs": [
+        "F_b",
+        "F_m",
+        "C",
+        "P_sep"
+      ],
+      "assumptions": [
+        "Linear elastic bolt and member. The joint separates (loses clamp) when the member load reaches zero, at P = F_i/(1 \u2212 C); a warning is raised when P > P_sep (the member load F_m goes negative and the bolt carries the full external load)."
+      ],
+      "method_references": [
+        "Bolt/member load sharing: F_b = F_i + C P, F_m = F_i \u2212 (1\u2212C) P"
+      ],
+      "synthetic_example": {
+        "k_b": 320000000.0,
+        "k_m": 2400000000.0,
+        "F_i": 20000.0,
+        "P": 10000.0
+      }
+    },
+    "bolted.bolt_fatigue": {
+      "title": "Bolt fatigue safety factor (Goodman) and separation",
+      "variables": [
+        {
+          "name": "F_i",
+          "unit": "N",
+          "desc": "preload",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "joint constant",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Pmax",
+          "unit": "N",
+          "desc": "maximum external load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Pmin",
+          "unit": "N",
+          "desc": "minimum external load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_t",
+          "unit": "m^2",
+          "desc": "tensile stress area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Se",
+          "unit": "Pa",
+          "desc": "bolt endurance limit (fully corrected)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sut",
+          "unit": "Pa",
+          "desc": "bolt ultimate tensile strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_fatigue",
+          "unit": "",
+          "desc": "Goodman factor of safety on the bolt",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_sep",
+          "unit": "",
+          "desc": "factor of safety against joint separation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_a",
+          "unit": "Pa",
+          "desc": "alternating bolt stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3a",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_m",
+          "unit": "Pa",
+          "desc": "midrange bolt stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3m",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _bolt_fatigue(values):\n    \"\"\"Bolt fatigue by the constant-preload Goodman line, plus the separation factor of safety.\n\n    The bolt stress oscillates between \u03c3i = F_i/A_t and \u03c3i + C\u00b7Pmax/A_t, so the alternating stress is\n    \u03c3a = C(Pmax \u2212 Pmin)/(2 A_t) and the midrange stress is \u03c3m = C(Pmax + Pmin)/(2 A_t) + \u03c3i. With the\n    Goodman line drawn from the preload (the preload is always present), the factor of safety is\n    n_f = Se(Sut \u2212 \u03c3i) / (Sut \u03c3a + Se(\u03c3m \u2212 \u03c3i)).\n    \"\"\"\n    Fi, C, Pmax, Pmin, At, Se, Sut = (values[k] for k in ('F_i', 'C', 'Pmax', 'Pmin', 'A_t', 'Se', 'Sut'))\n    if Pmax < Pmin:\n        raise MechError('bolt_fatigue: Pmax must be >= Pmin')\n    if not (0.0 < C < 1.0):\n        raise MechError('bolt_fatigue: the joint constant C must lie between 0 and 1')\n    if Pmax <= 0:\n        raise MechError('bolt_fatigue: Pmax must be positive')\n    if At <= 0 or Se <= 0 or Sut <= 0:\n        raise MechError('bolt_fatigue: A_t, Se and Sut must be positive')\n    sigma_i = Fi / At\n    sigma_a = C * (Pmax - Pmin) / (2.0 * At)\n    sigma_m = C * (Pmax + Pmin) / (2.0 * At) + sigma_i\n    n_sep = Fi / ((1.0 - C) * Pmax)   # separation when F_m = F_i \u2212 (1\u2212C)\u00b7Pmax reaches zero\n    out = {'sigma_a': sigma_a, 'sigma_m': sigma_m, 'n_sep': n_sep}\n    if Pmax == Pmin:\n        # static (no alternating) load: the fatigue factor of safety is undefined\n        out['n_fatigue'] = None\n        out['_warnings'] = ['bolt_fatigue: Pmin == Pmax (static load, \u03c3a = 0) \u2014 the fatigue factor of '\n                            'safety is undefined; use a static strength check instead']\n    else:\n        out['n_fatigue'] = Se * (Sut - sigma_i) / (Sut * sigma_a + Se * (sigma_m - sigma_i))\n    return out\n",
+        "source": "bolted.py",
+        "line": 53
+      },
+      "outputs": [
+        "n_fatigue",
+        "sigma_a",
+        "sigma_m",
+        "n_sep"
+      ],
+      "assumptions": [
+        "External load fluctuates between Pmin and Pmax; the bolt sees C\u00b7P of it. \u03c3i = F_i/A_t; \u03c3a = C\u00b7(Pmax\u2212Pmin)/(2 A_t); \u03c3m = C\u00b7(Pmax+Pmin)/(2 A_t) + \u03c3i. The constant-preload Goodman form n_f = Se(Sut\u2212\u03c3i)/(Sut \u03c3a + Se(\u03c3m\u2212\u03c3i)) is used (the preload is always present). Separation is guarded by n_sep = F_i/((1\u2212C)\u00b7Pmax). Pmin = Pmax (static) gives n_fatigue = null with a note."
+      ],
+      "method_references": [
+        "Bolt fatigue with constant preload and joint separation (recalled)"
+      ],
+      "synthetic_example": {
+        "F_i": 20000.0,
+        "C": 0.1176,
+        "Pmax": 10000.0,
+        "Pmin": 0.0,
+        "A_t": 8.43e-05,
+        "Se": 180000000.0,
+        "Sut": 600000000.0
+      }
+    },
+    "bolted.thread_stripping": {
+      "title": "Thread stripping area and shear stress",
+      "variables": [
+        {
+          "name": "A_strip",
+          "unit": "m^2",
+          "desc": "thread stripping (shear) area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_strip",
+          "unit": "Pa",
+          "desc": "thread shear stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "axial load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_min",
+          "unit": "m",
+          "desc": "minor diameter (external thread root)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_e",
+          "unit": "m",
+          "desc": "length of engagement",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "",
+          "desc": "engaged-fraction of thread in shear (coarse user input, \u22480.5)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "A_strip = pi*d_min*L_e*f",
+        "tau_strip = F/A_strip"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A_strip",
+        "tau_strip"
+      ],
+      "assumptions": [
+        "Simple cylinder model of the external-thread shear area: A = \u03c0\u00b7d_min\u00b7L_e\u00b7f with f a coarse engaged-fraction user input (\u22480.5). A refined treatment balances the internal (nut) and external (bolt) thread shear areas; their diameter ratio w_i/w_o \u2248 0.75\u20130.88 sets the equal-strength nut. Exact ASME B1.1 / ISO 898 formulas give precise stripping areas."
+      ],
+      "method_references": [
+        "Thread shear area approximation (recalled)"
+      ],
+      "synthetic_example": {
+        "F": 20000.0,
+        "d_min": 0.01,
+        "L_e": 0.012,
+        "f": 0.5
+      }
+    },
+    "bolted.bolt_group_eccentric": {
+      "title": "Bolt group in shear with eccentric loading (elastic method)",
+      "variables": [
+        {
+          "name": "bolts",
+          "unit": "",
+          "desc": "bolt coordinates [[x (m), y (m)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "F_x",
+          "unit": "N",
+          "desc": "applied load x-component",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_y",
+          "unit": "N",
+          "desc": "applied load y-component",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_p",
+          "unit": "m",
+          "desc": "x of the load application point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_p",
+          "unit": "m",
+          "desc": "y of the load application point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "moment",
+          "unit": "N*m",
+          "desc": "eccentric moment about the bolt centroid",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "direct_x",
+          "unit": "N",
+          "desc": "direct shear per bolt, x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "direct_y",
+          "unit": "N",
+          "desc": "direct shear per bolt, y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "max_shear",
+          "unit": "N",
+          "desc": "largest bolt resultant shear",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "bolt_forces",
+          "unit": "",
+          "desc": "per-bolt [[Fx (N), Fy (N), F (N)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _bolt_group(values):\n    \"\"\"Elastic (torsion) analysis of a bolt group under an eccentric shear load.\n\n    Direct shear is shared equally; the moment M about the bolt centroid is resisted by shear\n    proportional to each bolt's distance from the centroid (elastic method, no instantaneous-centre\n    iteration). Returns per-bolt resultants and the largest one.\n    \"\"\"\n    bolts = values['bolts']\n    if not isinstance(bolts, list) or len(bolts) < 2:\n        raise MechError('bolt_group_eccentric: need at least two bolt coordinates [[x, y], ...]')\n    n = len(bolts)\n    pts = []\n    for row in bolts:\n        if len(row) != 2:\n            raise MechError('bolt_group_eccentric: each bolt must be [x_m, y_m]')\n        pts.append((float(row[0]), float(row[1])))\n    Fx, Fy = values['F_x'], values['F_y']\n    xp, yp = values['x_p'], values['y_p']\n    xc = sum(x for x, _ in pts) / n\n    yc = sum(y for _, y in pts) / n\n    M = (xp - xc) * Fy - (yp - yc) * Fx        # CCW positive, r \u00d7 F\n    sumr2 = sum((x - xc) ** 2 + (y - yc) ** 2 for x, y in pts)\n    if sumr2 <= 0:\n        raise MechError('bolt_group_eccentric: all bolts coincide with the centroid')\n    dx, dy = Fx / n, Fy / n\n    rows, max_shear = [], 0.0\n    for x, y in pts:\n        rx, ry = x - xc, y - yc\n        ftx = -M * ry / sumr2\n        fty = M * rx / sumr2\n        bx, by = dx + ftx, dy + fty\n        f = math.hypot(bx, by)\n        max_shear = max(max_shear, f)\n        rows.append([bx, by, f])\n    return {'moment': M, 'direct_x': dx, 'direct_y': dy, 'max_shear': max_shear, 'bolt_forces': rows}\n",
+        "source": "bolted.py",
+        "line": 108
+      },
+      "outputs": [
+        "moment",
+        "direct_x",
+        "direct_y",
+        "max_shear",
+        "bolt_forces"
+      ],
+      "assumptions": [
+        "Elastic (torsion) method: equal direct shear F/n plus torsional shear proportional to distance from the centroid (no instantaneous-centre plastic iteration). The eccentric moment is M = (x_p\u2212x\u0304)F_y \u2212 (y_p\u2212\u0233)F_x."
+      ],
+      "method_references": [
+        "Elastic analysis of an eccentrically loaded bolt group (recalled)"
+      ],
+      "synthetic_example": {
+        "bolts": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.1,
+            0.0
+          ],
+          [
+            0.1,
+            0.1
+          ],
+          [
+            0.0,
+            0.1
+          ]
+        ],
+        "F_x": 3000.0,
+        "F_y": 4000.0,
+        "x_p": 0.2,
+        "y_p": 0.15
+      }
+    },
+    "bolted.rivet_shear": {
+      "title": "Rivet shear and bearing stress",
+      "variables": [
+        {
+          "name": "tau",
+          "unit": "Pa",
+          "desc": "rivet shear stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_b",
+          "unit": "Pa",
+          "desc": "rivet bearing stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3b",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "load transferred",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "",
+          "desc": "shear planes per rivet (1 or 2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of rivets",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "rivet diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "plate thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "tau = F/(m*n*pi*d**2/4)",
+        "sigma_b = F/(n*d*t)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "tau",
+        "sigma_b"
+      ],
+      "assumptions": [
+        "Average stresses: shear on m\u00b7n rivet cross-sections; bearing on the projected area n\u00b7d\u00b7t of the plate. Single shear m = 1, double (butt with cover plates) m = 2."
+      ],
+      "method_references": [
+        "Rivet shear \u03c4 = F/(m\u00b7n\u00b7\u03c0d\u00b2/4); bearing \u03c3b = F/(n\u00b7d\u00b7t)"
+      ],
+      "synthetic_example": {
+        "F": 20000.0,
+        "m": 1,
+        "n": 4,
+        "d": 0.008,
+        "t": 0.006
+      }
+    },
+    "bolted.rivet_efficiency": {
+      "title": "Riveted joint strength and efficiency (per pitch)",
+      "variables": [
+        {
+          "name": "F_shear",
+          "unit": "N",
+          "desc": "joint strength in rivet shear (per pitch)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_bearing",
+          "unit": "N",
+          "desc": "joint strength in bearing (per pitch)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_tearing",
+          "unit": "N",
+          "desc": "joint strength in plate tearing (per pitch)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_solid",
+          "unit": "N",
+          "desc": "strength of the solid (unpierced) plate per pitch",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "joint efficiency (min strength / solid-plate strength)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "",
+          "desc": "shear planes per rivet (1 or 2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "rivets per pitch length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "rivet diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "plate thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "m",
+          "desc": "pitch (rivet spacing)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_allow",
+          "unit": "Pa",
+          "desc": "allowable rivet shear stress",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_b_allow",
+          "unit": "Pa",
+          "desc": "allowable bearing stress",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_t_allow",
+          "unit": "Pa",
+          "desc": "allowable plate tensile stress",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F_shear = m*n*pi*d**2/4*tau_allow",
+        "F_bearing = n*d*t*sigma_b_allow",
+        "F_tearing = (p - d)*t*sigma_t_allow",
+        "F_solid = p*t*sigma_t_allow",
+        "eta = Min(F_shear, F_bearing, F_tearing)/F_solid"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F_shear",
+        "F_bearing",
+        "F_tearing",
+        "F_solid",
+        "eta"
+      ],
+      "assumptions": [
+        "Per-pitch strengths with n rivets per pitch length p: shear m\u00b7n\u00b7\u03c0d\u00b2/4\u00b7\u03c4_allow, bearing n\u00b7d\u00b7t\u00b7\u03c3b, tearing across the outer-row net section (p \u2212 d)\u00b7t\u00b7\u03c3t (one hole per pitch in the outer row), solid plate p\u00b7t\u00b7\u03c3t. The joint efficiency is \u03b7 = min(F_shear, F_bearing, F_tearing)/F_solid. Requires p > d for a positive net section."
+      ],
+      "method_references": [
+        "Riveted joint strengths and efficiency (standard forms, recalled)"
+      ],
+      "synthetic_example": {
+        "m": 1,
+        "n": 1,
+        "d": 0.008,
+        "t": 0.006,
+        "p": 0.024,
+        "tau_allow": 60000000.0,
+        "sigma_b_allow": 150000000.0,
+        "sigma_t_allow": 110000000.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "bolted-001",
+      "calculator": "bolted.tightening_torque",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K": 0.2,
+        "F_i": "20 kN",
+        "d": "12 mm"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expected_as_specified": {
+        "T": "48 N*m"
+      },
+      "expected_SI": {
+        "T": 48.0
+      },
+      "actual_SI": {
+        "T": {
+          "value": 48.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc bolted.tightening_torque (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.096,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = K\u00b7F\u00b7d = 0.2\u00b720000\u00b70.012 = 48 N\u00b7m"
+      }
+    },
+    {
+      "id": "bolted-002",
+      "calculator": "bolted.tightening_torque",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K": 0.2,
+        "T": "48 N*m",
+        "d": "12 mm"
+      },
+      "solve_for": [
+        "F_i"
+      ],
+      "expected_as_specified": {
+        "F_i": "20 kN"
+      },
+      "expected_SI": {
+        "F_i": 20000.0
+      },
+      "actual_SI": {
+        "F_i": {
+          "value": 19999.999999999996,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.tightening_torque (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_i": {
+          "absolute_error": 3.637978807091713e-12,
+          "relative_error": 1.8189894035458566e-16,
+          "allowed_absolute_error": 40.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F_i = T/(K\u00b7d) = 48/(0.2\u00b70.012) = 20000 N"
+      }
+    },
+    {
+      "id": "bolted-003",
+      "calculator": "bolted.tensile_stress_area",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "12 mm",
+        "p": "1.75 mm"
+      },
+      "solve_for": [
+        "A_t"
+      ],
+      "expected_as_specified": {
+        "A_t": "84.2664 mm^2"
+      },
+      "expected_SI": {
+        "A_t": 8.42664e-05
+      },
+      "actual_SI": {
+        "A_t": {
+          "value": 8.426636752380864e-05,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc bolted.tensile_stress_area (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A_t": {
+          "absolute_error": 3.247619135963477e-11,
+          "relative_error": 3.8539906011927375e-07,
+          "allowed_absolute_error": 1.685328e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "At = \u03c0/4\u00b7(0.012 \u2212 0.9382\u00b70.00175)\u00b2 = \u03c0/4\u00b7(0.01035815)\u00b2 = 0.785398\u00b71.07291e-4 = 8.42664e-5 m\u00b2 (M12 \u00d7 1.75)"
+      }
+    },
+    {
+      "id": "bolted-004",
+      "calculator": "bolted.bolt_stiffness",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "12 mm",
+        "A_t": "84.3 mm^2",
+        "E": "200 GPa",
+        "L_t": "30 mm",
+        "L_d": "30 mm"
+      },
+      "solve_for": [
+        "A_d",
+        "k_b"
+      ],
+      "expected_as_specified": {
+        "A_d": "113.097 mm^2",
+        "k_b": "321.99 MN/m"
+      },
+      "expected_SI": {
+        "A_d": 0.00011309699999999999,
+        "k_b": 321990000.0
+      },
+      "actual_SI": {
+        "A_d": {
+          "value": 0.00011309733552923255,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_stiffness (symbolic)"
+        },
+        "k_b": {
+          "value": 321993720.92343163,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_stiffness (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A_d": {
+          "absolute_error": 3.355292325582385e-10,
+          "relative_error": 2.9667385744824224e-06,
+          "allowed_absolute_error": 2.26194e-07,
+          "passed": true
+        },
+        "k_b": {
+          "absolute_error": 3720.923431634903,
+          "relative_error": 1.1556021713826215e-05,
+          "allowed_absolute_error": 643980.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A_d = \u03c0\u00b70.012\u00b2/4 = 1.13097e-4 m\u00b2; k_b = A_d\u00b7A_t\u00b7E/(A_d\u00b7L_t + A_t\u00b7L_d) = 1.13097e-4\u00b78.43e-5\u00b7200e9/(0.03\u00b7(1.13097e-4 + 8.43e-5)) = 1906.82/5.92191e-6 = 3.2199e8 N/m"
+      }
+    },
+    {
+      "id": "bolted-005",
+      "calculator": "bolted.member_stiffness_frustum",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "200 GPa",
+        "d": "12 mm",
+        "D": "18 mm",
+        "alpha": "30 deg",
+        "L": "30 mm"
+      },
+      "solve_for": [
+        "k_m"
+      ],
+      "expected_as_specified": {
+        "k_m": "2413.5 MN/m"
+      },
+      "expected_SI": {
+        "k_m": 2413500000.0
+      },
+      "actual_SI": {
+        "k_m": {
+          "value": 2413498985.8184805,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc bolted.member_stiffness_frustum (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "k_m": {
+          "absolute_error": 1014.1815195083618,
+          "relative_error": 4.202119409605808e-07,
+          "allowed_absolute_error": 4827000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "tan30\u00b0 = 0.577350; Lt = 0.0173205; arg = (0.0233205\u00b70.030)/(0.0473205\u00b70.006) = 6.99615e-4/2.83923e-4 = 2.46410; k_m = \u03c0\u00b7200e9\u00b70.012\u00b70.577350/(2\u00b7ln2.46410) = 4.35239e9/(2\u00b70.901889) = 2.41350e9 N/m"
+      }
+    },
+    {
+      "id": "bolted-006",
+      "calculator": "bolted.member_stiffness_wileman",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "200 GPa",
+        "d": "12 mm",
+        "A": 0.787,
+        "B": 0.629,
+        "L": "30 mm"
+      },
+      "solve_for": [
+        "k_m"
+      ],
+      "expected_as_specified": {
+        "k_m": "2429.2 MN/m"
+      },
+      "expected_SI": {
+        "k_m": 2429200000.0
+      },
+      "actual_SI": {
+        "k_m": {
+          "value": 2429150740.5694065,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc bolted.member_stiffness_wileman (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "k_m": {
+          "absolute_error": 49259.4305934906,
+          "relative_error": 2.0278046514692327e-05,
+          "allowed_absolute_error": 4858400.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "k_m = E\u00b7d\u00b7A\u00b7exp(B\u00b7d/L) = 200e9\u00b70.012\u00b70.787\u00b7exp(0.629\u00b70.4) = 1.8888e9\u00b7exp(0.2516) = 1.8888e9\u00b71.28610 = 2.42915e9 N/m"
+      }
+    },
+    {
+      "id": "bolted-007",
+      "calculator": "bolted.joint_constant",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k_b": "320 MN/m",
+        "k_m": "2.4 GN/m"
+      },
+      "solve_for": [
+        "C"
+      ],
+      "expected_as_specified": {
+        "C": 0.117647
+      },
+      "expected_SI": {
+        "C": 0.117647
+      },
+      "actual_SI": {
+        "C": {
+          "value": 0.11764705882352941,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.joint_constant (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "C": {
+          "absolute_error": 5.882352940855817e-08,
+          "relative_error": 5.000002499728695e-07,
+          "allowed_absolute_error": 0.00023529400000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C = 3.2e8/(3.2e8 + 2.4e9) = 3.2e8/2.72e9 = 0.117647"
+      }
+    },
+    {
+      "id": "bolted-008",
+      "calculator": "bolted.preload",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k": 0.75,
+        "A_t": "84.3 mm^2",
+        "Sp": "600 MPa",
+        "C": 0.1176,
+        "P": "10 kN"
+      },
+      "solve_for": [
+        "F_i",
+        "n_L",
+        "n_sep"
+      ],
+      "expected_as_specified": {
+        "F_i": "37.935 kN",
+        "n_L": 10.752551,
+        "n_sep": 4.299071
+      },
+      "expected_SI": {
+        "F_i": 37935.0,
+        "n_L": 10.752551,
+        "n_sep": 4.299071
+      },
+      "actual_SI": {
+        "F_i": {
+          "value": 37934.99999999999,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.preload (symbolic)"
+        },
+        "n_L": {
+          "value": 10.752551020408163,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.preload (symbolic)"
+        },
+        "n_sep": {
+          "value": 4.299070716228467,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.preload (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_i": {
+          "absolute_error": 7.275957614183426e-12,
+          "relative_error": 1.9180064885154675e-16,
+          "allowed_absolute_error": 75.87,
+          "passed": true
+        },
+        "n_L": {
+          "absolute_error": 2.0408162271223773e-08,
+          "relative_error": 1.8979833037968172e-09,
+          "allowed_absolute_error": 0.021505102,
+          "passed": true
+        },
+        "n_sep": {
+          "absolute_error": 2.8377153249437015e-07,
+          "relative_error": 6.600764037029632e-08,
+          "allowed_absolute_error": 0.008598142,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F_i = k\u00b7A_t\u00b7Sp = 0.75\u00b784.3e-6\u00b7600e6 = 0.75\u00b750580 = 37935 N; n_L = (Sp A_t \u2212 F_i)/(C P) = (50580 \u2212 37935)/(0.1176\u00b710000) = 12645/1176 = 10.7526; n_sep = F_i/((1\u2212C) P) = 37935/8824 = 4.29907"
+      }
+    },
+    {
+      "id": "bolted-009",
+      "calculator": "bolted.preload",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k": 0.9,
+        "A_t": "84.3 mm^2",
+        "Sp": "600 MPa",
+        "C": 0.1176,
+        "P": "10 kN"
+      },
+      "solve_for": [
+        "F_i",
+        "n_L",
+        "n_sep"
+      ],
+      "expected_as_specified": {
+        "F_i": "45.522 kN",
+        "n_L": 4.30102,
+        "n_sep": 5.158885
+      },
+      "expected_SI": {
+        "F_i": 45522.0,
+        "n_L": 4.30102,
+        "n_sep": 5.158885
+      },
+      "actual_SI": {
+        "F_i": {
+          "value": 45521.99999999999,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.preload (symbolic)"
+        },
+        "n_L": {
+          "value": 4.301020408163265,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.preload (symbolic)"
+        },
+        "n_sep": {
+          "value": 5.158884859474161,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.preload (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_i": {
+          "absolute_error": 7.275957614183426e-12,
+          "relative_error": 1.5983387404295562e-16,
+          "allowed_absolute_error": 91.044,
+          "passed": true
+        },
+        "n_L": {
+          "absolute_error": 4.081632649644007e-07,
+          "relative_error": 9.489917855866764e-08,
+          "allowed_absolute_error": 0.00860204,
+          "passed": true
+        },
+        "n_sep": {
+          "absolute_error": 1.4052583896528859e-07,
+          "relative_error": 2.7239575793080983e-08,
+          "allowed_absolute_error": 0.01031777,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F_i = 0.9\u00b784.3e-6\u00b7600e6 = 45522 N; n_L = (50580 \u2212 45522)/1176 = 5058/1176 = 4.30102; n_sep = 45522/8824 = 5.15888"
+      }
+    },
+    {
+      "id": "bolted-010",
+      "calculator": "bolted.preload",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A_t": "84.3 mm^2",
+        "Sp": "600 MPa",
+        "C": 0.1176,
+        "P": "10 kN",
+        "F_i": "37.935 kN"
+      },
+      "solve_for": [
+        "k",
+        "n_L",
+        "n_sep"
+      ],
+      "expected_as_specified": {
+        "k": 0.75
+      },
+      "expected_SI": {
+        "k": 0.75
+      },
+      "actual_SI": {
+        "k": {
+          "value": 0.7500000000000001,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.preload (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "k": {
+          "absolute_error": 1.1102230246251565e-16,
+          "relative_error": 1.4802973661668753e-16,
+          "allowed_absolute_error": 0.0015,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "k = F_i/(A_t\u00b7Sp) = 37935/(84.3e-6\u00b7600e6) = 37935/50580 = 0.75"
+      }
+    },
+    {
+      "id": "bolted-011",
+      "calculator": "bolted.load_sharing",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k_b": "320 MN/m",
+        "k_m": "2.4 GN/m",
+        "F_i": "20 kN",
+        "P": "10 kN"
+      },
+      "solve_for": [
+        "F_b",
+        "F_m",
+        "C",
+        "P_sep"
+      ],
+      "expected_as_specified": {
+        "C": 0.117647,
+        "F_b": "21.1765 kN",
+        "F_m": "11.1765 kN",
+        "P_sep": "22.6667 kN"
+      },
+      "expected_SI": {
+        "C": 0.117647,
+        "F_b": 21176.5,
+        "F_m": 11176.5,
+        "P_sep": 22666.699999999997
+      },
+      "actual_SI": {
+        "C": {
+          "value": 0.11764705882352941,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.load_sharing (procedure)"
+        },
+        "F_b": {
+          "value": 21176.470588235294,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.load_sharing (procedure)"
+        },
+        "F_m": {
+          "value": 11176.470588235294,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.load_sharing (procedure)"
+        },
+        "P_sep": {
+          "value": 22666.666666666668,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.load_sharing (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "C": {
+          "absolute_error": 5.882352940855817e-08,
+          "relative_error": 5.000002499728695e-07,
+          "allowed_absolute_error": 0.00023529400000000001,
+          "passed": true
+        },
+        "F_b": {
+          "absolute_error": 0.02941176470631035,
+          "relative_error": 1.3888869598994333e-06,
+          "allowed_absolute_error": 42.353,
+          "passed": true
+        },
+        "F_m": {
+          "absolute_error": 0.02941176470631035,
+          "relative_error": 2.6315720222171834e-06,
+          "allowed_absolute_error": 22.353,
+          "passed": true
+        },
+        "P_sep": {
+          "absolute_error": 0.03333333332921029,
+          "relative_error": 1.4705860724856417e-06,
+          "allowed_absolute_error": 45.3334,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C = 3.2e8/2.72e9 = 0.117647; F_b = 20000 + 0.117647\u00b710000 = 21176.5 N; F_m = 20000 \u2212 (1\u22120.117647)\u00b710000 = 20000 \u2212 8823.53 = 11176.5 N; P_sep = 20000/0.882353 = 22666.7 N"
+      }
+    },
+    {
+      "id": "bolted-012",
+      "calculator": "bolted.load_sharing",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k_b": "320 MN/m",
+        "k_m": "2.4 GN/m",
+        "P": "10 kN",
+        "P_sep": "22.6667 kN"
+      },
+      "solve_for": [
+        "C",
+        "F_b",
+        "F_m",
+        "F_i"
+      ],
+      "expected_as_specified": {
+        "F_i": "20 kN"
+      },
+      "expected_SI": {
+        "F_i": 20000.0
+      },
+      "actual_SI": {
+        "F_i": {
+          "value": 20000.029411765096,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.load_sharing (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_i": {
+          "absolute_error": 0.029411765095574083,
+          "relative_error": 1.4705882547787042e-06,
+          "allowed_absolute_error": 40.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C = 0.117647; from P_sep = F_i/(1\u2212C): F_i = 22666.7\u00b70.882353 = 20000 N"
+      }
+    },
+    {
+      "id": "bolted-013",
+      "calculator": "bolted.bolt_fatigue",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F_i": "20 kN",
+        "C": 0.1176,
+        "Pmax": "10 kN",
+        "Pmin": "0 kN",
+        "A_t": "84.3 mm^2",
+        "Se": "180 MPa",
+        "Sut": "600 MPa"
+      },
+      "solve_for": [
+        "n_fatigue",
+        "sigma_a",
+        "sigma_m",
+        "n_sep"
+      ],
+      "expected_as_specified": {
+        "n_fatigue": 12.00157,
+        "n_sep": 2.266546,
+        "sigma_a": "6.975089 MPa",
+        "sigma_m": "244.223013 MPa"
+      },
+      "expected_SI": {
+        "n_fatigue": 12.00157,
+        "n_sep": 2.266546,
+        "sigma_a": 6975089.0,
+        "sigma_m": 244223013.0
+      },
+      "actual_SI": {
+        "n_fatigue": {
+          "value": 12.001569858712713,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_fatigue (procedure)"
+        },
+        "n_sep": {
+          "value": 2.2665457842248413,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_fatigue (procedure)"
+        },
+        "sigma_a": {
+          "value": 6975088.967971531,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_fatigue (procedure)"
+        },
+        "sigma_m": {
+          "value": 244223013.04863587,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_fatigue (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_fatigue": {
+          "absolute_error": 1.4128728587081696e-07,
+          "relative_error": 1.17724002668665e-08,
+          "allowed_absolute_error": 0.02400314,
+          "passed": true
+        },
+        "n_sep": {
+          "absolute_error": 2.1577515862958307e-07,
+          "relative_error": 9.519999092433292e-08,
+          "allowed_absolute_error": 0.004533092,
+          "passed": true
+        },
+        "sigma_a": {
+          "absolute_error": 0.03202846925705671,
+          "relative_error": 4.591836642809391e-09,
+          "allowed_absolute_error": 13950.178,
+          "passed": true
+        },
+        "sigma_m": {
+          "absolute_error": 0.04863587021827698,
+          "relative_error": 1.991453205856443e-10,
+          "allowed_absolute_error": 488446.026,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Constant-preload Goodman: \u03c3i = F_i/A_t = 20000/84.3e-6 = 237.248 MPa; \u03c3a = C(Pmax\u2212Pmin)/(2 A_t) = 0.1176\u00b710000/(2\u00b784.3e-6) = 6.97509 MPa; \u03c3m = \u03c3i + C(Pmax+Pmin)/(2 A_t) = 237.248 + 6.97509 = 244.223 MPa. n_f = Se(Sut\u2212\u03c3i)/(Sut \u03c3a + Se(\u03c3m\u2212\u03c3i)) = 180e6\u00b7(600e6\u2212237.248e6)/(600e6\u00b76.97509e6 + 180e6\u00b76.97509e6) = 6.52954e16/5.44057e15 = 12.0016; n_sep = 20000/(0.8824\u00b710000) = 2.26655"
+      }
+    },
+    {
+      "id": "bolted-014",
+      "calculator": "bolted.bolt_fatigue",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F_i": "20 kN",
+        "C": 0.1176,
+        "Pmax": "10 kN",
+        "Pmin": "10 kN",
+        "A_t": "84.3 mm^2",
+        "Se": "180 MPa",
+        "Sut": "600 MPa"
+      },
+      "solve_for": [
+        "n_fatigue",
+        "sigma_a",
+        "sigma_m",
+        "n_sep"
+      ],
+      "expected_as_specified": {
+        "n_fatigue": null,
+        "n_sep": 2.266546,
+        "sigma_a": "0 MPa",
+        "sigma_m": "251.198102 MPa"
+      },
+      "expected_SI": {
+        "n_fatigue": null,
+        "n_sep": 2.266546,
+        "sigma_a": 0.0,
+        "sigma_m": 251198102.0
+      },
+      "actual_SI": {
+        "n_fatigue": {
+          "value": null,
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_fatigue (procedure)",
+          "unit": ""
+        },
+        "n_sep": {
+          "value": 2.2665457842248413,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_fatigue (procedure)"
+        },
+        "sigma_a": {
+          "value": 0.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_fatigue (procedure)"
+        },
+        "sigma_m": {
+          "value": 251198102.0166074,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_fatigue (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_fatigue": {
+          "passed": true
+        },
+        "n_sep": {
+          "absolute_error": 2.1577515862958307e-07,
+          "relative_error": 9.519999092433292e-08,
+          "allowed_absolute_error": 0.004533092,
+          "passed": true
+        },
+        "sigma_a": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "sigma_m": {
+          "absolute_error": 0.01660740375518799,
+          "relative_error": 6.611277562593999e-11,
+          "allowed_absolute_error": 502396.204,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Static load (Pmin = Pmax): \u03c3a = 0, so the fatigue factor of safety is undefined (null, with a note). \u03c3m = \u03c3i + C\u00b7Pmax/A_t = 237.248 + 0.1176\u00b710000/84.3e-6 = 237.248 + 13.9502 = 251.198 MPa; n_sep = 2.26655"
+      }
+    },
+    {
+      "id": "bolted-015",
+      "calculator": "bolted.thread_stripping",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "20 kN",
+        "d_min": "10 mm",
+        "L_e": "12 mm",
+        "f": 0.5
+      },
+      "solve_for": [
+        "A_strip",
+        "tau_strip"
+      ],
+      "expected_as_specified": {
+        "A_strip": "188.496 mm^2",
+        "tau_strip": "106.103 MPa"
+      },
+      "expected_SI": {
+        "A_strip": 0.000188496,
+        "tau_strip": 106103000.0
+      },
+      "actual_SI": {
+        "A_strip": {
+          "value": 0.0001884955592153876,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc bolted.thread_stripping (symbolic)"
+        },
+        "tau_strip": {
+          "value": 106103295.39459689,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc bolted.thread_stripping (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A_strip": {
+          "absolute_error": 4.407846123960935e-10,
+          "relative_error": 2.3384295284573337e-06,
+          "allowed_absolute_error": 3.76992e-07,
+          "passed": true
+        },
+        "tau_strip": {
+          "absolute_error": 295.39459688961506,
+          "relative_error": 2.7840362373317913e-06,
+          "allowed_absolute_error": 212206.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A_strip = \u03c0\u00b70.010\u00b70.012\u00b70.5 = 1.88496e-4 m\u00b2; \u03c4 = 20000/1.88496e-4 = 1.06103e8 Pa"
+      }
+    },
+    {
+      "id": "bolted-016",
+      "calculator": "bolted.bolt_group_eccentric",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "bolts": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.1,
+            0.0
+          ],
+          [
+            0.1,
+            0.1
+          ],
+          [
+            0.0,
+            0.1
+          ]
+        ],
+        "F_x": "3 kN",
+        "F_y": "4 kN",
+        "x_p": 0.2,
+        "y_p": 0.15
+      },
+      "solve_for": [
+        "moment",
+        "direct_x",
+        "direct_y",
+        "max_shear",
+        "bolt_forces"
+      ],
+      "expected_as_specified": {
+        "moment": "300 N*m",
+        "direct_x": "750 N",
+        "direct_y": "1000 N",
+        "max_shear": "2304.886 N",
+        "bolt_forces": [
+          [
+            1500.0,
+            250.0,
+            1520.691
+          ],
+          [
+            1500.0,
+            1750.0,
+            2304.886
+          ],
+          [
+            0.0,
+            1750.0,
+            1750.0
+          ],
+          [
+            0.0,
+            250.0,
+            250.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "moment": 300.0,
+        "direct_x": 750.0,
+        "direct_y": 1000.0,
+        "max_shear": 2304.886,
+        "bolt_forces": [
+          [
+            1500.0,
+            250.0,
+            1520.691
+          ],
+          [
+            1500.0,
+            1750.0,
+            2304.886
+          ],
+          [
+            0.0,
+            1750.0,
+            1750.0
+          ],
+          [
+            0.0,
+            250.0,
+            250.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "moment": {
+          "value": 300.0000000000001,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_group_eccentric (procedure)"
+        },
+        "direct_x": {
+          "value": 750.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_group_eccentric (procedure)"
+        },
+        "direct_y": {
+          "value": 1000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_group_eccentric (procedure)"
+        },
+        "max_shear": {
+          "value": 2304.886114323222,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_group_eccentric (procedure)"
+        },
+        "bolt_forces": {
+          "value": [
+            [
+              1500.0000000000002,
+              249.99999999999977,
+              1520.6906325745551
+            ],
+            [
+              1500.0000000000002,
+              1750.0000000000002,
+              2304.886114323222
+            ],
+            [
+              -2.2737367544323206e-13,
+              1750.0000000000002,
+              1750.0000000000002
+            ],
+            [
+              -2.2737367544323206e-13,
+              249.99999999999977,
+              249.99999999999977
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_group_eccentric (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "moment": {
+          "absolute_error": 1.1368683772161603e-13,
+          "relative_error": 3.789561257387201e-16,
+          "allowed_absolute_error": 0.6,
+          "passed": true
+        },
+        "direct_x": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.5,
+          "passed": true
+        },
+        "direct_y": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.0,
+          "passed": true
+        },
+        "max_shear": {
+          "absolute_error": 0.00011432322207838297,
+          "relative_error": 4.9600380269732635e-08,
+          "allowed_absolute_error": 4.609772,
+          "passed": true
+        },
+        "bolt_forces": [
+          [
+            {
+              "absolute_error": 2.2737367544323206e-13,
+              "relative_error": 1.5158245029548803e-16,
+              "allowed_absolute_error": 3.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.2737367544323206e-13,
+              "relative_error": 9.094947017729283e-16,
+              "allowed_absolute_error": 0.5,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.000367425444892433,
+              "relative_error": 2.416174258231508e-07,
+              "allowed_absolute_error": 3.041382,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 2.2737367544323206e-13,
+              "relative_error": 1.5158245029548803e-16,
+              "allowed_absolute_error": 3.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.2737367544323206e-13,
+              "relative_error": 1.2992781453898976e-16,
+              "allowed_absolute_error": 3.5,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.00011432322207838297,
+              "relative_error": 4.9600380269732635e-08,
+              "allowed_absolute_error": 4.609772,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 2.2737367544323206e-13,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.2737367544323206e-13,
+              "relative_error": 1.2992781453898976e-16,
+              "allowed_absolute_error": 3.5,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.2737367544323206e-13,
+              "relative_error": 1.2992781453898976e-16,
+              "allowed_absolute_error": 3.5,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 2.2737367544323206e-13,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.2737367544323206e-13,
+              "relative_error": 9.094947017729283e-16,
+              "allowed_absolute_error": 0.5,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.2737367544323206e-13,
+              "relative_error": 9.094947017729283e-16,
+              "allowed_absolute_error": 0.5,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Centroid (0.05, 0.05), \u03a3r\u00b2 = 4\u00b70.005 = 0.02; M = (0.15)(4000) \u2212 (0.10)(3000) = 300 N\u00b7m; direct (750, 1000). Bolt (0,0): torsional = (300/0.02)(0.05, \u22120.05) = (750, \u2212750) \u2192 resultant (1500, 250), 1520.69 N; (0.1,0): + (750, 750) \u2192 (1500, 1750), 2304.89 N; (0.1,0.1): (\u2212750, 750) \u2192 (0, 1750), 1750 N; (0,0.1): (\u2212750, \u2212750) \u2192 (0, 250), 250 N. max = 2304.89 N"
+      }
+    },
+    {
+      "id": "bolted-017",
+      "calculator": "bolted.bolt_group_eccentric",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "bolts": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.1,
+            0.0
+          ],
+          [
+            0.1,
+            0.1
+          ],
+          [
+            0.0,
+            0.1
+          ]
+        ],
+        "F_y": "4 kN",
+        "x_p": 0.2,
+        "y_p": 0.15,
+        "moment": "300 N*m"
+      },
+      "solve_for": [
+        "F_x"
+      ],
+      "expected_as_specified": {
+        "F_x": "3 kN"
+      },
+      "expected_SI": {
+        "F_x": 3000.0
+      },
+      "actual_SI": {
+        "F_x": {
+          "value": 3000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.bolt_group_eccentric (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_x": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 6.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "M = (x_p\u2212x\u0304)F_y \u2212 (y_p\u2212\u0233)F_x \u2192 300 = 0.15\u00b74000 \u2212 0.10\u00b7F_x \u2192 F_x = (600 \u2212 300)/0.10 = 3000 N"
+      }
+    },
+    {
+      "id": "bolted-018",
+      "calculator": "bolted.rivet_shear",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "20 kN",
+        "m": 1,
+        "n": 4,
+        "d": "8 mm",
+        "t": "6 mm"
+      },
+      "solve_for": [
+        "tau",
+        "sigma_b"
+      ],
+      "expected_as_specified": {
+        "tau": "99.4718 MPa",
+        "sigma_b": "104.167 MPa"
+      },
+      "expected_SI": {
+        "tau": 99471800.0,
+        "sigma_b": 104167000.0
+      },
+      "actual_SI": {
+        "tau": {
+          "value": 99471839.43243459,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_shear (symbolic)"
+        },
+        "sigma_b": {
+          "value": 104166666.66666666,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_shear (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "tau": {
+          "absolute_error": 39.43243458867073,
+          "relative_error": 3.9641822696151805e-07,
+          "allowed_absolute_error": 198943.6,
+          "passed": true
+        },
+        "sigma_b": {
+          "absolute_error": 333.33333334326744,
+          "relative_error": 3.199989760128135e-06,
+          "allowed_absolute_error": 208334.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c4 = 20000/(1\u00b74\u00b7\u03c0\u00b70.008\u00b2/4) = 20000/2.01062e-4 = 99.4718 MPa; \u03c3b = 20000/(4\u00b70.008\u00b70.006) = 20000/1.92e-4 = 104.167 MPa"
+      }
+    },
+    {
+      "id": "bolted-019",
+      "calculator": "bolted.rivet_shear",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "20 kN",
+        "m": 1,
+        "n": 4,
+        "t": "6 mm",
+        "sigma_b": "104.167 MPa"
+      },
+      "solve_for": [
+        "tau",
+        "d"
+      ],
+      "expected_as_specified": {
+        "d": "8 mm"
+      },
+      "expected_SI": {
+        "d": 0.008
+      },
+      "actual_SI": {
+        "d": {
+          "value": 0.007999974400081919,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_shear (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "d": {
+          "absolute_error": 2.5599918081209427e-08,
+          "relative_error": 3.1999897601511784e-06,
+          "allowed_absolute_error": 1.6e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "d = F/(n\u00b7t\u00b7\u03c3b) = 20000/(4\u00b70.006\u00b7104.167e6) = 20000/2.5e6 = 0.008 m"
+      }
+    },
+    {
+      "id": "bolted-020",
+      "calculator": "bolted.rivet_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": 1,
+        "n": 1,
+        "d": "8 mm",
+        "t": "6 mm",
+        "p": "24 mm",
+        "tau_allow": "60 MPa",
+        "sigma_b_allow": "150 MPa",
+        "sigma_t_allow": "110 MPa"
+      },
+      "solve_for": [
+        "F_shear",
+        "F_bearing",
+        "F_tearing",
+        "F_solid",
+        "eta"
+      ],
+      "expected_as_specified": {
+        "F_shear": "3.01593 kN",
+        "F_bearing": "7.2 kN",
+        "F_tearing": "10.56 kN",
+        "F_solid": "15.84 kN",
+        "eta": 0.1904
+      },
+      "expected_SI": {
+        "F_shear": 3015.93,
+        "F_bearing": 7200.0,
+        "F_tearing": 10560.0,
+        "F_solid": 15840.0,
+        "eta": 0.1904
+      },
+      "actual_SI": {
+        "F_shear": {
+          "value": 3015.928947446201,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "F_bearing": {
+          "value": 7200.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "F_tearing": {
+          "value": 10560.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "F_solid": {
+          "value": 15840.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "eta": {
+          "value": 0.19039955476301776,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_shear": {
+          "absolute_error": 0.0010525537986723066,
+          "relative_error": 3.4899808638539576e-07,
+          "allowed_absolute_error": 6.03186,
+          "passed": true
+        },
+        "F_bearing": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 14.4,
+          "passed": true
+        },
+        "F_tearing": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 21.12,
+          "passed": true
+        },
+        "F_solid": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 31.68,
+          "passed": true
+        },
+        "eta": {
+          "absolute_error": 4.4523698225495956e-07,
+          "relative_error": 2.3384295286499973e-06,
+          "allowed_absolute_error": 0.00038080000000000004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Per pitch (n = 1 rivet per pitch): F_shear = 1\u00b71\u00b7\u03c0\u00b70.008\u00b2/4\u00b760e6 = 5.02655e-5\u00b760e6 = 3015.93 N; F_bearing = 1\u00b70.008\u00b70.006\u00b7150e6 = 7200 N; F_tearing = (0.024\u22120.008)\u00b70.006\u00b7110e6 = 10560 N; F_solid = 0.024\u00b70.006\u00b7110e6 = 15840 N; \u03b7 = min/15840 = 3015.93/15840 = 0.190400 (shear governs)"
+      }
+    },
+    {
+      "id": "bolted-021",
+      "calculator": "bolted.rivet_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": 1,
+        "n": 1,
+        "d": "8 mm",
+        "t": "6 mm",
+        "p": "20 mm",
+        "tau_allow": "100 MPa",
+        "sigma_b_allow": "200 MPa",
+        "sigma_t_allow": "50 MPa"
+      },
+      "solve_for": [
+        "F_shear",
+        "F_bearing",
+        "F_tearing",
+        "F_solid",
+        "eta"
+      ],
+      "expected_as_specified": {
+        "F_shear": "5.02655 kN",
+        "F_bearing": "9.6 kN",
+        "F_tearing": "3.6 kN",
+        "F_solid": "6 kN",
+        "eta": 0.6
+      },
+      "expected_SI": {
+        "F_shear": 5026.55,
+        "F_bearing": 9600.0,
+        "F_tearing": 3600.0,
+        "F_solid": 6000.0,
+        "eta": 0.6
+      },
+      "actual_SI": {
+        "F_shear": {
+          "value": 5026.548245743668,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "F_bearing": {
+          "value": 9600.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "F_tearing": {
+          "value": 3600.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "F_solid": {
+          "value": 6000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "eta": {
+          "value": 0.6,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_shear": {
+          "absolute_error": 0.0017542563318784232,
+          "relative_error": 3.4899808653617753e-07,
+          "allowed_absolute_error": 10.0531,
+          "passed": true
+        },
+        "F_bearing": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 19.2,
+          "passed": true
+        },
+        "F_tearing": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 7.2,
+          "passed": true
+        },
+        "F_solid": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 12.0,
+          "passed": true
+        },
+        "eta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0012,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Per pitch: F_shear = \u03c0\u00b70.008\u00b2/4\u00b7100e6 = 5026.55 N; F_bearing = 0.008\u00b70.006\u00b7200e6 = 9600 N; F_tearing = (0.020\u22120.008)\u00b70.006\u00b750e6 = 3600 N; F_solid = 0.020\u00b70.006\u00b750e6 = 6000 N; \u03b7 = 3600/6000 = 0.6 (tearing governs)"
+      }
+    },
+    {
+      "id": "bolted-022",
+      "calculator": "bolted.rivet_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": 2,
+        "n": 2,
+        "d": "10 mm",
+        "t": "8 mm",
+        "p": "40 mm",
+        "tau_allow": "100 MPa",
+        "sigma_b_allow": "250 MPa",
+        "sigma_t_allow": "80 MPa"
+      },
+      "solve_for": [
+        "F_shear",
+        "F_bearing",
+        "F_tearing",
+        "F_solid",
+        "eta"
+      ],
+      "expected_as_specified": {
+        "F_shear": "31.4159 kN",
+        "F_bearing": "40 kN",
+        "F_tearing": "19.2 kN",
+        "F_solid": "25.6 kN",
+        "eta": 0.75
+      },
+      "expected_SI": {
+        "F_shear": 31415.9,
+        "F_bearing": 40000.0,
+        "F_tearing": 19200.0,
+        "F_solid": 25600.0,
+        "eta": 0.75
+      },
+      "actual_SI": {
+        "F_shear": {
+          "value": 31415.926535897932,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "F_bearing": {
+          "value": 40000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "F_tearing": {
+          "value": 19200.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "F_solid": {
+          "value": 25600.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        },
+        "eta": {
+          "value": 0.75,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bolted.rivet_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "F_shear": {
+          "absolute_error": 0.026535897930443753,
+          "relative_error": 8.446645784600712e-07,
+          "allowed_absolute_error": 15.70795,
+          "passed": true
+        },
+        "F_bearing": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 20.0,
+          "passed": true
+        },
+        "F_tearing": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 9.6,
+          "passed": true
+        },
+        "F_solid": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 12.8,
+          "passed": true
+        },
+        "eta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.000375,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two rivets per pitch in double shear: F_shear = n\u00b7m\u00b7(\u03c0 d\u00b2/4)\u00b7\u03c4 = 2\u00b72\u00b778.5398e-6\u00b7100e6 = 31415.9 N; F_bearing = n\u00b7d\u00b7t\u00b7\u03c3b = 2\u00b70.010\u00b70.008\u00b7250e6 = 40000 N; F_tearing (outer row, one hole per pitch) = (p \u2212 d)\u00b7t\u00b7\u03c3t = 0.030\u00b70.008\u00b780e6 = 19200 N; F_solid = p\u00b7t\u00b7\u03c3t = 25600 N; \u03b7 = min/solid = 19200/25600 = 0.75"
+      }
+    }
+  ],
+  "passed": 22,
+  "failed": 0
+}

@@ -1,0 +1,337 @@
+{
+  "section": "kinetics",
+  "cases": [
+    {
+      "calc": "kinetics.newton_second_law",
+      "inputs": {
+        "m": "5 kg",
+        "a": "3 m/s^2"
+      },
+      "expect": {
+        "F": "15 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = ma = 5·3 = 15 N"
+      }
+    },
+    {
+      "calc": "kinetics.newton_second_law",
+      "inputs": {
+        "F": "15 N",
+        "a": "3 m/s^2"
+      },
+      "solve_for": [
+        "m"
+      ],
+      "expect": {
+        "m": "5 kg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "m = F/a = 15/3 = 5 kg"
+      }
+    },
+    {
+      "calc": "kinetics.centripetal_force",
+      "inputs": {
+        "m": "2 kg",
+        "r": "0.5 m",
+        "omega": "4 rad/s"
+      },
+      "expect": {
+        "v": "2 m/s",
+        "F_c": "16 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v = ωr = 4·0.5 = 2 m/s; F_c = mω²r = 2·16·0.5 = 16 N"
+      }
+    },
+    {
+      "calc": "kinetics.work_constant_force",
+      "inputs": {
+        "F": "100 N",
+        "d": "2 m",
+        "theta": "60 deg"
+      },
+      "expect": {
+        "W": "100 J"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "W = F·d·cosθ = 100·2·cos60° = 200·0.5 = 100 J"
+      }
+    },
+    {
+      "calc": "kinetics.kinetic_energy",
+      "inputs": {
+        "m": "2 kg",
+        "v": "5 m/s"
+      },
+      "expect": {
+        "KE": "25 J"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "KE = ½mv² = 0.5·2·25 = 25 J"
+      }
+    },
+    {
+      "calc": "kinetics.rotational_kinetic_energy",
+      "inputs": {
+        "I": "0.5 kg*m^2",
+        "omega": "4 rad/s"
+      },
+      "expect": {
+        "KE": "4 J"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "KE = ½Iω² = 0.5·0.5·16 = 4 J"
+      }
+    },
+    {
+      "calc": "kinetics.potential_energy",
+      "inputs": {
+        "m": "3 kg",
+        "g": "9.80665 m/s^2",
+        "h": "10 m",
+        "k": "200 N/m",
+        "x": "0.1 m"
+      },
+      "expect": {
+        "PE_g": "294.200 J",
+        "PE_s": "1 J"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "PE_g = mgh = 3·9.80665·10 = 294.200 J; PE_s = ½kx² = 0.5·200·0.01 = 1 J"
+      }
+    },
+    {
+      "calc": "kinetics.power",
+      "inputs": {
+        "F": "200 N",
+        "v": "3 m/s"
+      },
+      "expect": {
+        "P": "600 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P = F·v = 200·3 = 600 W"
+      }
+    },
+    {
+      "calc": "kinetics.efficiency",
+      "inputs": {
+        "P_out": "600 W",
+        "P_in": "750 W"
+      },
+      "expect": {
+        "eta": 0.8
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η = P_out/P_in = 600/750 = 0.8"
+      }
+    },
+    {
+      "calc": "kinetics.linear_impulse",
+      "inputs": {
+        "F": "50 N",
+        "dt": "0.1 s",
+        "m": "2 kg",
+        "v_i": "5 m/s"
+      },
+      "expect": {
+        "J": "5 N*s",
+        "v_f": "7.5 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "J = FΔt = 50·0.1 = 5 N·s; v_f = v_i + FΔt/m = 5 + 5/2 = 7.5 m/s"
+      }
+    },
+    {
+      "calc": "kinetics.angular_momentum",
+      "inputs": {
+        "I": "0.5 kg*m^2",
+        "omega": "4 rad/s"
+      },
+      "expect": {
+        "H": "2 kg*m^2/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "H = Iω = 0.5·4 = 2 kg·m²/s"
+      }
+    },
+    {
+      "calc": "kinetics.restitution",
+      "inputs": {
+        "v1": "10 m/s",
+        "v2": "0 m/s",
+        "v1p": "2 m/s",
+        "v2p": "8 m/s"
+      },
+      "expect": {
+        "e": 0.6
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "e = (v2′ − v1′)/(v1 − v2) = (8 − 2)/(10 − 0) = 0.6"
+      }
+    },
+    {
+      "calc": "kinetics.impact_velocities",
+      "inputs": {
+        "m1": "2 kg",
+        "m2": "3 kg",
+        "v1": "10 m/s",
+        "v2": "0 m/s",
+        "e": 0.6
+      },
+      "expect": {
+        "v1p": "0.4 m/s",
+        "v2p": "6.4 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v1′ = ((m1−em2)v1 + (1+e)m2 v2)/(m1+m2) = ((2−1.8)·10 + 0)/5 = 2/5 = 0.4 m/s; v2′ = ((1+e)m1 v1 + (m2−em1)v2)/(m1+m2) = (1.6·2·10 + 0)/5 = 32/5 = 6.4 m/s (check momentum 2·0.4 + 3·6.4 = 20 = 2·10)"
+      }
+    },
+    {
+      "calc": "kinetics.mass_moment_inertia",
+      "inputs": {
+        "solid": {
+          "shape": "sphere",
+          "m": 5,
+          "r": 0.2
+        },
+        "d": 0
+      },
+      "expect": {
+        "I_c": "0.08 kg*m^2",
+        "I": "0.08 kg*m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Solid sphere about a diameter: I_c = ⅖mr² = 0.4·5·0.04 = 0.08 kg·m²; with d = 0 the parallel axis adds nothing"
+      }
+    },
+    {
+      "calc": "kinetics.mass_moment_inertia",
+      "inputs": {
+        "solid": {
+          "shape": "sphere",
+          "m": 5,
+          "r": 0.2
+        },
+        "d": "300 mm"
+      },
+      "expect": {
+        "I_c": "0.08 kg*m^2",
+        "I": "0.53 kg*m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Parallel-axis theorem: I = I_c + md² = 0.08 + 5·0.3² = 0.08 + 0.45 = 0.53 kg·m²"
+      }
+    },
+    {
+      "calc": "kinetics.radius_of_gyration",
+      "inputs": {
+        "I": "0.5 kg*m^2",
+        "m": "2 kg"
+      },
+      "expect": {
+        "k": "0.5 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "k = √(I/m) = √(0.5/2) = √0.25 = 0.5 m"
+      }
+    },
+    {
+      "calc": "kinetics.rigid_body_planar",
+      "inputs": {
+        "F": "30 N",
+        "m": "5 kg",
+        "M": "6 N*m",
+        "I_G": "2 kg*m^2"
+      },
+      "expect": {
+        "a": "6 m/s^2",
+        "alpha": "3 rad/s^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a = F/m = 30/5 = 6 m/s²; α = M/I_G = 6/2 = 3 rad/s²"
+      }
+    },
+    {
+      "calc": "kinetics.gyroscopic_torque",
+      "inputs": {
+        "I": "0.5 kg*m^2",
+        "omega": "100 rad/s",
+        "Omega": "2 rad/s"
+      },
+      "expect": {
+        "M": "100 N*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "M = IωΩ = 0.5·100·2 = 100 N·m"
+      }
+    },
+    {
+      "calc": "kinetics.rocket_thrust",
+      "inputs": {
+        "mdot": "2 kg/s",
+        "v_e": "3000 m/s"
+      },
+      "expect": {
+        "T": "6000 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T = ṁ·v_e = 2·3000 = 6000 N"
+      }
+    },
+    {
+      "calc": "kinetics.tsiolkovsky",
+      "inputs": {
+        "v_e": "3000 m/s",
+        "m0": "1000 kg",
+        "mf": "200 kg"
+      },
+      "expect": {
+        "dv": "4828.31 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Δv = v_e·ln(m0/mf) = 3000·ln(5) = 3000·1.609438 = 4828.31 m/s"
+      }
+    },
+    {
+      "calc": "kinetics.tsiolkovsky",
+      "inputs": {
+        "dv": "4828.31 m/s",
+        "v_e": "3000 m/s",
+        "mf": "200 kg"
+      },
+      "solve_for": [
+        "m0"
+      ],
+      "expect": {
+        "m0": "1000 kg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "m0 = mf·exp(dv/v_e) = 200·exp(4828.31/3000) = 200·exp(1.609438) = 200·5 = 1000 kg"
+      }
+    }
+  ]
+}

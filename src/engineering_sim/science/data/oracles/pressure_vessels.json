@@ -1,0 +1,308 @@
+{
+  "section": "pressure_vessels",
+  "cases": [
+    {
+      "calc": "pressure_vessels.cylindrical_shell",
+      "inputs": {
+        "p": "3 MPa",
+        "R": "400 mm",
+        "S": "120 MPa",
+        "E_l": 0.9,
+        "E_c": 0.85,
+        "t": "16 mm"
+      },
+      "expect": {
+        "t_hoop": "11.2994 mm",
+        "t_long": "5.847953 mm",
+        "t_req": "11.2994 mm",
+        "MAWP": "4.21875 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "t_hoop = 3e6·0.4/(120e6·0.9 − 0.6·3e6) = 1.2e6/1.062e8 = 11.2994e-3 m; t_long = 3e6·0.4/(2·120e6·0.85 + 0.4·3e6) = 1.2e6/2.052e8 = 5.84795e-3 m; t_req = max = 11.2994e-3 m (hoop governs); MAWP_hoop = 120e6·0.9·0.016/(0.4 + 0.6·0.016) = 4.21875 MPa; MAWP_long = 2·120e6·0.85·0.016/(0.4 − 0.4·0.016) = 8.29268 MPa; MAWP = min = 4.21875 MPa"
+      }
+    },
+    {
+      "calc": "pressure_vessels.cylindrical_shell",
+      "inputs": {
+        "p": "3 MPa",
+        "R": "400 mm",
+        "S": "120 MPa",
+        "E_l": 1.0,
+        "E_c": 0.45,
+        "t": "16 mm"
+      },
+      "expect": {
+        "t_hoop": "10.15228 mm",
+        "t_long": "10.98901 mm",
+        "t_req": "10.98901 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Weak circumferential joint: t_hoop = 3e6·0.4/(120e6·1.0 − 0.6·3e6) = 1.2e6/1.182e8 = 10.1523e-3 m; t_long = 3e6·0.4/(2·120e6·0.45 + 0.4·3e6) = 1.2e6/1.092e8 = 10.9890e-3 m; the LONGITUDINAL form governs, t_req = 10.9890 mm (exercises the max branch)"
+      }
+    },
+    {
+      "calc": "pressure_vessels.cylindrical_shell",
+      "inputs": {
+        "p": "60 MPa",
+        "R": "0.3 m",
+        "S": "138 MPa",
+        "E_l": 0.85,
+        "E_c": 1.0,
+        "t": "0.2 m"
+      },
+      "expect": {
+        "t_hoop": "0.2214022 m",
+        "t_long": "0.06 m",
+        "t_req": "0.2214022 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "t_hoop = 60e6·0.3/(138e6·0.85 − 0.6·60e6) = 18e6/81.3e6 = 0.221402 m > R/2 = 0.15 m; t_long = 18e6/(2·138e6 + 0.4·60e6) = 18e6/300e6 = 0.06 m; t_req = 0.221402 m — the pressure exceeds 0.385·S·E_l = 45.16 MPa and t_req exceeds R/2, so the calculator emits a thin-shell-range warning rather than returning silently"
+      }
+    },
+    {
+      "calc": "pressure_vessels.cylindrical_shell",
+      "inputs": {
+        "p": "3 MPa",
+        "R": "400 mm",
+        "S": "120 MPa",
+        "E_l": 0.9,
+        "E_c": 0.85,
+        "MAWP": "4.21875 MPa"
+      },
+      "solve_for": [
+        "t"
+      ],
+      "expect": {
+        "t": "16 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: t = MAWP·R/(S·E_l − 0.6·MAWP) = 4.21875e6·0.4/(108e6 − 2.53125e6) = 1.6875e6/1.0546875e8 = 0.016 m (hoop MAWP governs)"
+      }
+    },
+    {
+      "calc": "pressure_vessels.spherical_shell",
+      "inputs": {
+        "p": "3 MPa",
+        "R": "400 mm",
+        "S": "120 MPa",
+        "E": 1.0,
+        "t": "8 mm"
+      },
+      "expect": {
+        "t_req": "5.01253 mm",
+        "MAWP": "4.780876 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "t_req = 3e6·0.4/(2·120e6·1.0 − 0.2·3e6) = 1.2e6/2.394e8 = 5.0125e-3 m; MAWP = 2·120e6·0.008/(0.4 + 0.2·0.008) = 1.92e6/0.4016 = 4.78088 MPa"
+      }
+    },
+    {
+      "calc": "pressure_vessels.hydro_test",
+      "inputs": {
+        "p": "2.5 MPa",
+        "factor": 1.3
+      },
+      "expect": {
+        "P_t": "3.25 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P_t = 1.3·2.5e6 = 3.25 MPa"
+      }
+    },
+    {
+      "calc": "pressure_vessels.head_hemispherical",
+      "inputs": {
+        "p": "1.5 MPa",
+        "L": "0.6 m",
+        "S": "120 MPa",
+        "E": 1.0
+      },
+      "expect": {
+        "t": "3.75469 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "t = 1.5e6·0.6/(2·120e6·1.0 − 0.2·1.5e6) = 9e5/2.397e8 = 3.7547e-3 m"
+      }
+    },
+    {
+      "calc": "pressure_vessels.head_ellipsoidal",
+      "inputs": {
+        "p": "2 MPa",
+        "D": "0.8 m",
+        "S": "120 MPa",
+        "E": 0.9
+      },
+      "expect": {
+        "t": "7.42115 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "2:1 ellipsoidal: t = 2e6·0.8/(2·120e6·0.9 − 0.2·2e6) = 1.6e6/2.156e8 = 7.4212e-3 m"
+      }
+    },
+    {
+      "calc": "pressure_vessels.head_torispherical",
+      "inputs": {
+        "p": "2 MPa",
+        "L": "1.0 m",
+        "S": "138 MPa",
+        "E": 1.0
+      },
+      "expect": {
+        "t": "12.8447 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "t = 0.885·2e6·1.0/(138e6·1.0 − 0.1·2e6) = 1.77e6/1.378e8 = 12.8447e-3 m"
+      }
+    },
+    {
+      "calc": "pressure_vessels.nozzle_reinforcement",
+      "inputs": {
+        "d": 0.2,
+        "t_r": 0.008,
+        "t": 0.01,
+        "t_n": 0.005,
+        "t_rn": 0.0015,
+        "h_n": 0.02,
+        "f_r1": 0.85,
+        "f_r2": 0.85,
+        "A_weld": 4e-05
+      },
+      "expect": {
+        "A_req": "0.001612 m^2",
+        "A1": "0.000397 m^2",
+        "A2": "0.000119 m^2",
+        "A_avail": "0.000556 m^2",
+        "A_add": "0.001056 m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "A_req = 0.2·0.008 + 2·0.005·0.008·(1−0.85) = 1.6e-3 + 1.2e-5 = 1.612e-3; A1 = 0.2·0.002 − 2·0.005·0.002·0.15 = 4e-4 − 3e-6 = 3.97e-4; A2 = 2·0.02·0.0035·0.85 = 1.19e-4; A_avail = 3.97e-4 + 1.19e-4 + 4e-5 = 5.56e-4; A_add = 1.612e-3 − 5.56e-4 = 1.056e-3 m²"
+      }
+    },
+    {
+      "calc": "pressure_vessels.nozzle_reinforcement",
+      "inputs": {
+        "d": 0.2,
+        "t_r": 0.012,
+        "t": 0.01,
+        "t_n": 0.006,
+        "t_rn": 0.002,
+        "h_n": 0.03,
+        "f_r1": 0.9,
+        "f_r2": 0.9,
+        "A_weld": 1e-05
+      },
+      "expect": {
+        "A1": "-0.0003976 m^2",
+        "A2": "0.000216 m^2",
+        "A_avail": "0.000226 m^2",
+        "A_add": "0.0021884 m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Thin shell (t < t_r): A1 = 0.2·(−0.002) − 2·0.006·(−0.002)·0.1 = −0.0003976 m² (negative, clamped to 0 in A_avail); A2 = 2·0.03·0.004·0.9 = 0.000216; A_req = 0.2·0.012 + 2·0.006·0.012·0.1 = 0.0024144; A_avail = 0 + 0.000216 + 0.00001 = 0.000226; A_add = 0.0024144 − 0.000226 = 0.0021884 m²"
+      }
+    },
+    {
+      "calc": "pressure_vessels.thermal_expansion_pipe",
+      "inputs": {
+        "alpha": "11.7e-6 1/K",
+        "L": "20 m",
+        "dT": "80 delta_degC"
+      },
+      "expect": {
+        "delta_L": "18.72 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ΔL = 11.7e-6·20·80 = 0.01872 m = 18.72 mm"
+      }
+    },
+    {
+      "calc": "pressure_vessels.thermal_expansion_pipe",
+      "inputs": {
+        "alpha": "11.7e-6 1/K",
+        "L": "20 m",
+        "dT": "-40 delta_degC"
+      },
+      "expect": {
+        "delta_L": "-9.36 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Contraction: ΔL = 11.7e-6·20·(−40) = −0.00936 m (negative = contraction, signed output)"
+      }
+    },
+    {
+      "calc": "pressure_vessels.expansion_loop",
+      "inputs": {
+        "E": "200 GPa",
+        "D": "0.219 m",
+        "delta": "0.03 m",
+        "S_A": "180 MPa"
+      },
+      "expect": {
+        "L": "4.67974 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L = sqrt(3·E·D·δ/S_A) = sqrt(3·2e11·0.219·0.03/180e6) = sqrt(3.942e9/1.8e8) = sqrt(21.9) = 4.6797 m"
+      }
+    },
+    {
+      "calc": "pressure_vessels.pipe_support_spacing",
+      "inputs": {
+        "w": "600 N/m",
+        "D_o": "0.219 m",
+        "t": "8 mm",
+        "E": "200 GPa",
+        "S_allow": "150 MPa",
+        "delta_allow": "4 mm",
+        "span": "simply_supported"
+      },
+      "expect": {
+        "I": "2.95543e-5 m^4",
+        "Z": "2.69903e-4 m^3",
+        "L_stress": "23.2337 m",
+        "L_defl": "7.41703 m",
+        "L_max": "7.41703 m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "D_i = 0.203 m; I = π/64·(0.219⁴ − 0.203⁴) = 2.9554e-5 m⁴; Z = 2I/D_o = 2.6990e-4 m³; L_stress = sqrt(8·Z·S/w) = sqrt(8·2.699e-4·150e6/600) = 23.234 m; L_defl = (384·E·I·δ/(5w))^0.25 = (384·2e11·2.9554e-5·0.004/3000)^0.25 = 7.417 m (deflection governs)"
+      }
+    },
+    {
+      "calc": "pressure_vessels.pipe_support_spacing",
+      "inputs": {
+        "w": "600 N/m",
+        "D_o": "0.219 m",
+        "t": "8 mm",
+        "E": "200 GPa",
+        "S_allow": "150 MPa",
+        "delta_allow": "4 mm",
+        "span": "continuous"
+      },
+      "expect": {
+        "L_stress": "25.9761 m",
+        "L_defl": "9.24023 m",
+        "L_max": "9.24023 m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Continuous span (M = wL²/10, δ = wL⁴/(185EI), recalled): L_stress = sqrt(10·2.699e-4·150e6/600) = 25.976 m; L_defl = (185·2e11·2.9554e-5·0.004/600)^0.25 = 9.2402 m (deflection governs)"
+      }
+    }
+  ]
+}

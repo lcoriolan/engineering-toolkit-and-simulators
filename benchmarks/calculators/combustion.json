@@ -1,0 +1,2748 @@
+{
+  "section": "combustion",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k combustion",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "combustion.stoichiometric_air": {
+      "title": "Stoichiometric air and air-fuel ratio for a CxHyOz fuel",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "carbon atoms per fuel molecule (surrogate fuels may be non-integer)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "",
+          "desc": "hydrogen atoms per fuel molecule (surrogate fuels may be non-integer)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "O",
+          "unit": "",
+          "desc": "oxygen atoms per fuel molecule (surrogate fuels may be non-integer)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "MW_fuel",
+          "unit": "kg/kmol",
+          "desc": "fuel molar mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_O2",
+          "unit": "",
+          "desc": "stoichiometric oxygen (kmol O2 / kmol fuel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_air",
+          "unit": "",
+          "desc": "stoichiometric air (kmol air / kmol fuel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "AF_st",
+          "unit": "",
+          "desc": "stoichiometric air-fuel ratio (mass)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "FA_st",
+          "unit": "",
+          "desc": "stoichiometric fuel-air ratio (mass)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _stoichiometric_air(values):\n    \"\"\"Stoichiometric oxygen and air requirements for a CxHyOz fuel (per kmol fuel).\n\n    CxHyOz + a(O2 + 3.76 N2) -> x CO2 + (y/2) H2O + 3.76 a N2, with a = x + y/4 \u2212 z/2. Air-fuel ratio on a\n    mass basis uses MW_air = 28.97 kg/kmol.\n    \"\"\"\n    C, H, O = float(values['C']), float(values['H']), float(values['O'])\n    MW_fuel = values['MW_fuel']\n    a = _a_o2(C, H, O)\n    if a <= 0.0:\n        raise MechError('fuel is already oxidised beyond stoichiometry (a = x + y/4 \u2212 z/2 \u2264 0)')\n    a_air = 4.76 * a                       # kmol air per kmol fuel (O2 + 3.76 N2)\n    af_st = a_air * MW_AIR / MW_fuel       # kg air / kg fuel\n    return {'a_O2': a, 'a_air': a_air, 'AF_st': af_st, 'FA_st': 1.0 / af_st}\n",
+        "source": "combustion.py",
+        "line": 55
+      },
+      "outputs": [
+        "a_O2",
+        "a_air",
+        "AF_st",
+        "FA_st"
+      ],
+      "assumptions": [
+        "Air = 3.76 mol N2 per mol O2 (MW 28.97 kg/kmol). a = x + y/4 \u2212 z/2 must be positive."
+      ],
+      "method_references": [
+        "Stoichiometric combustion of CxHyOz; a = x + y/4 \u2212 z/2 (recalled)"
+      ],
+      "synthetic_example": {
+        "C": 1.0,
+        "H": 4.0,
+        "O": 0.0,
+        "MW_fuel": 16.04
+      }
+    },
+    "combustion.excess_air": {
+      "title": "Excess-air fraction",
+      "variables": [
+        {
+          "name": "excess",
+          "unit": "",
+          "desc": "excess-air fraction (AF_actual \u2212 AF_st)/AF_st",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "AF_actual",
+          "unit": "",
+          "desc": "actual air-fuel ratio",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "AF_st",
+          "unit": "",
+          "desc": "stoichiometric air-fuel ratio",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "excess = (AF_actual - AF_st)/AF_st"
+      ],
+      "procedure": null,
+      "outputs": [
+        "excess"
+      ],
+      "assumptions": [
+        "Excess-air fraction; multiply by 100 for percent. Negative means fuel-rich (air deficiency)."
+      ],
+      "method_references": [
+        "Excess air = (AF_actual \u2212 AF_st)/AF_st"
+      ],
+      "synthetic_example": {
+        "AF_actual": 17.64,
+        "AF_st": 14.7
+      }
+    },
+    "combustion.products_of_combustion": {
+      "title": "Products of combustion and dew point",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "carbon atoms per fuel molecule (surrogate fuels may be non-integer)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "",
+          "desc": "hydrogen atoms per fuel molecule (surrogate fuels may be non-integer)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "O",
+          "unit": "",
+          "desc": "oxygen atoms per fuel molecule (surrogate fuels may be non-integer)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lambda",
+          "unit": "",
+          "desc": "excess-air ratio \u03bb = AF_actual/AF_st",
+          "lo": 1.0,
+          "hi": null,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_total",
+          "unit": "Pa",
+          "desc": "total pressure of the products",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_O2",
+          "unit": "",
+          "desc": "stoichiometric oxygen (kmol/kmol fuel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_CO2",
+          "unit": "",
+          "desc": "CO2 in products (kmol/kmol fuel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_H2O",
+          "unit": "",
+          "desc": "H2O in products (kmol/kmol fuel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_O2",
+          "unit": "",
+          "desc": "excess O2 in products (kmol/kmol fuel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_N2",
+          "unit": "",
+          "desc": "N2 in products (kmol/kmol fuel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_wet",
+          "unit": "",
+          "desc": "total wet products (kmol/kmol fuel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_dry",
+          "unit": "",
+          "desc": "total dry products (kmol/kmol fuel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_H2O",
+          "unit": "",
+          "desc": "water mole fraction in the products",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_H2O",
+          "unit": "Pa",
+          "desc": "partial pressure of water vapour",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_dew",
+          "unit": "K",
+          "desc": "dew-point temperature of the products",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _products(values):\n    \"\"\"Products of combustion of CxHyOz with an excess-air ratio \u03bb, plus the water dew point.\n\n    Products per kmol fuel: x CO2, (y/2) H2O, (\u03bb\u22121)a O2, 3.76 \u03bb a N2. The water partial pressure\n    P_H2O = y_H2O \u00b7 P_total gives the dew point through the Water saturation curve (CoolProp/IAPWS-95).\n    \"\"\"\n    C, H, O = float(values['C']), float(values['H']), float(values['O'])\n    lam, P_total = values['lambda'], values['P_total']\n    a = _a_o2(C, H, O)\n    if a <= 0.0:\n        raise MechError('fuel is already oxidised beyond stoichiometry')\n    if lam < 1.0:\n        raise MechError('lambda < 1 (fuel-rich) is not modelled: the CO/H2 split in rich products is not computed')\n    n_co2, n_h2o = float(C), H / 2.0\n    n_o2 = (lam - 1.0) * a\n    n_n2 = 3.76 * lam * a\n    n_wet = n_co2 + n_h2o + n_o2 + n_n2\n    n_dry = n_wet - n_h2o\n    y_h2o = n_h2o / n_wet if n_wet > 0.0 else 0.0\n    p_h2o = y_h2o * P_total\n    # A fuel with no hydrogen (CO, carbon) has no water in the products: skip the dew point\n    # rather than calling saturation at P = 0.\n    if n_h2o > 0.0:\n        t_dew = common.saturation('Water', P=p_h2o)['T']\n    else:\n        t_dew = None\n    out = {'a_O2': a, 'n_CO2': n_co2, 'n_H2O': n_h2o, 'n_O2': n_o2, 'n_N2': n_n2,\n           'n_wet': n_wet, 'n_dry': n_dry, 'y_H2O': y_h2o, 'P_H2O': p_h2o, 'T_dew': t_dew}\n    if n_h2o <= 0.0:\n        out['_warnings'] = ['fuel has no hydrogen: no water in the products, so the dew point is undefined']\n    return out\n",
+        "source": "combustion.py",
+        "line": 71
+      },
+      "outputs": [
+        "a_O2",
+        "n_CO2",
+        "n_H2O",
+        "n_O2",
+        "n_N2",
+        "n_wet",
+        "n_dry",
+        "y_H2O",
+        "P_H2O",
+        "T_dew"
+      ],
+      "assumptions": [
+        "Complete combustion (no CO/soot), dry air, \u03bb \u2265 1 (fuel-rich mixtures are not modelled). Dew point uses the Water saturation curve (CoolProp/IAPWS-95) at P_H2O; it fails if P_H2O is below the water triple point, and is undefined (null) for a hydrogen-free fuel such as CO or carbon."
+      ],
+      "method_references": [
+        "Product mole balance of CxHyOz combustion; dew point at P_H2O (recalled)"
+      ],
+      "synthetic_example": {
+        "C": 1.0,
+        "H": 4.0,
+        "O": 0.0,
+        "lambda": 1.2,
+        "P_total": 101325.0
+      }
+    },
+    "combustion.heating_values": {
+      "title": "Higher and lower heating values from formation enthalpies",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "carbon atoms per fuel molecule (surrogate fuels may be non-integer)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "",
+          "desc": "hydrogen atoms per fuel molecule (surrogate fuels may be non-integer)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "O",
+          "unit": "",
+          "desc": "oxygen atoms per fuel molecule (surrogate fuels may be non-integer)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "MW_fuel",
+          "unit": "kg/kmol",
+          "desc": "fuel molar mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "hf_fuel",
+          "unit": "J/mol",
+          "desc": "enthalpy of formation of the fuel",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "hf_CO2",
+          "unit": "J/mol",
+          "desc": "enthalpy of formation of CO2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "hf_H2O_g",
+          "unit": "J/mol",
+          "desc": "enthalpy of formation of gaseous H2O",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "hf_H2O_l",
+          "unit": "J/mol",
+          "desc": "enthalpy of formation of liquid H2O",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_O2",
+          "unit": "",
+          "desc": "stoichiometric oxygen (kmol/kmol fuel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "LHV",
+          "unit": "J/mol",
+          "desc": "lower heating value (gaseous product water)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "HHV",
+          "unit": "J/mol",
+          "desc": "higher heating value (liquid product water)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "LHV_mass",
+          "unit": "J/kg",
+          "desc": "lower heating value per unit mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "HHV_mass",
+          "unit": "J/kg",
+          "desc": "higher heating value per unit mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _heating_values_formation(values):\n    \"\"\"Heating values from formation enthalpies (per mole of CxHyOz fuel).\n\n    \u0394H_comb = [x hf(CO2) + (y/2) hf(H2O)] \u2212 [hf(fuel) + a hf(O2)] with hf(O2) = 0. The LHV uses gaseous\n    product water, the HHV liquid product water; both are \u2212\u0394H_comb. Mass-basis values divide by the molar\n    mass (MW in kg/kmol, so kg/mol = MW/1000).\n    \"\"\"\n    C, H, O = float(values['C']), float(values['H']), float(values['O'])\n    hf_fuel = values['hf_fuel']\n    hf_co2 = values['hf_CO2']\n    hf_h2o_g = values['hf_H2O_g']\n    hf_h2o_l = values['hf_H2O_l']\n    MW = values['MW_fuel']\n    a = _a_o2(C, H, O)\n    if a <= 0.0:\n        raise MechError('fuel is already oxidised beyond stoichiometry')\n    h_products_g = C * hf_co2 + (H / 2.0) * hf_h2o_g\n    h_products_l = C * hf_co2 + (H / 2.0) * hf_h2o_l\n    lhv = -(h_products_g - hf_fuel)\n    hhv = -(h_products_l - hf_fuel)\n    return {'a_O2': a, 'LHV': lhv, 'HHV': hhv,\n            'LHV_mass': lhv * 1000.0 / MW, 'HHV_mass': hhv * 1000.0 / MW}\n",
+        "source": "combustion.py",
+        "line": 104
+      },
+      "outputs": [
+        "a_O2",
+        "LHV",
+        "HHV",
+        "LHV_mass",
+        "HHV_mass"
+      ],
+      "assumptions": [
+        "\u0394H_comb = \u03a3 \u03bd hf(products) \u2212 \u03a3 \u03bd hf(reactants) with hf(O2) = 0. LHV uses gaseous product water, HHV liquid (the difference is the water latent heat)."
+      ],
+      "method_references": [
+        "Heating value from enthalpies of formation (Hess's law; recalled)"
+      ],
+      "synthetic_example": {
+        "C": 1.0,
+        "H": 4.0,
+        "O": 0.0,
+        "MW_fuel": 16.04,
+        "hf_fuel": -74870.0,
+        "hf_CO2": -393520.0,
+        "hf_H2O_g": -241820.0,
+        "hf_H2O_l": -285830.0
+      }
+    },
+    "combustion.heating_value_fuel": {
+      "title": "Heating values of a named fuel (NIST-WebBook reaction thermochemistry)",
+      "variables": [
+        {
+          "name": "fuel",
+          "unit": "",
+          "desc": "fuel species",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "CH4",
+            "C2H6",
+            "C3H8",
+            "C2H4",
+            "C2H2",
+            "H2",
+            "CO",
+            "CH3OH(g)",
+            "C2H5OH(g)"
+          ]
+        },
+        {
+          "name": "a_O2",
+          "unit": "",
+          "desc": "stoichiometric oxygen (kmol/kmol fuel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "MW",
+          "unit": "kg/kmol",
+          "desc": "fuel molar mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "LHV",
+          "unit": "J/mol",
+          "desc": "lower heating value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "HHV",
+          "unit": "J/mol",
+          "desc": "higher heating value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "LHV_mass",
+          "unit": "J/kg",
+          "desc": "lower heating value per unit mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "HHV_mass",
+          "unit": "J/kg",
+          "desc": "higher heating value per unit mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _heating_value_fuel(values):\n    \"\"\"Heating values of a named fuel via the NIST-WebBook Shomate engine (engineering_sim.science.thermo).\n\n    The balanced combustion reaction (fuel + a O2 -> C CO2 + (H/2) H2O) is assembled from the formula and\n    its \u0394H read from ``thermo.reaction``; LHV uses H2O(g), HHV uses H2O(l). Values are per mole of fuel.\n    \"\"\"\n    fuel = values['fuel']\n    rec = thermo.species(fuel)\n    if rec is None:\n        raise MechError(f'unknown fuel species {fuel!r}')\n    atoms = _atoms(rec['formula'])\n    C, H, O = atoms['C'], atoms['H'], atoms['O']\n    a = _a_o2(C, H, O)\n    if a <= 0.0:\n        raise MechError('fuel is already oxidised beyond stoichiometry')\n    mw = 12.011 * C + 1.008 * H + 15.999 * O          # kg/kmol\n    # dH of combustion from the Shomate enthalpies of formation at 298.15 K (Hess's law). Read from\n    # thermo.props directly rather than thermo.reaction, whose equilibrium constant exp(-dG/RT)\n    # overflows double precision for very exergonic fuels such as C3H8.\n    def _hf(key):\n        return cite.num(thermo.props(key, 298.15)['h'])  # kJ/mol\n    d_h_g = C * _hf('CO2') + (H / 2.0) * _hf('H2O(g)') - _hf(fuel) - a * _hf('O2')   # kJ/mol\n    d_h_l = C * _hf('CO2') + (H / 2.0) * _hf('H2O(l)') - _hf(fuel) - a * _hf('O2')   # kJ/mol\n    lhv = -d_h_g * 1000.0                              # J/mol\n    hhv = -d_h_l * 1000.0                              # J/mol\n    return {'a_O2': a, 'MW': mw, 'LHV': lhv, 'HHV': hhv,\n            'LHV_mass': lhv * 1000.0 / mw, 'HHV_mass': hhv * 1000.0 / mw}\n",
+        "source": "combustion.py",
+        "line": 131
+      },
+      "outputs": [
+        "a_O2",
+        "MW",
+        "LHV",
+        "HHV",
+        "LHV_mass",
+        "HHV_mass"
+      ],
+      "assumptions": [
+        "\u0394H of the balanced combustion reaction read from the NIST-WebBook Shomate engine in engineering_sim.science.thermo (not recalled tables). LHV uses H2O(g), HHV uses H2O(l)."
+      ],
+      "method_references": [
+        "NIST-WebBook Shomate reaction thermochemistry via engineering_sim.science.thermo"
+      ],
+      "synthetic_example": {
+        "fuel": "CH4"
+      }
+    },
+    "combustion.enthalpy_of_reaction": {
+      "title": "Enthalpy, entropy, Gibbs energy and equilibrium constant of a reaction",
+      "variables": [
+        {
+          "name": "reactants",
+          "unit": "",
+          "desc": "reactants as {species: coefficient}",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "products",
+          "unit": "",
+          "desc": "products as {species: coefficient}",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "reaction temperature",
+          "lo": 298.15,
+          "hi": 6000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dH",
+          "unit": "J/mol",
+          "desc": "enthalpy of reaction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dS",
+          "unit": "J/mol/K",
+          "desc": "entropy of reaction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dG",
+          "unit": "J/mol",
+          "desc": "Gibbs energy of reaction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "equilibrium constant exp(\u2212\u0394G/RT) (null when it overflows)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ln_K",
+          "unit": "",
+          "desc": "natural log of the equilibrium constant",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _reaction_thermo(values):\n    \"\"\"Enthalpy/entropy/Gibbs change and equilibrium constant of a reaction via thermo.reaction.\n\n    reactants/products are {species_key: coefficient} dicts (e.g. {'H2': 1, 'O2': 0.5} -> {'H2O(g)': 1}).\n    Returns dH, dG in J/mol, dS in J/(mol\u00b7K) and the equilibrium constant K = exp(\u2212dG/RT), all per mole of\n    reaction as written.\n    \"\"\"\n    reactants, products, T = values['reactants'], values['products'], values['T']\n    if not isinstance(reactants, dict) or not isinstance(products, dict):\n        raise MechError('reactants and products must be {species: coefficient} objects')\n    try:\n        r = thermo.reaction(reactants, products, T)\n        dH, dS, dG = cite.num(r['dH']) * 1000.0, cite.num(r['dS']), cite.num(r['dG']) * 1000.0\n    except ValueError as exc:\n        raise MechError(str(exc))\n    except OverflowError:\n        # thermo.reaction also evaluates K = exp(\u2212\u0394G/RT), which overflows for ordinary exergonic reactions such as\n        # propane combustion. Assemble \u0394H and \u0394S from the same Shomate species data (element balance still checked\n        \n        try:\n            ok, imbalance = thermo._balance(reactants, products)\n        except KeyError as exc:\n            raise MechError(str(exc))\n        if not ok:\n            raise MechError(f'reaction is not element-balanced: {imbalance}')\n        def side(d, key):\n            return sum(c * cite.num(thermo.props(k, T)[key]) for k, c in d.items())\n        dH = (side(products, 'h') - side(reactants, 'h')) * 1000.0\n        dS = side(products, 's') - side(reactants, 's')\n        dG = dH - T * dS\n    ln_k = -dG / (R_UNIV * T)\n    try:\n        K = math.exp(ln_k)\n    except OverflowError:\n        K = None\n    out = {'dH': dH, 'dS': dS, 'dG': dG, 'K': K, 'ln_K': ln_k}\n    if K is None:\n        out['_warnings'] = ['K = exp(ln K) overflows double precision; use ln_K']\n    return out\n",
+        "source": "combustion.py",
+        "line": 160
+      },
+      "outputs": [
+        "dH",
+        "dS",
+        "dG",
+        "K",
+        "ln_K"
+      ],
+      "assumptions": [
+        "Species and thermochemistry from the NIST-WebBook Shomate engine; element balance is checked. K is dimensionless."
+      ],
+      "method_references": [
+        "Reaction thermodynamics via engineering_sim.science.thermo (NIST-WebBook Shomate)"
+      ],
+      "synthetic_example": {
+        "reactants": {
+          "H2": 1,
+          "O2": 0.5
+        },
+        "products": {
+          "H2O(g)": 1
+        },
+        "T": 298.15
+      }
+    },
+    "combustion.equilibrium_constant": {
+      "title": "Equilibrium constant from the standard Gibbs-energy change",
+      "variables": [
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "equilibrium constant exp(\u2212\u0394G/RT); null when it overflows",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ln_K",
+          "unit": "",
+          "desc": "natural log of the equilibrium constant, ln K = \u2212\u0394G/(RT)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "log10_K",
+          "unit": "",
+          "desc": "base-10 log of the equilibrium constant",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dG",
+          "unit": "J/mol",
+          "desc": "standard Gibbs-energy change of the reaction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "temperature",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _equilibrium_constant(values):\n    \"\"\"Equilibrium constant from a standard Gibbs-energy change, K = exp(\u2212\u0394G/RT).\n\n    Returns K, ln K and log10 K. K itself is None when exp(ln K) overflows double precision, with a\n    ``_warnings`` note pointing the caller at the log forms.\n    \"\"\"\n    dG, T = values['dG'], values['T']\n    ln_k = -dG / (R_UNIV * T)\n    log10_k = ln_k / math.log(10.0)\n    try:\n        K = math.exp(ln_k)\n    except OverflowError:\n        K = None\n    out = {'K': K, 'ln_K': ln_k, 'log10_K': log10_k}\n    if K is None:\n        out['_warnings'] = ['K = exp(ln K) overflows double precision; use ln_K or log10_K instead']\n    return out\n",
+        "source": "combustion.py",
+        "line": 201
+      },
+      "outputs": [
+        "K",
+        "ln_K",
+        "log10_K"
+      ],
+      "assumptions": [
+        "K = exp(\u2212\u0394G\u00b0/(R T)) with R = 8.314462618 J/(mol\u00b7K). ln K = \u2212\u0394G\u00b0/(R T) is returned alongside K so large \u2212\u0394G\u00b0 (whose K overflows double precision) is still usable."
+      ],
+      "method_references": [
+        "K = exp(\u2212\u0394G/RT); ln K = \u2212\u0394G/(RT)"
+      ],
+      "synthetic_example": {
+        "dG": -10000.0,
+        "T": 298.15
+      }
+    },
+    "combustion.chemical_equilibrium": {
+      "title": "Chemical equilibrium composition and adiabatic flame temperature (Cantera)",
+      "variables": [
+        {
+          "name": "mech",
+          "unit": "",
+          "desc": "kinetic mechanism",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "gri30",
+            "gri30_highT",
+            "h2o2",
+            "ohn",
+            "nDodecane_Reitz"
+          ]
+        },
+        {
+          "name": "mixture",
+          "unit": "",
+          "desc": "reactant mixture {species: moles or mole fractions}",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "reactant temperature (constraint TP/HP) or fixed T (TP)",
+          "lo": 200.0,
+          "hi": 6000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "Pa",
+          "desc": "pressure",
+          "lo": 100.0,
+          "hi": 10000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "constraint",
+          "unit": "",
+          "desc": "equilibrium constraint",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "TP",
+            "HP",
+            "UV"
+          ]
+        },
+        {
+          "name": "T_out",
+          "unit": "K",
+          "desc": "equilibrium temperature (adiabatic flame temperature for HP)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "equilibrium density",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "major",
+          "unit": "",
+          "desc": "major species [[species, mole fraction], ...], most abundant first",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _chemical_equilibrium(values):\n    \"\"\"Cantera equilibrium via common.equilibrium.\n\n    constraint 'TP' returns the equilibrium composition at (T, P); 'HP' returns the adiabatic flame\n    temperature and composition (reactant T and P fixed); 'UV' the constant-volume explosion temperature.\n    Returns the equilibrium temperature T_out (K), density (kg/m\u00b3) and the major species mole fractions\n    (most abundant first, X \u2265 1e-6).\n    \"\"\"\n    mech, mixture = values['mech'], values['mixture']\n    T, P = values['T'], values['P']\n    constraint = values['constraint']\n    if not isinstance(mixture, dict) or not mixture:\n        raise MechError('mixture must be a non-empty {species: amount} object')\n    try:\n        r = common.equilibrium(mech, mixture, T, P, constraint)\n    except ValueError as exc:\n        raise MechError(str(exc))\n    major = [{'species': d['species'], 'X': cite.num(d['X'])} for d in r.get('major', [])]\n    return {'T_out': float(r['T']), 'rho': float(r['rho']), 'major': major}\n",
+        "source": "combustion.py",
+        "line": 220
+      },
+      "outputs": [
+        "T_out",
+        "rho",
+        "major"
+      ],
+      "assumptions": [
+        "Cantera 0-D homogeneous equilibrium via common.equilibrium. HP = adiabatic flame temperature; TP = fixed-T composition; UV = constant-volume explosion. The mechanism must contain every species in the mixture (h2o2 covers H2/O2 only)."
+      ],
+      "method_references": [
+        "Cantera constrained Gibbs-energy minimisation via engineering_sim.science.mech.common"
+      ],
+      "synthetic_example": {
+        "mech": "gri30",
+        "mixture": {
+          "CH4": 1,
+          "O2": 2,
+          "N2": 7.52
+        },
+        "T": 298.15,
+        "P": 101325.0,
+        "constraint": "HP"
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "combustion-001",
+      "calculator": "combustion.stoichiometric_air",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": 1,
+        "H": 4,
+        "O": 0,
+        "MW_fuel": "16.04 kg/kmol"
+      },
+      "solve_for": [
+        "a_O2",
+        "a_air",
+        "AF_st",
+        "FA_st"
+      ],
+      "expected_as_specified": {
+        "a_O2": 2.0,
+        "a_air": "9.52",
+        "AF_st": "17.194",
+        "FA_st": "0.05816"
+      },
+      "expected_SI": {
+        "a_O2": 2.0,
+        "a_air": 9.52,
+        "AF_st": 17.194,
+        "FA_st": 0.05816
+      },
+      "actual_SI": {
+        "a_O2": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.stoichiometric_air (procedure)"
+        },
+        "a_air": {
+          "value": 9.52,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.stoichiometric_air (procedure)"
+        },
+        "AF_st": {
+          "value": 17.19416458852868,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.stoichiometric_air (procedure)"
+        },
+        "FA_st": {
+          "value": 0.058159266468064616,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.stoichiometric_air (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a_O2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "a_air": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.019039999999999998,
+          "passed": true
+        },
+        "AF_st": {
+          "absolute_error": 0.0001645885286798432,
+          "relative_error": 9.572439727802907e-06,
+          "allowed_absolute_error": 0.034388,
+          "passed": true
+        },
+        "FA_st": {
+          "absolute_error": 7.335319353873881e-07,
+          "relative_error": 1.2612309755629094e-05,
+          "allowed_absolute_error": 0.00011632000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = 1 + 4/4 \u2212 0 = 2 kmol O2; air = 4.76\u00b72 = 9.52 kmol; AF_st = 9.52\u00b728.97/16.04 = 275.79/16.04 = 17.194 kg air/kg fuel; FA_st = 1/17.194 = 0.05816"
+      }
+    },
+    {
+      "id": "combustion-002",
+      "calculator": "combustion.stoichiometric_air",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": 1,
+        "H": 4,
+        "O": 0,
+        "AF_st": "17.194"
+      },
+      "solve_for": [
+        "MW_fuel"
+      ],
+      "expected_as_specified": {
+        "MW_fuel": "16.04 kg/kmol"
+      },
+      "expected_SI": {
+        "MW_fuel": 16.04
+      },
+      "actual_SI": {
+        "MW_fuel": {
+          "value": 16.040153541933233,
+          "unit": "kg/kmol",
+          "kind": "derived",
+          "method": "mechcalc combustion.stoichiometric_air (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "MW_fuel": {
+          "absolute_error": 0.00015354193323346976,
+          "relative_error": 9.57243972777243e-06,
+          "allowed_absolute_error": 0.03208,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "MW_fuel = 9.52\u00b728.97/17.194 = 16.04 kg/kmol"
+      }
+    },
+    {
+      "id": "combustion-003",
+      "calculator": "combustion.stoichiometric_air",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": 7.76,
+        "H": 13.1,
+        "O": 0,
+        "MW_fuel": "106.2 kg/kmol"
+      },
+      "solve_for": [
+        "a_O2",
+        "a_air",
+        "AF_st",
+        "FA_st"
+      ],
+      "expected_as_specified": {
+        "a_O2": 11.035,
+        "a_air": "52.5266",
+        "AF_st": "14.329",
+        "FA_st": "0.06979"
+      },
+      "expected_SI": {
+        "a_O2": 11.035,
+        "a_air": 52.5266,
+        "AF_st": 14.329,
+        "FA_st": 0.06979
+      },
+      "actual_SI": {
+        "a_O2": {
+          "value": 11.035,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.stoichiometric_air (procedure)"
+        },
+        "a_air": {
+          "value": 52.526599999999995,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.stoichiometric_air (procedure)"
+        },
+        "AF_st": {
+          "value": 14.328583822975515,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.stoichiometric_air (procedure)"
+        },
+        "FA_st": {
+          "value": 0.06979056774588747,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.stoichiometric_air (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a_O2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02207,
+          "passed": true
+        },
+        "a_air": {
+          "absolute_error": 7.105427357601002e-15,
+          "relative_error": 1.352729351909509e-16,
+          "allowed_absolute_error": 0.1050532,
+          "passed": true
+        },
+        "AF_st": {
+          "absolute_error": 0.0004161770244852647,
+          "relative_error": 2.904438722068984e-05,
+          "allowed_absolute_error": 0.028658000000000003,
+          "passed": true
+        },
+        "FA_st": {
+          "absolute_error": 5.677458874697727e-07,
+          "relative_error": 8.135060717434772e-06,
+          "allowed_absolute_error": 0.00013958000000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Diesel-surrogate C7.76H13.1 (non-integer atoms): a = 7.76 + 13.1/4 \u2212 0 = 7.76 + 3.275 = 11.035 kmol O2; air = 4.76\u00b711.035 = 52.5266 kmol; AF_st = 52.5266\u00b728.97/106.2 = 1521.70/106.2 = 14.329; FA_st = 1/14.329 = 0.06979"
+      }
+    },
+    {
+      "id": "combustion-004",
+      "calculator": "combustion.excess_air",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "AF_actual": 20.0,
+        "AF_st": 16.0
+      },
+      "solve_for": [
+        "excess"
+      ],
+      "expected_as_specified": {
+        "excess": 0.25
+      },
+      "expected_SI": {
+        "excess": 0.25
+      },
+      "actual_SI": {
+        "excess": {
+          "value": 0.25,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.excess_air (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "excess": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "excess = (20.0 \u2212 16.0)/16.0 = 4/16 = 0.25 (25 % excess air)"
+      }
+    },
+    {
+      "id": "combustion-005",
+      "calculator": "combustion.excess_air",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "AF_st": 14.7,
+        "excess": 0.2
+      },
+      "solve_for": [
+        "AF_actual"
+      ],
+      "expected_as_specified": {
+        "AF_actual": 17.64
+      },
+      "expected_SI": {
+        "AF_actual": 17.64
+      },
+      "actual_SI": {
+        "AF_actual": {
+          "value": 17.64,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.excess_air (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "AF_actual": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.03528,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "AF_actual = AF_st(1 + excess) = 14.7\u00b71.2 = 17.64"
+      }
+    },
+    {
+      "id": "combustion-006",
+      "calculator": "combustion.products_of_combustion",
+      "classification": "backend regression; not independent physical validation",
+      "inputs": {
+        "C": 1,
+        "H": 4,
+        "O": 0,
+        "lambda": 1.2,
+        "P_total": "1 atm"
+      },
+      "solve_for": [
+        "a_O2",
+        "n_CO2",
+        "n_H2O",
+        "n_O2",
+        "n_N2",
+        "n_wet",
+        "n_dry",
+        "y_H2O",
+        "P_H2O",
+        "T_dew"
+      ],
+      "expected_as_specified": {
+        "n_CO2": 1.0,
+        "n_H2O": 2.0,
+        "n_O2": 0.4,
+        "n_N2": "9.024",
+        "n_wet": "12.424",
+        "n_dry": "10.424",
+        "y_H2O": "0.16098",
+        "P_H2O": "16.311 kPa",
+        "T_dew": "328.87 K"
+      },
+      "expected_SI": {
+        "n_CO2": 1.0,
+        "n_H2O": 2.0,
+        "n_O2": 0.4,
+        "n_N2": 9.024,
+        "n_wet": 12.424,
+        "n_dry": 10.424,
+        "y_H2O": 0.16098,
+        "P_H2O": 16311.0,
+        "T_dew": 328.87
+      },
+      "actual_SI": {
+        "n_CO2": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_H2O": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_O2": {
+          "value": 0.3999999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_N2": {
+          "value": 9.024,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_wet": {
+          "value": 12.424,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_dry": {
+          "value": 10.424,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "y_H2O": {
+          "value": 0.16097875080489377,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "P_H2O": {
+          "value": 16311.17192530586,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "T_dew": {
+          "value": 328.86649758598185,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "n_CO2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "n_H2O": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "n_O2": {
+          "absolute_error": 1.1102230246251565e-16,
+          "relative_error": 2.7755575615628914e-16,
+          "allowed_absolute_error": 0.0004,
+          "passed": true
+        },
+        "n_N2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.009023999999999999,
+          "passed": true
+        },
+        "n_wet": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.012424,
+          "passed": true
+        },
+        "n_dry": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.010424,
+          "passed": true
+        },
+        "y_H2O": {
+          "absolute_error": 1.2491951062454376e-06,
+          "relative_error": 7.759939782863944e-06,
+          "allowed_absolute_error": 0.00016098000000000002,
+          "passed": true
+        },
+        "P_H2O": {
+          "absolute_error": 0.1719253058599861,
+          "relative_error": 1.0540451588497708e-05,
+          "allowed_absolute_error": 16.311,
+          "passed": true
+        },
+        "T_dew": {
+          "absolute_error": 0.0035024140181576513,
+          "relative_error": 1.064984345838067e-05,
+          "allowed_absolute_error": 0.32887,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = 1 + 4/4 = 2. Products per kmol CH4: 1 CO2, 2 H2O, (1.2\u22121)\u00b72 = 0.4 O2, 3.76\u00b71.2\u00b72 = 9.024 N2. n_wet = 1+2+0.4+9.024 = 12.424; n_dry = 10.424. y_H2O = 2/12.424 = 0.16098; P_H2O = 0.16098\u00b7101 325 = 16 311 Pa. T_dew = T_sat(H2O at 16.311 kPa) = 328.87 K (CoolProp IAPWS-95)"
+      }
+    },
+    {
+      "id": "combustion-007",
+      "calculator": "combustion.products_of_combustion",
+      "classification": "backend regression; not independent physical validation",
+      "inputs": {
+        "C": 3,
+        "H": 8,
+        "O": 0,
+        "lambda": 1.2,
+        "P_total": "2 atm"
+      },
+      "solve_for": [
+        "a_O2",
+        "n_CO2",
+        "n_H2O",
+        "n_O2",
+        "n_N2",
+        "n_wet",
+        "n_dry",
+        "y_H2O",
+        "P_H2O",
+        "T_dew"
+      ],
+      "expected_as_specified": {
+        "a_O2": 5.0,
+        "n_CO2": 3.0,
+        "n_H2O": 4.0,
+        "n_O2": 1.0,
+        "n_N2": "22.56",
+        "n_wet": "30.56",
+        "n_dry": "26.56",
+        "y_H2O": "0.13089",
+        "P_H2O": "26.525 kPa",
+        "T_dew": "339.44 K"
+      },
+      "expected_SI": {
+        "a_O2": 5.0,
+        "n_CO2": 3.0,
+        "n_H2O": 4.0,
+        "n_O2": 1.0,
+        "n_N2": 22.56,
+        "n_wet": 30.56,
+        "n_dry": 26.56,
+        "y_H2O": 0.13089,
+        "P_H2O": 26525.0,
+        "T_dew": 339.44
+      },
+      "actual_SI": {
+        "a_O2": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_CO2": {
+          "value": 3.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_H2O": {
+          "value": 4.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_O2": {
+          "value": 0.9999999999999998,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_N2": {
+          "value": 22.56,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_wet": {
+          "value": 30.56,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_dry": {
+          "value": 26.56,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "y_H2O": {
+          "value": 0.13089005235602094,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "P_H2O": {
+          "value": 26524.869109947645,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "T_dew": {
+          "value": 339.4421855498105,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "a_O2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.005,
+          "passed": true
+        },
+        "n_CO2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.003,
+          "passed": true
+        },
+        "n_H2O": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "n_O2": {
+          "absolute_error": 2.220446049250313e-16,
+          "relative_error": 2.220446049250313e-16,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "n_N2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02256,
+          "passed": true
+        },
+        "n_wet": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.03056,
+          "passed": true
+        },
+        "n_dry": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02656,
+          "passed": true
+        },
+        "y_H2O": {
+          "absolute_error": 5.23560209353402e-08,
+          "relative_error": 4.000001599460631e-07,
+          "allowed_absolute_error": 0.00013089000000000002,
+          "passed": true
+        },
+        "P_H2O": {
+          "absolute_error": 0.13089005235451623,
+          "relative_error": 4.934591983205136e-06,
+          "allowed_absolute_error": 26.525000000000002,
+          "passed": true
+        },
+        "T_dew": {
+          "absolute_error": 0.0021855498105196602,
+          "relative_error": 6.438692583430533e-06,
+          "allowed_absolute_error": 0.33944,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = 3 + 8/4 = 5. Products per kmol C3H8: 3 CO2, 4 H2O, (1.2\u22121)\u00b75 = 1.0 O2, 3.76\u00b71.2\u00b75 = 22.56 N2. n_wet = 3+4+1+22.56 = 30.56; n_dry = 26.56. y_H2O = 4/30.56 = 0.13089; P_H2O = 0.13089\u00b7202 650 = 26 525 Pa. T_dew = T_sat(H2O at 26.525 kPa) = 339.44 K (CoolProp IAPWS-95)"
+      }
+    },
+    {
+      "id": "combustion-008",
+      "calculator": "combustion.products_of_combustion",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": 1,
+        "H": 0,
+        "O": 0,
+        "lambda": 1.2,
+        "P_total": "1 atm"
+      },
+      "solve_for": [
+        "a_O2",
+        "n_CO2",
+        "n_H2O",
+        "n_O2",
+        "n_N2",
+        "n_wet",
+        "n_dry",
+        "y_H2O",
+        "P_H2O",
+        "T_dew"
+      ],
+      "expected_as_specified": {
+        "a_O2": 1.0,
+        "n_CO2": 1.0,
+        "n_H2O": 0.0,
+        "n_O2": 0.2,
+        "n_N2": "4.512",
+        "n_wet": "5.712",
+        "n_dry": "5.712",
+        "y_H2O": 0.0,
+        "P_H2O": 0.0,
+        "T_dew": null
+      },
+      "expected_SI": {
+        "a_O2": 1.0,
+        "n_CO2": 1.0,
+        "n_H2O": 0.0,
+        "n_O2": 0.2,
+        "n_N2": 4.512,
+        "n_wet": 5.712,
+        "n_dry": 5.712,
+        "y_H2O": 0.0,
+        "P_H2O": 0.0,
+        "T_dew": null
+      },
+      "actual_SI": {
+        "a_O2": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_CO2": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_H2O": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_O2": {
+          "value": 0.19999999999999996,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_N2": {
+          "value": 4.512,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_wet": {
+          "value": 5.712,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "n_dry": {
+          "value": 5.712,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "y_H2O": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "P_H2O": {
+          "value": 0.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)"
+        },
+        "T_dew": {
+          "value": null,
+          "kind": "derived",
+          "method": "mechcalc combustion.products_of_combustion (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a_O2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "n_CO2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "n_H2O": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "n_O2": {
+          "absolute_error": 5.551115123125783e-17,
+          "relative_error": 2.7755575615628914e-16,
+          "allowed_absolute_error": 0.0004,
+          "passed": true
+        },
+        "n_N2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.009023999999999999,
+          "passed": true
+        },
+        "n_wet": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.011424,
+          "passed": true
+        },
+        "n_dry": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.011424,
+          "passed": true
+        },
+        "y_H2O": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "P_H2O": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "T_dew": {
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Carbon (no hydrogen): a = 1 + 0 \u2212 0 = 1. Products: 1 CO2, 0 H2O, (1.2\u22121)\u00b71 = 0.2 O2, 3.76\u00b71.2\u00b71 = 4.512 N2. n_wet = n_dry = 5.712. No water \u2192 y_H2O = 0, P_H2O = 0, and the dew point is undefined (null)."
+      }
+    },
+    {
+      "id": "combustion-009",
+      "calculator": "combustion.heating_values",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": 1,
+        "H": 4,
+        "O": 0,
+        "MW_fuel": "16.04 kg/kmol",
+        "hf_fuel": "-74.87 kJ/mol",
+        "hf_CO2": "-393.52 kJ/mol",
+        "hf_H2O_g": "-241.82 kJ/mol",
+        "hf_H2O_l": "-285.83 kJ/mol"
+      },
+      "solve_for": [
+        "a_O2",
+        "LHV",
+        "HHV",
+        "LHV_mass",
+        "HHV_mass"
+      ],
+      "expected_as_specified": {
+        "LHV": "802.29 kJ/mol",
+        "HHV": "890.31 kJ/mol",
+        "LHV_mass": "50.02 MJ/kg",
+        "HHV_mass": "55.51 MJ/kg"
+      },
+      "expected_SI": {
+        "LHV": 802290.0,
+        "HHV": 890310.0,
+        "LHV_mass": 50020000.0,
+        "HHV_mass": 55510000.0
+      },
+      "actual_SI": {
+        "LHV": {
+          "value": 802290.0,
+          "unit": "J/mol",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_values (procedure)"
+        },
+        "HHV": {
+          "value": 890310.0,
+          "unit": "J/mol",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_values (procedure)"
+        },
+        "LHV_mass": {
+          "value": 50018079.800498754,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_values (procedure)"
+        },
+        "HHV_mass": {
+          "value": 55505610.97256858,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_values (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "LHV": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 802.29,
+          "passed": true
+        },
+        "HHV": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 890.3100000000001,
+          "passed": true
+        },
+        "LHV_mass": {
+          "absolute_error": 1920.199501246214,
+          "relative_error": 3.838863457109584e-05,
+          "allowed_absolute_error": 50020.0,
+          "passed": true
+        },
+        "HHV_mass": {
+          "absolute_error": 4389.027431420982,
+          "relative_error": 7.906732897533746e-05,
+          "allowed_absolute_error": 55510.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u0394H_comb(g) = 1\u00b7(\u2212393.52) + 2\u00b7(\u2212241.82) \u2212 (\u221274.87) = \u2212393.52 \u2212 483.64 + 74.87 = \u2212802.29 kJ/mol \u2192 LHV = 802.29 kJ/mol; \u0394H_comb(l) = \u2212393.52 + 2\u00b7(\u2212285.83) + 74.87 = \u2212890.31 kJ/mol \u2192 HHV = 890.31 kJ/mol. LHV_mass = 802.29/16.04 = 50.02 MJ/kg; HHV_mass = 890.31/16.04 = 55.51 MJ/kg"
+      }
+    },
+    {
+      "id": "combustion-010",
+      "calculator": "combustion.heating_value_fuel",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "fuel": "CH4"
+      },
+      "solve_for": [
+        "a_O2",
+        "MW",
+        "LHV",
+        "HHV",
+        "LHV_mass",
+        "HHV_mass"
+      ],
+      "expected_as_specified": {
+        "a_O2": 2.0,
+        "MW": "16.043 kg/kmol",
+        "LHV_mass": "50.03 MJ/kg",
+        "HHV_mass": "55.51 MJ/kg"
+      },
+      "expected_SI": {
+        "a_O2": 2.0,
+        "MW": 16.043,
+        "LHV_mass": 50030000.0,
+        "HHV_mass": 55510000.0
+      },
+      "actual_SI": {
+        "a_O2": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_value_fuel (procedure)"
+        },
+        "MW": {
+          "value": 16.043,
+          "unit": "kg/kmol",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_value_fuel (procedure)"
+        },
+        "LHV_mass": {
+          "value": 50025838.06377493,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_value_fuel (procedure)"
+        },
+        "HHV_mass": {
+          "value": 55511486.663726956,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_value_fuel (procedure)"
+        }
+      },
+      "relative_tolerance": 0.005,
+      "comparison": {
+        "a_O2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        },
+        "MW": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.080215,
+          "passed": true
+        },
+        "LHV_mass": {
+          "absolute_error": 4161.936225071549,
+          "relative_error": 8.318881121470217e-05,
+          "allowed_absolute_error": 250150.0,
+          "passed": true
+        },
+        "HHV_mass": {
+          "absolute_error": 1486.6637269556522,
+          "relative_error": 2.6781908249966714e-05,
+          "allowed_absolute_error": 277550.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Methane heating values: LHV = 50.0 MJ/kg, HHV = 55.5 MJ/kg, MW = 16.04 kg/kmol, a = 2 (standard combustion reference values; recalled, not re-read)."
+      }
+    },
+    {
+      "id": "combustion-011",
+      "calculator": "combustion.heating_value_fuel",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "fuel": "C3H8"
+      },
+      "solve_for": [
+        "a_O2",
+        "MW",
+        "LHV",
+        "HHV",
+        "LHV_mass",
+        "HHV_mass"
+      ],
+      "expected_as_specified": {
+        "a_O2": 5.0,
+        "MW": "44.097 kg/kmol",
+        "LHV_mass": "46.33 MJ/kg",
+        "HHV_mass": "50.32 MJ/kg"
+      },
+      "expected_SI": {
+        "a_O2": 5.0,
+        "MW": 44.097,
+        "LHV_mass": 46330000.0,
+        "HHV_mass": 50320000.0
+      },
+      "actual_SI": {
+        "a_O2": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_value_fuel (procedure)"
+        },
+        "MW": {
+          "value": 44.097,
+          "unit": "kg/kmol",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_value_fuel (procedure)"
+        },
+        "LHV_mass": {
+          "value": 46332841.10904097,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_value_fuel (procedure)"
+        },
+        "HHV_mass": {
+          "value": 50324326.26626392,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc combustion.heating_value_fuel (procedure)"
+        }
+      },
+      "relative_tolerance": 0.005,
+      "comparison": {
+        "a_O2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.025,
+          "passed": true
+        },
+        "MW": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.22048500000000001,
+          "passed": true
+        },
+        "LHV_mass": {
+          "absolute_error": 2841.10904096812,
+          "relative_error": 6.132331191383812e-05,
+          "allowed_absolute_error": 231650.0,
+          "passed": true
+        },
+        "HHV_mass": {
+          "absolute_error": 4326.2662639170885,
+          "relative_error": 8.597508473603117e-05,
+          "allowed_absolute_error": 251600.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Propane heating values: LHV = 46.35 MJ/kg, HHV = 50.35 MJ/kg, MW = 44.10 kg/kmol, a = 5 (standard combustion reference values; recalled, not re-read)."
+      }
+    },
+    {
+      "id": "combustion-012",
+      "calculator": "combustion.enthalpy_of_reaction",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "reactants": {
+          "H2": 1,
+          "O2": 0.5
+        },
+        "products": {
+          "H2O(g)": 1
+        },
+        "T": "298.15 K"
+      },
+      "solve_for": [
+        "dH",
+        "dS",
+        "dG",
+        "K",
+        "ln_K"
+      ],
+      "expected_as_specified": {
+        "dH": "-241.8 kJ/mol",
+        "dG": "-228.6 kJ/mol",
+        "dS": "-44.4 J/mol/K"
+      },
+      "expected_SI": {
+        "dH": -241800.0,
+        "dG": -228600.0,
+        "dS": -44.4
+      },
+      "actual_SI": {
+        "dH": {
+          "value": -241825.48647449576,
+          "unit": "J/mol",
+          "kind": "derived",
+          "method": "mechcalc combustion.enthalpy_of_reaction (procedure)"
+        },
+        "dG": {
+          "value": -228582.10466856443,
+          "unit": "J/mol",
+          "kind": "derived",
+          "method": "mechcalc combustion.enthalpy_of_reaction (procedure)"
+        },
+        "dS": {
+          "value": -44.41852022784278,
+          "unit": "J/mol/K",
+          "kind": "derived",
+          "method": "mechcalc combustion.enthalpy_of_reaction (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dH": {
+          "absolute_error": 25.486474495759467,
+          "relative_error": 0.00010540312032985718,
+          "allowed_absolute_error": 483.6,
+          "passed": true
+        },
+        "dG": {
+          "absolute_error": 17.895331435574917,
+          "relative_error": 7.828228974442221e-05,
+          "allowed_absolute_error": 457.2,
+          "passed": true
+        },
+        "dS": {
+          "absolute_error": 0.01852022784277807,
+          "relative_error": 0.0004171222487112178,
+          "allowed_absolute_error": 0.0888,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Standard enthalpy of formation of H2O(g): \u0394Hf = \u2212241.8 kJ/mol, \u0394Gf = \u2212228.6 kJ/mol, \u0394S = \u221244.4 J/(mol\u00b7K) (standard reference values; recalled, not re-read)."
+      }
+    },
+    {
+      "id": "combustion-013",
+      "calculator": "combustion.enthalpy_of_reaction",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "reactants": {
+          "CO": 1,
+          "O2": 0.5
+        },
+        "products": {
+          "CO2": 1
+        },
+        "T": "298.15 K"
+      },
+      "solve_for": [
+        "dH",
+        "dS",
+        "dG",
+        "K",
+        "ln_K"
+      ],
+      "expected_as_specified": {
+        "dH": "-283.0 kJ/mol"
+      },
+      "expected_SI": {
+        "dH": -283000.0
+      },
+      "actual_SI": {
+        "dH": {
+          "value": -282986.01144558564,
+          "unit": "J/mol",
+          "kind": "derived",
+          "method": "mechcalc combustion.enthalpy_of_reaction (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dH": {
+          "absolute_error": 13.988554414361715,
+          "relative_error": 4.942952089880465e-05,
+          "allowed_absolute_error": 566.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "CO + 1/2 O2 \u2192 CO2 heat of reaction \u0394H = \u2212283.0 kJ/mol (standard reference value; recalled, not re-read)."
+      }
+    },
+    {
+      "id": "combustion-014",
+      "calculator": "combustion.equilibrium_constant",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dG": "-10 kJ/mol",
+        "T": "298.15 K"
+      },
+      "solve_for": [
+        "K",
+        "ln_K",
+        "log10_K"
+      ],
+      "expected_as_specified": {
+        "K": "56.484",
+        "ln_K": "4.0340",
+        "log10_K": "1.7519"
+      },
+      "expected_SI": {
+        "K": 56.484,
+        "ln_K": 4.034,
+        "log10_K": 1.7519
+      },
+      "actual_SI": {
+        "K": {
+          "value": 56.48383859029209,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.equilibrium_constant (procedure)"
+        },
+        "ln_K": {
+          "value": 4.033954554584696,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.equilibrium_constant (procedure)"
+        },
+        "log10_K": {
+          "value": 1.7519242033046234,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.equilibrium_constant (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "K": {
+          "absolute_error": 0.00016140970791411746,
+          "relative_error": 2.857618226650334e-06,
+          "allowed_absolute_error": 0.112968,
+          "passed": true
+        },
+        "ln_K": {
+          "absolute_error": 4.544541530382418e-05,
+          "relative_error": 1.1265596257765041e-05,
+          "allowed_absolute_error": 0.008068,
+          "passed": true
+        },
+        "log10_K": {
+          "absolute_error": 2.4203304623382493e-05,
+          "relative_error": 1.381546014234973e-05,
+          "allowed_absolute_error": 0.0035038,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "ln K = \u2212\u0394G/(RT) = 10 000/(8.314462618\u00b7298.15) = 4.03396; K = exp(4.03396) = 56.484; log10 K = 4.03396/ln 10 = 1.75192"
+      }
+    },
+    {
+      "id": "combustion-015",
+      "calculator": "combustion.equilibrium_constant",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K": "56.484",
+        "T": "298.15 K"
+      },
+      "solve_for": [
+        "dG"
+      ],
+      "expected_as_specified": {
+        "dG": "-10 kJ/mol"
+      },
+      "expected_SI": {
+        "dG": -10000.0
+      },
+      "actual_SI": {
+        "dG": {
+          "value": -10000.007083922912,
+          "unit": "J/mol",
+          "kind": "derived",
+          "method": "mechcalc combustion.equilibrium_constant (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "dG": {
+          "absolute_error": 0.0070839229119883385,
+          "relative_error": 7.083922911988338e-07,
+          "allowed_absolute_error": 10.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u0394G = \u2212RT ln K = \u22128.314462618\u00b7298.15\u00b7ln(56.484) = \u221210 000 J/mol = \u221210 kJ/mol"
+      }
+    },
+    {
+      "id": "combustion-016",
+      "calculator": "combustion.equilibrium_constant",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dG": "-2000 kJ/mol",
+        "T": "298.15 K"
+      },
+      "solve_for": [
+        "K",
+        "ln_K",
+        "log10_K"
+      ],
+      "expected_as_specified": {
+        "K": null,
+        "ln_K": "806.79",
+        "log10_K": "350.38"
+      },
+      "expected_SI": {
+        "K": null,
+        "ln_K": 806.79,
+        "log10_K": 350.38
+      },
+      "actual_SI": {
+        "K": {
+          "value": null,
+          "kind": "derived",
+          "method": "mechcalc combustion.equilibrium_constant (procedure)",
+          "unit": ""
+        },
+        "ln_K": {
+          "value": 806.7909109169393,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.equilibrium_constant (procedure)"
+        },
+        "log10_K": {
+          "value": 350.38484066092474,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.equilibrium_constant (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "K": {
+          "passed": true
+        },
+        "ln_K": {
+          "absolute_error": 0.0009109169393468619,
+          "relative_error": 1.1290632498504716e-06,
+          "allowed_absolute_error": 0.80679,
+          "passed": true
+        },
+        "log10_K": {
+          "absolute_error": 0.004840660924742224,
+          "relative_error": 1.3815460142537314e-05,
+          "allowed_absolute_error": 0.35038,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "ln K = 2 000 000/(8.314462618\u00b7298.15) = 806.79; log10 K = 806.79/ln 10 = 350.38. K = exp(806.79) overflows double precision, so it is reported null with the log forms as the usable result."
+      }
+    },
+    {
+      "id": "combustion-017",
+      "calculator": "combustion.chemical_equilibrium",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "mech": "gri30",
+        "mixture": {
+          "CH4": 1,
+          "O2": 2,
+          "N2": 7.52
+        },
+        "T": "298.15 K",
+        "P": "1 atm",
+        "constraint": "HP"
+      },
+      "solve_for": [
+        "T_out",
+        "rho",
+        "major"
+      ],
+      "expected_as_specified": {
+        "T_out": "2225 K"
+      },
+      "expected_SI": {
+        "T_out": 2225.0
+      },
+      "actual_SI": {
+        "T_out": {
+          "value": 2224.6173595315677,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc combustion.chemical_equilibrium (procedure)"
+        }
+      },
+      "relative_tolerance": 0.01,
+      "comparison": {
+        "T_out": {
+          "absolute_error": 0.3826404684323279,
+          "relative_error": 0.0001719732442392485,
+          "allowed_absolute_error": 22.25,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Adiabatic flame temperature of stoichiometric methane-air at 1 atm, 298 K reactants \u2248 2226 K (with dissociation; standard reference value, recalled, not re-read)."
+      }
+    },
+    {
+      "id": "combustion-018",
+      "calculator": "combustion.chemical_equilibrium",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mech": "gri30",
+        "mixture": {
+          "O2": 1,
+          "N2": 3.76
+        },
+        "T": "298.15 K",
+        "P": "1 atm",
+        "constraint": "TP"
+      },
+      "solve_for": [
+        "T_out",
+        "rho",
+        "major"
+      ],
+      "expected_as_specified": {
+        "T_out": "298.15 K",
+        "major": [
+          {
+            "species": "N2",
+            "X": 0.78992
+          },
+          {
+            "species": "O2",
+            "X": 0.21008
+          }
+        ]
+      },
+      "expected_SI": {
+        "T_out": 298.15,
+        "major": [
+          {
+            "species": "N2",
+            "X": 0.78992
+          },
+          {
+            "species": "O2",
+            "X": 0.21008
+          }
+        ]
+      },
+      "actual_SI": {
+        "T_out": {
+          "value": 298.15,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc combustion.chemical_equilibrium (procedure)"
+        },
+        "major": {
+          "value": [
+            {
+              "species": "N2",
+              "X": 0.7899159663730673
+            },
+            {
+              "species": "O2",
+              "X": 0.21008403349853383
+            }
+          ],
+          "kind": "derived",
+          "method": "mechcalc combustion.chemical_equilibrium (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "T_out": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.29814999999999997,
+          "passed": true
+        },
+        "major": [
+          {
+            "species": {
+              "passed": true
+            },
+            "X": {
+              "absolute_error": 4.033626932686829e-06,
+              "relative_error": 5.106373977981099e-06,
+              "allowed_absolute_error": 0.0007899199999999999,
+              "passed": true
+            }
+          },
+          {
+            "species": {
+              "passed": true
+            },
+            "X": {
+              "absolute_error": 4.033498533839719e-06,
+              "relative_error": 1.919982165765289e-05,
+              "allowed_absolute_error": 0.00021008,
+              "passed": true
+            }
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Air at 298 K does not react, so the equilibrium composition equals the feed: X_N2 = 3.76/4.76 = 0.78992, X_O2 = 1/4.76 = 0.21008, and T_out = 298.15 K (TP constraint holds T fixed)"
+      }
+    },
+    {
+      "id": "combustion-019",
+      "calculator": "combustion.enthalpy_of_reaction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "reactants": {
+          "C3H8": 1,
+          "O2": 5
+        },
+        "products": {
+          "CO2": 3,
+          "H2O(g)": 4
+        },
+        "T": "298.15 K"
+      },
+      "solve_for": [
+        "dH",
+        "dS",
+        "dG",
+        "K",
+        "ln_K"
+      ],
+      "expected_as_specified": {
+        "dH": "-2043.13 kJ/mol",
+        "ln_K": 836.29
+      },
+      "expected_SI": {
+        "dH": -2043130.0,
+        "ln_K": 836.29
+      },
+      "actual_SI": {
+        "dH": {
+          "value": -2043139.2943853796,
+          "unit": "J/mol",
+          "kind": "derived",
+          "method": "mechcalc combustion.enthalpy_of_reaction (procedure)"
+        },
+        "ln_K": {
+          "value": 836.3475400635485,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc combustion.enthalpy_of_reaction (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "dH": {
+          "absolute_error": 9.294385379645973,
+          "relative_error": 4.54909153095788e-06,
+          "allowed_absolute_error": 2043.13,
+          "passed": true
+        },
+        "ln_K": {
+          "absolute_error": 0.05754006354857211,
+          "relative_error": 6.88039598088846e-05,
+          "allowed_absolute_error": 0.83629,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Propane combustion (gaseous water) from NIST standard values recalled: \u0394Hf CO2 \u2212393.51, H2O(g) \u2212241.826, C3H8 \u2212104.7 kJ/mol \u2192 \u0394H = 3(\u2212393.51) + 4(\u2212241.826) \u2212 (\u2212104.7) = \u22122043.13 kJ/mol. S\u00b0 CO2 213.785, H2O(g) 188.835, O2 205.152, C3H8 270.3 J/(mol\u00b7K) \u2192 \u0394S = 100.64; \u0394G = \u22122043134 \u2212 298.15\u00b7100.64 = \u22122073139 J/mol; ln K = 2073139/(8.314462618\u00b7298.15) = 836.29 (K overflows double precision)."
+      }
+    }
+  ],
+  "passed": 19,
+  "failed": 0
+}

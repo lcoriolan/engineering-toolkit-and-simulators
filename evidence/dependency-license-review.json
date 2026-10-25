@@ -1,0 +1,375 @@
+{
+  "review_date": "2026-10-24",
+  "scope": "Direct declared runtime/optional/test packages and Netgen in the tested environment. Not a complete transitive binary-distribution license bill of materials.",
+  "relicensing": "No upstream component is relicensed by this project. Actual installed versions, component notices and linkage/distribution conditions control.",
+  "packages": [
+    {
+      "package": "numpy",
+      "observed_version": "2.5.4",
+      "declared_license_summary": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0 (package metadata)",
+      "project_sources": [
+        "https://numpy.org",
+        "https://numpy.org/doc/",
+        "https://github.com/numpy/numpy",
+        "https://pypi.org/project/numpy/#files",
+        "https://github.com/numpy/numpy/issues",
+        "https://numpy.org/doc/stable/release"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "scipy",
+      "observed_version": "1.18.1",
+      "declared_license_summary": "BSD-3-Clause; bundled component terms also apply",
+      "project_sources": [
+        "https://scipy.org/",
+        "https://docs.scipy.org/doc/scipy/",
+        "https://github.com/scipy/scipy",
+        "https://github.com/scipy/scipy/releases",
+        "https://github.com/scipy/scipy/issues"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "pint",
+      "observed_version": "0.26.2",
+      "declared_license_summary": "BSD-3-Clause",
+      "project_sources": [
+        "https://github.com/hgrecco/pint",
+        "https://pint.readthedocs.io/"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "sympy",
+      "observed_version": "1.14.0",
+      "declared_license_summary": "BSD-3-Clause",
+      "project_sources": [
+        "https://github.com/sympy/sympy",
+        "https://sympy.org"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "warp-lang",
+      "observed_version": "1.18.0",
+      "declared_license_summary": "Apache-2.0",
+      "project_sources": [
+        "https://developer.nvidia.com/warp-python",
+        "https://nvidia.github.io/warp/stable/",
+        "https://github.com/NVIDIA/warp",
+        "https://github.com/NVIDIA/warp/issues",
+        "https://github.com/NVIDIA/warp/blob/main/CHANGELOG.md"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "rdkit",
+      "observed_version": "2026.9.1",
+      "declared_license_summary": "BSD-3-Clause",
+      "project_sources": [
+        "http://rdkit.org/",
+        "https://github.com/rdkit/rdkit",
+        "https://github.com/kuelumbus/rdkit-pypi"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "biopython",
+      "observed_version": "1.88",
+      "declared_license_summary": "Biopython License Agreement; component-specific terms",
+      "project_sources": [
+        "https://biopython.org/",
+        "https://biopython.org/wiki/Documentation",
+        "https://github.com/biopython/biopython/",
+        "https://github.com/biopython/biopython/issues"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "primer3-py",
+      "observed_version": "2.4.0",
+      "declared_license_summary": "GPL-2.0-or-later",
+      "project_sources": [
+        "https://github.com/libnano/primer3-py",
+        "http://libnano.github.io/primer3-py"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "CoolProp",
+      "observed_version": "8.0.0",
+      "declared_license_summary": "MIT",
+      "project_sources": [
+        "http://www.coolprop.org",
+        "https://github.com/CoolProp/CoolProp",
+        "https://github.com/CoolProp/CoolProp/issues"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "cantera",
+      "observed_version": "3.2.0",
+      "declared_license_summary": "BSD-3-Clause",
+      "project_sources": [
+        "https://cantera.org",
+        "https://cantera.org/stable/reference",
+        "https://numfocus.org/donate-to-cantera",
+        "https://github.com/Cantera/cantera",
+        "https://github.com/Cantera/cantera/issues"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "iapws",
+      "observed_version": "1.5.5",
+      "declared_license_summary": "GPL v3 (package metadata)",
+      "project_sources": [
+        "https://github.com/jjgomera/iapws"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "pyscf",
+      "observed_version": "2.14.0",
+      "declared_license_summary": "Apache-2.0",
+      "project_sources": [
+        "http://www.pyscf.org",
+        "https://github.com/pyscf/pyscf"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "tblite",
+      "observed_version": "0.7.0",
+      "declared_license_summary": "LGPL-3.0-or-later",
+      "project_sources": [
+        "https://github.com/tblite/tblite",
+        "https://tblite.readthedocs.io"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "ase",
+      "observed_version": "3.29.0",
+      "declared_license_summary": "LGPL-2.1-or-later",
+      "project_sources": [
+        "https://ase-lib.org/",
+        "https://gitlab.com/ase/ase.git",
+        "https://gitlab.com/ase/ase/issues/"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "openmm",
+      "observed_version": "8.6.1",
+      "declared_license_summary": "Python wrapper: PSF-style; native library and bundled components have separate terms",
+      "project_sources": [
+        "https://openmm.org"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "pdbfixer",
+      "observed_version": "1.12.0",
+      "declared_license_summary": "MIT",
+      "project_sources": [
+        "https://github.com/openmm/pdbfixer"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "gemmi",
+      "observed_version": "0.7.5",
+      "declared_license_summary": "MPL-2.0",
+      "project_sources": [
+        "https://github.com/project-gemmi/gemmi"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "meeko",
+      "observed_version": "0.8.0",
+      "declared_license_summary": "LGPL-2.1 in license field; classifier says LGPLv2+; consult installed license",
+      "project_sources": [
+        "https://github.com/forlilab/meeko"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "vina",
+      "observed_version": "1.2.7",
+      "declared_license_summary": "Apache-2.0",
+      "project_sources": [
+        "https://ccsb.scripps.edu/"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "pymatgen",
+      "observed_version": "2026.10.24",
+      "declared_license_summary": "MIT",
+      "project_sources": [
+        "https://pymatgen.org",
+        "https://github.com/materialsproject/pymatgen",
+        "https://github.com/materialsproject/pymatgen/issues",
+        "https://pypi.org/project/pymatgen"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "pycalphad",
+      "observed_version": "0.11.2",
+      "declared_license_summary": "MIT",
+      "project_sources": [
+        "https://pycalphad.org/"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "ngsolve",
+      "observed_version": "6.2.2607",
+      "declared_license_summary": "LGPL-2.1-only",
+      "project_sources": [
+        "https://github.com/NGSolve/ngsolve/blob/master/LICENSE"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "netgen-mesher",
+      "observed_version": "6.2.2607",
+      "declared_license_summary": "LGPL-2.1-only",
+      "project_sources": [
+        "https://github.com/NGSolve/netgen/blob/master/LICENSE"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "scikit-fem",
+      "observed_version": "12.0.2",
+      "declared_license_summary": "BSD license (package classifier)",
+      "project_sources": [
+        "https://github.com/kinnala/scikit-fem"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "gmsh",
+      "observed_version": "4.15.2",
+      "declared_license_summary": "GPLv2+; upstream commercial licensing option",
+      "project_sources": [
+        "https://gmsh.info"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "sgp4",
+      "observed_version": "2.27",
+      "declared_license_summary": "MIT",
+      "project_sources": [
+        "https://github.com/brandon-rhodes/python-sgp4"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "pymsis",
+      "observed_version": "0.13.0",
+      "declared_license_summary": "MIT for Python package; underlying MSIS model terms also apply",
+      "project_sources": [
+        "https://swxtrec.github.io/pymsis/",
+        "https://github.com/swxtrec/pymsis"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "matplotlib",
+      "observed_version": "3.11.2",
+      "declared_license_summary": "Matplotlib/PSF-style license; bundled component terms also apply",
+      "project_sources": [
+        "https://matplotlib.org",
+        "https://matplotlib.org/stable/install/index.html",
+        "https://github.com/matplotlib/matplotlib",
+        "https://github.com/matplotlib/matplotlib/issues",
+        "https://discourse.matplotlib.org/",
+        "https://numfocus.org/donate-to-matplotlib"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "PyYAML",
+      "observed_version": "6.0.3",
+      "declared_license_summary": "MIT",
+      "project_sources": [
+        "https://github.com/yaml/pyyaml/issues",
+        "https://github.com/yaml/pyyaml/actions",
+        "https://pyyaml.org/wiki/PyYAMLDocumentation",
+        "http://lists.sourceforge.net/lists/listinfo/yaml-core",
+        "https://github.com/yaml/pyyaml",
+        "https://pyyaml.org/"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "pytest",
+      "observed_version": "9.1.1",
+      "declared_license_summary": "MIT",
+      "project_sources": [
+        "https://docs.pytest.org/en/stable/changelog.html",
+        "https://docs.pytest.org/en/stable/contact.html",
+        "https://docs.pytest.org/en/stable/sponsor.html",
+        "https://docs.pytest.org/en/latest/",
+        "https://github.com/pytest-dev/pytest",
+        "https://github.com/pytest-dev/pytest/issues"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    },
+    {
+      "package": "build",
+      "observed_version": "1.6.1",
+      "declared_license_summary": "MIT",
+      "project_sources": [
+        "https://build.pypa.io/en/stable/changelog.html",
+        "https://build.pypa.io",
+        "https://github.com/pypa/build/issues",
+        "https://github.com/pypa/build"
+      ],
+      "review_basis": "Installed upstream distribution metadata and license-file inventory; additional primary-source checks documented in THIRD_PARTY_NOTICES.md.",
+      "bundled_in_this_repository": false
+    }
+  ],
+  "polyform_text": {
+    "official_url": "https://polyformproject.org/licenses/noncommercial/1.0.0.txt",
+    "sha256": "ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8",
+    "modified": false
+  }
+}

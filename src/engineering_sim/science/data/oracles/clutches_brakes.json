@@ -1,0 +1,503 @@
+{
+  "section": "clutches_brakes",
+  "cases": [
+    {
+      "calc": "clutches_brakes.disk_clutch_uniform_wear",
+      "inputs": {
+        "n": 2,
+        "mu": 0.3,
+        "F": "4 kN",
+        "r_o": "100 mm",
+        "r_i": "60 mm"
+      },
+      "expect": {
+        "T": "192 N*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T = n mu F (r_o + r_i)/2 = 2 x 0.3 x 4000 x (0.100 + 0.060)/2 = 2 x 0.3 x 4000 x 0.08 = 192 N·m"
+      }
+    },
+    {
+      "calc": "clutches_brakes.disk_clutch_uniform_wear",
+      "inputs": {
+        "n": 2,
+        "mu": 0.3,
+        "T": "192 N*m",
+        "r_o": "100 mm",
+        "r_i": "60 mm"
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expect": {
+        "F": "4 kN"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse of the case above: F = 2T/(n mu (r_o + r_i)) = 2 x 192/(2 x 0.3 x 0.16) = 384/0.096 = 4000 N"
+      }
+    },
+    {
+      "calc": "clutches_brakes.disk_clutch_uniform_pressure",
+      "inputs": {
+        "n": 2,
+        "mu": 0.35,
+        "F": "3 kN",
+        "r_o": "90 mm",
+        "r_i": "50 mm"
+      },
+      "expect": {
+        "T": "151 N*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ratio = (r_o^3 - r_i^3)/(r_o^2 - r_i^2) = (0.09^3 - 0.05^3)/(0.09^2 - 0.05^2) = (7.29e-4 - 1.25e-4)/(8.1e-3 - 2.5e-3) = 6.04e-4/5.6e-3 = 0.107857; T = 2 x 0.35 x 3000 x (2/3) x 0.107857 = 1400 x 0.107857 = 151.0 N·m"
+      }
+    },
+    {
+      "calc": "clutches_brakes.cone_clutch",
+      "inputs": {
+        "mu": 0.3,
+        "F": "2 kN",
+        "alpha": "15 deg",
+        "r_m": "80 mm"
+      },
+      "expect": {
+        "T": "185.46 N*m",
+        "N": "7.7274 kN"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "sin15° = 0.258819; N = F/sin(alpha) = 2000/0.258819 = 7727.4 N; T = mu N r_m = 0.3 x 7727.4 x 0.080 = 185.46 N·m"
+      }
+    },
+    {
+      "calc": "clutches_brakes.band_brake",
+      "inputs": {
+        "T2": "100 N",
+        "mu": 0.3,
+        "theta": "225 deg",
+        "r": "150 mm",
+        "b": "50 mm"
+      },
+      "expect": {
+        "T1": "324.82 N",
+        "T_brake": "33.723 N*m",
+        "p_max": "43.309 kPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "theta = 225° = 3.92699 rad; T1 = T2 e^(mu theta) = 100 e^(0.3 x 3.92699) = 100 e^1.17810 = 100 x 3.24818 = 324.82 N; T_brake = (T1 - T2) r = (324.82 - 100) x 0.15 = 33.723 N·m; p_max = 2 T1/(b D) = T1/(b r) = 324.82/(0.05 x 0.15) = 43.309 kPa"
+      }
+    },
+    {
+      "calc": "clutches_brakes.drum_brake_short_shoe",
+      "inputs": {
+        "F": "500 N",
+        "mu": 0.35,
+        "r": "0.12 m",
+        "a": "0.1 m",
+        "b": "0.05 m",
+        "c": "0.2 m",
+        "sense": "leading"
+      },
+      "expect": {
+        "T": "50.909 N*m",
+        "N": "1.2121 kN"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Leading (self-energizing) shoe: N = F c/(a - mu b) = 500 x 0.2/(0.1 - 0.35 x 0.05) = 100/0.0825 = 1212.1 N; T = mu N r = 0.35 x 1212.1 x 0.12 = 50.909 N·m"
+      }
+    },
+    {
+      "calc": "clutches_brakes.drum_brake_short_shoe",
+      "inputs": {
+        "T": "50.909 N*m",
+        "mu": 0.35,
+        "r": "0.12 m",
+        "a": "0.1 m",
+        "b": "0.05 m",
+        "c": "0.2 m",
+        "sense": "leading"
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expect": {
+        "F": "500 N"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse of the leading-shoe case: N = T/(mu r) = 50.909/(0.35 x 0.12) = 1212.1 N; F = N(a - mu b)/c = 1212.1 x 0.0825/0.2 = 500 N"
+      }
+    },
+    {
+      "calc": "clutches_brakes.drum_brake_short_shoe",
+      "inputs": {
+        "F": "500 N",
+        "mu": 0.35,
+        "r": "0.12 m",
+        "a": "0.1 m",
+        "b": "0.05 m",
+        "c": "0.2 m",
+        "sense": "trailing"
+      },
+      "expect": {
+        "T": "35.745 N*m",
+        "N": "851.06 N"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Trailing shoe: N = F c/(a + mu b) = 100/(0.1 + 0.0175) = 851.06 N; T = 0.35 x 851.06 x 0.12 = 35.745 N·m"
+      }
+    },
+    {
+      "calc": "clutches_brakes.drum_brake_long_shoe",
+      "inputs": {
+        "mu": 0.35,
+        "r": "150 mm",
+        "b": "50 mm",
+        "p_a": "1 MPa",
+        "a": "130 mm",
+        "c": "180 mm",
+        "theta1": "10 deg",
+        "theta2": "90 deg",
+        "sense": "leading"
+      },
+      "expect": {
+        "F": "3.0098 kN",
+        "T": "387.77 N*m",
+        "M_N": "764.05 N*m",
+        "M_f": "222.29 N*m",
+        "theta_a": "90 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta_a = min(theta2, 90°) = 90°, sin(theta_a)=1; I1 = (theta2-theta1)/2 - (sin2theta2 - sin2theta1)/4 = (1.5708-0.17453)/2 - (0 - 0.34202)/4 = 0.69813 + 0.085506 = 0.78364; M_N = p_a b r a I1 = 1e6 x 0.05 x 0.15 x 0.13 x 0.78364 = 764.05 N·m; I2 = r(cos theta1 - cos theta2) - (a/2)(sin^2 theta2 - sin^2 theta1) = 0.15(0.98481 - 0) - 0.065(1 - 0.030154) = 0.14772 - 0.063040 = 0.084681; M_f = mu p_a b r I2 = 0.35 x 1e6 x 0.05 x 0.15 x 0.084681 = 222.29 N·m; T = mu p_a b r^2 (cos theta1 - cos theta2) = 0.35 x 1e6 x 0.05 x 0.0225 x 0.98481 = 387.77 N·m; F = (M_N - M_f)/c = (764.05 - 222.29)/0.18 = 3009.8 N"
+      }
+    },
+    {
+      "calc": "clutches_brakes.drum_brake_long_shoe",
+      "inputs": {
+        "mu": 0.35,
+        "r": "150 mm",
+        "b": "50 mm",
+        "p_a": "1 MPa",
+        "a": "130 mm",
+        "c": "180 mm",
+        "theta1": "10 deg",
+        "theta2": "90 deg",
+        "sense": "trailing"
+      },
+      "expect": {
+        "F": "5.4796 kN",
+        "T": "387.77 N*m",
+        "M_N": "764.05 N*m",
+        "M_f": "222.29 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Same geometry as the leading case; a trailing shoe adds the friction moment instead of subtracting it. M_N = 764.05 N·m, M_f = 222.29 N·m (unchanged); F = (M_N + M_f)/c = (764.05 + 222.29)/0.18 = 986.34/0.18 = 5479.6 N; T = 387.77 N·m (torque is independent of shoe sense)."
+      }
+    },
+    {
+      "calc": "clutches_brakes.drum_brake_long_shoe",
+      "inputs": {
+        "mu": 1.0,
+        "r": "150 mm",
+        "b": "50 mm",
+        "p_a": "1 MPa",
+        "a": "130 mm",
+        "c": "180 mm",
+        "theta1": "10 deg",
+        "theta2": "90 deg",
+        "sense": "leading"
+      },
+      "expect": {
+        "F": "716.32 N",
+        "T": "1.1079 kN*m",
+        "M_N": "764.05 N*m",
+        "M_f": "635.11 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Leading shoe near the self-locking boundary (mu = 1.0 is just below mu_crit = a I1/I2 = 0.13 x 0.78364/0.084681 = 1.203). M_N = 764.05 N·m (unchanged); M_f = mu p_a b r I2 = 1.0 x 1e6 x 0.05 x 0.15 x 0.084681 = 635.11 N·m; T = 1.0 x 1e6 x 0.05 x 0.0225 x 0.98481 = 1107.9 N·m; F = (M_N - M_f)/c = (764.05 - 635.11)/0.18 = 716.32 N (still positive, so no self-locking)."
+      }
+    },
+    {
+      "calc": "clutches_brakes.drum_brake_long_shoe",
+      "inputs": {
+        "mu": 0.35,
+        "r": "150 mm",
+        "b": "50 mm",
+        "p_a": "1 MPa",
+        "a": "130 mm",
+        "c": "180 mm",
+        "theta1": "10 deg",
+        "theta2": "60 deg",
+        "sense": "leading"
+      },
+      "expect": {
+        "F": "1.4731 kN",
+        "T": "220.42 N*m",
+        "M_N": "343.75 N*m",
+        "M_f": "78.600 N*m",
+        "theta_a": "60 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta2 = 60° < 90°, so theta_a = theta2 = 60° and sin(theta_a) = 0.866025. I1 = (theta2-theta1)/2 - (sin120 - sin20)/4 = (1.04720-0.17453)/2 - (0.866025-0.342020)/4 = 0.436332 - 0.131001 = 0.305331; M_N = p_a b r a I1/sin(theta_a) = 1e6 x 0.05 x 0.15 x 0.13 x 0.305331/0.866025 = 343.75 N·m; I2 = r(cos10 - cos60) - (a/2)(sin^2 60 - sin^2 10) = 0.15(0.98481 - 0.5) - 0.065(0.75 - 0.030154) = 0.072721 - 0.046790 = 0.025931; M_f = 0.35 x 1e6 x 0.05 x 0.15 x 0.025931/0.866025 = 78.600 N·m; T = 0.35 x 1e6 x 0.05 x 0.0225 x 0.48481/0.866025 = 220.42 N·m; F = (343.75 - 78.600)/0.18 = 1473.1 N"
+      }
+    },
+    {
+      "calc": "clutches_brakes.disk_brake_caliper",
+      "inputs": {
+        "mu": 0.4,
+        "F": "5 kN",
+        "r_o": "140 mm",
+        "r_i": "90 mm"
+      },
+      "expect": {
+        "T": "460 N*m",
+        "r_m": "115 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r_m = (0.140 + 0.090)/2 = 0.115 m; T = 2 mu F r_m = 2 x 0.4 x 5000 x 0.115 = 460 N·m"
+      }
+    },
+    {
+      "calc": "clutches_brakes.disk_brake_uniform_pressure",
+      "inputs": {
+        "mu": 0.4,
+        "F": "5 kN",
+        "r_o": "140 mm",
+        "r_i": "90 mm"
+      },
+      "expect": {
+        "T": "467.25 N*m",
+        "r_m": "116.81 mm"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "r_m = (2/3)(r_o^3 - r_i^3)/(r_o^2 - r_i^2) = (2/3)(0.14^3 - 0.09^3)/(0.14^2 - 0.09^2) = (2/3)(2.744e-3 - 7.29e-4)/(0.0196 - 0.0081) = (2/3)(2.015e-3/0.0115) = 0.116812 m; T = 2 mu F r_m = 2 x 0.4 x 5000 x 0.116812 = 467.25 N·m"
+      }
+    },
+    {
+      "calc": "clutches_brakes.disk_brake_button",
+      "inputs": {
+        "mu": 0.4,
+        "F": "5 kN",
+        "r_e": "115 mm"
+      },
+      "expect": {
+        "T": "460 N*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Button (circular) pad with nearly uniform pressure: resultant friction acts at the pad centre, so T = 2 mu F r_e = 2 x 0.4 x 5000 x 0.115 = 460 N·m"
+      }
+    },
+    {
+      "calc": "clutches_brakes.brake_energy",
+      "inputs": {
+        "m": "1 t",
+        "v1": "36 km/h",
+        "v2": "0 m/s",
+        "I": "1.5 kg*m^2",
+        "omega1": "20 rad/s",
+        "omega2": "0 rad/s"
+      },
+      "expect": {
+        "E": "50.3 kJ"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v1 = 36 km/h = 10 m/s; E = 0.5 m (v1^2 - v2^2) + 0.5 I (omega1^2 - omega2^2) = 0.5 x 1000 x 100 + 0.5 x 1.5 x 400 = 50000 + 300 = 50300 J = 50.3 kJ"
+      }
+    },
+    {
+      "calc": "clutches_brakes.brake_energy",
+      "inputs": {
+        "m": "1 t",
+        "v1": "20 m/s",
+        "v2": "5 m/s",
+        "I": "2 kg*m^2",
+        "omega1": "150 rad/s",
+        "omega2": "40 rad/s"
+      },
+      "expect": {
+        "E": "208.4 kJ"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Speed change (not to rest): E = 0.5 x 1000 x (20^2 - 5^2) + 0.5 x 2 x (150^2 - 40^2) = 500 x (400 - 25) + 1 x (22500 - 1600) = 187500 + 20900 = 208400 J = 208.4 kJ"
+      }
+    },
+    {
+      "calc": "clutches_brakes.brake_stop_time",
+      "inputs": {
+        "I": "2 kg*m^2",
+        "omega": "100 rad/s",
+        "T": "50 N*m"
+      },
+      "expect": {
+        "t": "4 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "t = I omega/T = 2 x 100/50 = 4 s"
+      }
+    },
+    {
+      "calc": "clutches_brakes.brake_stop_time",
+      "inputs": {
+        "I": "2 kg*m^2",
+        "T": "50 N*m",
+        "t": "4 s"
+      },
+      "solve_for": [
+        "omega"
+      ],
+      "expect": {
+        "omega": "954.93 rpm"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = T t/I = 50 x 4/2 = 100 rad/s = 100 x 60/(2 pi) = 954.93 rpm"
+      }
+    },
+    {
+      "calc": "clutches_brakes.brake_temp_rise",
+      "inputs": {
+        "E": "50 kJ",
+        "m_brake": "5 kg",
+        "cp": "500 J/(kg*K)"
+      },
+      "expect": {
+        "dT": "20 delta_degC"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "dT = E/(m c_p) = 50000/(5 x 500) = 20 K"
+      }
+    },
+    {
+      "calc": "clutches_brakes.flywheel_energy",
+      "inputs": {
+        "omega_max": "105 rad/s",
+        "omega_min": "95 rad/s",
+        "I": "3 kg*m^2"
+      },
+      "expect": {
+        "omega_avg": "100 rad/s",
+        "C_s": 0.1,
+        "delta_E": "3 kJ"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_avg = (105 + 95)/2 = 100; C_s = (105 - 95)/100 = 0.1; delta_E = 0.5 x 3 x (105^2 - 95^2) = 1.5 x (11025 - 9025) = 1.5 x 2000 = 3000 J"
+      }
+    },
+    {
+      "calc": "clutches_brakes.flywheel_inertia_required",
+      "inputs": {
+        "I": "3 kg*m^2",
+        "C_s": 0.1,
+        "delta_E": "3 kJ"
+      },
+      "solve_for": [
+        "omega"
+      ],
+      "expect": {
+        "omega": "100 rad/s"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = sqrt(delta_E/(C_s I)) = sqrt(3000/(0.1 x 3)) = sqrt(10000) = 100 rad/s"
+      }
+    },
+    {
+      "calc": "clutches_brakes.flywheel_inertia_required",
+      "inputs": {
+        "delta_E": "3 kJ",
+        "C_s": 0.1,
+        "omega": "100 rad/s"
+      },
+      "expect": {
+        "I": "3 kg*m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "I = delta_E/(C_s omega^2) = 3000/(0.1 x 10000) = 3000/1000 = 3 kg·m^2"
+      }
+    },
+    {
+      "calc": "clutches_brakes.flywheel_rim",
+      "inputs": {
+        "rho": "7850 kg/m^3",
+        "R": "300 mm",
+        "b": "50 mm",
+        "t": "20 mm"
+      },
+      "expect": {
+        "V": "1.88496e-3 m^3",
+        "m": "14.797 kg",
+        "I": "1.3317 kg*m^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = 2 pi R b t = 2 x pi x 0.3 x 0.05 x 0.02 = 1.88496e-3 m^3; m = rho V = 7850 x 1.88496e-3 = 14.797 kg; I = m R^2 = 14.797 x 0.09 = 1.3317 kg·m^2"
+      }
+    },
+    {
+      "calc": "clutches_brakes.flywheel_torque_angle",
+      "inputs": {
+        "torque_curve": [
+          [
+            0,
+            150
+          ],
+          [
+            180,
+            150
+          ],
+          [
+            180,
+            50
+          ],
+          [
+            360,
+            50
+          ]
+        ]
+      },
+      "expect": {
+        "T_mean": 100,
+        "W_max": "157.08 J",
+        "W_min": 0,
+        "delta_E": "157.08 J"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Square-wave turning moment, 150 N·m over [0, 180°] and 50 N·m over [180°, 360°]. Mean torque = (150 pi + 50 pi)/(2 pi) = 100 N·m. Cumulative W(theta) = integral (T - 100) dtheta: rises to (150 - 100) pi = 50 pi at 180° then falls back to 0. W_max = 50 pi = 157.08 J, W_min = 0, delta_E = 157.08 J"
+      }
+    }
+  ]
+}

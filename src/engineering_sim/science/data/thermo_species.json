@@ -1,0 +1,2989 @@
+{
+  "Al(s)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7429905&Mask=2#Thermo-Condensed",
+      "uncertainty": 0.1,
+      "unit": "J/mol*K",
+      "value": 28.3,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "Al": 1
+    },
+    "formula": "Al",
+    "name": "Aluminum",
+    "phase": "solid",
+    "shomate": [
+      {
+        "A": 28.0892,
+        "B": -5.414849,
+        "C": 8.560423,
+        "D": 3.42737,
+        "E": -0.277375,
+        "F": -9.147187,
+        "G": 61.90981,
+        "H": 0.0,
+        "Tmax": 933.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7429905&Mask=2#Thermo-Condensed",
+        "verified": true
+      }
+    ],
+    "smiles": "[Al]"
+  },
+  "Al2O3(s)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (corundum phase; CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1344281&Mask=2#Thermo-Condensed",
+      "uncertainty": 0.1,
+      "unit": "J/mol*K",
+      "value": 50.92,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (corundum phase; CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1344281&Mask=2#Thermo-Condensed",
+      "uncertainty": 1.3,
+      "unit": "kJ/mol",
+      "value": -1675.7,
+      "verified": true
+    },
+    "elements": {
+      "Al": 2,
+      "O": 3
+    },
+    "formula": "Al2O3",
+    "name": "Aluminum oxide",
+    "phase": "solid",
+    "shomate": [
+      {
+        "A": 102.429,
+        "B": 38.7498,
+        "C": -15.9109,
+        "D": 2.628181,
+        "E": -3.007551,
+        "F": -1717.93,
+        "G": 146.997,
+        "H": -1675.69,
+        "Tmax": 2327.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1344281&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": 108.683,
+        "B": 37.2263,
+        "C": -14.2065,
+        "D": 2.193601,
+        "E": -3.209881,
+        "F": -1701.6,
+        "G": 155.136,
+        "H": -1656.86,
+        "Tmax": 2327.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1344281&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": 106.918,
+        "B": 36.6219,
+        "C": -13.9759,
+        "D": 2.15799,
+        "E": -3.157761,
+        "F": -1710.5,
+        "G": 151.792,
+        "H": -1666.49,
+        "Tmax": 2327.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1344281&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": 106.088,
+        "B": 36.3374,
+        "C": -13.8673,
+        "D": 2.141221,
+        "E": -3.133231,
+        "F": -1705.97,
+        "G": 153.935,
+        "H": -1662.3,
+        "Tmax": 2327.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1344281&Mask=2#Thermo-Condensed",
+        "verified": true
+      }
+    ],
+    "smiles": "[Al+3].[Al+3].[O-2].[O-2].[O-2]"
+  },
+  "Ar": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440371&Mask=1#Thermo-Gas",
+      "uncertainty": 0.003,
+      "unit": "J/mol*K",
+      "value": 154.846,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "Ar": 1
+    },
+    "formula": "Ar",
+    "name": "Argon",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 20.786,
+        "B": 2.825911e-07,
+        "C": -1.464191e-07,
+        "D": 1.092131e-08,
+        "E": -3.661371e-08,
+        "F": -6.19735,
+        "G": 179.999,
+        "H": 0.0,
+        "Tmax": 6000.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440371&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "[Ar]"
+  },
+  "Br2(g)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7726956&Mask=1#Thermo-Gas",
+      "uncertainty": 0.005,
+      "unit": "J/mol*K",
+      "value": 245.468,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7726956&Mask=1#Thermo-Gas",
+      "uncertainty": 0.11,
+      "unit": "kJ/mol",
+      "value": 30.91,
+      "verified": true
+    },
+    "elements": {
+      "Br": 2
+    },
+    "formula": "Br2",
+    "name": "Bromine",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 38.52723,
+        "B": -1.976835,
+        "C": 1.526107,
+        "D": -0.198398,
+        "E": -0.185815,
+        "F": 18.8762,
+        "G": 291.4863,
+        "H": 30.91001,
+        "Tmax": 3400.0,
+        "Tmin": 332.503,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7726956&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 34.99288,
+        "B": 9.252248,
+        "C": -2.361588,
+        "D": 0.154336,
+        "E": -43.07637,
+        "F": -7.467771,
+        "G": 273.6303,
+        "H": 30.91001,
+        "Tmax": 6000.0,
+        "Tmin": 3400.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7726956&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "BrBr"
+  },
+  "C(gr)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "N/A (Average of 10 values; Individual data points)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782425&Mask=2#Thermo-Condensed",
+      "uncertainty": 0.5,
+      "unit": "J/mol*K",
+      "value": 5.6,
+      "verified": true
+    },
+    "cp298_JmolK": {
+      "kind": "unverified",
+      "source": "NIST-JANAF graphite Cp at 298.15 K (standard value); WebBook lists only scattered experimental Cp",
+      "unit": "J/mol*K",
+      "value": 8.527
+    },
+    "cp_model": "constant",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "C": 1
+    },
+    "formula": "C",
+    "name": "Graphite",
+    "phase": "solid",
+    "smiles": "[C]"
+  },
+  "C2H2": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in March, 1961)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74862&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 200.93,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Manion, 2002 (adopted recommendation of  Gurvich, Veyts, et al., 1991; DRB)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74862&Mask=1#Thermo-Gas",
+      "uncertainty": 0.8,
+      "unit": "kJ/mol",
+      "value": 227.4,
+      "verified": true
+    },
+    "elements": {
+      "C": 2,
+      "H": 2
+    },
+    "formula": "C2H2",
+    "name": "Acetylene",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 40.68697,
+        "B": 40.73279,
+        "C": -16.1784,
+        "D": 3.669741,
+        "E": -0.658411,
+        "F": 210.7067,
+        "G": 235.0052,
+        "H": 226.7314,
+        "Tmax": 1100.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74862&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 67.47244,
+        "B": 11.7511,
+        "C": -2.02147,
+        "D": 0.136195,
+        "E": -9.806418,
+        "F": 185.455,
+        "G": 253.5337,
+        "H": 226.7314,
+        "Tmax": 6000.0,
+        "Tmin": 1100.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74862&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "C#C"
+  },
+  "C2H4": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in September, 1965)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74851&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 219.32,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Manion, 2002 (adopted recommendation of  Gurvich, Veyts, et al., 1991; DRB)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74851&Mask=1#Thermo-Gas",
+      "uncertainty": 0.5,
+      "unit": "kJ/mol",
+      "value": 52.4,
+      "verified": true
+    },
+    "elements": {
+      "C": 2,
+      "H": 4
+    },
+    "formula": "C2H4",
+    "name": "Ethylene",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": -6.38788,
+        "B": 184.4019,
+        "C": -112.9718,
+        "D": 28.49593,
+        "E": 0.31554,
+        "F": 48.17332,
+        "G": 163.1568,
+        "H": 52.46694,
+        "Tmax": 1200.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74851&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 106.5104,
+        "B": 13.7326,
+        "C": -2.628481,
+        "D": 0.174595,
+        "E": -26.14469,
+        "F": -35.36237,
+        "G": 275.0424,
+        "H": 52.46694,
+        "Tmax": 6000.0,
+        "Tmin": 1200.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74851&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "C=C"
+  },
+  "C2H5OH(g)": {
+    "S298_JmolK": {
+      "kind": "unverified",
+      "source": "Gurvich, Veyts & Alcock, Thermodynamic Properties of Individual Substances (via NIST WebBook Cp table)",
+      "unit": "J/mol*K",
+      "value": 282.7
+    },
+    "cp298_JmolK": {
+      "kind": "cited",
+      "note": "Cp at 298.15 K from the WebBook constant-pressure heat capacity table",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C64175&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 65.21,
+      "verified": true
+    },
+    "cp_model": "constant",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "N/A (Average of 9 values; Individual data points)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C64175&Mask=1#Thermo-Gas",
+      "uncertainty": 2.0,
+      "unit": "kJ/mol",
+      "value": -234.0,
+      "verified": true
+    },
+    "elements": {
+      "C": 2,
+      "H": 6,
+      "O": 1
+    },
+    "formula": "C2H6O",
+    "name": "Ethanol",
+    "phase": "gas",
+    "smiles": "CCO"
+  },
+  "C2H6": {
+    "S298_JmolK": {
+      "kind": "unverified",
+      "source": "Gurvich, Veyts & Alcock, Thermodynamic Properties of Individual Substances (via NIST WebBook Cp table)",
+      "unit": "J/mol*K",
+      "value": 229.6
+    },
+    "cp298_JmolK": {
+      "kind": "cited",
+      "note": "Cp at 298.15 K from the WebBook constant-pressure heat capacity table",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74840&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 52.49,
+      "verified": true
+    },
+    "cp_model": "constant",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Manion, 2002 (adopted recommendation of  Gurvich, Veyts, et al., 1991; DRB)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74840&Mask=1#Thermo-Gas",
+      "uncertainty": 0.4,
+      "unit": "kJ/mol",
+      "value": -84.0,
+      "verified": true
+    },
+    "elements": {
+      "C": 2,
+      "H": 6
+    },
+    "formula": "C2H6",
+    "name": "Ethane",
+    "phase": "gas",
+    "smiles": "CC"
+  },
+  "C3H8": {
+    "S298_JmolK": {
+      "kind": "unverified",
+      "source": "Gurvich, Veyts & Alcock, Thermodynamic Properties of Individual Substances (via NIST WebBook Cp table)",
+      "unit": "J/mol*K",
+      "value": 269.91
+    },
+    "cp298_JmolK": {
+      "kind": "cited",
+      "note": "Cp at 298.15 K from the WebBook constant-pressure heat capacity table",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74986&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 73.6,
+      "verified": true
+    },
+    "cp_model": "constant",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Pittam and Pilcher, 1972 (ALS)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74986&Mask=1#Thermo-Gas",
+      "uncertainty": 0.5,
+      "unit": "kJ/mol",
+      "value": -104.7,
+      "verified": true
+    },
+    "elements": {
+      "C": 3,
+      "H": 8
+    },
+    "formula": "C3H8",
+    "name": "Propane",
+    "phase": "gas",
+    "smiles": "CCC"
+  },
+  "CH3COOH(g)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Weltner W., 1955 (Other third-law entropy values at 298.15 K are 284.5 [ Chao J., 1986] and 290.37(4.18) J/mol*K [ Halford J.O., 1941].; GT)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C64197&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 282.84,
+      "verified": true
+    },
+    "cp298_JmolK": {
+      "kind": "cited",
+      "note": "Cp at 298.15 K from the WebBook constant-pressure heat capacity table",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C64197&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 63.44,
+      "verified": true
+    },
+    "cp_model": "constant",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "N/A (Average of 8 values; Individual data points)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C64197&Mask=1#Thermo-Gas",
+      "uncertainty": 3.0,
+      "unit": "kJ/mol",
+      "value": -433.0,
+      "verified": true
+    },
+    "elements": {
+      "C": 2,
+      "H": 4,
+      "O": 2
+    },
+    "formula": "C2H4O2",
+    "name": "Acetic acid",
+    "phase": "gas",
+    "smiles": "CC(=O)O"
+  },
+  "CH3OH(g)": {
+    "S298_JmolK": {
+      "kind": "unverified",
+      "source": "Gurvich, Veyts & Alcock, Thermodynamic Properties of Individual Substances (via NIST WebBook Cp table)",
+      "unit": "J/mol*K",
+      "value": 239.81
+    },
+    "cp298_JmolK": {
+      "kind": "cited",
+      "note": "Cp at 298.15 K from the WebBook constant-pressure heat capacity table",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C67561&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 44.06,
+      "verified": true
+    },
+    "cp_model": "constant",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "N/A (Average of 9 values; Individual data points)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C67561&Mask=1#Thermo-Gas",
+      "uncertainty": 10.0,
+      "unit": "kJ/mol",
+      "value": -205.0,
+      "verified": true
+    },
+    "elements": {
+      "C": 1,
+      "H": 4,
+      "O": 1
+    },
+    "formula": "CH4O",
+    "name": "Methanol",
+    "phase": "gas",
+    "smiles": "CO"
+  },
+  "CH4": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Colwell J.H., 1963 (The calorimetric value is significantly higher than the statistically calculated entropy, 186.26 J/mol*K, which remains the best value for use in thermodynamic calculations [ Vogt G.J., 1976,  Friend D.G., 1989,  Gurvich, Veyts, et al., 1989]. Earlier the value of 185.3 J/mol*K was calculated from experimental data [ Giauque W.F., 1931]. The value of S(298.15 K)=185.94 J/mol*K was obtained by high accuracy ab initio calculation [ East A.L.L., 1997].; GT)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74828&Mask=1#Thermo-Gas",
+      "uncertainty": 0.42,
+      "unit": "J/mol*K",
+      "value": 188.66,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Manion, 2002 (adopted recommendation of  Gurvich, Veyts, et al., 1991; DRB)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74828&Mask=1#Thermo-Gas",
+      "uncertainty": 0.3,
+      "unit": "kJ/mol",
+      "value": -74.6,
+      "verified": true
+    },
+    "elements": {
+      "C": 1,
+      "H": 4
+    },
+    "formula": "CH4",
+    "name": "Methane",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": -0.703029,
+        "B": 108.4773,
+        "C": -42.52157,
+        "D": 5.862788,
+        "E": 0.678565,
+        "F": -76.84376,
+        "G": 158.7163,
+        "H": -74.8731,
+        "Tmax": 1300.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74828&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 85.81217,
+        "B": 11.26467,
+        "C": -2.114146,
+        "D": 0.13819,
+        "E": -26.42221,
+        "F": -153.5327,
+        "G": 224.4143,
+        "H": -74.8731,
+        "Tmax": 6000.0,
+        "Tmin": 1300.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74828&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "C"
+  },
+  "CO": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C630080&Mask=1#Thermo-Gas",
+      "uncertainty": 0.004,
+      "unit": "J/mol*K",
+      "value": 197.66,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C630080&Mask=1#Thermo-Gas",
+      "uncertainty": 0.17,
+      "unit": "kJ/mol",
+      "value": -110.53,
+      "verified": true
+    },
+    "elements": {
+      "C": 1,
+      "O": 1
+    },
+    "formula": "CO",
+    "name": "Carbon monoxide",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 25.56759,
+        "B": 6.09613,
+        "C": 4.054656,
+        "D": -2.671301,
+        "E": 0.131021,
+        "F": -118.0089,
+        "G": 227.3665,
+        "H": -110.5271,
+        "Tmax": 1300.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C630080&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 35.1507,
+        "B": 1.300095,
+        "C": -0.205921,
+        "D": 0.01355,
+        "E": -3.28278,
+        "F": -127.8375,
+        "G": 231.712,
+        "H": -110.5271,
+        "Tmax": 6000.0,
+        "Tmin": 1300.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C630080&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "[C-]#[O+]"
+  },
+  "CO2": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=1#Thermo-Gas",
+      "uncertainty": 0.01,
+      "unit": "J/mol*K",
+      "value": 213.785,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=1#Thermo-Gas",
+      "uncertainty": 0.13,
+      "unit": "kJ/mol",
+      "value": -393.51,
+      "verified": true
+    },
+    "elements": {
+      "C": 1,
+      "O": 2
+    },
+    "formula": "CO2",
+    "name": "Carbon dioxide",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 24.99735,
+        "B": 55.18696,
+        "C": -33.69137,
+        "D": 7.948387,
+        "E": -0.136638,
+        "F": -403.6075,
+        "G": 228.2431,
+        "H": -393.5224,
+        "Tmax": 1200.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 58.16639,
+        "B": 2.720074,
+        "C": -0.492289,
+        "D": 0.038844,
+        "E": -6.447293,
+        "F": -425.9186,
+        "G": 263.6125,
+        "H": -393.5224,
+        "Tmax": 6000.0,
+        "Tmin": 1200.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "O=C=O"
+  },
+  "CaCO3(s)": {
+    "S298_JmolK": {
+      "kind": "unverified",
+      "source": "NIST-JANAF Thermochemical Tables (standard reference); not in WebBook solid thermochemistry",
+      "unit": "J/mol*K",
+      "value": 92.9
+    },
+    "cp298_JmolK": {
+      "kind": "unverified",
+      "note": "constant-Cp approximation",
+      "source": "NIST-JANAF Thermochemical Tables (standard reference); not in WebBook solid thermochemistry",
+      "unit": "J/mol*K",
+      "value": 81.88
+    },
+    "cp_model": "constant",
+    "dHf298_kJmol": {
+      "kind": "unverified",
+      "source": "NIST-JANAF Thermochemical Tables (standard reference); not in WebBook solid thermochemistry",
+      "unit": "kJ/mol",
+      "value": -1206.9
+    },
+    "elements": {
+      "C": 1,
+      "Ca": 1,
+      "O": 3
+    },
+    "formula": "CCaO3",
+    "name": "Calcium carbonate (calcite)",
+    "phase": "solid",
+    "smiles": "O=C([O-])[O-].[Ca+2]"
+  },
+  "CaO(s)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1305788&Mask=2#Thermo-Condensed",
+      "uncertainty": 0.4,
+      "unit": "J/mol*K",
+      "value": 38.1,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1305788&Mask=2#Thermo-Condensed",
+      "uncertainty": 0.9,
+      "unit": "kJ/mol",
+      "value": -634.92,
+      "verified": true
+    },
+    "elements": {
+      "Ca": 1,
+      "O": 1
+    },
+    "formula": "CaO",
+    "name": "Calcium oxide",
+    "phase": "solid",
+    "shomate": [
+      {
+        "A": 49.95403,
+        "B": 4.887916,
+        "C": -0.352056,
+        "D": 0.046187,
+        "E": -0.825097,
+        "F": -652.9718,
+        "G": 92.56096,
+        "H": -635.0894,
+        "Tmax": 3200.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1305788&Mask=2#Thermo-Condensed",
+        "verified": true
+      }
+    ],
+    "smiles": "[Ca+2].[O-2]"
+  },
+  "Cl": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C22537151&Mask=1#Thermo-Gas",
+      "uncertainty": 0.004,
+      "unit": "J/mol*K",
+      "value": 165.19,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C22537151&Mask=1#Thermo-Gas",
+      "uncertainty": 0.008,
+      "unit": "kJ/mol",
+      "value": 121.301,
+      "verified": true
+    },
+    "elements": {
+      "Cl": 1
+    },
+    "formula": "Cl",
+    "name": "Chlorine atom",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 13.38298,
+        "B": 42.33999,
+        "C": -64.74656,
+        "D": 32.99532,
+        "E": 0.063319,
+        "F": 116.1491,
+        "G": 171.7038,
+        "H": 121.3021,
+        "Tmax": 600.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C22537151&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 23.26597,
+        "B": -1.555939,
+        "C": 0.34691,
+        "D": -0.025961,
+        "E": 0.153212,
+        "F": 114.6604,
+        "G": 193.8882,
+        "H": 121.3021,
+        "Tmax": 6000.0,
+        "Tmin": 600.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C22537151&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "[Cl]"
+  },
+  "Cl2": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782505&Mask=1#Thermo-Gas",
+      "uncertainty": 0.01,
+      "unit": "J/mol*K",
+      "value": 223.081,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "Cl": 2
+    },
+    "formula": "Cl2",
+    "name": "Chlorine",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 33.0506,
+        "B": 12.2294,
+        "C": -12.0651,
+        "D": 4.38533,
+        "E": -0.159494,
+        "F": -10.8348,
+        "G": 259.029,
+        "H": 0.0,
+        "Tmax": 1000.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782505&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 42.6773,
+        "B": -5.00957,
+        "C": 1.904621,
+        "D": -0.165641,
+        "E": -2.09848,
+        "F": -17.2898,
+        "G": 269.84,
+        "H": 0.0,
+        "Tmax": 3000.0,
+        "Tmin": 1000.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782505&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": -42.5535,
+        "B": 41.6857,
+        "C": -7.12683,
+        "D": 0.387839,
+        "E": 101.144,
+        "F": 132.764,
+        "G": 264.786,
+        "H": 0.0,
+        "Tmax": 6000.0,
+        "Tmin": 3000.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782505&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "ClCl"
+  },
+  "F2": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782414&Mask=1#Thermo-Gas",
+      "uncertainty": 0.005,
+      "unit": "J/mol*K",
+      "value": 202.791,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "F": 2
+    },
+    "formula": "F2",
+    "name": "Fluorine",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 31.4451,
+        "B": 8.413831,
+        "C": -2.77885,
+        "D": 0.218104,
+        "E": -0.211175,
+        "F": -10.4326,
+        "G": 237.277,
+        "H": 0.0,
+        "Tmax": 6000.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782414&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "FF"
+  },
+  "Fe(s)": {
+    "S298_JmolK": {
+      "kind": "derived",
+      "method": "Shomate/NIST WebBook (S at 298.15 K)",
+      "unit": "J/mol*K",
+      "value": 27.3209
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "Fe": 1
+    },
+    "formula": "Fe",
+    "name": "Iron",
+    "phase": "solid",
+    "shomate": [
+      {
+        "A": 18.42868,
+        "B": 24.64301,
+        "C": -8.91372,
+        "D": 9.664706,
+        "E": -0.012643,
+        "F": -6.573022,
+        "G": 42.51488,
+        "H": 0.0,
+        "Tmax": 700.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7439896&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": -57767.65,
+        "B": 137919.7,
+        "C": -122773.2,
+        "D": 38682.42,
+        "E": 3993.08,
+        "F": 24078.67,
+        "G": -87364.01,
+        "H": 0.0,
+        "Tmax": 1042.0,
+        "Tmin": 700.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7439896&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": -325.8859,
+        "B": 28.92876,
+        "C": 0.0,
+        "D": 0.0,
+        "E": 411.9629,
+        "F": 745.8231,
+        "G": 241.8766,
+        "H": 0.0,
+        "Tmax": 1100.0,
+        "Tmin": 1042.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7439896&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": -776.7387,
+        "B": 919.4005,
+        "C": -383.7184,
+        "D": 57.08148,
+        "E": 242.1369,
+        "F": 697.6234,
+        "G": -558.3674,
+        "H": 0.0,
+        "Tmax": 1809.0,
+        "Tmin": 1100.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7439896&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": 23.97449,
+        "B": 8.36775,
+        "C": 0.000277,
+        "D": -8.6e-05,
+        "E": -5e-06,
+        "F": 0.268027,
+        "G": 62.06336,
+        "H": 7.788015,
+        "Tmax": 1809.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7439896&Mask=2#Thermo-Condensed",
+        "verified": true
+      }
+    ],
+    "smiles": "[Fe]"
+  },
+  "Fe2O3(s)": {
+    "S298_JmolK": {
+      "kind": "derived",
+      "method": "Shomate/NIST WebBook (S at 298.15 K)",
+      "unit": "J/mol*K",
+      "value": 87.3321
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (hematite phase; Data last reviewed in June, 1965)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1317608&Mask=2#Thermo-Condensed",
+      "unit": "kJ/mol",
+      "value": -825.5,
+      "verified": true
+    },
+    "elements": {
+      "Fe": 2,
+      "O": 3
+    },
+    "formula": "Fe2O3",
+    "name": "Hematite",
+    "phase": "solid",
+    "shomate": [
+      {
+        "A": 93.43834,
+        "B": 108.3577,
+        "C": -50.86447,
+        "D": 25.58683,
+        "E": -1.61133,
+        "F": -863.2094,
+        "G": 161.0719,
+        "H": -825.5032,
+        "Tmax": 950.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1317608&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": 150.624,
+        "B": 0.0,
+        "C": 0.0,
+        "D": 0.0,
+        "E": 0.0,
+        "F": -875.6066,
+        "G": 252.8814,
+        "H": -825.5032,
+        "Tmax": 1050.0,
+        "Tmin": 950.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1317608&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": 110.9362,
+        "B": 32.04714,
+        "C": -9.192333,
+        "D": 0.901506,
+        "E": 5.433677,
+        "F": -843.1471,
+        "G": 228.3548,
+        "H": -825.5032,
+        "Tmax": 2500.0,
+        "Tmin": 1050.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1317608&Mask=2#Thermo-Condensed",
+        "verified": true
+      }
+    ],
+    "smiles": "[Fe+3].[Fe+3].[O-2].[O-2].[O-2]"
+  },
+  "H": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C12385136&Mask=1#Thermo-Gas",
+      "uncertainty": 0.002,
+      "unit": "J/mol*K",
+      "value": 114.717,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C12385136&Mask=1#Thermo-Gas",
+      "uncertainty": 0.006,
+      "unit": "kJ/mol",
+      "value": 217.998,
+      "verified": true
+    },
+    "elements": {
+      "H": 1
+    },
+    "formula": "H",
+    "name": "Hydrogen atom",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 20.78603,
+        "B": 4.850638e-10,
+        "C": -1.582916e-10,
+        "D": 1.525102e-11,
+        "E": 3.196347e-11,
+        "F": 211.802,
+        "G": 139.8711,
+        "H": 217.9994,
+        "Tmax": 6000.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C12385136&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "[H]"
+  },
+  "H2": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1333740&Mask=1#Thermo-Gas",
+      "uncertainty": 0.003,
+      "unit": "J/mol*K",
+      "value": 130.68,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "H": 2
+    },
+    "formula": "H2",
+    "name": "Hydrogen",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 33.066178,
+        "B": -11.363417,
+        "C": 11.432816,
+        "D": -2.772874,
+        "E": -0.158558,
+        "F": -9.980797,
+        "G": 172.707974,
+        "H": 0.0,
+        "Tmax": 1000.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1333740&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 18.563083,
+        "B": 12.257357,
+        "C": -2.859786,
+        "D": 0.268238,
+        "E": 1.97799,
+        "F": -1.147438,
+        "G": 156.288133,
+        "H": 0.0,
+        "Tmax": 2500.0,
+        "Tmin": 1000.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1333740&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 43.41356,
+        "B": -4.293079,
+        "C": 1.272428,
+        "D": -0.096876,
+        "E": -20.533862,
+        "F": -38.515158,
+        "G": 162.081354,
+        "H": 0.0,
+        "Tmax": 6000.0,
+        "Tmin": 2500.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1333740&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "[H][H]"
+  },
+  "H2O(g)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=1#Thermo-Gas",
+      "uncertainty": 0.01,
+      "unit": "J/mol*K",
+      "value": 188.835,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=1#Thermo-Gas",
+      "uncertainty": 0.04,
+      "unit": "kJ/mol",
+      "value": -241.826,
+      "verified": true
+    },
+    "elements": {
+      "H": 2,
+      "O": 1
+    },
+    "formula": "H2O",
+    "name": "Water",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 30.092,
+        "B": 6.832514,
+        "C": 6.793435,
+        "D": -2.53448,
+        "E": 0.082139,
+        "F": -250.881,
+        "G": 223.3967,
+        "H": -241.8264,
+        "Tmax": 1700.0,
+        "Tmin": 500.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 41.96426,
+        "B": 8.622053,
+        "C": -1.49978,
+        "D": 0.098119,
+        "E": -11.15764,
+        "F": -272.1797,
+        "G": 219.7809,
+        "H": -241.8264,
+        "Tmax": 6000.0,
+        "Tmin": 1700.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "O"
+  },
+  "H2O(l)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=2#Thermo-Condensed",
+      "uncertainty": 0.03,
+      "unit": "J/mol*K",
+      "value": 69.95,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=2#Thermo-Condensed",
+      "uncertainty": 0.04,
+      "unit": "kJ/mol",
+      "value": -285.83,
+      "verified": true
+    },
+    "elements": {
+      "H": 2,
+      "O": 1
+    },
+    "formula": "H2O",
+    "name": "Water",
+    "phase": "liquid",
+    "shomate": [
+      {
+        "A": -203.606,
+        "B": 1523.29,
+        "C": -3196.413,
+        "D": 2474.455,
+        "E": 3.855326,
+        "F": -256.5478,
+        "G": -488.7163,
+        "H": -285.8304,
+        "Tmax": 500.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Mask=2#Thermo-Condensed",
+        "verified": true
+      }
+    ],
+    "smiles": "O"
+  },
+  "H2O2(g)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in December, 1960)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7722841&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 232.95,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in December, 1960)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7722841&Mask=1#Thermo-Gas",
+      "unit": "kJ/mol",
+      "value": -136.11,
+      "verified": true
+    },
+    "elements": {
+      "H": 2,
+      "O": 2
+    },
+    "formula": "H2O2",
+    "name": "Hydrogen peroxide",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 34.25667,
+        "B": 55.18445,
+        "C": -35.15443,
+        "D": 9.08744,
+        "E": -0.422157,
+        "F": -149.9098,
+        "G": 257.0604,
+        "H": -136.1064,
+        "Tmax": 1500.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7722841&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "OO"
+  },
+  "H2S": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7783064&Mask=1#Thermo-Gas",
+      "uncertainty": 0.05,
+      "unit": "J/mol*K",
+      "value": 205.81,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7783064&Mask=1#Thermo-Gas",
+      "uncertainty": 0.5,
+      "unit": "kJ/mol",
+      "value": -20.6,
+      "verified": true
+    },
+    "elements": {
+      "H": 2,
+      "S": 1
+    },
+    "formula": "H2S",
+    "name": "Hydrogen sulfide",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 26.88412,
+        "B": 18.67809,
+        "C": 3.434203,
+        "D": -3.378702,
+        "E": 0.135882,
+        "F": -28.91211,
+        "G": 233.3747,
+        "H": -20.50202,
+        "Tmax": 1400.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7783064&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 51.22136,
+        "B": 4.147486,
+        "C": -0.643566,
+        "D": 0.041621,
+        "E": -10.46385,
+        "F": -55.87606,
+        "G": 243.69,
+        "H": -20.50202,
+        "Tmax": 6000.0,
+        "Tmin": 1400.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7783064&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "S"
+  },
+  "HBr": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10035106&Mask=1#Thermo-Gas",
+      "uncertainty": 0.004,
+      "unit": "J/mol*K",
+      "value": 198.7,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10035106&Mask=1#Thermo-Gas",
+      "uncertainty": 0.16,
+      "unit": "kJ/mol",
+      "value": -36.29,
+      "verified": true
+    },
+    "elements": {
+      "Br": 1,
+      "H": 1
+    },
+    "formula": "BrH",
+    "name": "Hydrogen bromide",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 31.71409,
+        "B": -13.69992,
+        "C": 23.35567,
+        "D": -9.008529,
+        "E": -0.028758,
+        "F": -45.57464,
+        "G": 240.0428,
+        "H": -36.44306,
+        "Tmax": 1100.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10035106&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 32.88913,
+        "B": 2.822116,
+        "C": -0.478035,
+        "D": 0.032464,
+        "E": -3.174958,
+        "F": -52.46318,
+        "G": 230.8597,
+        "H": -36.44306,
+        "Tmax": 6000.0,
+        "Tmin": 1100.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10035106&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "Br"
+  },
+  "HCHO": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in March, 1961)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C50000&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 218.95,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Fletcher and Pilcher, 1970 (ALS)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C50000&Mask=1#Thermo-Gas",
+      "uncertainty": 0.46,
+      "unit": "kJ/mol",
+      "value": -108.6,
+      "verified": true
+    },
+    "elements": {
+      "C": 1,
+      "H": 2,
+      "O": 1
+    },
+    "formula": "CH2O",
+    "name": "Formaldehyde",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 5.193767,
+        "B": 93.23249,
+        "C": -44.85457,
+        "D": 7.882279,
+        "E": 0.551175,
+        "F": -119.3591,
+        "G": 202.4663,
+        "H": -115.8972,
+        "Tmax": 1200.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C50000&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 71.35268,
+        "B": 6.174497,
+        "C": -1.19109,
+        "D": 0.079564,
+        "E": -15.58917,
+        "F": -170.6327,
+        "G": 262.318,
+        "H": -115.8972,
+        "Tmax": 6000.0,
+        "Tmin": 1200.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C50000&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "C=O"
+  },
+  "HCN": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in December, 1969)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74908&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 201.82,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in December, 1969)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74908&Mask=1#Thermo-Gas",
+      "unit": "kJ/mol",
+      "value": 135.14,
+      "verified": true
+    },
+    "elements": {
+      "C": 1,
+      "H": 1,
+      "N": 1
+    },
+    "formula": "CHN",
+    "name": "Hydrogen cyanide",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 32.69373,
+        "B": 22.59205,
+        "C": -4.369142,
+        "D": -0.407697,
+        "E": -0.282399,
+        "F": 123.4811,
+        "G": 233.2597,
+        "H": 135.1432,
+        "Tmax": 1200.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74908&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 52.36527,
+        "B": 5.563298,
+        "C": -0.953224,
+        "D": 0.056711,
+        "E": -7.564086,
+        "F": 103.8523,
+        "G": 244.8448,
+        "H": 135.1432,
+        "Tmax": 6000.0,
+        "Tmin": 1200.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74908&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "C#N"
+  },
+  "HCOOH(g)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Millikan R.C., 1957 (Other third-law S(298.15 K) value is 248.11(1.26) J/mol*K [ Halford J.O., 1942,  Millikan R.C., 1957]. Please also see  Waring W., 1952.; GT)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C64186&Mask=1#Thermo-Gas",
+      "uncertainty": 0.42,
+      "unit": "J/mol*K",
+      "value": 248.7,
+      "verified": true
+    },
+    "cp298_JmolK": {
+      "kind": "cited",
+      "note": "Cp at 298.15 K from the WebBook constant-pressure heat capacity table",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C64186&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 45.68,
+      "verified": true
+    },
+    "cp_model": "constant",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Guthrie, 1974 (Heat of hydrolysis; ALS)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C64186&Mask=1#Thermo-Gas",
+      "unit": "kJ/mol",
+      "value": -378.6,
+      "verified": true
+    },
+    "elements": {
+      "C": 1,
+      "H": 2,
+      "O": 2
+    },
+    "formula": "CH2O2",
+    "name": "Formic acid",
+    "phase": "gas",
+    "smiles": "O=CO"
+  },
+  "HCl": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7647010&Mask=1#Thermo-Gas",
+      "uncertainty": 0.005,
+      "unit": "J/mol*K",
+      "value": 186.902,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7647010&Mask=1#Thermo-Gas",
+      "uncertainty": 0.1,
+      "unit": "kJ/mol",
+      "value": -92.31,
+      "verified": true
+    },
+    "elements": {
+      "Cl": 1,
+      "H": 1
+    },
+    "formula": "ClH",
+    "name": "Hydrogen chloride",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 32.12392,
+        "B": -13.45805,
+        "C": 19.86852,
+        "D": -6.853936,
+        "E": -0.049672,
+        "F": -101.6206,
+        "G": 228.6866,
+        "H": -92.31201,
+        "Tmax": 1200.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7647010&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 31.91923,
+        "B": 3.203184,
+        "C": -0.541539,
+        "D": 0.035925,
+        "E": -3.438525,
+        "F": -108.015,
+        "G": 218.2768,
+        "H": -92.31201,
+        "Tmax": 6000.0,
+        "Tmin": 1200.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7647010&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "Cl"
+  },
+  "HF": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664393&Mask=1#Thermo-Gas",
+      "uncertainty": 0.003,
+      "unit": "J/mol*K",
+      "value": 173.779,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664393&Mask=1#Thermo-Gas",
+      "uncertainty": 0.7,
+      "unit": "kJ/mol",
+      "value": -273.3,
+      "verified": true
+    },
+    "elements": {
+      "F": 1,
+      "H": 1
+    },
+    "formula": "FH",
+    "name": "Hydrogen fluoride",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 30.11693,
+        "B": -3.246612,
+        "C": 2.868116,
+        "D": 0.457914,
+        "E": -0.024861,
+        "F": -281.4912,
+        "G": 210.9226,
+        "H": -272.5462,
+        "Tmax": 1000.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664393&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 24.57033,
+        "B": 6.893391,
+        "C": -1.243874,
+        "D": 0.082583,
+        "E": -0.23406,
+        "F": -279.7653,
+        "G": 202.8525,
+        "H": -272.5462,
+        "Tmax": 6000.0,
+        "Tmin": 1000.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664393&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "F"
+  },
+  "He": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440597&Mask=1#Thermo-Gas",
+      "uncertainty": 0.002,
+      "unit": "J/mol*K",
+      "value": 126.153,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "He": 1
+    },
+    "formula": "He",
+    "name": "Helium",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 20.78603,
+        "B": 4.850638e-10,
+        "C": -1.582916e-10,
+        "D": 1.525102e-11,
+        "E": 3.196347e-11,
+        "F": -6.197341,
+        "G": 151.3064,
+        "H": 0.0,
+        "Tmax": 6000.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440597&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "[He]"
+  },
+  "N": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C17778880&Mask=1#Thermo-Gas",
+      "uncertainty": 0.003,
+      "unit": "J/mol*K",
+      "value": 153.301,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C17778880&Mask=1#Thermo-Gas",
+      "uncertainty": 0.4,
+      "unit": "kJ/mol",
+      "value": 472.68,
+      "verified": true
+    },
+    "elements": {
+      "N": 1
+    },
+    "formula": "N",
+    "name": "Nitrogen atom",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 21.13581,
+        "B": -0.388842,
+        "C": 0.043545,
+        "D": 0.024685,
+        "E": -0.025678,
+        "F": 466.311,
+        "G": 178.8263,
+        "H": 472.6832,
+        "Tmax": 6000.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C17778880&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "[N]"
+  },
+  "N2": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7727379&Mask=1#Thermo-Gas",
+      "uncertainty": 0.004,
+      "unit": "J/mol*K",
+      "value": 191.609,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "N": 2
+    },
+    "formula": "N2",
+    "name": "Nitrogen",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 28.98641,
+        "B": 1.853978,
+        "C": -9.647459,
+        "D": 16.63537,
+        "E": 0.000117,
+        "F": -8.671914,
+        "G": 226.4168,
+        "H": 0.0,
+        "Tmax": 500.0,
+        "Tmin": 100.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7727379&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 19.50583,
+        "B": 19.88705,
+        "C": -8.598535,
+        "D": 1.369784,
+        "E": 0.527601,
+        "F": -4.935202,
+        "G": 212.39,
+        "H": 0.0,
+        "Tmax": 2000.0,
+        "Tmin": 500.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7727379&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 35.51872,
+        "B": 1.128728,
+        "C": -0.196103,
+        "D": 0.014662,
+        "E": -4.55376,
+        "F": -18.97091,
+        "G": 224.981,
+        "H": 0.0,
+        "Tmax": 6000.0,
+        "Tmin": 2000.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7727379&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "N#N"
+  },
+  "N2O": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in December, 1964)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10024972&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 219.96,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in December, 1964)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10024972&Mask=1#Thermo-Gas",
+      "unit": "kJ/mol",
+      "value": 82.05,
+      "verified": true
+    },
+    "elements": {
+      "N": 2,
+      "O": 1
+    },
+    "formula": "N2O",
+    "name": "Nitrous oxide",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 27.67988,
+        "B": 51.14898,
+        "C": -30.64454,
+        "D": 6.847911,
+        "E": -0.157906,
+        "F": 71.24934,
+        "G": 238.6164,
+        "H": 82.04824,
+        "Tmax": 1400.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10024972&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 60.30274,
+        "B": 1.034566,
+        "C": -0.192997,
+        "D": 0.01254,
+        "E": -6.860254,
+        "F": 48.6139,
+        "G": 272.5002,
+        "H": 82.04824,
+        "Tmax": 6000.0,
+        "Tmin": 1400.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10024972&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "N#[N+][O-]"
+  },
+  "NH3": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664417&Mask=1#Thermo-Gas",
+      "uncertainty": 0.05,
+      "unit": "J/mol*K",
+      "value": 192.77,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664417&Mask=1#Thermo-Gas",
+      "uncertainty": 0.35,
+      "unit": "kJ/mol",
+      "value": -45.94,
+      "verified": true
+    },
+    "elements": {
+      "H": 3,
+      "N": 1
+    },
+    "formula": "H3N",
+    "name": "Ammonia",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 19.99563,
+        "B": 49.77119,
+        "C": -15.37599,
+        "D": 1.921168,
+        "E": 0.189174,
+        "F": -53.30667,
+        "G": 203.8591,
+        "H": -45.89806,
+        "Tmax": 1400.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664417&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 52.02427,
+        "B": 18.48801,
+        "C": -3.765128,
+        "D": 0.248541,
+        "E": -12.45799,
+        "F": -85.53895,
+        "G": 223.8022,
+        "H": -45.89806,
+        "Tmax": 6000.0,
+        "Tmin": 1400.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7664417&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "N"
+  },
+  "NO": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in June, 1963)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102439&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 210.76,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in June, 1963)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102439&Mask=1#Thermo-Gas",
+      "unit": "kJ/mol",
+      "value": 90.29,
+      "verified": true
+    },
+    "elements": {
+      "N": 1,
+      "O": 1
+    },
+    "formula": "NO",
+    "name": "Nitric oxide",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 23.83491,
+        "B": 12.58878,
+        "C": -1.139011,
+        "D": -1.497459,
+        "E": 0.214194,
+        "F": 83.35783,
+        "G": 237.1219,
+        "H": 90.29114,
+        "Tmax": 1200.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102439&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 35.99169,
+        "B": 0.95717,
+        "C": -0.148032,
+        "D": 0.009974,
+        "E": -3.004088,
+        "F": 73.10787,
+        "G": 246.1619,
+        "H": 90.29114,
+        "Tmax": 6000.0,
+        "Tmin": 1200.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102439&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "[N]=O"
+  },
+  "NO2": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in September, 1964)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102440&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 240.04,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in September, 1964)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102440&Mask=1#Thermo-Gas",
+      "unit": "kJ/mol",
+      "value": 33.1,
+      "verified": true
+    },
+    "elements": {
+      "N": 1,
+      "O": 2
+    },
+    "formula": "NO2",
+    "name": "Nitrogen dioxide",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 16.10857,
+        "B": 75.89525,
+        "C": -54.3874,
+        "D": 14.30777,
+        "E": 0.239423,
+        "F": 26.17464,
+        "G": 240.5386,
+        "H": 33.09502,
+        "Tmax": 1200.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102440&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 56.82541,
+        "B": 0.738053,
+        "C": -0.144721,
+        "D": 0.009777,
+        "E": -5.459911,
+        "F": 2.846456,
+        "G": 290.5056,
+        "H": 33.09502,
+        "Tmax": 6000.0,
+        "Tmin": 1200.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10102440&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "[O]N=O"
+  },
+  "Na(s)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440235&Mask=2#Thermo-Condensed",
+      "uncertainty": 0.2,
+      "unit": "J/mol*K",
+      "value": 51.3,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "Na": 1
+    },
+    "formula": "Na",
+    "name": "Sodium",
+    "phase": "solid",
+    "shomate": [
+      {
+        "A": 72.63675,
+        "B": -9.491572,
+        "C": -730.9322,
+        "D": 1414.518,
+        "E": -1.259377,
+        "F": -21.79467,
+        "G": 155.0963,
+        "H": 0.0,
+        "Tmax": 370.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440235&Mask=2#Thermo-Condensed",
+        "verified": true
+      }
+    ],
+    "smiles": "[Na]"
+  },
+  "NaCl(s)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in September, 1964)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7647145&Mask=2#Thermo-Condensed",
+      "unit": "J/mol*K",
+      "value": 72.11,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in September, 1964)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7647145&Mask=2#Thermo-Condensed",
+      "unit": "kJ/mol",
+      "value": -411.12,
+      "verified": true
+    },
+    "elements": {
+      "Cl": 1,
+      "Na": 1
+    },
+    "formula": "ClNa",
+    "name": "Sodium chloride",
+    "phase": "solid",
+    "shomate": [
+      {
+        "A": 50.72389,
+        "B": 6.672267,
+        "C": -2.517167,
+        "D": 10.15934,
+        "E": -0.200675,
+        "F": -427.2115,
+        "G": 130.3973,
+        "H": -411.1203,
+        "Tmax": 1073.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7647145&Mask=2#Thermo-Condensed",
+        "verified": true
+      }
+    ],
+    "smiles": "[Cl-].[Na+]"
+  },
+  "NaOH(s)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in December, 1970)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1310732&Mask=2#Thermo-Condensed",
+      "unit": "J/mol*K",
+      "value": 64.46,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in December, 1970)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1310732&Mask=2#Thermo-Condensed",
+      "unit": "kJ/mol",
+      "value": -425.93,
+      "verified": true
+    },
+    "elements": {
+      "H": 1,
+      "Na": 1,
+      "O": 1
+    },
+    "formula": "HNaO",
+    "name": "Sodium hydroxide",
+    "phase": "solid",
+    "shomate": [
+      {
+        "A": 419.4837,
+        "B": -1717.754,
+        "C": 2953.573,
+        "D": -1597.221,
+        "E": -6.046884,
+        "F": -517.8662,
+        "G": 933.0738,
+        "H": -425.9312,
+        "Tmax": 572.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1310732&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": 86.02304,
+        "B": 0.0,
+        "C": 0.0,
+        "D": 0.0,
+        "E": 0.0,
+        "F": -448.8512,
+        "G": 169.6281,
+        "H": -425.9312,
+        "Tmax": 596.0,
+        "Tmin": 572.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C1310732&Mask=2#Thermo-Condensed",
+        "verified": true
+      }
+    ],
+    "smiles": "[Na+].[OH-]"
+  },
+  "Ne": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440019&Mask=1#Thermo-Gas",
+      "uncertainty": 0.003,
+      "unit": "J/mol*K",
+      "value": 146.328,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "Ne": 1
+    },
+    "formula": "Ne",
+    "name": "Neon",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 20.78603,
+        "B": 4.850638e-10,
+        "C": -1.582916e-10,
+        "D": 1.525102e-11,
+        "E": 3.196347e-11,
+        "F": -6.197341,
+        "G": 171.4821,
+        "H": 0.0,
+        "Tmax": 6000.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440019&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "[Ne]"
+  },
+  "O": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C17778802&Mask=1#Thermo-Gas",
+      "uncertainty": 0.003,
+      "unit": "J/mol*K",
+      "value": 161.059,
+      "verified": true
+    },
+    "cp298_JmolK": {
+      "kind": "derived",
+      "method": "Monatomic ideal gas Cp = 5/2 R (R = 8.314462618 J/mol*K)",
+      "note": "translational Cp only; neglects electronic fine-structure contribution",
+      "unit": "J/mol*K",
+      "value": 20.786
+    },
+    "cp_model": "constant",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C17778802&Mask=1#Thermo-Gas",
+      "uncertainty": 0.1,
+      "unit": "kJ/mol",
+      "value": 249.18,
+      "verified": true
+    },
+    "elements": {
+      "O": 1
+    },
+    "formula": "O",
+    "name": "Oxygen atom",
+    "phase": "gas",
+    "smiles": "[O]"
+  },
+  "O2": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782447&Mask=1#Thermo-Gas",
+      "uncertainty": 0.005,
+      "unit": "J/mol*K",
+      "value": 205.152,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "O": 2
+    },
+    "formula": "O2",
+    "name": "Oxygen",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 31.32234,
+        "B": -20.23531,
+        "C": 57.86644,
+        "D": -36.50624,
+        "E": -0.007374,
+        "F": -8.903471,
+        "G": 246.7945,
+        "H": 0.0,
+        "Tmax": 700.0,
+        "Tmin": 100.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782447&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 30.03235,
+        "B": 8.772972,
+        "C": -3.988133,
+        "D": 0.788313,
+        "E": -0.741599,
+        "F": -11.32468,
+        "G": 236.1663,
+        "H": 0.0,
+        "Tmax": 2000.0,
+        "Tmin": 700.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782447&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 20.91111,
+        "B": 10.72071,
+        "C": -2.020498,
+        "D": 0.146449,
+        "E": 9.245722,
+        "F": 5.337651,
+        "G": 237.6185,
+        "H": 0.0,
+        "Tmax": 6000.0,
+        "Tmin": 2000.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782447&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "O=O"
+  },
+  "O3": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in June, 1961)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10028156&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 238.92,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in June, 1961)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10028156&Mask=1#Thermo-Gas",
+      "unit": "kJ/mol",
+      "value": 142.67,
+      "verified": true
+    },
+    "elements": {
+      "O": 3
+    },
+    "formula": "O3",
+    "name": "Ozone",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 21.66157,
+        "B": 79.86001,
+        "C": -66.02603,
+        "D": 19.58363,
+        "E": -0.079251,
+        "F": 132.9407,
+        "G": 243.6406,
+        "H": 142.674,
+        "Tmax": 1200.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10028156&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 57.81409,
+        "B": 0.730941,
+        "C": -0.039253,
+        "D": 0.00261,
+        "E": -3.560367,
+        "F": 115.7717,
+        "G": 294.5607,
+        "H": 142.674,
+        "Tmax": 6000.0,
+        "Tmin": 1200.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C10028156&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "O=[O+][O-]"
+  },
+  "OH": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in June, 1977)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C3352576&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 183.71,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in June, 1977)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C3352576&Mask=1#Thermo-Gas",
+      "unit": "kJ/mol",
+      "value": 38.99,
+      "verified": true
+    },
+    "elements": {
+      "H": 1,
+      "O": 1
+    },
+    "formula": "HO",
+    "name": "Hydroxyl",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 32.27768,
+        "B": -11.36291,
+        "C": 13.60545,
+        "D": -3.846486,
+        "E": -0.001335,
+        "F": 29.75113,
+        "G": 225.5783,
+        "H": 38.98706,
+        "Tmax": 1300.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C3352576&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 28.74701,
+        "B": 4.714489,
+        "C": -0.814725,
+        "D": 0.054748,
+        "E": -2.747829,
+        "F": 26.41439,
+        "G": 214.1166,
+        "H": 38.98706,
+        "Tmax": 6000.0,
+        "Tmin": 1300.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C3352576&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "[OH]"
+  },
+  "S(s)": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (rhombic phase; CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7704349&Mask=2#Thermo-Condensed",
+      "uncertainty": 0.05,
+      "unit": "J/mol*K",
+      "value": 32.054,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "derived",
+      "method": "Definition: element in standard reference state",
+      "note": "ΔfH° of an element in its standard state is 0 by definition",
+      "unit": "kJ/mol",
+      "value": 0.0
+    },
+    "elements": {
+      "S": 1
+    },
+    "formula": "S",
+    "name": "Sulfur",
+    "phase": "solid",
+    "shomate": [
+      {
+        "A": 21.21978,
+        "B": 3.865858,
+        "C": 22.27461,
+        "D": -10.31908,
+        "E": -0.122518,
+        "F": -7.085604,
+        "G": 54.99575,
+        "H": 0.0,
+        "Tmax": 388.36,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7704349&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": 24.23749,
+        "B": -4.98306,
+        "C": 33.009,
+        "D": -15.29616,
+        "E": -0.182237,
+        "F": -7.516263,
+        "G": 61.49141,
+        "H": 0.360001,
+        "Tmax": 388.36,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7704349&Mask=2#Thermo-Condensed",
+        "verified": true
+      }
+    ],
+    "smiles": "[S]"
+  },
+  "SO2": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7446095&Mask=1#Thermo-Gas",
+      "uncertainty": 0.05,
+      "unit": "J/mol*K",
+      "value": 248.223,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Cox, Wagman, et al., 1984 (CODATA Review value)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7446095&Mask=1#Thermo-Gas",
+      "uncertainty": 0.2,
+      "unit": "kJ/mol",
+      "value": -296.81,
+      "verified": true
+    },
+    "elements": {
+      "O": 2,
+      "S": 1
+    },
+    "formula": "O2S",
+    "name": "Sulfur dioxide",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 21.43049,
+        "B": 74.35094,
+        "C": -57.75217,
+        "D": 16.35534,
+        "E": 0.086731,
+        "F": -305.7688,
+        "G": 254.8872,
+        "H": -296.8422,
+        "Tmax": 1200.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7446095&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 57.48188,
+        "B": 1.009328,
+        "C": -0.07629,
+        "D": 0.005174,
+        "E": -4.045401,
+        "F": -324.414,
+        "G": 302.7798,
+        "H": -296.8422,
+        "Tmax": 6000.0,
+        "Tmin": 1200.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7446095&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "O=S=O"
+  },
+  "SO3": {
+    "S298_JmolK": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in September, 1965)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7446119&Mask=1#Thermo-Gas",
+      "unit": "J/mol*K",
+      "value": 256.77,
+      "verified": true
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (Data last reviewed in September, 1965)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7446119&Mask=1#Thermo-Gas",
+      "unit": "kJ/mol",
+      "value": -395.77,
+      "verified": true
+    },
+    "elements": {
+      "O": 3,
+      "S": 1
+    },
+    "formula": "O3S",
+    "name": "Sulfur trioxide",
+    "phase": "gas",
+    "shomate": [
+      {
+        "A": 24.02503,
+        "B": 119.4607,
+        "C": -94.38686,
+        "D": 26.96237,
+        "E": -0.117517,
+        "F": -407.8526,
+        "G": 253.5186,
+        "H": -395.7654,
+        "Tmax": 1200.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7446119&Mask=1#Thermo-Gas",
+        "verified": true
+      },
+      {
+        "A": 81.99008,
+        "B": 0.622236,
+        "C": -0.12244,
+        "D": 0.008294,
+        "E": -6.703688,
+        "F": -437.659,
+        "G": 330.9264,
+        "H": -395.7654,
+        "Tmax": 6000.0,
+        "Tmin": 1200.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7446119&Mask=1#Thermo-Gas",
+        "verified": true
+      }
+    ],
+    "smiles": "O=S(=O)=O"
+  },
+  "SiO2(s)": {
+    "S298_JmolK": {
+      "kind": "derived",
+      "method": "Shomate/NIST WebBook (S at 298.15 K)",
+      "unit": "J/mol*K",
+      "value": 41.4598
+    },
+    "cp_model": "shomate",
+    "dHf298_kJmol": {
+      "kind": "cited",
+      "note": "Chase, 1998 (quartz phase; Data last reviewed in June, 1967)",
+      "retrieved": "2026-09-14",
+      "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C14808607&Mask=2#Thermo-Condensed",
+      "unit": "kJ/mol",
+      "value": -910.86,
+      "verified": true
+    },
+    "elements": {
+      "O": 2,
+      "Si": 1
+    },
+    "formula": "O2Si",
+    "name": "Quartz",
+    "phase": "solid",
+    "shomate": [
+      {
+        "A": -6.076591,
+        "B": 251.6755,
+        "C": -324.7964,
+        "D": 168.5604,
+        "E": 0.002548,
+        "F": -917.6893,
+        "G": -27.96962,
+        "H": -910.8568,
+        "Tmax": 847.0,
+        "Tmin": 298.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C14808607&Mask=2#Thermo-Condensed",
+        "verified": true
+      },
+      {
+        "A": 58.7534,
+        "B": 10.27925,
+        "C": -0.131384,
+        "D": 0.02521,
+        "E": 0.025601,
+        "F": -929.3292,
+        "G": 105.8092,
+        "H": -910.8568,
+        "Tmax": 1996.0,
+        "Tmin": 847.0,
+        "retrieved": "2026-09-14",
+        "source": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C14808607&Mask=2#Thermo-Condensed",
+        "verified": true
+      }
+    ],
+    "smiles": "O=[Si]=O"
+  },
+  "_meta": {
+    "created": "2026-09-14 19:26 MDT | 21:26 EDT | 01:26 Zulu",
+    "description": "Cited thermochemistry database (NIST WebBook). Keys like H2, H2O(g), H2O(l), C(gr). Each species: name, formula, smiles (canonical), phase, elements, dHf298_kJmol, S298_JmolK, and either Shomate coefficients (cp_model=shomate, per temperature range, each group cited) or a constant Cp (cp_model=constant, flagged). Retrieved 2026-09-14.",
+    "project": "Engineering Harness — science toolkit"
+  }
+}

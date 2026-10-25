@@ -1,0 +1,1701 @@
+{
+  "section": "kinematics",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k kinematics",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "kinematics.rectilinear_constant_a": {
+      "title": "Rectilinear motion with constant acceleration",
+      "variables": [
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "final velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v0",
+          "unit": "m/s",
+          "desc": "initial velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m/s^2",
+          "desc": "constant acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "time interval",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "displacement",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v = v0 + a*t",
+        "s = v0*t + 0.5*a*t**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v",
+        "s"
+      ],
+      "assumptions": [
+        "Straight-line motion, constant acceleration; signs are along the chosen axis (negative a decelerates)."
+      ],
+      "method_references": [
+        "Constant-acceleration kinematics v = v0 + at; s = v0t + \u00bdat\u00b2"
+      ],
+      "synthetic_example": {
+        "v0": 10.0,
+        "a": 2.0,
+        "t": 5.0
+      }
+    },
+    "kinematics.rectilinear_vsq": {
+      "title": "Velocity from displacement without time (v\u00b2 = v0\u00b2 + 2as)",
+      "variables": [
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "final speed (magnitude)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v0",
+          "unit": "m/s",
+          "desc": "initial velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m/s^2",
+          "desc": "constant acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "displacement",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v**2 = v0**2 + 2*a*s"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v"
+      ],
+      "assumptions": [
+        "Constant acceleration; the equation gives v\u00b2 so the recovered speed is a magnitude \u2014 assign the direction from the motion sense."
+      ],
+      "method_references": [
+        "v\u00b2 = v0\u00b2 + 2as (eliminate t from the constant-acceleration equations)"
+      ],
+      "synthetic_example": {
+        "v0": 10.0,
+        "a": 2.0,
+        "s": 75.0
+      }
+    },
+    "kinematics.normal_tangential": {
+      "title": "Normal and tangential acceleration components (curvilinear motion)",
+      "variables": [
+        {
+          "name": "a_n",
+          "unit": "m/s^2",
+          "desc": "normal (centripetal) acceleration",
+          "lo": null,
+          "hi": null,
+          "label": "an",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_t",
+          "unit": "m/s^2",
+          "desc": "tangential acceleration (rate of change of speed)",
+          "lo": null,
+          "hi": null,
+          "label": "at",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m/s^2",
+          "desc": "total acceleration magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "m",
+          "desc": "radius of curvature",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "a_n = v**2/rho",
+        "a = sqrt(a_n**2 + a_t**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "a_n",
+        "a"
+      ],
+      "assumptions": [
+        "a_n points toward the centre of curvature; a_t is along the path (negative for deceleration). Solving for a_t from the total magnitude returns its absolute value."
+      ],
+      "method_references": [
+        "a_n = v\u00b2/\u03c1; a = \u221a(a_n\u00b2 + a_t\u00b2)"
+      ],
+      "synthetic_example": {
+        "v": 20.0,
+        "rho": 50.0,
+        "a_t": 6.0
+      }
+    },
+    "kinematics.polar_motion": {
+      "title": "Polar-coordinate velocity and acceleration components",
+      "variables": [
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radial distance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rdot",
+          "unit": "m/s",
+          "desc": "radial velocity \u1e59",
+          "lo": null,
+          "hi": null,
+          "label": "\u1e59",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_dot",
+          "unit": "rad/s",
+          "desc": "angular velocity \u03b8\u0307",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8\u0307",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rddot",
+          "unit": "m/s^2",
+          "desc": "radial acceleration r\u0308",
+          "lo": null,
+          "hi": null,
+          "label": "r\u0308",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_ddot",
+          "unit": "rad/s^2",
+          "desc": "angular acceleration \u03b8\u0308",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8\u0308",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_r",
+          "unit": "m/s",
+          "desc": "radial velocity component",
+          "lo": null,
+          "hi": null,
+          "label": "vr",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_theta",
+          "unit": "m/s",
+          "desc": "transverse velocity component",
+          "lo": null,
+          "hi": null,
+          "label": "v\u03b8",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_r",
+          "unit": "m/s^2",
+          "desc": "radial acceleration component",
+          "lo": null,
+          "hi": null,
+          "label": "ar",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_theta",
+          "unit": "m/s^2",
+          "desc": "transverse acceleration component",
+          "lo": null,
+          "hi": null,
+          "label": "a\u03b8",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v_r = rdot",
+        "v_theta = r*theta_dot",
+        "a_r = rddot - r*theta_dot**2",
+        "a_theta = r*theta_ddot + 2*rdot*theta_dot"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v_r",
+        "v_theta",
+        "a_r",
+        "a_theta"
+      ],
+      "assumptions": [
+        "\u03b8\u0307 and \u03b8\u0308 are angular (rad/s, rad/s\u00b2). The \u2212r\u03b8\u0307\u00b2 term is the centripetal part and 2\u1e59\u03b8\u0307 the Coriolis part of the radial/transverse split."
+      ],
+      "method_references": [
+        "Polar components: v_r = \u1e59, v_\u03b8 = r\u03b8\u0307; a_r = r\u0308 \u2212 r\u03b8\u0307\u00b2, a_\u03b8 = r\u03b8\u0308 + 2\u1e59\u03b8\u0307"
+      ],
+      "synthetic_example": {
+        "r": 2.0,
+        "rdot": 3.0,
+        "theta_dot": 0.5,
+        "rddot": 1.0,
+        "theta_ddot": 0.2
+      }
+    },
+    "kinematics.projectile": {
+      "title": "Projectile range, maximum height and time of flight",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "m",
+          "desc": "horizontal range",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "m",
+          "desc": "maximum height",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t_flight",
+          "unit": "s",
+          "desc": "time of flight",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v0",
+          "unit": "m/s",
+          "desc": "launch speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "launch angle above horizontal",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "R = v0**2*sin(2*theta)/g",
+        "H = v0**2*sin(theta)**2/(2*g)",
+        "t_flight = 2*v0*sin(theta)/g"
+      ],
+      "procedure": null,
+      "outputs": [
+        "R",
+        "H",
+        "t_flight"
+      ],
+      "assumptions": [
+        "Flat ground, launch and landing at the same height, no air resistance. Range is maximum at \u03b8 = 45\u00b0."
+      ],
+      "method_references": [
+        "Projectile range R = v0\u00b2 sin(2\u03b8)/g; height H = v0\u00b2 sin\u00b2\u03b8/(2g); flight time 2v0 sin\u03b8/g"
+      ],
+      "synthetic_example": {
+        "v0": 30.0,
+        "theta": 0.7853981633974483,
+        "g": 9.80665
+      }
+    },
+    "kinematics.relative_velocity": {
+      "title": "Relative velocity and acceleration of two particles (1-D)",
+      "variables": [
+        {
+          "name": "v_AB",
+          "unit": "m/s",
+          "desc": "velocity of A relative to B",
+          "lo": null,
+          "hi": null,
+          "label": "vA/B",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_A",
+          "unit": "m/s",
+          "desc": "velocity of A",
+          "lo": null,
+          "hi": null,
+          "label": "vA",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_B",
+          "unit": "m/s",
+          "desc": "velocity of B",
+          "lo": null,
+          "hi": null,
+          "label": "vB",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_AB",
+          "unit": "m/s^2",
+          "desc": "acceleration of A relative to B",
+          "lo": null,
+          "hi": null,
+          "label": "aA/B",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_A",
+          "unit": "m/s^2",
+          "desc": "acceleration of A",
+          "lo": null,
+          "hi": null,
+          "label": "aA",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_B",
+          "unit": "m/s^2",
+          "desc": "acceleration of B",
+          "lo": null,
+          "hi": null,
+          "label": "aB",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v_AB = v_A - v_B",
+        "a_AB = a_A - a_B"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v_AB",
+        "a_AB"
+      ],
+      "assumptions": [
+        "One-dimensional (collinear) relative motion: v_A/B = v_A \u2212 v_B."
+      ],
+      "method_references": [
+        "Relative velocity v_A/B = v_A \u2212 v_B; a_A/B = a_A \u2212 a_B"
+      ],
+      "synthetic_example": {
+        "v_A": 30.0,
+        "v_B": 20.0,
+        "a_A": 2.0,
+        "a_B": 1.0
+      }
+    },
+    "kinematics.rotation_fixed_axis": {
+      "title": "Rotation about a fixed axis: velocity and acceleration of a point",
+      "variables": [
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "tangential speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_t",
+          "unit": "m/s^2",
+          "desc": "tangential acceleration",
+          "lo": null,
+          "hi": null,
+          "label": "at",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_n",
+          "unit": "m/s^2",
+          "desc": "normal (centripetal) acceleration",
+          "lo": null,
+          "hi": null,
+          "label": "an",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "rad/s^2",
+          "desc": "angular acceleration",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "distance of the point from the axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v = omega*r",
+        "a_t = alpha*r",
+        "a_n = omega**2*r"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v",
+        "a_t",
+        "a_n"
+      ],
+      "assumptions": [
+        "Point attached to a body rotating about a fixed axis; a_n points toward the axis, a_t is tangent (sign follows \u03b1). Enter \u03c9/\u03b1 as angular units (rpm, rad/s)."
+      ],
+      "method_references": [
+        "v = \u03c9r; a_t = \u03b1r; a_n = \u03c9\u00b2r"
+      ],
+      "synthetic_example": {
+        "omega": 10.0,
+        "alpha": 2.0,
+        "r": 0.5
+      }
+    },
+    "kinematics.instantaneous_center": {
+      "title": "Instantaneous centre of rotation (r = v/\u03c9)",
+      "variables": [
+        {
+          "name": "r_ic",
+          "unit": "m",
+          "desc": "distance from the point to the instantaneous centre",
+          "lo": null,
+          "hi": null,
+          "label": "rIC",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "speed of the point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular velocity of the body",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "r_ic = v/omega"
+      ],
+      "procedure": null,
+      "outputs": [
+        "r_ic"
+      ],
+      "assumptions": [
+        "The IC is the point with zero velocity, on the line through the point perpendicular to v, at distance r = v/\u03c9. For pure rolling it is the contact point. \u03c9 = 0 (pure translation) has no finite IC."
+      ],
+      "method_references": [
+        "Instantaneous centre: r = v/\u03c9"
+      ],
+      "synthetic_example": {
+        "v": 6.0,
+        "omega": 2.0
+      }
+    },
+    "kinematics.coriolis_accel": {
+      "title": "Coriolis acceleration of a point moving in a rotating frame",
+      "variables": [
+        {
+          "name": "a_cor",
+          "unit": "m/s^2",
+          "desc": "Coriolis acceleration magnitude",
+          "lo": null,
+          "hi": null,
+          "label": "acor",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular velocity of the rotating frame",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_rel",
+          "unit": "m/s",
+          "desc": "relative velocity (component perpendicular to \u03c9)",
+          "lo": null,
+          "hi": null,
+          "label": "vrel",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "a_cor = 2*omega*v_rel"
+      ],
+      "procedure": null,
+      "outputs": [
+        "a_cor"
+      ],
+      "assumptions": [
+        "Magnitude for v_rel perpendicular to \u03c9; direction from the right-hand rule (\u03c9 \u00d7 v_rel). Only the velocity component perpendicular to the axis contributes."
+      ],
+      "method_references": [
+        "Coriolis acceleration a_cor = 2\u03c9 \u00d7 v_rel (magnitude 2\u03c9v_rel)"
+      ],
+      "synthetic_example": {
+        "omega": 5.0,
+        "v_rel": 3.0
+      }
+    },
+    "kinematics.rotating_frame_accel": {
+      "title": "Acceleration of a particle sliding along a rod rotating at constant \u03c9",
+      "variables": [
+        {
+          "name": "a_rad",
+          "unit": "m/s^2",
+          "desc": "radial acceleration r\u0308 \u2212 \u03c9\u00b2r (negative = toward the axis)",
+          "lo": null,
+          "hi": null,
+          "label": "arad",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_cor",
+          "unit": "m/s^2",
+          "desc": "Coriolis (transverse) acceleration 2\u03c9v_r",
+          "lo": null,
+          "hi": null,
+          "label": "acor",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_total",
+          "unit": "m/s^2",
+          "desc": "total acceleration magnitude",
+          "lo": null,
+          "hi": null,
+          "label": "atot",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular velocity (constant)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_r",
+          "unit": "m/s",
+          "desc": "radial relative velocity along the rod",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radial distance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rddot",
+          "unit": "m/s^2",
+          "desc": "radial relative acceleration along the rod (0 = constant sliding speed)",
+          "lo": null,
+          "hi": null,
+          "label": "r\u0308",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "a_rad = rddot - omega**2*r",
+        "a_cor = 2*omega*v_r",
+        "a_total = sqrt(a_rad**2 + a_cor**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "a_rad",
+        "a_cor",
+        "a_total"
+      ],
+      "assumptions": [
+        "Rod rotating at constant \u03c9 (\u03c9\u0307 = 0, so the transverse term is only Coriolis 2\u03c9v_r); radial term includes the relative acceleration r\u0308. For \u03c9\u0307 \u2260 0 use kinematics.polar_motion (a_\u03b8 = r\u03b8\u0308 + 2\u1e59\u03b8\u0307). Coriolis direction by right-hand rule. [Generalised with r\u0308 after review 2026-09-15; previously implicit r\u0308 = 0.]"
+      ],
+      "method_references": [
+        "Polar-coordinate acceleration a_r = r\u0308 \u2212 r\u03b8\u0307\u00b2, a_\u03b8 = r\u03b8\u0308 + 2\u1e59\u03b8\u0307 (recalled)"
+      ],
+      "synthetic_example": {
+        "omega": 5.0,
+        "v_r": 2.0,
+        "r": 0.4,
+        "rddot": 0.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "kinematics-001",
+      "calculator": "kinematics.rectilinear_constant_a",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v0": "10 m/s",
+        "a": "2 m/s^2",
+        "t": "5 s"
+      },
+      "solve_for": [
+        "v",
+        "s"
+      ],
+      "expected_as_specified": {
+        "v": "20 m/s",
+        "s": "75 m"
+      },
+      "expected_SI": {
+        "v": 20.0,
+        "s": 75.0
+      },
+      "actual_SI": {
+        "v": {
+          "value": 20.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rectilinear_constant_a (symbolic)"
+        },
+        "s": {
+          "value": 75.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rectilinear_constant_a (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.04,
+          "passed": true
+        },
+        "s": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.15,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v = v0 + at = 10 + 2\u00b75 = 20 m/s; s = v0t + \u00bdat\u00b2 = 10\u00b75 + \u00bd\u00b72\u00b725 = 50 + 25 = 75 m"
+      }
+    },
+    {
+      "id": "kinematics-002",
+      "calculator": "kinematics.rectilinear_vsq",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v0": "10 m/s",
+        "a": "2 m/s^2",
+        "s": "75 m"
+      },
+      "solve_for": [
+        "v"
+      ],
+      "expected_as_specified": {
+        "v": "20 m/s"
+      },
+      "expected_SI": {
+        "v": 20.0
+      },
+      "actual_SI": {
+        "v": {
+          "value": 20.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rectilinear_vsq (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.04,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v = \u221a(v0\u00b2 + 2as) = \u221a(100 + 2\u00b72\u00b775) = \u221a(100 + 300) = \u221a400 = 20 m/s (same case as rectilinear_constant_a, solved without t)"
+      }
+    },
+    {
+      "id": "kinematics-003",
+      "calculator": "kinematics.rectilinear_vsq",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v": "20 m/s",
+        "v0": "10 m/s",
+        "s": "75 m"
+      },
+      "solve_for": [
+        "a"
+      ],
+      "expected_as_specified": {
+        "a": "2 m/s^2"
+      },
+      "expected_SI": {
+        "a": 2.0
+      },
+      "actual_SI": {
+        "a": {
+          "value": 2.0,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rectilinear_vsq (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = (v\u00b2 \u2212 v0\u00b2)/(2s) = (400 \u2212 100)/(2\u00b775) = 300/150 = 2 m/s\u00b2"
+      }
+    },
+    {
+      "id": "kinematics-004",
+      "calculator": "kinematics.normal_tangential",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v": "20 m/s",
+        "rho": "50 m",
+        "a_t": "6 m/s^2"
+      },
+      "solve_for": [
+        "a_n",
+        "a"
+      ],
+      "expected_as_specified": {
+        "a_n": "8 m/s^2",
+        "a": "10 m/s^2"
+      },
+      "expected_SI": {
+        "a_n": 8.0,
+        "a": 10.0
+      },
+      "actual_SI": {
+        "a_n": {
+          "value": 8.0,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.normal_tangential (symbolic)"
+        },
+        "a": {
+          "value": 10.0,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.normal_tangential (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a_n": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.016,
+          "passed": true
+        },
+        "a": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a_n = v\u00b2/\u03c1 = 400/50 = 8 m/s\u00b2; a = \u221a(a_n\u00b2 + a_t\u00b2) = \u221a(64 + 36) = \u221a100 = 10 m/s\u00b2 (3-4-5 landmark)"
+      }
+    },
+    {
+      "id": "kinematics-005",
+      "calculator": "kinematics.polar_motion",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "r": "2 m",
+        "rdot": "3 m/s",
+        "theta_dot": "0.5 rad/s",
+        "rddot": "1 m/s^2",
+        "theta_ddot": "0.2 rad/s^2"
+      },
+      "solve_for": [
+        "v_r",
+        "v_theta",
+        "a_r",
+        "a_theta"
+      ],
+      "expected_as_specified": {
+        "v_r": "3 m/s",
+        "v_theta": "1 m/s",
+        "a_r": "0.5 m/s^2",
+        "a_theta": "3.4 m/s^2"
+      },
+      "expected_SI": {
+        "v_r": 3.0,
+        "v_theta": 1.0,
+        "a_r": 0.5,
+        "a_theta": 3.4
+      },
+      "actual_SI": {
+        "v_r": {
+          "value": 3.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc kinematics.polar_motion (symbolic)"
+        },
+        "v_theta": {
+          "value": 1.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc kinematics.polar_motion (symbolic)"
+        },
+        "a_r": {
+          "value": 0.5,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.polar_motion (symbolic)"
+        },
+        "a_theta": {
+          "value": 3.4,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.polar_motion (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v_r": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.006,
+          "passed": true
+        },
+        "v_theta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "a_r": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "a_theta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0068,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v_r = \u1e59 = 3; v_\u03b8 = r\u03b8\u0307 = 2\u00b70.5 = 1; a_r = r\u0308 \u2212 r\u03b8\u0307\u00b2 = 1 \u2212 2\u00b70.25 = 0.5; a_\u03b8 = r\u03b8\u0308 + 2\u1e59\u03b8\u0307 = 2\u00b70.2 + 2\u00b73\u00b70.5 = 0.4 + 3 = 3.4 m/s\u00b2"
+      }
+    },
+    {
+      "id": "kinematics-006",
+      "calculator": "kinematics.projectile",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v0": "30 m/s",
+        "theta": "45 deg",
+        "g": "9.80665 m/s^2"
+      },
+      "solve_for": [
+        "R",
+        "H",
+        "t_flight"
+      ],
+      "expected_as_specified": {
+        "R": "91.7745 m",
+        "H": "22.9436 m",
+        "t_flight": "4.32629 s"
+      },
+      "expected_SI": {
+        "R": 91.7745,
+        "H": 22.9436,
+        "t_flight": 4.32629
+      },
+      "actual_SI": {
+        "R": {
+          "value": 91.77445916801355,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc kinematics.projectile (symbolic)"
+        },
+        "H": {
+          "value": 22.94361479200338,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc kinematics.projectile (symbolic)"
+        },
+        "t_flight": {
+          "value": 4.326289494495352,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc kinematics.projectile (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R": {
+          "absolute_error": 4.083198645332686e-05,
+          "relative_error": 4.4491646866315654e-07,
+          "allowed_absolute_error": 0.18354900000000002,
+          "passed": true
+        },
+        "H": {
+          "absolute_error": 1.4792003380392771e-05,
+          "relative_error": 6.447115265430347e-07,
+          "allowed_absolute_error": 0.0458872,
+          "passed": true
+        },
+        "t_flight": {
+          "absolute_error": 5.055046479185421e-07,
+          "relative_error": 1.1684483655014853e-07,
+          "allowed_absolute_error": 0.00865258,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = v0\u00b2 sin(2\u03b8)/g = 900\u00b7sin90\u00b0/9.80665 = 900/9.80665 = 91.7745 m; H = 900\u00b7sin\u00b245\u00b0/(2\u00b79.80665) = 450/19.6133 = 22.9436 m; t = 2\u00b730\u00b7sin45\u00b0/9.80665 = 42.4264/9.80665 = 4.32629 s"
+      }
+    },
+    {
+      "id": "kinematics-007",
+      "calculator": "kinematics.relative_velocity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v_A": "30 m/s",
+        "v_B": "20 m/s",
+        "a_A": "2 m/s^2",
+        "a_B": "1 m/s^2"
+      },
+      "solve_for": [
+        "v_AB",
+        "a_AB"
+      ],
+      "expected_as_specified": {
+        "v_AB": "10 m/s",
+        "a_AB": "1 m/s^2"
+      },
+      "expected_SI": {
+        "v_AB": 10.0,
+        "a_AB": 1.0
+      },
+      "actual_SI": {
+        "v_AB": {
+          "value": 10.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc kinematics.relative_velocity (symbolic)"
+        },
+        "a_AB": {
+          "value": 1.0,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.relative_velocity (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v_AB": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02,
+          "passed": true
+        },
+        "a_AB": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v_A/B = v_A \u2212 v_B = 30 \u2212 20 = 10 m/s; a_A/B = a_A \u2212 a_B = 2 \u2212 1 = 1 m/s\u00b2"
+      }
+    },
+    {
+      "id": "kinematics-008",
+      "calculator": "kinematics.rotation_fixed_axis",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega": "10 rad/s",
+        "alpha": "2 rad/s^2",
+        "r": "0.5 m"
+      },
+      "solve_for": [
+        "v",
+        "a_t",
+        "a_n"
+      ],
+      "expected_as_specified": {
+        "v": "5 m/s",
+        "a_t": "1 m/s^2",
+        "a_n": "50 m/s^2"
+      },
+      "expected_SI": {
+        "v": 5.0,
+        "a_t": 1.0,
+        "a_n": 50.0
+      },
+      "actual_SI": {
+        "v": {
+          "value": 5.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rotation_fixed_axis (symbolic)"
+        },
+        "a_t": {
+          "value": 1.0,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rotation_fixed_axis (symbolic)"
+        },
+        "a_n": {
+          "value": 50.0,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rotation_fixed_axis (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        },
+        "a_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "a_n": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.1,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v = \u03c9r = 10\u00b70.5 = 5 m/s; a_t = \u03b1r = 2\u00b70.5 = 1 m/s\u00b2; a_n = \u03c9\u00b2r = 100\u00b70.5 = 50 m/s\u00b2"
+      }
+    },
+    {
+      "id": "kinematics-009",
+      "calculator": "kinematics.instantaneous_center",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v": "6 m/s",
+        "omega": "2 rad/s"
+      },
+      "solve_for": [
+        "r_ic"
+      ],
+      "expected_as_specified": {
+        "r_ic": "3 m"
+      },
+      "expected_SI": {
+        "r_ic": 3.0
+      },
+      "actual_SI": {
+        "r_ic": {
+          "value": 3.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc kinematics.instantaneous_center (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "r_ic": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.006,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = v/\u03c9 = 6/2 = 3 m"
+      }
+    },
+    {
+      "id": "kinematics-010",
+      "calculator": "kinematics.instantaneous_center",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "r_ic": "3 m",
+        "v": "6 m/s"
+      },
+      "solve_for": [
+        "omega"
+      ],
+      "expected_as_specified": {
+        "omega": "2 rad/s"
+      },
+      "expected_SI": {
+        "omega": 2.0
+      },
+      "actual_SI": {
+        "omega": {
+          "value": 2.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc kinematics.instantaneous_center (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "omega": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c9 = v/r = 6/3 = 2 rad/s"
+      }
+    },
+    {
+      "id": "kinematics-011",
+      "calculator": "kinematics.coriolis_accel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega": "5 rad/s",
+        "v_rel": "3 m/s"
+      },
+      "solve_for": [
+        "a_cor"
+      ],
+      "expected_as_specified": {
+        "a_cor": "30 m/s^2"
+      },
+      "expected_SI": {
+        "a_cor": 30.0
+      },
+      "actual_SI": {
+        "a_cor": {
+          "value": 30.0,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.coriolis_accel (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a_cor": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a_cor = 2\u03c9\u00b7v_rel = 2\u00b75\u00b73 = 30 m/s\u00b2"
+      }
+    },
+    {
+      "id": "kinematics-012",
+      "calculator": "kinematics.rotating_frame_accel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega": "5 rad/s",
+        "v_r": "2 m/s",
+        "r": "0.4 m",
+        "rddot": "0 m/s^2"
+      },
+      "solve_for": [
+        "a_rad",
+        "a_cor",
+        "a_total"
+      ],
+      "expected_as_specified": {
+        "a_rad": "-10 m/s^2",
+        "a_cor": "20 m/s^2",
+        "a_total": "22.3607 m/s^2"
+      },
+      "expected_SI": {
+        "a_rad": -10.0,
+        "a_cor": 20.0,
+        "a_total": 22.3607
+      },
+      "actual_SI": {
+        "a_rad": {
+          "value": -10.0,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rotating_frame_accel (symbolic)"
+        },
+        "a_cor": {
+          "value": 20.0,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rotating_frame_accel (symbolic)"
+        },
+        "a_total": {
+          "value": 22.360679774997898,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rotating_frame_accel (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a_rad": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02,
+          "passed": true
+        },
+        "a_cor": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.04,
+          "passed": true
+        },
+        "a_total": {
+          "absolute_error": 2.022500210330236e-05,
+          "relative_error": 9.044887728605257e-07,
+          "allowed_absolute_error": 0.0447214,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a_rad = r\u0308 \u2212 \u03c9\u00b2r = 0 \u2212 25\u00b70.4 = \u221210 m/s\u00b2; a_cor = 2\u03c9\u00b7v_r = 2\u00b75\u00b72 = 20 m/s\u00b2; a_total = \u221a(10\u00b2 + 20\u00b2) = \u221a500 = 22.3607 m/s\u00b2 [reviewer update 2026-09-15: calculator generalised with r\u0308]"
+      }
+    },
+    {
+      "id": "kinematics-013",
+      "calculator": "kinematics.rotating_frame_accel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega": "5 rad/s",
+        "v_r": "2 m/s",
+        "r": "0.4 m",
+        "rddot": "3 m/s^2"
+      },
+      "solve_for": [
+        "a_rad",
+        "a_cor",
+        "a_total"
+      ],
+      "expected_as_specified": {
+        "a_rad": "-7 m/s^2",
+        "a_total": "21.1896 m/s^2"
+      },
+      "expected_SI": {
+        "a_rad": -7.0,
+        "a_total": 21.1896
+      },
+      "actual_SI": {
+        "a_rad": {
+          "value": -7.0,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rotating_frame_accel (symbolic)"
+        },
+        "a_total": {
+          "value": 21.18962010041709,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinematics.rotating_frame_accel (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a_rad": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.014,
+          "passed": true
+        },
+        "a_total": {
+          "absolute_error": 2.010041709255006e-05,
+          "relative_error": 9.485982318000369e-07,
+          "allowed_absolute_error": 0.0423792,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "reviewer case: a_rad = 3 \u2212 10 = \u22127 m/s\u00b2; a_total = \u221a(49 + 400) = \u221a449 = 21.1896 m/s\u00b2"
+      }
+    }
+  ],
+  "passed": 13,
+  "failed": 0
+}

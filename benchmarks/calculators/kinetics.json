@@ -1,0 +1,2395 @@
+{
+  "section": "kinetics",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k kinetics",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "kinetics.newton_second_law": {
+      "title": "Newton's second law (F = ma)",
+      "variables": [
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "net force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m/s^2",
+          "desc": "acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F = m*a"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F"
+      ],
+      "assumptions": [
+        "Net force on a particle (or the mass-centre of a body), in an inertial frame."
+      ],
+      "method_references": [
+        "Newton's second law F = ma"
+      ],
+      "synthetic_example": {
+        "m": 5.0,
+        "a": 3.0
+      }
+    },
+    "kinetics.centripetal_force": {
+      "title": "Centripetal force (F_c = mv\u00b2/r = m\u03c9\u00b2r)",
+      "variables": [
+        {
+          "name": "F_c",
+          "unit": "N",
+          "desc": "centripetal (radially inward) force",
+          "lo": null,
+          "hi": null,
+          "label": "Fc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "tangential speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "path radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular velocity (v = \u03c9r)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F_c = m*v**2/r",
+        "v = omega*r"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F_c",
+        "v"
+      ],
+      "assumptions": [
+        "Uniform circular motion; the force points toward the centre. Enter either v or \u03c9 (with r) \u2014 the two are tied by v = \u03c9r."
+      ],
+      "method_references": [
+        "F_c = mv\u00b2/r = m\u03c9\u00b2r"
+      ],
+      "synthetic_example": {
+        "m": 2.0,
+        "r": 0.5,
+        "omega": 4.0
+      }
+    },
+    "kinetics.work_constant_force": {
+      "title": "Work done by a constant force (W = F\u00b7d\u00b7cos\u03b8)",
+      "variables": [
+        {
+          "name": "W",
+          "unit": "J",
+          "desc": "work done",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "force magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "displacement magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "angle between force and displacement",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "W = F*d*cos(theta)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "W"
+      ],
+      "assumptions": [
+        "Constant force along a straight displacement; W < 0 when the force opposes the motion."
+      ],
+      "method_references": [
+        "Work W = F\u00b7d\u00b7cos\u03b8"
+      ],
+      "synthetic_example": {
+        "F": 100.0,
+        "d": 2.0,
+        "theta": 1.0471975511965976
+      }
+    },
+    "kinetics.kinetic_energy": {
+      "title": "Translational kinetic energy (KE = \u00bdmv\u00b2)",
+      "variables": [
+        {
+          "name": "KE",
+          "unit": "J",
+          "desc": "kinetic energy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "KE = 0.5*m*v**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "KE"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Kinetic energy KE = \u00bdmv\u00b2"
+      ],
+      "synthetic_example": {
+        "m": 2.0,
+        "v": 5.0
+      }
+    },
+    "kinetics.rotational_kinetic_energy": {
+      "title": "Rotational kinetic energy (KE = \u00bdI\u03c9\u00b2)",
+      "variables": [
+        {
+          "name": "KE",
+          "unit": "J",
+          "desc": "rotational kinetic energy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "kg*m^2",
+          "desc": "mass moment of inertia",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "KE = 0.5*I*omega**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "KE"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Rotational kinetic energy KE = \u00bdI\u03c9\u00b2"
+      ],
+      "synthetic_example": {
+        "I": 0.5,
+        "omega": 4.0
+      }
+    },
+    "kinetics.potential_energy": {
+      "title": "Gravitational and spring potential energy",
+      "variables": [
+        {
+          "name": "PE_g",
+          "unit": "J",
+          "desc": "gravitational potential energy mgh",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "PE_s",
+          "unit": "J",
+          "desc": "spring potential energy \u00bdkx\u00b2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration (standard g = 9.80665 m/s\u00b2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "height above the datum",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "N/m",
+          "desc": "spring stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x",
+          "unit": "m",
+          "desc": "spring displacement from free length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "PE_g = m*g*h",
+        "PE_s = 0.5*k*x**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "PE_g",
+        "PE_s"
+      ],
+      "assumptions": [
+        "h measured from an arbitrary datum (PE is relative); x is the spring stretch or compression from its free length."
+      ],
+      "method_references": [
+        "PE_g = mgh; PE_s = \u00bdkx\u00b2"
+      ],
+      "synthetic_example": {
+        "m": 3.0,
+        "g": 9.80665,
+        "h": 10.0,
+        "k": 200.0,
+        "x": 0.1
+      }
+    },
+    "kinetics.power": {
+      "title": "Mechanical power (P = F\u00b7v)",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "W",
+          "desc": "power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "force (component along the velocity)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P = F*v"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P"
+      ],
+      "assumptions": [
+        "Force and velocity in the same direction. Rotational power P = T\u03c9 is the shaft-power calculator in the mechanics-of-materials section."
+      ],
+      "method_references": [
+        "Power P = F\u00b7v"
+      ],
+      "synthetic_example": {
+        "F": 200.0,
+        "v": 3.0
+      }
+    },
+    "kinetics.efficiency": {
+      "title": "Mechanical efficiency (\u03b7 = P_out/P_in)",
+      "variables": [
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_out",
+          "unit": "W",
+          "desc": "output (useful) power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_in",
+          "unit": "W",
+          "desc": "input power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eta = P_out/P_in"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eta"
+      ],
+      "assumptions": [
+        "Power losses are P_in \u2212 P_out = P_in(1 \u2212 \u03b7)."
+      ],
+      "method_references": [
+        "Efficiency \u03b7 = P_out/P_in"
+      ],
+      "synthetic_example": {
+        "P_out": 600.0,
+        "P_in": 750.0
+      }
+    },
+    "kinetics.linear_impulse": {
+      "title": "Linear impulse and momentum (J = F\u00b7\u0394t = m\u0394v)",
+      "variables": [
+        {
+          "name": "J",
+          "unit": "N*s",
+          "desc": "impulse",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "average force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dt",
+          "unit": "s",
+          "desc": "time interval",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394t",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_i",
+          "unit": "m/s",
+          "desc": "initial velocity",
+          "lo": null,
+          "hi": null,
+          "label": "vi",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_f",
+          "unit": "m/s",
+          "desc": "final velocity",
+          "lo": null,
+          "hi": null,
+          "label": "vf",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "J = F*dt",
+        "v_f = v_i + F*dt/m"
+      ],
+      "procedure": null,
+      "outputs": [
+        "J",
+        "v_f"
+      ],
+      "assumptions": [
+        "Impulse of a constant average force over \u0394t equals the change in linear momentum."
+      ],
+      "method_references": [
+        "Impulse\u2013momentum: J = F\u0394t = m(v_f \u2212 v_i)"
+      ],
+      "synthetic_example": {
+        "F": 50.0,
+        "dt": 0.1,
+        "m": 2.0,
+        "v_i": 5.0
+      }
+    },
+    "kinetics.angular_momentum": {
+      "title": "Angular momentum of a rigid body (H = I\u03c9)",
+      "variables": [
+        {
+          "name": "H",
+          "unit": "kg*m^2/s",
+          "desc": "angular momentum",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "kg*m^2",
+          "desc": "mass moment of inertia",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "H = I*omega"
+      ],
+      "procedure": null,
+      "outputs": [
+        "H"
+      ],
+      "assumptions": [
+        "About the axis of rotation (a principal axis). For a particle, I = mr\u00b2 about the axis."
+      ],
+      "method_references": [
+        "Angular momentum H = I\u03c9"
+      ],
+      "synthetic_example": {
+        "I": 0.5,
+        "omega": 4.0
+      }
+    },
+    "kinetics.restitution": {
+      "title": "Coefficient of restitution (e = (v2\u2032 \u2212 v1\u2032)/(v1 \u2212 v2))",
+      "variables": [
+        {
+          "name": "e",
+          "unit": "",
+          "desc": "coefficient of restitution",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v1",
+          "unit": "m/s",
+          "desc": "velocity of body 1 before impact",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v2",
+          "unit": "m/s",
+          "desc": "velocity of body 2 before impact",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v1p",
+          "unit": "m/s",
+          "desc": "velocity of body 1 after impact",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v2p",
+          "unit": "m/s",
+          "desc": "velocity of body 2 after impact",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "e = (v2p - v1p)/(v1 - v2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "e"
+      ],
+      "assumptions": [
+        "Direct central impact; e = 1 perfectly elastic, e = 0 perfectly plastic. Requires v1 \u2260 v2 (bodies approaching)."
+      ],
+      "method_references": [
+        "Coefficient of restitution e = (v2\u2032 \u2212 v1\u2032)/(v1 \u2212 v2)"
+      ],
+      "synthetic_example": {
+        "v1": 10.0,
+        "v2": 0.0,
+        "v1p": 2.0,
+        "v2p": 8.0
+      }
+    },
+    "kinetics.impact_velocities": {
+      "title": "Direct central impact: velocities after impact (given e and masses)",
+      "variables": [
+        {
+          "name": "v1p",
+          "unit": "m/s",
+          "desc": "velocity of body 1 after impact",
+          "lo": null,
+          "hi": null,
+          "label": "v1\u2032",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v2p",
+          "unit": "m/s",
+          "desc": "velocity of body 2 after impact",
+          "lo": null,
+          "hi": null,
+          "label": "v2\u2032",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m1",
+          "unit": "kg",
+          "desc": "mass of body 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m2",
+          "unit": "kg",
+          "desc": "mass of body 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v1",
+          "unit": "m/s",
+          "desc": "velocity of body 1 before impact",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v2",
+          "unit": "m/s",
+          "desc": "velocity of body 2 before impact",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "e",
+          "unit": "",
+          "desc": "coefficient of restitution",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v1p = ((m1 - e*m2)*v1 + m2*(1 + e)*v2)/(m1 + m2)",
+        "v2p = (m1*(1 + e)*v1 + (m2 - e*m1)*v2)/(m1 + m2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v1p",
+        "v2p"
+      ],
+      "assumptions": [
+        "Direct central impact (motion along the line of centres) with coefficient of restitution e; momentum and the restitution relation are solved together."
+      ],
+      "method_references": [
+        "Direct central impact solution from momentum conservation and e = (v2\u2032 \u2212 v1\u2032)/(v1 \u2212 v2)"
+      ],
+      "synthetic_example": {
+        "m1": 2.0,
+        "m2": 3.0,
+        "v1": 10.0,
+        "v2": 0.0,
+        "e": 0.6
+      }
+    },
+    "kinetics.mass_moment_inertia": {
+      "title": "Mass moment of inertia of a standard solid (plus parallel-axis)",
+      "variables": [
+        {
+          "name": "solid",
+          "unit": "",
+          "desc": "{\"shape\": \"rod\"|\"disk\"|\"cylinder\"|\"sphere\"|\"shell\"|\"block\", \"m\": kg, dims}: rod \u2192 \"L\"; disk/cylinder/sphere/shell \u2192 \"r\"; block \u2192 \"a\",\"b\"",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "parallel-axis offset distance (0 for the centroidal axis)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I_c",
+          "unit": "kg*m^2",
+          "desc": "moment of inertia about the centroidal axis",
+          "lo": null,
+          "hi": null,
+          "label": "Ic",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "kg*m^2",
+          "desc": "moment of inertia about the parallel axis (I_c + m\u00b7d\u00b2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _mass_inertia(values):\n    \"\"\"Mass moment of inertia of a standard solid about a centroidal axis, plus parallel-axis shift.\n\n    ``solid`` is a dict: {'shape': 'rod'|'disk'|'cylinder'|'sphere'|'shell'|'block', 'm': mass kg,\n    and the needed dimension(s)}: rod \u2192 'L' (length); disk/cylinder (central axis) / sphere / shell (thin SPHERICAL shell, about a diameter) \u2192 'r'; block \u2192 'a','b'. Solid-cylinder transverse axis m(3r\u00b2+h\u00b2)/12 is not included\n    (the two in-plane side lengths). ``d`` is the parallel-axis offset from that centroidal axis.\n    Returns I_c (about the centroidal axis) and I = I_c + m\u00b7d\u00b2.\n    \"\"\"\n    solid = values['solid']\n    if not isinstance(solid, dict):\n        raise MechError('solid: give {\"shape\": ..., \"m\": ..., and the dimension(s)} in SI')\n    shape = str(solid.get('shape', '')).lower()\n    m = float(solid.get('m'))\n    d = float(values['d'])\n    if m <= 0:\n        raise MechError('solid.m must be positive')\n\n    def dim(name):\n        if solid.get(name) is None:\n            raise MechError(f\"shape '{shape}' needs dimension {name!r}\")\n        return float(solid[name])\n\n    if shape == 'rod':\n        I = m * dim('L') ** 2 / 12          # thin rod, about perpendicular centroidal axis\n    elif shape in ('disk', 'cylinder'):\n        I = m * dim('r') ** 2 / 2           # solid disk/cylinder, about the central axis\n    elif shape == 'sphere':\n        I = 2 * m * dim('r') ** 2 / 5       # solid sphere, about a diameter\n    elif shape == 'shell':\n        I = 2 * m * dim('r') ** 2 / 3       # thin spherical shell, about a diameter\n    elif shape == 'block':\n        I = m * (dim('a') ** 2 + dim('b') ** 2) / 12   # rectangular block, axis \u22a5 to the a\u00d7b face\n    else:\n        raise MechError(f\"unknown shape {shape!r}: use rod, disk, cylinder, sphere, shell or block\")\n    return {'I_c': I, 'I': I + m * d ** 2}\n",
+        "source": "kinetics.py",
+        "line": 25
+      },
+      "outputs": [
+        "I_c",
+        "I"
+      ],
+      "assumptions": [
+        "Standard solids about a centroidal principal axis: rod m L\u00b2/12; disk/solid cylinder m r\u00b2/2; sphere 2mr\u00b2/5; thin spherical shell 2mr\u00b2/3; block m(a\u00b2+b\u00b2)/12 (axis \u22a5 to the a\u00d7b face). Parallel-axis theorem I = I_c + m\u00b7d\u00b2."
+      ],
+      "method_references": [
+        "Standard mass moments of inertia; parallel-axis theorem"
+      ],
+      "synthetic_example": {
+        "solid": {
+          "shape": "sphere",
+          "m": 5.0,
+          "r": 0.2
+        },
+        "d": 0.3
+      }
+    },
+    "kinetics.radius_of_gyration": {
+      "title": "Radius of gyration (k = \u221a(I/m))",
+      "variables": [
+        {
+          "name": "k",
+          "unit": "m",
+          "desc": "radius of gyration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "kg*m^2",
+          "desc": "mass moment of inertia",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "k = sqrt(I/m)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "k"
+      ],
+      "assumptions": [
+        "The distance k at which the whole mass could be concentrated to give the same I."
+      ],
+      "method_references": [
+        "Radius of gyration k = \u221a(I/m)"
+      ],
+      "synthetic_example": {
+        "I": 0.5,
+        "m": 2.0
+      }
+    },
+    "kinetics.rigid_body_planar": {
+      "title": "Rigid-body planar motion: translation and rotation equations",
+      "variables": [
+        {
+          "name": "a",
+          "unit": "m/s^2",
+          "desc": "acceleration of the mass centre",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "net force on the body",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "rad/s^2",
+          "desc": "angular acceleration",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M",
+          "unit": "N*m",
+          "desc": "net moment about the mass centre",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I_G",
+          "unit": "kg*m^2",
+          "desc": "mass moment of inertia about the mass centre",
+          "lo": null,
+          "hi": null,
+          "label": "IG",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "a = F/m",
+        "alpha = M/I_G"
+      ],
+      "procedure": null,
+      "outputs": [
+        "a",
+        "alpha"
+      ],
+      "assumptions": [
+        "Newton\u2013Euler equations for a rigid body in plane motion: \u03a3F = m\u00b7a_G (translation of the mass centre) and \u03a3M_G = I_G\u00b7\u03b1 (rotation about the mass centre). For rolling without slipping add a = \u03b1r; for a fixed-axis pivot use \u03a3M_O = I_O\u00b7\u03b1."
+      ],
+      "method_references": [
+        "Plane rigid-body equations of motion: \u03a3F = m a_G, \u03a3M_G = I_G \u03b1"
+      ],
+      "synthetic_example": {
+        "F": 30.0,
+        "m": 5.0,
+        "M": 6.0,
+        "I_G": 2.0
+      }
+    },
+    "kinetics.gyroscopic_torque": {
+      "title": "Gyroscopic torque and precession (M = I\u03c9\u03a9)",
+      "variables": [
+        {
+          "name": "M",
+          "unit": "N*m",
+          "desc": "gyroscopic torque (moment required to precess)",
+          "lo": null,
+          "hi": null,
+          "label": "M",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "kg*m^2",
+          "desc": "spin moment of inertia about the spin axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "spin angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Omega",
+          "unit": "rad/s",
+          "desc": "precession angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03a9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "M = I*omega*Omega"
+      ],
+      "procedure": null,
+      "outputs": [
+        "M"
+      ],
+      "assumptions": [
+        "Spin axis perpendicular to the precession axis; the torque is perpendicular to both. The reaction the spinning body exerts on its supports has the same magnitude."
+      ],
+      "method_references": [
+        "Gyroscopic torque M = I\u00b7\u03c9\u00b7\u03a9"
+      ],
+      "synthetic_example": {
+        "I": 0.5,
+        "omega": 100.0,
+        "Omega": 2.0
+      }
+    },
+    "kinetics.rocket_thrust": {
+      "title": "Rocket thrust (T = \u1e41\u00b7v_e)",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N",
+          "desc": "thrust",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mdot",
+          "unit": "kg/s",
+          "desc": "propellant mass flow rate",
+          "lo": null,
+          "hi": null,
+          "label": "\u1e41",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_e",
+          "unit": "m/s",
+          "desc": "effective exhaust velocity",
+          "lo": null,
+          "hi": null,
+          "label": "ve",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = mdot*v_e"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T"
+      ],
+      "assumptions": [
+        "Steady propellant mass flow; v_e is the effective exhaust velocity (specific impulse I_sp = v_e/g0). With a nozzle pressure mismatch T = \u1e41\u00b7v_exit + (p_e \u2212 p_a)\u00b7A_e, i.e. v_e = v_exit + (p_e \u2212 p_a)\u00b7A_e/\u1e41."
+      ],
+      "method_references": [
+        "Rocket thrust T = \u1e41\u00b7v_e"
+      ],
+      "synthetic_example": {
+        "mdot": 2.0,
+        "v_e": 3000.0
+      }
+    },
+    "kinetics.tsiolkovsky": {
+      "title": "Tsiolkovsky rocket equation (\u0394v = v_e\u00b7ln(m0/mf))",
+      "variables": [
+        {
+          "name": "dv",
+          "unit": "m/s",
+          "desc": "velocity change (delta-v)",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394v",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_e",
+          "unit": "m/s",
+          "desc": "effective exhaust velocity",
+          "lo": null,
+          "hi": null,
+          "label": "ve",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m0",
+          "unit": "kg",
+          "desc": "initial mass (with propellant)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mf",
+          "unit": "kg",
+          "desc": "final mass (propellant spent)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "dv = v_e*log(m0/mf)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "dv"
+      ],
+      "assumptions": [
+        "Ideal rocket, no drag or gravity, constant v_e; log is the natural logarithm."
+      ],
+      "method_references": [
+        "Tsiolkovsky rocket equation \u0394v = v_e\u00b7ln(m0/mf)"
+      ],
+      "synthetic_example": {
+        "v_e": 3000.0,
+        "m0": 1000.0,
+        "mf": 200.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "kinetics-001",
+      "calculator": "kinetics.newton_second_law",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "5 kg",
+        "a": "3 m/s^2"
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expected_as_specified": {
+        "F": "15 N"
+      },
+      "expected_SI": {
+        "F": 15.0
+      },
+      "actual_SI": {
+        "F": {
+          "value": 15.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc kinetics.newton_second_law (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.03,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = ma = 5\u00b73 = 15 N"
+      }
+    },
+    {
+      "id": "kinetics-002",
+      "calculator": "kinetics.newton_second_law",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "15 N",
+        "a": "3 m/s^2"
+      },
+      "solve_for": [
+        "m"
+      ],
+      "expected_as_specified": {
+        "m": "5 kg"
+      },
+      "expected_SI": {
+        "m": 5.0
+      },
+      "actual_SI": {
+        "m": {
+          "value": 5.0,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc kinetics.newton_second_law (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "m": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "m = F/a = 15/3 = 5 kg"
+      }
+    },
+    {
+      "id": "kinetics-003",
+      "calculator": "kinetics.centripetal_force",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "2 kg",
+        "r": "0.5 m",
+        "omega": "4 rad/s"
+      },
+      "solve_for": [
+        "F_c",
+        "v"
+      ],
+      "expected_as_specified": {
+        "v": "2 m/s",
+        "F_c": "16 N"
+      },
+      "expected_SI": {
+        "v": 2.0,
+        "F_c": 16.0
+      },
+      "actual_SI": {
+        "v": {
+          "value": 2.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc kinetics.centripetal_force (symbolic)"
+        },
+        "F_c": {
+          "value": 16.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc kinetics.centripetal_force (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "F_c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.032,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v = \u03c9r = 4\u00b70.5 = 2 m/s; F_c = m\u03c9\u00b2r = 2\u00b716\u00b70.5 = 16 N"
+      }
+    },
+    {
+      "id": "kinetics-004",
+      "calculator": "kinetics.work_constant_force",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "100 N",
+        "d": "2 m",
+        "theta": "60 deg"
+      },
+      "solve_for": [
+        "W"
+      ],
+      "expected_as_specified": {
+        "W": "100 J"
+      },
+      "expected_SI": {
+        "W": 100.0
+      },
+      "actual_SI": {
+        "W": {
+          "value": 100.00000000000003,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc kinetics.work_constant_force (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "W": {
+          "absolute_error": 2.842170943040401e-14,
+          "relative_error": 2.842170943040401e-16,
+          "allowed_absolute_error": 0.2,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "W = F\u00b7d\u00b7cos\u03b8 = 100\u00b72\u00b7cos60\u00b0 = 200\u00b70.5 = 100 J"
+      }
+    },
+    {
+      "id": "kinetics-005",
+      "calculator": "kinetics.kinetic_energy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "2 kg",
+        "v": "5 m/s"
+      },
+      "solve_for": [
+        "KE"
+      ],
+      "expected_as_specified": {
+        "KE": "25 J"
+      },
+      "expected_SI": {
+        "KE": 25.0
+      },
+      "actual_SI": {
+        "KE": {
+          "value": 25.0,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc kinetics.kinetic_energy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "KE": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "KE = \u00bdmv\u00b2 = 0.5\u00b72\u00b725 = 25 J"
+      }
+    },
+    {
+      "id": "kinetics-006",
+      "calculator": "kinetics.rotational_kinetic_energy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "0.5 kg*m^2",
+        "omega": "4 rad/s"
+      },
+      "solve_for": [
+        "KE"
+      ],
+      "expected_as_specified": {
+        "KE": "4 J"
+      },
+      "expected_SI": {
+        "KE": 4.0
+      },
+      "actual_SI": {
+        "KE": {
+          "value": 4.0,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc kinetics.rotational_kinetic_energy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "KE": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.008,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "KE = \u00bdI\u03c9\u00b2 = 0.5\u00b70.5\u00b716 = 4 J"
+      }
+    },
+    {
+      "id": "kinetics-007",
+      "calculator": "kinetics.potential_energy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "3 kg",
+        "g": "9.80665 m/s^2",
+        "h": "10 m",
+        "k": "200 N/m",
+        "x": "0.1 m"
+      },
+      "solve_for": [
+        "PE_g",
+        "PE_s"
+      ],
+      "expected_as_specified": {
+        "PE_g": "294.200 J",
+        "PE_s": "1 J"
+      },
+      "expected_SI": {
+        "PE_g": 294.2,
+        "PE_s": 1.0
+      },
+      "actual_SI": {
+        "PE_g": {
+          "value": 294.19949999999994,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc kinetics.potential_energy (symbolic)"
+        },
+        "PE_s": {
+          "value": 1.0000000000000002,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc kinetics.potential_energy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "PE_g": {
+          "absolute_error": 0.00050000000004502,
+          "relative_error": 1.6995241333957172e-06,
+          "allowed_absolute_error": 0.5884,
+          "passed": true
+        },
+        "PE_s": {
+          "absolute_error": 2.220446049250313e-16,
+          "relative_error": 2.220446049250313e-16,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "PE_g = mgh = 3\u00b79.80665\u00b710 = 294.200 J; PE_s = \u00bdkx\u00b2 = 0.5\u00b7200\u00b70.01 = 1 J"
+      }
+    },
+    {
+      "id": "kinetics-008",
+      "calculator": "kinetics.power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "200 N",
+        "v": "3 m/s"
+      },
+      "solve_for": [
+        "P"
+      ],
+      "expected_as_specified": {
+        "P": "600 W"
+      },
+      "expected_SI": {
+        "P": 600.0
+      },
+      "actual_SI": {
+        "P": {
+          "value": 600.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc kinetics.power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.2,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = F\u00b7v = 200\u00b73 = 600 W"
+      }
+    },
+    {
+      "id": "kinetics-009",
+      "calculator": "kinetics.efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P_out": "600 W",
+        "P_in": "750 W"
+      },
+      "solve_for": [
+        "eta"
+      ],
+      "expected_as_specified": {
+        "eta": 0.8
+      },
+      "expected_SI": {
+        "eta": 0.8
+      },
+      "actual_SI": {
+        "eta": {
+          "value": 0.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc kinetics.efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0016,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b7 = P_out/P_in = 600/750 = 0.8"
+      }
+    },
+    {
+      "id": "kinetics-010",
+      "calculator": "kinetics.linear_impulse",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "50 N",
+        "dt": "0.1 s",
+        "m": "2 kg",
+        "v_i": "5 m/s"
+      },
+      "solve_for": [
+        "J",
+        "v_f"
+      ],
+      "expected_as_specified": {
+        "J": "5 N*s",
+        "v_f": "7.5 m/s"
+      },
+      "expected_SI": {
+        "J": 5.0,
+        "v_f": 7.5
+      },
+      "actual_SI": {
+        "J": {
+          "value": 5.0,
+          "unit": "N*s",
+          "kind": "derived",
+          "method": "mechcalc kinetics.linear_impulse (symbolic)"
+        },
+        "v_f": {
+          "value": 7.5,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc kinetics.linear_impulse (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "J": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        },
+        "v_f": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.015,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "J = F\u0394t = 50\u00b70.1 = 5 N\u00b7s; v_f = v_i + F\u0394t/m = 5 + 5/2 = 7.5 m/s"
+      }
+    },
+    {
+      "id": "kinetics-011",
+      "calculator": "kinetics.angular_momentum",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "0.5 kg*m^2",
+        "omega": "4 rad/s"
+      },
+      "solve_for": [
+        "H"
+      ],
+      "expected_as_specified": {
+        "H": "2 kg*m^2/s"
+      },
+      "expected_SI": {
+        "H": 2.0
+      },
+      "actual_SI": {
+        "H": {
+          "value": 2.0,
+          "unit": "kg*m^2/s",
+          "kind": "derived",
+          "method": "mechcalc kinetics.angular_momentum (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "H": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "H = I\u03c9 = 0.5\u00b74 = 2 kg\u00b7m\u00b2/s"
+      }
+    },
+    {
+      "id": "kinetics-012",
+      "calculator": "kinetics.restitution",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v1": "10 m/s",
+        "v2": "0 m/s",
+        "v1p": "2 m/s",
+        "v2p": "8 m/s"
+      },
+      "solve_for": [
+        "e"
+      ],
+      "expected_as_specified": {
+        "e": 0.6
+      },
+      "expected_SI": {
+        "e": 0.6
+      },
+      "actual_SI": {
+        "e": {
+          "value": 0.6,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc kinetics.restitution (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "e": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0012,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "e = (v2\u2032 \u2212 v1\u2032)/(v1 \u2212 v2) = (8 \u2212 2)/(10 \u2212 0) = 0.6"
+      }
+    },
+    {
+      "id": "kinetics-013",
+      "calculator": "kinetics.impact_velocities",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m1": "2 kg",
+        "m2": "3 kg",
+        "v1": "10 m/s",
+        "v2": "0 m/s",
+        "e": 0.6
+      },
+      "solve_for": [
+        "v1p",
+        "v2p"
+      ],
+      "expected_as_specified": {
+        "v1p": "0.4 m/s",
+        "v2p": "6.4 m/s"
+      },
+      "expected_SI": {
+        "v1p": 0.4,
+        "v2p": 6.4
+      },
+      "actual_SI": {
+        "v1p": {
+          "value": 0.4,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc kinetics.impact_velocities (symbolic)"
+        },
+        "v2p": {
+          "value": 6.4,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc kinetics.impact_velocities (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v1p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0008,
+          "passed": true
+        },
+        "v2p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0128,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v1\u2032 = ((m1\u2212em2)v1 + (1+e)m2 v2)/(m1+m2) = ((2\u22121.8)\u00b710 + 0)/5 = 2/5 = 0.4 m/s; v2\u2032 = ((1+e)m1 v1 + (m2\u2212em1)v2)/(m1+m2) = (1.6\u00b72\u00b710 + 0)/5 = 32/5 = 6.4 m/s (check momentum 2\u00b70.4 + 3\u00b76.4 = 20 = 2\u00b710)"
+      }
+    },
+    {
+      "id": "kinetics-014",
+      "calculator": "kinetics.mass_moment_inertia",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "solid": {
+          "shape": "sphere",
+          "m": 5,
+          "r": 0.2
+        },
+        "d": 0
+      },
+      "solve_for": [
+        "I_c",
+        "I"
+      ],
+      "expected_as_specified": {
+        "I_c": "0.08 kg*m^2",
+        "I": "0.08 kg*m^2"
+      },
+      "expected_SI": {
+        "I_c": 0.08,
+        "I": 0.08
+      },
+      "actual_SI": {
+        "I_c": {
+          "value": 0.08000000000000002,
+          "unit": "kg*m^2",
+          "kind": "derived",
+          "method": "mechcalc kinetics.mass_moment_inertia (procedure)"
+        },
+        "I": {
+          "value": 0.08000000000000002,
+          "unit": "kg*m^2",
+          "kind": "derived",
+          "method": "mechcalc kinetics.mass_moment_inertia (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "I_c": {
+          "absolute_error": 1.3877787807814457e-17,
+          "relative_error": 1.734723475976807e-16,
+          "allowed_absolute_error": 0.00016,
+          "passed": true
+        },
+        "I": {
+          "absolute_error": 1.3877787807814457e-17,
+          "relative_error": 1.734723475976807e-16,
+          "allowed_absolute_error": 0.00016,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Solid sphere about a diameter: I_c = \u2156mr\u00b2 = 0.4\u00b75\u00b70.04 = 0.08 kg\u00b7m\u00b2; with d = 0 the parallel axis adds nothing"
+      }
+    },
+    {
+      "id": "kinetics-015",
+      "calculator": "kinetics.mass_moment_inertia",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "solid": {
+          "shape": "sphere",
+          "m": 5,
+          "r": 0.2
+        },
+        "d": "300 mm"
+      },
+      "solve_for": [
+        "I_c",
+        "I"
+      ],
+      "expected_as_specified": {
+        "I_c": "0.08 kg*m^2",
+        "I": "0.53 kg*m^2"
+      },
+      "expected_SI": {
+        "I_c": 0.08,
+        "I": 0.53
+      },
+      "actual_SI": {
+        "I_c": {
+          "value": 0.08000000000000002,
+          "unit": "kg*m^2",
+          "kind": "derived",
+          "method": "mechcalc kinetics.mass_moment_inertia (procedure)"
+        },
+        "I": {
+          "value": 0.53,
+          "unit": "kg*m^2",
+          "kind": "derived",
+          "method": "mechcalc kinetics.mass_moment_inertia (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "I_c": {
+          "absolute_error": 1.3877787807814457e-17,
+          "relative_error": 1.734723475976807e-16,
+          "allowed_absolute_error": 0.00016,
+          "passed": true
+        },
+        "I": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0010600000000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Parallel-axis theorem: I = I_c + md\u00b2 = 0.08 + 5\u00b70.3\u00b2 = 0.08 + 0.45 = 0.53 kg\u00b7m\u00b2"
+      }
+    },
+    {
+      "id": "kinetics-016",
+      "calculator": "kinetics.radius_of_gyration",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "0.5 kg*m^2",
+        "m": "2 kg"
+      },
+      "solve_for": [
+        "k"
+      ],
+      "expected_as_specified": {
+        "k": "0.5 m"
+      },
+      "expected_SI": {
+        "k": 0.5
+      },
+      "actual_SI": {
+        "k": {
+          "value": 0.5,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc kinetics.radius_of_gyration (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "k": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "k = \u221a(I/m) = \u221a(0.5/2) = \u221a0.25 = 0.5 m"
+      }
+    },
+    {
+      "id": "kinetics-017",
+      "calculator": "kinetics.rigid_body_planar",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "30 N",
+        "m": "5 kg",
+        "M": "6 N*m",
+        "I_G": "2 kg*m^2"
+      },
+      "solve_for": [
+        "a",
+        "alpha"
+      ],
+      "expected_as_specified": {
+        "a": "6 m/s^2",
+        "alpha": "3 rad/s^2"
+      },
+      "expected_SI": {
+        "a": 6.0,
+        "alpha": 3.0
+      },
+      "actual_SI": {
+        "a": {
+          "value": 6.0,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinetics.rigid_body_planar (symbolic)"
+        },
+        "alpha": {
+          "value": 3.0,
+          "unit": "rad/s^2",
+          "kind": "derived",
+          "method": "mechcalc kinetics.rigid_body_planar (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.012,
+          "passed": true
+        },
+        "alpha": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.006,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = F/m = 30/5 = 6 m/s\u00b2; \u03b1 = M/I_G = 6/2 = 3 rad/s\u00b2"
+      }
+    },
+    {
+      "id": "kinetics-018",
+      "calculator": "kinetics.gyroscopic_torque",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "0.5 kg*m^2",
+        "omega": "100 rad/s",
+        "Omega": "2 rad/s"
+      },
+      "solve_for": [
+        "M"
+      ],
+      "expected_as_specified": {
+        "M": "100 N*m"
+      },
+      "expected_SI": {
+        "M": 100.0
+      },
+      "actual_SI": {
+        "M": {
+          "value": 100.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc kinetics.gyroscopic_torque (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "M": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.2,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "M = I\u03c9\u03a9 = 0.5\u00b7100\u00b72 = 100 N\u00b7m"
+      }
+    },
+    {
+      "id": "kinetics-019",
+      "calculator": "kinetics.rocket_thrust",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mdot": "2 kg/s",
+        "v_e": "3000 m/s"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expected_as_specified": {
+        "T": "6000 N"
+      },
+      "expected_SI": {
+        "T": 6000.0
+      },
+      "actual_SI": {
+        "T": {
+          "value": 6000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc kinetics.rocket_thrust (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 12.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = \u1e41\u00b7v_e = 2\u00b73000 = 6000 N"
+      }
+    },
+    {
+      "id": "kinetics-020",
+      "calculator": "kinetics.tsiolkovsky",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v_e": "3000 m/s",
+        "m0": "1000 kg",
+        "mf": "200 kg"
+      },
+      "solve_for": [
+        "dv"
+      ],
+      "expected_as_specified": {
+        "dv": "4828.31 m/s"
+      },
+      "expected_SI": {
+        "dv": 4828.31
+      },
+      "actual_SI": {
+        "dv": {
+          "value": 4828.313737302302,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc kinetics.tsiolkovsky (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dv": {
+          "absolute_error": 0.0037373023014879436,
+          "relative_error": 7.74039426111402e-07,
+          "allowed_absolute_error": 9.65662,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u0394v = v_e\u00b7ln(m0/mf) = 3000\u00b7ln(5) = 3000\u00b71.609438 = 4828.31 m/s"
+      }
+    },
+    {
+      "id": "kinetics-021",
+      "calculator": "kinetics.tsiolkovsky",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dv": "4828.31 m/s",
+        "v_e": "3000 m/s",
+        "mf": "200 kg"
+      },
+      "solve_for": [
+        "m0"
+      ],
+      "expected_as_specified": {
+        "m0": "1000 kg"
+      },
+      "expected_SI": {
+        "m0": 1000.0
+      },
+      "actual_SI": {
+        "m0": {
+          "value": 999.9987542333425,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc kinetics.tsiolkovsky (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "m0": {
+          "absolute_error": 0.0012457666574618997,
+          "relative_error": 1.2457666574618998e-06,
+          "allowed_absolute_error": 2.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "m0 = mf\u00b7exp(dv/v_e) = 200\u00b7exp(4828.31/3000) = 200\u00b7exp(1.609438) = 200\u00b75 = 1000 kg"
+      }
+    }
+  ],
+  "passed": 21,
+  "failed": 0
+}

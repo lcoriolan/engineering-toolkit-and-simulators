@@ -1,0 +1,497 @@
+{
+  "section": "cycles",
+  "cases": [
+    {
+      "calc": "cycles.otto_cycle",
+      "inputs": {
+        "r": 10.0,
+        "gamma": 1.3
+      },
+      "expect": {
+        "eta": "0.49881"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η = 1 − 10^(−0.3) = 1 − 1/1.9952623 = 1 − 0.5011872 = 0.4988128"
+      }
+    },
+    {
+      "calc": "cycles.otto_cycle",
+      "inputs": {
+        "eta": "0.62989",
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "r"
+      ],
+      "expect": {
+        "r": 12.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r = (1 − η)^(−1/(γ−1)) = 0.3701072^(−2.5) = 12.0"
+      }
+    },
+    {
+      "calc": "cycles.otto_mep",
+      "inputs": {
+        "P1": "95 kPa",
+        "T1": "310 K",
+        "r": 9.0,
+        "gamma": 1.4,
+        "R": "287 J/kg/K",
+        "q_in": "900 kJ/kg"
+      },
+      "expect": {
+        "T3": "2000.9 K",
+        "P3": "5.5186 MPa",
+        "w_net": "526.28 kJ/kg",
+        "eta": "0.58476",
+        "mep": "632.19 kPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "cv = 287/0.4 = 717.5 J/kg·K; v1 = 287·310/95000 = 0.936526, v2 = 0.104058; T2 = 310·9^0.4 = 746.07 K; T3 = 746.07 + 900000/717.5 = 2000.44 K (2000.9 with full precision); P2 = 95000·9^1.4 = 2.0605e6 Pa; P3 = P2·T3/T2 = 2.0605e6·2.6814 = 5.5186 MPa; T4 = 2000.44/9^0.4 = 830.85 K; q_out = 717.5(830.85−310) = 373.72 kJ/kg; w_net = 900 − 373.72 = 526.28 kJ/kg; η = 526.28/900 = 0.58476; MEP = 526280/(0.936526−0.104058) = 632.19 kPa"
+      }
+    },
+    {
+      "calc": "cycles.otto_mep",
+      "inputs": {
+        "P1": "100 kPa",
+        "T1": "300 K",
+        "r": 8.0,
+        "gamma": 1.4,
+        "R": "287 J/kg/K",
+        "mep": "562.2 kPa"
+      },
+      "solve_for": [
+        "q_in"
+      ],
+      "expect": {
+        "q_in": "750 kJ/kg"
+      },
+      "rel_tol": 0.002,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverting MEP = (q_in − cv(T4−T1))/(v1−v2) with T4 = (T1 r^(γ−1) + q_in/cv)/r^(γ−1): solving for q_in gives q_in = 750 kJ/kg"
+      }
+    },
+    {
+      "calc": "cycles.diesel_cycle",
+      "inputs": {
+        "r": 18.0,
+        "r_c": 2.5,
+        "gamma": 1.35
+      },
+      "expect": {
+        "eta": "0.56091"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η = 1 − (1/18^0.35)·(2.5^1.35−1)/(1.35·1.5) = 1 − 0.36345·(3.44377−1)/2.025 = 1 − 0.36345·1.20680 = 1 − 0.43909 = 0.56091"
+      }
+    },
+    {
+      "calc": "cycles.dual_cycle",
+      "inputs": {
+        "r": 16.0,
+        "r_c": 1.8,
+        "r_p": 1.6,
+        "gamma": 1.35
+      },
+      "expect": {
+        "eta": "0.58692"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "num = 1.6·1.8^1.35 − 1 = 3.53856 − 1 = 2.53856; den = 16^0.35·(0.6 + 1.35·1.6·0.8) = 2.63816·2.328 = 6.14166; η = 1 − 2.53856/6.14166 = 1 − 0.41308 = 0.58692"
+      }
+    },
+    {
+      "calc": "cycles.brayton_cycle",
+      "inputs": {
+        "rp": 16.0,
+        "gamma": 1.4
+      },
+      "expect": {
+        "eta": "0.54714"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η = 1 − 16^(−0.285714) = 1 − 1/2.20837 = 1 − 0.45286 = 0.54714"
+      }
+    },
+    {
+      "calc": "cycles.brayton_bwr",
+      "inputs": {
+        "T1": "290 K",
+        "T3": "1500 K",
+        "rp": 12.0,
+        "gamma": 1.4
+      },
+      "expect": {
+        "T2": "589.84 K",
+        "T4": "737.49 K",
+        "bwr": "0.39323"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "rp^0.285714 = 2.03394; T2 = 290·2.03394 = 589.84 K; T4 = 1500/2.03394 = 737.49 K; bwr = (589.84−290)/(1500−737.49) = 299.84/762.51 = 0.39323"
+      }
+    },
+    {
+      "calc": "cycles.regenerator_effectiveness",
+      "inputs": {
+        "T5": "700 K",
+        "T2": "450 K",
+        "T4": "800 K"
+      },
+      "expect": {
+        "eps": "0.71429"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ε = (700−450)/(800−450) = 250/350 = 0.71429"
+      }
+    },
+    {
+      "calc": "cycles.intercooler_optimum",
+      "inputs": {
+        "P1": "120 kPa",
+        "P3": "1440 kPa"
+      },
+      "expect": {
+        "P2": "415.69 kPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P2 = √(P1·P3) = √(120·1440) = √172800 = 415.69 kPa (equal stage pressure ratios)"
+      }
+    },
+    {
+      "calc": "cycles.intercooler_optimum",
+      "inputs": {
+        "P2": "300 kPa",
+        "P3": "900 kPa"
+      },
+      "solve_for": [
+        "P1"
+      ],
+      "expect": {
+        "P1": "100 kPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P1 = P2²/P3 = 90 000/900 = 100 kPa"
+      }
+    },
+    {
+      "calc": "cycles.reheat_turbine",
+      "inputs": {
+        "T_max": "1500 K",
+        "P1": "1.5 MPa",
+        "P2": "120 kPa",
+        "P_int": "450 kPa",
+        "gamma": 1.33,
+        "cp": "1.15 kJ/kg/K"
+      },
+      "expect": {
+        "T2s": "1112.64 K",
+        "w_two": "927.78 kJ/kg",
+        "w_extra": "124.55 kJ/kg"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = 0.33/1.33 = 0.24812; T2s = 1500·(450/1500)^0.24812 = 1500·0.74176 = 1112.64 K; T4s = 1500·(120/450)^0.24812 = 1500·0.72040 = 1080.59 K; w1 = 1150(1500−1112.64) = 445.46 kJ/kg; w2 = 1150(1500−1080.59) = 482.32 kJ/kg; w_two = 927.78 kJ/kg; w_single = 1150·1500·(1−(120/1500)^0.24812) = 1.725e6·0.46578 = 803.23 kJ/kg; w_extra = 927.78−803.23 = 124.55 kJ/kg"
+      }
+    },
+    {
+      "calc": "cycles.jet_thrust",
+      "inputs": {
+        "m_dot": "120 kg/s",
+        "V_e": "700 m/s",
+        "V_in": "300 m/s",
+        "P_e": "50 kPa",
+        "P_amb": "35 kPa",
+        "A_e": "0.4 m^2"
+      },
+      "expect": {
+        "F": "54 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 120(700−300) + (50e3−35e3)·0.4 = 48 000 + 6 000 = 54 000 N = 54 kN"
+      }
+    },
+    {
+      "calc": "cycles.jet_thrust",
+      "inputs": {
+        "m_dot": "50 kg/s",
+        "V_e": "200 m/s",
+        "V_in": "250 m/s",
+        "P_e": "101.325 kPa",
+        "P_amb": "101.325 kPa",
+        "A_e": "0.3 m^2"
+      },
+      "expect": {
+        "F": "-2.5 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Matched nozzle, V_e < V_in (thrust reverser): F = 50(200−250) + 0 = −2500 N = −2.5 kN (signed thrust)"
+      }
+    },
+    {
+      "calc": "cycles.jet_thrust",
+      "inputs": {
+        "m_dot": "80 kg/s",
+        "V_in": "250 m/s",
+        "P_e": "60 kPa",
+        "P_amb": "40 kPa",
+        "A_e": "0.35 m^2",
+        "F": "35 kN"
+      },
+      "solve_for": [
+        "V_e"
+      ],
+      "expect": {
+        "V_e": "600 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V_e = (F − (P_e−P_amb)A_e)/ṁ + V_in = (35 000 − 7 000)/80 + 250 = 350 + 250 = 600 m/s"
+      }
+    },
+    {
+      "calc": "cycles.rankine_cycle",
+      "inputs": {
+        "fluid": "Water",
+        "P_cond": "20 kPa",
+        "P_boiler": "6 MPa",
+        "T_boiler": "500 degC",
+        "eta_turb": 0.88,
+        "eta_pump": 0.85
+      },
+      "expect": {
+        "eta": "0.31909",
+        "x4": "0.91400",
+        "w_net": "1009.76 kJ/kg"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Water (CoolProp IAPWS-95): h1 = 251.42 kJ/kg, v1 = 0.0010172 m³/kg at 20 kPa; h3 = 3423.11 kJ/kg, s3 = 6.88262 kJ/kg·K at 6 MPa/500°C; h4s = 2267.53 kJ/kg (20 kPa, s = s3); hfg = 2357.69 kJ/kg. w_p = 0.0010172·5.98e6/0.85 = 7.156 kJ/kg, h2 = 258.58 kJ/kg. w_t = 0.88(3423.11−2267.53) = 1016.91 kJ/kg, h4 = 2406.20 kJ/kg. q_in = h3−h2 = 3164.53 kJ/kg. w_net = 1016.91−7.16 = 1009.76 kJ/kg. η = 1009.76/3164.53 = 0.31909. x4 = (2406.20−251.42)/2357.69 = 0.91400"
+      }
+    },
+    {
+      "calc": "cycles.rankine_reheat",
+      "inputs": {
+        "fluid": "Water",
+        "P_cond": "20 kPa",
+        "P_boiler": "12 MPa",
+        "P_reheat": "1.5 MPa",
+        "T_boiler": "560 degC",
+        "T_reheat": "480 degC",
+        "eta_turb": 0.88,
+        "eta_pump": 0.85
+      },
+      "expect": {
+        "eta": "0.36544",
+        "x6": "0.99296"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Water (CoolProp IAPWS-95): h1 = 251.42 kJ/kg, v1 = 0.0010172 m³/kg at 20 kPa; h3 = 3507.37 kJ/kg, s3 = 6.6347 kJ/kg·K at 12 MPa/560°C; h4s = 2911.07 kJ/kg (1.5 MPa, s = s3); h5 = 3430.03 kJ/kg, s5 = 7.0330 at 1.5 MPa/480°C; h6s = 2478.10 kJ/kg (20 kPa, s = s5); hfg = 2357.69 kJ/kg. w_p = 0.0010172·11.98e6/0.85 = 14.34 kJ/kg, h2 = 265.76 kJ/kg. w_hp = 0.88(3507.37−2911.07) = 524.74, h4 = 2982.63; w_lp = 0.88(3430.03−2478.10) = 837.70, h6 = 2592.33. w_t = 1362.44; q_in = (3507.37−265.76)+(3430.03−2982.63) = 3241.61+447.40 = 3689.01; w_net = 1362.44−14.34 = 1348.10; η = 1348.10/3689.01 = 0.36544; x6 = (2592.33−251.42)/2357.69 = 0.99296"
+      }
+    },
+    {
+      "calc": "cycles.rankine_regenerative",
+      "inputs": {
+        "fluid": "Water",
+        "P_cond": "8 kPa",
+        "P_fwh": "0.7 MPa",
+        "P_boiler": "8 MPa",
+        "T_boiler": "480 degC",
+        "eta_turb": 0.85,
+        "eta_pump": 1.0
+      },
+      "expect": {
+        "y": "0.19647",
+        "eta": "0.36913"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Water (CoolProp IAPWS-95). h1 = 173.840, h2 = h1 + v1·692000/1.0 = 174.538, h3 = hf(0.7 MPa) = 697.002, h4 = h3 + v3·7.3e6/1.0 = 705.090 kJ/kg. h5 = 3349.645, s5 = 6.66126 at 8 MPa/480°C. h6s = h(0.7 MPa, s5) = 2742.688; h6 = h5 − 0.85(h5 − h6s) = 2833.732; s6 = s(0.7 MPa, 2833.732) = 6.86388; h7s = h(8 kPa, s6) = 2147.186; h7 = h6 − 0.85(h6 − h7s) = 2250.168 kJ/kg. y = (697.002−174.538)/(2833.732−174.538) = 522.464/2659.194 = 0.196475. w_t = (3349.645−2833.732)+(1−0.196475)(2833.732−2250.168) = 515.913+468.890 = 984.803; w_p = 0.803525·0.698 + 8.088 = 0.561+8.088 = 8.649; q_in = 3349.645−705.090 = 2644.555; η = (984.803−8.649)/2644.555 = 0.369126"
+      }
+    },
+    {
+      "calc": "cycles.rankine_regenerative",
+      "inputs": {
+        "fluid": "Water",
+        "P_cond": "10 kPa",
+        "P_fwh": "800 kPa",
+        "P_boiler": "15 MPa",
+        "T_boiler": "600 degC",
+        "eta_turb": 0.85,
+        "eta_pump": 0.85
+      },
+      "expect": {
+        "y": "0.19527",
+        "eta": "0.40280"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Water (CoolProp IAPWS-95). h1 = 191.81, h2 = 191.81 + 0.0010103·790e3/0.85 = 192.74; h3 = hf(800 kPa) = 720.86; h4 = 720.86 + 0.001115·14.2e6/0.85 = 739.49; h5 = 3583.13, s5 = 6.6796; h6s = h(800 kPa, s5) = 2776.31; h6 = 3583.13 − 0.85(3583.13−2776.31) = 2897.33; s6 = s(800 kPa, 2897.33); h7 = h6 − 0.85(h6 − h7s) with h7s = h(10 kPa, s6) = 2137.88 → h7 = 2251.82 kJ/kg. y = (720.86−192.74)/(2897.33−192.74) = 528.12/2704.59 = 0.195268. η = 0.402797"
+      }
+    },
+    {
+      "calc": "cycles.combined_cycle",
+      "inputs": {
+        "eta_gt": 0.38,
+        "eta_st": 0.32
+      },
+      "expect": {
+        "eta_cc": 0.5784
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η_cc = 0.38 + 0.32 − 0.38·0.32 = 0.70 − 0.1216 = 0.5784"
+      }
+    },
+    {
+      "calc": "cycles.cogeneration",
+      "inputs": {
+        "W_net": "15 MW",
+        "Q_use": "25 MW",
+        "Q_in": "50 MW"
+      },
+      "expect": {
+        "eps_u": 0.8
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "εu = (15 + 25)/50 = 40/50 = 0.80"
+      }
+    },
+    {
+      "calc": "cycles.vapor_compression",
+      "inputs": {
+        "fluid": "R134a",
+        "P_evap": "150 kPa",
+        "P_cond": "1 MPa",
+        "m_dot": "0.03 kg/s"
+      },
+      "expect": {
+        "cop": "3.3574",
+        "Q_dot": "3.9848 kW",
+        "W_dot": "1.1869 kW"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "R134a (CoolProp): h1 = hg(150 kPa) = 388.32 kJ/kg, s1 = 1.73884; h3 = hf(1 MPa) = 255.50 = h4; h2 = h(1 MPa, s1) = 427.88 kJ/kg. q_L = 388.32−255.50 = 132.83 kJ/kg; w_c = 427.88−388.32 = 39.56 kJ/kg; COP = 132.83/39.56 = 3.3574; Q̇ = 0.03·132.83 = 3.9848 kW; Ẇ = 0.03·39.56 = 1.1869 kW"
+      }
+    },
+    {
+      "calc": "cycles.vapor_compression",
+      "inputs": {
+        "fluid": "R134a",
+        "P_evap": "150 kPa",
+        "P_cond": "1 MPa",
+        "Q_dot": "3.9848 kW"
+      },
+      "solve_for": [
+        "m_dot"
+      ],
+      "expect": {
+        "m_dot": "0.03 kg/s"
+      },
+      "rel_tol": 0.002,
+      "source": {
+        "kind": "hand",
+        "derivation": "ṁ = Q̇/q_L = 3.9848 kW / 132.83 kJ/kg = 0.03 kg/s"
+      }
+    },
+    {
+      "calc": "cycles.refrigeration_tons",
+      "inputs": {
+        "tons": 3.0
+      },
+      "expect": {
+        "Q_dot": "10.551 kW"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "3 tons × 3.51685 kW/ton = 10.5506 kW"
+      }
+    },
+    {
+      "calc": "cycles.cascade_refrigeration",
+      "inputs": {
+        "fluid": "R134a",
+        "P_evap": "120 kPa",
+        "P_cascade": "500 kPa",
+        "P_cond": "1.5 MPa"
+      },
+      "expect": {
+        "cop": "2.5759",
+        "m_ratio": "1.5115"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "R134a (CoolProp). Low stage (120→500 kPa): h1 = 385.12, h2 = 414.42, h3 = h4 = 221.50 kJ/kg. High stage (500 kPa→1.5 MPa): h1 = 407.47, h2 = 430.11, h3 = h4 = 279.84 kJ/kg. q_L = 385.12−221.50 = 163.62; w_low = 414.42−385.12 = 29.30; w_high = 430.11−407.47 = 22.64. m_ratio = (414.42−221.50)/(407.47−279.84) = 192.92/127.63 = 1.5115. w_total = 29.30 + 1.5115·22.64 = 29.30+34.22 = 63.52 kJ/kg. COP = 163.62/63.52 = 2.5759"
+      }
+    },
+    {
+      "calc": "cycles.multistage_refrigeration",
+      "inputs": {
+        "fluid": "R134a",
+        "P_evap": "120 kPa",
+        "P_int": "500 kPa",
+        "P_cond": "1.2 MPa"
+      },
+      "expect": {
+        "cop": "3.0379",
+        "x6": "0.2390"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "R134a (CoolProp): h1 = hg(120 kPa) = 385.12, h2 = h(500 kPa, s1) = 414.42; h7 = hf(500 kPa) = 221.50, hg(500 kPa) = 407.47; h5 = hf(1.2 MPa) = 265.95 kJ/kg. x6 = (265.95−221.50)/(407.47−221.50) = 44.45/185.97 = 0.23902; m3 = x6/(1−x6) = 0.31406. h8 = (414.42 + 0.31406·407.47)/1.31406 = 542.39/1.31406 = 412.76; h9 = h(1.2 MPa, s8) = 431.45. q_L = 385.12−221.50 = 163.62; w_c1 = 414.42−385.12 = 29.30; w_c2 = 1.31406(431.45−412.76) = 24.56; w_total = 53.86; COP = 163.62/53.86 = 3.0379"
+      }
+    },
+    {
+      "calc": "cycles.absorption_refrigeration",
+      "inputs": {
+        "Q_L": "7 kW",
+        "Q_gen": "10 kW"
+      },
+      "expect": {
+        "cop": 0.7
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "COP = Q_L/Q_gen = 7/10 = 0.70"
+      }
+    },
+    {
+      "calc": "cycles.gas_refrigeration",
+      "inputs": {
+        "rp": 5.0,
+        "gamma": 1.4
+      },
+      "expect": {
+        "cop": "1.71286"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "COP = 1/(5^(0.4/1.4) − 1) = 1/(5^0.285714 − 1) = 1/(1.583819 − 1) = 1/0.583819 = 1.71286"
+      }
+    }
+  ]
+}

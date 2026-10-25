@@ -1,0 +1,3625 @@
+{
+  "section": "springs",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k springs",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "springs.helical_spring_rate": {
+      "title": "Helical spring rate and index",
+      "variables": [
+        {
+          "name": "k",
+          "unit": "N/m",
+          "desc": "spring rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "spring index D/d",
+          "lo": 4.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G",
+          "unit": "Pa",
+          "desc": "shear modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "wire diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "mean coil diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_a",
+          "unit": "",
+          "desc": "number of active coils",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "k = G*d**4/(8*D**3*n_a)",
+        "C = D/d"
+      ],
+      "procedure": null,
+      "outputs": [
+        "k",
+        "C"
+      ],
+      "assumptions": [
+        "Round wire, linear elastic, mean coil diameter D constant. n_a is the number of active coils (total minus the inactive end coils). C \u2273 4 is the usual design range."
+      ],
+      "method_references": [
+        "k = Gd\u2074/(8D\u00b3n); C = D/d"
+      ],
+      "synthetic_example": {
+        "G": 79300000000.0,
+        "d": 0.004,
+        "D": 0.032,
+        "n_a": 10.0
+      }
+    },
+    "springs.spring_stress": {
+      "title": "Helical spring shear stress with Wahl and Bergstr\u00e4sser correction",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "spring index D/d",
+          "lo": 4.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_w",
+          "unit": "",
+          "desc": "Wahl correction factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_b",
+          "unit": "",
+          "desc": "Bergstr\u00e4sser correction factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_w",
+          "unit": "Pa",
+          "desc": "corrected shear stress using Wahl factor",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4w",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_b",
+          "unit": "Pa",
+          "desc": "corrected shear stress using Bergstr\u00e4sser factor",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4b",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "axial force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "mean coil diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "wire diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "C = D/d",
+        "K_w = (4*C - 1)/(4*C - 4) + 0.615/C",
+        "K_b = (4*C + 2)/(4*C - 3)",
+        "tau_w = K_w*8*F*D/(pi*d**3)",
+        "tau_b = K_b*8*F*D/(pi*d**3)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "C",
+        "K_w",
+        "K_b",
+        "tau_w",
+        "tau_b"
+      ],
+      "assumptions": [
+        "Correction factors combine the direct (transverse) shear and the wire-curvature effect. Naming varies between texts \u2014 (4C\u22121)/(4C\u22124) + 0.615/C is the Wahl factor and (4C+2)/(4C\u22123) the (simpler) Bergstr\u00e4sser factor; both are given.",
+        "8FD/(\u03c0d\u00b3) is the uncorrected shear stress; both corrected stresses are reported."
+      ],
+      "method_references": [
+        "Wahl and Bergstr\u00e4sser stress-correction factors; \u03c4 = K\u00b78FD/(\u03c0d\u00b3) (recalled)"
+      ],
+      "synthetic_example": {
+        "F": 500.0,
+        "D": 0.032,
+        "d": 0.004
+      }
+    },
+    "springs.spring_deflection": {
+      "title": "Helical spring deflection under axial load",
+      "variables": [
+        {
+          "name": "delta",
+          "unit": "m",
+          "desc": "deflection",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "spring index D/d",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "axial force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "mean coil diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "wire diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_a",
+          "unit": "",
+          "desc": "number of active coils",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G",
+          "unit": "Pa",
+          "desc": "shear modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "delta = 8*F*D**3*n_a/(G*d**4)",
+        "C = D/d"
+      ],
+      "procedure": null,
+      "outputs": [
+        "delta",
+        "C"
+      ],
+      "assumptions": [
+        "Linear elastic; \u03b4 = F/k with k from helical_spring_rate. Physical helical geometry needs the spring index C = D/d \u2265 1 (D \u2265 d); C is reported so a non-physical D < d is rejected rather than silently computed."
+      ],
+      "method_references": [
+        "\u03b4 = 8FD\u00b3n/(Gd\u2074); C = D/d"
+      ],
+      "synthetic_example": {
+        "F": 500.0,
+        "D": 0.032,
+        "d": 0.004,
+        "n_a": 10.0,
+        "G": 79300000000.0
+      }
+    },
+    "springs.spring_geometry": {
+      "title": "Helical spring total coils, solid and free length",
+      "variables": [
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "wire diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_a",
+          "unit": "",
+          "desc": "number of active coils",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "end",
+          "unit": "",
+          "desc": "end condition",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "plain",
+            "plain_ground",
+            "squared",
+            "squared_ground"
+          ]
+        },
+        {
+          "name": "delta_max",
+          "unit": "m",
+          "desc": "maximum deflection to solid (working travel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_t",
+          "unit": "",
+          "desc": "total coils",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_s",
+          "unit": "m",
+          "desc": "solid length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_f",
+          "unit": "m",
+          "desc": "free length (solid + max deflection)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _spring_geometry(values):\n    \"\"\"Total coils, solid length and free length from active coils and the end condition.\"\"\"\n    d = values['d']\n    na = values['n_a']\n    end = values['end']\n    if end not in _END_OFFSET:\n        raise MechError(f'end: {end!r} is not one of {\", \".join(sorted(_END_OFFSET))}')\n    add, solid_extra = _END_OFFSET[end]\n    nt = na + add\n    ls = d * (nt + solid_extra)\n    return {'n_t': nt, 'L_s': ls, 'L_f': ls + values['delta_max']}\n",
+        "source": "springs.py",
+        "line": 32
+      },
+      "outputs": [
+        "n_t",
+        "L_s",
+        "L_f"
+      ],
+      "assumptions": [
+        "End condition sets the total-coil count and solid length: plain n_t = n_a (L_s = d(n_t+1)); plain-and-ground n_t = n_a+1 (L_s = d\u00b7n_t); squared (closed) n_t = n_a+2 (L_s = d(n_t+1)); squared-and-ground n_t = n_a+2 (L_s = d\u00b7n_t).",
+        "L_f = L_s + \u03b4_max is the minimum free length (solid length plus working travel); it is not the pitch-based manufactured free length (which follows from the coil pitch and end configuration)."
+      ],
+      "method_references": [
+        "Solid/free length by end condition (Shigley Table 10-1, recalled)"
+      ],
+      "synthetic_example": {
+        "d": 0.004,
+        "n_a": 10.0,
+        "end": "squared_ground",
+        "delta_max": 0.06
+      }
+    },
+    "springs.spring_buckling": {
+      "title": "Compression spring buckling (critical deflection and stability)",
+      "variables": [
+        {
+          "name": "delta_cr",
+          "unit": "m",
+          "desc": "critical deflection at buckling onset (null when stable)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b4cr",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L0_crit",
+          "unit": "m",
+          "desc": "absolute-stability length (no buckling below this)",
+          "lo": null,
+          "hi": null,
+          "label": "L0,crit",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "stable",
+          "unit": "",
+          "desc": "stability flag (1 = absolutely stable, 0 = buckles)",
+          "lo": 0,
+          "hi": 1,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L0",
+          "unit": "m",
+          "desc": "free length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "mean coil diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G",
+          "unit": "Pa",
+          "desc": "shear modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "",
+          "desc": "end-condition constant (0.5 fixed-fixed, 0.707 hinged, 1.0 free, 2.0 fixed-free)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _spring_buckling(values):\n    \"\"\"Compression-spring buckling: critical deflection, absolute-stability length, stable flag.\n\n    Shigley form \u03b4_cr = C\u2081\u2032\u00b7L0\u00b7[1 \u2212 \u221a(1 \u2212 C\u2082\u2032/\u03bb_eff\u00b2)] with C\u2081\u2032 = E/(2(E \u2212 G)),\n    C\u2082\u2032 = 2\u03c0\u00b2(E \u2212 G)/(2G + E) and \u03bb_eff = \u03b1\u00b7L0/D. Buckling is possible only when\n    L0 \u2265 L0_crit = (\u03c0D/\u03b1)\u00b7\u221a(2(E \u2212 G)/(2G + E)); for L0 < L0_crit the spring is absolutely\n    stable and \u03b4_cr has no real value (reported null, stable = 1).\n    \"\"\"\n    L0, D = values['L0'], values['D']\n    E, G = values['E'], values['G']\n    alpha = values['alpha']\n    if alpha <= 0:\n        raise MechError('spring_buckling: alpha (end-condition constant) must be positive')\n    if E <= G:\n        raise MechError(\"spring_buckling: Young's modulus E must exceed the shear modulus G\")\n    c1 = E / (2.0 * (E - G))\n    c2 = 2.0 * PI ** 2 * (E - G) / (2.0 * G + E)\n    L0_crit = (PI * D / alpha) * math.sqrt(2.0 * (E - G) / (2.0 * G + E))\n    if L0 < L0_crit:\n        return {'L0_crit': L0_crit, 'delta_cr': None, 'stable': 1}\n    lam = alpha * L0 / D\n    delta_cr = c1 * L0 * (1.0 - math.sqrt(1.0 - c2 / lam ** 2))\n    return {'L0_crit': L0_crit, 'delta_cr': delta_cr, 'stable': 0}\n",
+        "source": "springs.py",
+        "line": 45
+      },
+      "outputs": [
+        "delta_cr",
+        "L0_crit",
+        "stable"
+      ],
+      "assumptions": [
+        "Spring treated as a column with an equivalent flexural rigidity. \u03b4_cr = C\u2081\u2032\u00b7L0\u00b7[1 \u2212 \u221a(1 \u2212 C\u2082\u2032/\u03bb_eff\u00b2)] with C\u2081\u2032 = E/(2(E\u2212G)), C\u2082\u2032 = 2\u03c0\u00b2(E\u2212G)/(2G+E), \u03bb_eff = \u03b1\u00b7L0/D. Buckling is possible only for L0 \u2265 L0_crit = (\u03c0D/\u03b1)\u00b7\u221a(2(E\u2212G)/(2G+E)); a shorter spring is absolutely stable (stable = 1, \u03b4_cr null). At exactly L0 = L0_crit the critical deflection is C\u2081\u2032\u00b7L0_crit.",
+        "Compression springs only; squared-and-ground ends \u2248 fixed (\u03b1 = 0.5)."
+      ],
+      "method_references": [
+        "Spring buckling / stability criterion (Shigley sec. 10-4 form, recalled)"
+      ],
+      "synthetic_example": {
+        "L0": 0.3,
+        "D": 0.032,
+        "E": 207000000000.0,
+        "G": 79300000000.0,
+        "alpha": 0.5
+      }
+    },
+    "springs.spring_surge": {
+      "title": "Helical spring surge (natural) frequency",
+      "variables": [
+        {
+          "name": "f",
+          "unit": "Hz",
+          "desc": "surge frequency, both ends fixed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_free",
+          "unit": "Hz",
+          "desc": "surge frequency, fixed\u2013free (one end free)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "wire diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "mean coil diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_a",
+          "unit": "",
+          "desc": "number of active coils",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G",
+          "unit": "Pa",
+          "desc": "shear modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "wire material density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "f = d*sqrt(G/(2*rho))/(2*pi*D**2*n_a)",
+        "f_free = f/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "f",
+        "f_free"
+      ],
+      "assumptions": [
+        "Fundamental surge mode of the spring alone (its own mass). f is for both ends fixed, f = \u00bd\u221a(k/m_s) with m_s = \u03c1\u00b7\u03c0\u00b2d\u00b2D\u00b7n_a/4 (active-coil mass) and k = Gd\u2074/(8D\u00b3n_a); one end fixed and the other free gives f_free = \u00bc\u221a(k/m_s) = f/2. With an attached mass m, use f \u2248 (1/2\u03c0)\u00b7\u221a(k/(m + m_s/3))."
+      ],
+      "method_references": [
+        "Surge frequency f = (d/(2\u03c0D\u00b2n_a))\u00b7\u221a(G/(2\u03c1)) (recalled)"
+      ],
+      "synthetic_example": {
+        "d": 0.004,
+        "D": 0.032,
+        "n_a": 10.0,
+        "G": 79300000000.0,
+        "rho": 7850.0
+      }
+    },
+    "springs.extension_hook_stress": {
+      "title": "Extension spring hook stresses (sections A and B)",
+      "variables": [
+        {
+          "name": "sigma_A",
+          "unit": "Pa",
+          "desc": "maximum stress at hook section A (bending + direct tension)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3A",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_B",
+          "unit": "Pa",
+          "desc": "maximum shear stress at hook section B (torsion)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4B",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C1",
+          "unit": "",
+          "desc": "curvature index at A, 2\u00b7r1/d",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_A",
+          "unit": "",
+          "desc": "curvature correction factor at A",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C2",
+          "unit": "",
+          "desc": "curvature index at B, 2\u00b7r2/d",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_B",
+          "unit": "",
+          "desc": "curvature correction factor at B",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "spring load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "mean coil diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "wire diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r1",
+          "unit": "m",
+          "desc": "inner radius of the hook loop at section A",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r2",
+          "unit": "m",
+          "desc": "inner radius of the hook loop at section B",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "C1 = 2*r1/d",
+        "K_A = (4*C1**2 - C1 - 1)/(4*C1*(C1 - 1))",
+        "sigma_A = K_A*16*F*D/(pi*d**3) + 4*F/(pi*d**2)",
+        "C2 = 2*r2/d",
+        "K_B = (4*C2 - 1)/(4*C2 - 4)",
+        "tau_B = K_B*8*F*D/(pi*d**3)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_A",
+        "tau_B",
+        "C1",
+        "K_A",
+        "C2",
+        "K_B"
+      ],
+      "assumptions": [
+        "Section A is where the hook joins the coil body: bending moment F\u00b7D/2 (plus the direct tension F) with the curvature factor K_A = (4C\u2081\u00b2\u2212C\u2081\u22121)/(4C\u2081(C\u2081\u22121)), C\u2081 = 2r\u2081/d. Section B is the hook end loaded in torsion (torque F\u00b7D/2) with K_B = (4C\u2082\u22121)/(4C\u2082\u22124), C\u2082 = 2r\u2082/d. Requires C\u2081, C\u2082 > 1 (hook bend radius larger than the wire radius)."
+      ],
+      "method_references": [
+        "Extension-spring hook bending and torsion; curvature factors (Shigley sec. 10-9 forms, recalled)"
+      ],
+      "synthetic_example": {
+        "F": 50.0,
+        "D": 0.02,
+        "d": 0.003,
+        "r1": 0.006,
+        "r2": 0.008
+      }
+    },
+    "springs.torsion_spring": {
+      "title": "Helical torsion spring rate, deflection and stress",
+      "variables": [
+        {
+          "name": "k_t",
+          "unit": "N*m/rad",
+          "desc": "ideal torsional spring rate per radian",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_turn",
+          "unit": "N*m/turn",
+          "desc": "ideal torsional spring rate per turn (2\u03c0\u00b7k_t)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_prime",
+          "unit": "N*m/turn",
+          "desc": "empirical rate per turn with friction allowance (Shigley)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "angular deflection",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "spring index D/d",
+          "lo": 4.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_i",
+          "unit": "",
+          "desc": "inner-surface stress-correction factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "Pa",
+          "desc": "maximum bending stress at the inner surface",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N_a",
+          "unit": "",
+          "desc": "active coils (body + end-leg correction)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M",
+          "unit": "N*m",
+          "desc": "applied moment (torque) at the spring ends",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "wire diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "mean coil diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N_b",
+          "unit": "",
+          "desc": "number of body coils",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l1",
+          "unit": "m",
+          "desc": "length of end leg 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l2",
+          "unit": "m",
+          "desc": "length of end leg 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "N_a = N_b + (l1 + l2)/(3*pi*D)",
+        "C = D/d",
+        "K_i = (4*C**2 - C - 1)/(4*C*(C - 1))",
+        "k_t = E*d**4/(64*D*N_a)",
+        "k_turn = 2*pi*k_t",
+        "k_prime = E*d**4/(10.8*D*N_a)",
+        "theta = M/k_t",
+        "sigma = K_i*32*M/(pi*d**3)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "k_t",
+        "k_turn",
+        "k_prime",
+        "theta",
+        "C",
+        "K_i",
+        "sigma",
+        "N_a"
+      ],
+      "assumptions": [
+        "Wire in bending (coils wind/unwind). k_t = Ed\u2074/(64\u00b7D\u00b7N_a) N\u00b7m/rad is the ideal straight-wire rate per radian (\u03b8 = M\u00b7L_w/(EI), L_w = \u03c0\u00b7D\u00b7N_a); the ideal per-turn rate is k_turn = 2\u03c0\u00b7k_t = Ed\u2074/(10.19\u00b7D\u00b7N_a) N\u00b7m/turn. Shigley's empirical rate k_prime = Ed\u2074/(10.8\u00b7D\u00b7N_a) N\u00b7m/turn adds a friction allowance. Active coils include the end legs: N_a = N_b + (l\u2081 + l\u2082)/(3\u03c0D). K_i = (4C\u00b2 \u2212 C \u2212 1)/(4C(C\u22121)) corrects the inner (compressive) surface; the outer surface is tensile for a spring wound to tighten."
+      ],
+      "method_references": [
+        "Torsion spring rate \u03b8 = M\u00b7L_w/(EI) (straight-wire bending); per-turn rates; end-leg coil correction; inner-fibre stress factor (Shigley sec. 10-6 forms, recalled)"
+      ],
+      "synthetic_example": {
+        "M": 2.0,
+        "d": 0.004,
+        "D": 0.03,
+        "N_b": 5.0,
+        "l1": 0.04,
+        "l2": 0.025,
+        "E": 207000000000.0
+      }
+    },
+    "springs.leaf_spring": {
+      "title": "Multi-leaf (semi-elliptic) leaf spring deflection and stress",
+      "variables": [
+        {
+          "name": "sigma",
+          "unit": "Pa",
+          "desc": "maximum bending stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta",
+          "unit": "m",
+          "desc": "central deflection",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "central load (total)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "span (eye-to-eye)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "",
+          "desc": "number of leaves",
+          "lo": 1,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "leaf width",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "leaf thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma = 3*F*L/(2*N*b*t**2)",
+        "delta = 3*F*L**3/(8*E*N*b*t**3)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma",
+        "delta"
+      ],
+      "assumptions": [
+        "Graduated (equal-stress) leaf idealisation with N leaves sliding without friction and equal thickness t. The 3/8 deflection factor is the uniform-strength result (1.5\u00d7 the constant-section beam value); \u03c3 is the leaf-surface stress."
+      ],
+      "method_references": [
+        "\u03c3 = 3FL/(2Nbt\u00b2); \u03b4 = 3FL\u00b3/(8ENbt\u00b3) (standard graduated-leaf forms, recalled)"
+      ],
+      "synthetic_example": {
+        "F": 3000.0,
+        "L": 1.0,
+        "N": 6,
+        "b": 0.05,
+        "t": 0.008,
+        "E": 207000000000.0
+      }
+    },
+    "springs.belleville": {
+      "title": "Belleville (disc) spring load and deflection",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu",
+          "unit": "",
+          "desc": "Poisson's ratio",
+          "lo": null,
+          "hi": 0.5,
+          "label": "\u03bd",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D_o",
+          "unit": "m",
+          "desc": "outside diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D_i",
+          "unit": "m",
+          "desc": "inside diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "disc thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "cone height (free height minus thickness)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta",
+          "unit": "m",
+          "desc": "deflection (0 \u2264 \u03b4 \u2264 h)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "form",
+          "unit": "",
+          "desc": "geometry constant: K1 (DIN 2092) or M (original Almen\u2013L\u00e1szl\u00f3)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "din_2092",
+            "almen_laszlo"
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "diameter ratio D_o/D_i",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "geometry constant (K1 for DIN 2092, M for original Almen\u2013L\u00e1szl\u00f3)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "load at the given deflection",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _belleville(values):\n    \"\"\"Belleville (disc) spring load\u2013deflection (Almen\u2013L\u00e1szl\u00f3 theory).\n\n    C = D_o/D_i; F = 4E\u00b7\u03b4/((1\u2212\u03bd\u00b2)\u00b7K\u00b7D_o\u00b2)\u00b7[(h\u2212\u03b4)(h\u2212\u03b4/2)\u00b7t + t\u00b3] with K = K1 (DIN 2092) or\n    M (original Almen\u2013L\u00e1szl\u00f3) as selected by ``form``. Valid for 0 \u2264 \u03b4 \u2264 h (flat at \u03b4 = h).\n    \"\"\"\n    E, nu = values['E'], values['nu']\n    Do, Di, t, h = values['D_o'], values['D_i'], values['t'], values['h']\n    delta = values['delta']\n    form = values['form']\n    if form not in ('din_2092', 'almen_laszlo'):\n        raise MechError(\"form: must be 'din_2092' or 'almen_laszlo'\")\n    if Do <= Di:\n        raise MechError('D_o must be greater than D_i (diameter ratio C = D_o/D_i must exceed 1)')\n    if t <= 0 or h <= 0:\n        raise MechError('t and h must be positive')\n    if delta < 0:\n        raise MechError('delta must be >= 0')\n    if delta > h:\n        raise MechError('delta must not exceed the cone height h (the washer is flat at delta = h)')\n    C = Do / Di\n    K = _belleville_k1(C) if form == 'din_2092' else _belleville_m(C)\n    F = _belleville_load(E, nu, Do, K, t, h, delta)\n    return {'C': C, 'K': K, 'F': F}\n",
+        "source": "springs.py",
+        "line": 86
+      },
+      "outputs": [
+        "F",
+        "C",
+        "K"
+      ],
+      "assumptions": [
+        "Almen\u2013L\u00e1szl\u00f3 load\u2013deflection for a coned disc: F = 4E\u00b7\u03b4/((1\u2212\u03bd\u00b2)\u00b7K\u00b7D_o\u00b2)\u00b7[(h\u2212\u03b4)(h\u2212\u03b4/2)\u00b7t + t\u00b3]. The geometry constant K is either K1 (DIN 2092) = (1/\u03c0)((C\u22121)/C)\u00b2/((C+1)/(C\u22121) \u2212 2/ln C) or the original Almen\u2013L\u00e1szl\u00f3 M = (6/(\u03c0\u00b7ln C))\u00b7((C\u22121)/C)\u00b2 \u2014 the same theory with two conventions for the neutral circle; they differ by under 1 % for typical C. Valid for 0 \u2264 \u03b4 \u2264 h (flat at \u03b4 = h; flattening then snap-through beyond the flat position is not modelled). The load\u2013deflection curve is non-monotonic (snap-through) when h/t \u2273 \u221a2."
+      ],
+      "method_references": [
+        "Almen\u2013L\u00e1szl\u00f3 disc-spring equation: F = 4E\u03b4/((1\u2212\u03bd\u00b2)K\u00b7D_o\u00b2)\u00b7[(h\u2212\u03b4)(h\u2212\u03b4/2)t + t\u00b3], DIN 2092 K1 and original Almen\u2013L\u00e1szl\u00f3 M (recalled)"
+      ],
+      "synthetic_example": {
+        "E": 206000000000.0,
+        "nu": 0.3,
+        "D_o": 0.1,
+        "D_i": 0.05,
+        "t": 0.004,
+        "h": 0.006,
+        "delta": 0.003,
+        "form": "din_2092"
+      }
+    },
+    "springs.spring_energy": {
+      "title": "Elastic energy stored in a spring",
+      "variables": [
+        {
+          "name": "U",
+          "unit": "J",
+          "desc": "stored energy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta",
+          "unit": "m",
+          "desc": "deflection",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "U = F*delta/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "U"
+      ],
+      "assumptions": [
+        "Linear spring: U = F\u00b7\u03b4/2 = k\u00b7\u03b4\u00b2/2 = F\u00b2/(2k)."
+      ],
+      "method_references": [
+        "U = F\u03b4/2 (area under the linear force\u2013deflection curve)"
+      ],
+      "synthetic_example": {
+        "F": 500.0,
+        "delta": 0.0646
+      }
+    },
+    "springs.spring_fatigue": {
+      "title": "Spring-wire fatigue safety factors (Goodman and Gerber)",
+      "variables": [
+        {
+          "name": "S_ut",
+          "unit": "Pa",
+          "desc": "ultimate tensile strength of the wire (S_ut = A/d^m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S_su",
+          "unit": "Pa",
+          "desc": "ultimate torsional strength (0.67\u00b7S_ut)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S_se",
+          "unit": "Pa",
+          "desc": "fully reversed torsional endurance, Goodman conversion of Zimmerli-type data",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S_se_gerber",
+          "unit": "Pa",
+          "desc": "fully reversed torsional endurance, Gerber conversion S_sa/(1 \u2212 (S_sm/S_su)\u00b2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_goodman",
+          "unit": "",
+          "desc": "Goodman factor of safety",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_gerber",
+          "unit": "",
+          "desc": "Gerber factor of safety",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "wire diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "Pa",
+          "desc": "wire strength coefficient (S_ut at d = 1 mm; Shigley Table 10-4 A/d^m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "",
+          "desc": "wire strength exponent (positive; Shigley Table 10-4)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S_sa",
+          "unit": "Pa",
+          "desc": "torsional endurance amplitude from Zimmerli-type data",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S_sm",
+          "unit": "Pa",
+          "desc": "mean stress of the Zimmerli-type data",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_a",
+          "unit": "Pa",
+          "desc": "alternating shear stress (\u03c4max \u2212 \u03c4min)/2",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4a",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_m",
+          "unit": "Pa",
+          "desc": "mean shear stress (\u03c4max + \u03c4min)/2",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4m",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _spring_fatigue(values):\n    \"\"\"Spring-wire fatigue: wire strength, torsional endurance and Goodman/Gerber safety factors.\n\n    S_ut = A/d^m with d in mm and A in MPa\u00b7mm^m (wire-strength table, Shigley Table 10-4 form); in\n    coherent SI this is S_ut = A\u00b7(1 mm/d)^m with A = S_ut at d = 1 mm (Pa). S_su = 0.67\u00b7S_ut.\n    Zimmerli-type test data (S_sa, S_sm measured at a nonzero mean stress) convert to the fully\n    reversed endurance with the SAME criterion that is then applied: Goodman S_se = S_sa/(1 \u2212 S_sm/S_su) and\n    Gerber S_se,G = S_sa/(1 \u2212 (S_sm/S_su)\u00b2). Goodman and Gerber safety factors then follow for the working\n    alternating/mean shear (\u03c4_a, \u03c4_m).\n    \"\"\"\n    d, A, m = values['d'], values['A'], values['m']\n    S_sa, S_sm = values['S_sa'], values['S_sm']\n    tau_a, tau_m = values['tau_a'], values['tau_m']\n    if d <= 0:\n        raise MechError('spring_fatigue: wire diameter d must be positive')\n    if A <= 0:\n        raise MechError('spring_fatigue: strength coefficient A must be positive')\n    S_ut = A * (1e-3 / d) ** m\n    S_su = 0.67 * S_ut\n    if S_sm >= S_su:\n        raise MechError('spring_fatigue: S_sm must be less than S_su (0.67\u00b7S_ut) '\n                        'for the Zimmerli conversion')\n    if S_sa <= 0:\n        raise MechError('spring_fatigue: S_sa must be positive')\n    S_se = S_sa / (1.0 - S_sm / S_su)               # Goodman conversion\n    S_se_gerber = S_sa / (1.0 - (S_sm / S_su) ** 2)  # Gerber conversion (consistent with the Gerber criterion)\n    if tau_a < 0 or tau_m < 0:\n        raise MechError('spring_fatigue: tau_a and tau_m must be >= 0')\n    if tau_a == 0 and tau_m == 0:\n        raise MechError('spring_fatigue: tau_a and tau_m cannot both be zero')\n    n_goodman = 1.0 / (tau_a / S_se + tau_m / S_su)\n    a = (tau_m / S_su) ** 2\n    b = tau_a / S_se_gerber\n    if a > 0:\n        n_gerber = (math.sqrt(b * b + 4.0 * a) - b) / (2.0 * a)\n    else:\n        n_gerber = 1.0 / b if b > 0 else float('inf')\n    return {'S_ut': S_ut, 'S_su': S_su, 'S_se': S_se, 'S_se_gerber': S_se_gerber,\n            'n_goodman': n_goodman, 'n_gerber': n_gerber}\n",
+        "source": "springs.py",
+        "line": 125
+      },
+      "outputs": [
+        "S_ut",
+        "S_su",
+        "S_se",
+        "S_se_gerber",
+        "n_goodman",
+        "n_gerber"
+      ],
+      "assumptions": [
+        "Wire strength S_ut = A/d^m with d in mm and A in MPa\u00b7mm^m (Shigley Table 10-4 form); enter A as the strength at d = 1 mm (Pa) and m the table exponent. S_su = 0.67\u00b7S_ut. Zimmerli-type test data (S_sa, S_sm \u2014 e.g. unpeened \u2248 241/379 MPa, peened \u2248 398/534 MPa \u2014 are user inputs, not built in) convert to the fully reversed endurance S_se = S_sa/(1 \u2212 S_sm/S_su). Compute \u03c4_a, \u03c4_m from the load range with spring_stress (\u03c4 = K\u00b78FD/(\u03c0d\u00b3) at F_max and F_min). Goodman: 1/n = \u03c4_a/S_se + \u03c4_m/S_su; Gerber: n\u00b7\u03c4_a/S_se,G + (n\u00b7\u03c4_m/S_su)\u00b2 = 1 with the Gerber-converted S_se,G (solve the quadratic)."
+      ],
+      "method_references": [
+        "Wire strength S_ut = A/d^m (Shigley Table 10-4 form, recalled); S_su = 0.67\u00b7S_ut; Zimmerli-type fully-reversed conversion S_se = S_sa/(1 \u2212 S_sm/S_su); Goodman and Gerber in torsion (recalled)"
+      ],
+      "synthetic_example": {
+        "d": 0.002,
+        "A": 2211000000.0,
+        "m": 0.145,
+        "S_sa": 241000000.0,
+        "S_sm": 379000000.0,
+        "tau_a": 100000000.0,
+        "tau_m": 150000000.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "springs-001",
+      "calculator": "springs.helical_spring_rate",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "G": "79.3 GPa",
+        "d": "4 mm",
+        "D": "32 mm",
+        "n_a": 10
+      },
+      "solve_for": [
+        "k",
+        "C"
+      ],
+      "expected_as_specified": {
+        "k": "7744.14 N/m",
+        "C": 8
+      },
+      "expected_SI": {
+        "k": 7744.14,
+        "C": 8.0
+      },
+      "actual_SI": {
+        "k": {
+          "value": 7744.140625000001,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc springs.helical_spring_rate (symbolic)"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.helical_spring_rate (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "k": {
+          "absolute_error": 0.0006250000005820766,
+          "relative_error": 8.070618565548616e-08,
+          "allowed_absolute_error": 15.488280000000001,
+          "passed": true
+        },
+        "C": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.016,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "k = Gd\u2074/(8D\u00b3n) = 79.3e9\u00b7(0.004)\u2074/(8\u00b7(0.032)\u00b3\u00b710) = 79.3e9\u00b72.56e-10/0.00262144 = 20.3008/0.00262144 = 7744.14 N/m; C = D/d = 32/4 = 8"
+      }
+    },
+    {
+      "id": "springs-002",
+      "calculator": "springs.helical_spring_rate",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k": "7744.14 N/m",
+        "D": "32 mm",
+        "n_a": 10,
+        "G": "79.3 GPa"
+      },
+      "solve_for": [
+        "d",
+        "C"
+      ],
+      "expected_as_specified": {
+        "d": "4 mm",
+        "C": 8
+      },
+      "expected_SI": {
+        "d": 0.004,
+        "C": 8.0
+      },
+      "actual_SI": {
+        "d": {
+          "value": 0.003999999919293817,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.helical_spring_rate (symbolic)"
+        },
+        "C": {
+          "value": 8.000000161412368,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.helical_spring_rate (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "d": {
+          "absolute_error": 8.070618305600075e-11,
+          "relative_error": 2.0176545764000187e-08,
+          "allowed_absolute_error": 8e-06,
+          "passed": true
+        },
+        "C": {
+          "absolute_error": 1.614123679161139e-07,
+          "relative_error": 2.017654598951424e-08,
+          "allowed_absolute_error": 0.016,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "d = (8kD\u00b3n/G)^(1/4) = (8\u00b77744.14\u00b7(0.032)\u00b3\u00b710/79.3e9)^(1/4) = (2.56e-10)^(1/4) = 0.004 m; C = D/d = 8"
+      }
+    },
+    {
+      "id": "springs-003",
+      "calculator": "springs.spring_stress",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "500 N",
+        "D": "32 mm",
+        "d": "4 mm"
+      },
+      "solve_for": [
+        "C",
+        "K_w",
+        "K_b",
+        "tau_w",
+        "tau_b"
+      ],
+      "expected_as_specified": {
+        "C": 8,
+        "K_w": 1.18402,
+        "K_b": 1.17241,
+        "tau_w": "753.769 MPa",
+        "tau_b": "746.382 MPa"
+      },
+      "expected_SI": {
+        "C": 8.0,
+        "K_w": 1.18402,
+        "K_b": 1.17241,
+        "tau_w": 753769000.0,
+        "tau_b": 746382000.0
+      },
+      "actual_SI": {
+        "C": {
+          "value": 8.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_stress (symbolic)"
+        },
+        "K_w": {
+          "value": 1.184017857142857,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_stress (symbolic)"
+        },
+        "K_b": {
+          "value": 1.1724137931034484,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_stress (symbolic)"
+        },
+        "tau_w": {
+          "value": 753769178.6934354,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_stress (symbolic)"
+        },
+        "tau_b": {
+          "value": 746381802.0861297,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_stress (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "C": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "K_w": {
+          "absolute_error": 2.142857143061505e-06,
+          "relative_error": 1.8098149888190275e-06,
+          "allowed_absolute_error": 0.00059201,
+          "passed": true
+        },
+        "K_b": {
+          "absolute_error": 3.793103448446189e-06,
+          "relative_error": 3.2353045849542303e-06,
+          "allowed_absolute_error": 0.000586205,
+          "passed": true
+        },
+        "tau_w": {
+          "absolute_error": 178.69343543052673,
+          "relative_error": 2.3706657534407324e-07,
+          "allowed_absolute_error": 376884.5,
+          "passed": true
+        },
+        "tau_b": {
+          "absolute_error": 197.91387033462524,
+          "relative_error": 2.6516431309252533e-07,
+          "allowed_absolute_error": 373191.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C = 8. Wahl K_w = (4C\u22121)/(4C\u22124) + 0.615/C = 31/28 + 0.076875 = 1.10714 + 0.076875 = 1.18402. Bergstr\u00e4sser K_b = (4C+2)/(4C\u22123) = 34/29 = 1.17241. \u03c4_nom = 8FD/(\u03c0d\u00b3) = 8\u00b7500\u00b70.032/(\u03c0\u00b76.4e-8) = 128/2.01062e-7 = 636.62 MPa. \u03c4_w = 1.18402\u00b7636.62 = 753.77 MPa; \u03c4_b = 1.17241\u00b7636.62 = 746.38 MPa"
+      }
+    },
+    {
+      "id": "springs-004",
+      "calculator": "springs.spring_stress",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "300 N",
+        "D": "30 mm",
+        "d": "5 mm"
+      },
+      "solve_for": [
+        "C",
+        "K_w",
+        "K_b",
+        "tau_w",
+        "tau_b"
+      ],
+      "expected_as_specified": {
+        "C": 6,
+        "K_w": 1.2525,
+        "K_b": 1.2381,
+        "tau_w": "229.641 MPa",
+        "tau_b": "227.000 MPa"
+      },
+      "expected_SI": {
+        "C": 6.0,
+        "K_w": 1.2525,
+        "K_b": 1.2381,
+        "tau_w": 229641000.0,
+        "tau_b": 227000000.0
+      },
+      "actual_SI": {
+        "C": {
+          "value": 6.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_stress (symbolic)"
+        },
+        "K_w": {
+          "value": 1.2525000000000002,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_stress (symbolic)"
+        },
+        "K_b": {
+          "value": 1.2380952380952381,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_stress (symbolic)"
+        },
+        "tau_w": {
+          "value": 229641484.28843343,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_stress (symbolic)"
+        },
+        "tau_b": {
+          "value": 227000421.68992606,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_stress (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "C": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.003,
+          "passed": true
+        },
+        "K_w": {
+          "absolute_error": 2.220446049250313e-16,
+          "relative_error": 1.7728112169663178e-16,
+          "allowed_absolute_error": 0.00062625,
+          "passed": true
+        },
+        "K_b": {
+          "absolute_error": 4.761904761840796e-06,
+          "relative_error": 3.846139053259669e-06,
+          "allowed_absolute_error": 0.00061905,
+          "passed": true
+        },
+        "tau_w": {
+          "absolute_error": 484.28843343257904,
+          "relative_error": 2.108893592313999e-06,
+          "allowed_absolute_error": 114820.5,
+          "passed": true
+        },
+        "tau_b": {
+          "absolute_error": 421.68992605805397,
+          "relative_error": 1.8576648725024403e-06,
+          "allowed_absolute_error": 113500.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C = 30/5 = 6. K_w = (4\u00b76\u22121)/(4\u00b76\u22124) + 0.615/6 = 23/20 + 0.1025 = 1.2525. K_b = (4\u00b76+2)/(4\u00b76\u22123) = 26/21 = 1.23810. \u03c4_nom = 8\u00b7300\u00b70.030/(\u03c0\u00b7(0.005)\u00b3) = 72/3.92699e-7 = 183.346 MPa. \u03c4_w = 1.2525\u00b7183.346 = 229.641 MPa; \u03c4_b = 1.23810\u00b7183.346 = 227.000 MPa"
+      }
+    },
+    {
+      "id": "springs-005",
+      "calculator": "springs.spring_deflection",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "500 N",
+        "D": "32 mm",
+        "d": "4 mm",
+        "n_a": 10,
+        "G": "79.3 GPa"
+      },
+      "solve_for": [
+        "delta",
+        "C"
+      ],
+      "expected_as_specified": {
+        "delta": "64.5649 mm"
+      },
+      "expected_SI": {
+        "delta": 0.0645649
+      },
+      "actual_SI": {
+        "delta": {
+          "value": 0.06456494325346786,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_deflection (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "delta": {
+          "absolute_error": 4.3253467862935935e-08,
+          "relative_error": 6.699223240946078e-07,
+          "allowed_absolute_error": 0.0001291298,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b4 = 8FD\u00b3n/(Gd\u2074) = 8\u00b7500\u00b7(0.032)\u00b3\u00b710/(79.3e9\u00b7(0.004)\u2074) = 1.31072/20.3008 = 0.0645649 m (= F/k = 500/7744.14)"
+      }
+    },
+    {
+      "id": "springs-006",
+      "calculator": "springs.spring_geometry",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "4 mm",
+        "n_a": 10,
+        "end": "squared_ground",
+        "delta_max": "60 mm"
+      },
+      "solve_for": [
+        "n_t",
+        "L_s",
+        "L_f"
+      ],
+      "expected_as_specified": {
+        "n_t": 12,
+        "L_s": "48 mm",
+        "L_f": "108 mm"
+      },
+      "expected_SI": {
+        "n_t": 12.0,
+        "L_s": 0.048,
+        "L_f": 0.108
+      },
+      "actual_SI": {
+        "n_t": {
+          "value": 12.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_geometry (procedure)"
+        },
+        "L_s": {
+          "value": 0.048,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_geometry (procedure)"
+        },
+        "L_f": {
+          "value": 0.108,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_geometry (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.024,
+          "passed": true
+        },
+        "L_s": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 9.6e-05,
+          "passed": true
+        },
+        "L_f": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.000216,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Squared-and-ground: n_t = n_a + 2 = 12; L_s = d\u00b7n_t = 0.004\u00b712 = 0.048 m; L_f = L_s + \u03b4_max = 48 + 60 = 108 mm"
+      }
+    },
+    {
+      "id": "springs-007",
+      "calculator": "springs.spring_geometry",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "5 mm",
+        "n_a": 8,
+        "end": "plain_ground",
+        "delta_max": "40 mm"
+      },
+      "solve_for": [
+        "n_t",
+        "L_s",
+        "L_f"
+      ],
+      "expected_as_specified": {
+        "n_t": 9,
+        "L_s": "45 mm",
+        "L_f": "85 mm"
+      },
+      "expected_SI": {
+        "n_t": 9.0,
+        "L_s": 0.045,
+        "L_f": 0.085
+      },
+      "actual_SI": {
+        "n_t": {
+          "value": 9.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_geometry (procedure)"
+        },
+        "L_s": {
+          "value": 0.045,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_geometry (procedure)"
+        },
+        "L_f": {
+          "value": 0.08499999999999999,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_geometry (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.018000000000000002,
+          "passed": true
+        },
+        "L_s": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 8.999999999999999e-05,
+          "passed": true
+        },
+        "L_f": {
+          "absolute_error": 1.3877787807814457e-17,
+          "relative_error": 1.6326809185664065e-16,
+          "allowed_absolute_error": 0.00017,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Plain-and-ground: n_t = n_a + 1 = 9; L_s = d\u00b7n_t = 0.005\u00b79 = 0.045 m; L_f = L_s + \u03b4_max = 45 + 40 = 85 mm"
+      }
+    },
+    {
+      "id": "springs-008",
+      "calculator": "springs.spring_buckling",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L0": "300 mm",
+        "D": "32 mm",
+        "E": "207 GPa",
+        "G": "79.3 GPa",
+        "alpha": 0.5
+      },
+      "solve_for": [
+        "delta_cr",
+        "L0_crit",
+        "stable"
+      ],
+      "expected_as_specified": {
+        "delta_cr": "41.7288 mm",
+        "L0_crit": "168.049 mm",
+        "stable": 0
+      },
+      "expected_SI": {
+        "delta_cr": 0.0417288,
+        "L0_crit": 0.168049,
+        "stable": 0.0
+      },
+      "actual_SI": {
+        "delta_cr": {
+          "value": 0.04172879839509366,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_buckling (procedure)"
+        },
+        "L0_crit": {
+          "value": 0.16804949031305144,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_buckling (procedure)"
+        },
+        "stable": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_buckling (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "delta_cr": {
+          "absolute_error": 1.6049063467082902e-09,
+          "relative_error": 3.8460400172262086e-08,
+          "allowed_absolute_error": 2.0864400000000003e-05,
+          "passed": true
+        },
+        "L0_crit": {
+          "absolute_error": 4.903130514377629e-07,
+          "relative_error": 2.9176790783507366e-06,
+          "allowed_absolute_error": 8.40245e-05,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C\u2081\u2032 = E/(2(E\u2212G)) = 207/(2\u00b7127.7) = 0.810493; C\u2082\u2032 = 2\u03c0\u00b2(E\u2212G)/(2G+E) = 2\u03c0\u00b2\u00b7127.7e9/365.6e9 = 6.89469; \u03bb = \u03b1L0/D = 0.5\u00b70.3/0.032 = 4.6875, \u03bb\u00b2 = 21.9727. \u03b4_cr = C\u2081\u2032\u00b7L0\u00b7(1\u2212\u221a(1\u2212C\u2082\u2032/\u03bb\u00b2)) = 0.810493\u00b70.3\u00b7(1\u2212\u221a(1\u22126.89469/21.9727)) = 0.243148\u00b7(1\u2212\u221a0.686216) = 0.243148\u00b70.171487 = 0.0417288 m. L0_crit = (\u03c0D/\u03b1)\u00b7\u221a(2(E\u2212G)/(2G+E)) = (\u03c0\u00b70.032/0.5)\u00b7\u221a(255.4/365.6) = 0.201062\u00b70.835814 = 0.168049 m. L0 > L0_crit so stable = 0"
+      }
+    },
+    {
+      "id": "springs-009",
+      "calculator": "springs.spring_buckling",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L0": "100 mm",
+        "D": "32 mm",
+        "E": "207 GPa",
+        "G": "79.3 GPa",
+        "alpha": 0.5
+      },
+      "solve_for": [
+        "delta_cr",
+        "L0_crit",
+        "stable"
+      ],
+      "expected_as_specified": {
+        "delta_cr": null,
+        "L0_crit": "168.049 mm",
+        "stable": 1
+      },
+      "expected_SI": {
+        "delta_cr": null,
+        "L0_crit": 0.168049,
+        "stable": 1.0
+      },
+      "actual_SI": {
+        "delta_cr": {
+          "value": null,
+          "kind": "derived",
+          "method": "mechcalc springs.spring_buckling (procedure)",
+          "unit": ""
+        },
+        "L0_crit": {
+          "value": 0.16804949031305144,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_buckling (procedure)"
+        },
+        "stable": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_buckling (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "delta_cr": {
+          "passed": true
+        },
+        "L0_crit": {
+          "absolute_error": 4.903130514377629e-07,
+          "relative_error": 2.9176790783507366e-06,
+          "allowed_absolute_error": 8.40245e-05,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L0_crit = (\u03c0D/\u03b1)\u00b7\u221a(2(E\u2212G)/(2G+E)) = (\u03c0\u00b70.032/0.5)\u00b7\u221a(255.4/365.6) = 0.168049 m. L0 = 0.100 m < L0_crit, so the spring is absolutely stable: stable = 1 and \u03b4_cr has no real value (null)"
+      }
+    },
+    {
+      "id": "springs-010",
+      "calculator": "springs.spring_buckling",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L0": "500 mm",
+        "D": "50 mm",
+        "E": "207 GPa",
+        "G": "79.3 GPa",
+        "alpha": 2.0
+      },
+      "solve_for": [
+        "delta_cr",
+        "L0_crit",
+        "stable"
+      ],
+      "expected_as_specified": {
+        "delta_cr": "3.50774 mm",
+        "L0_crit": "65.6443 mm",
+        "stable": 0
+      },
+      "expected_SI": {
+        "delta_cr": 0.00350774,
+        "L0_crit": 0.0656443,
+        "stable": 0.0
+      },
+      "actual_SI": {
+        "delta_cr": {
+          "value": 0.003507741551581692,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_buckling (procedure)"
+        },
+        "L0_crit": {
+          "value": 0.06564433215353571,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_buckling (procedure)"
+        },
+        "stable": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_buckling (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "delta_cr": {
+          "absolute_error": 1.5515816921204961e-09,
+          "relative_error": 4.423308717637271e-07,
+          "allowed_absolute_error": 1.75387e-06,
+          "passed": true
+        },
+        "L0_crit": {
+          "absolute_error": 3.2153535708956404e-08,
+          "relative_error": 4.898145872369178e-07,
+          "allowed_absolute_error": 3.282215e-05,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C\u2081\u2032 = 0.810493, C\u2082\u2032 = 6.89469 (steel, as above). \u03bb = 2\u00b70.5/0.05 = 20, \u03bb\u00b2 = 400. \u03b4_cr = 0.810493\u00b70.5\u00b7(1\u2212\u221a(1\u22126.89469/400)) = 0.405247\u00b7(1\u2212\u221a0.982763) = 0.405247\u00b7(1\u22120.991344) = 0.405247\u00b70.00865595 = 0.00350774 m. L0_crit = (\u03c0\u00b70.05/2)\u00b70.835814 = 0.0656443 m"
+      }
+    },
+    {
+      "id": "springs-011",
+      "calculator": "springs.spring_surge",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "4 mm",
+        "D": "32 mm",
+        "n_a": 10,
+        "G": "79.3 GPa",
+        "rho": "7850 kg/m^3"
+      },
+      "solve_for": [
+        "f",
+        "f_free"
+      ],
+      "expected_as_specified": {
+        "f": "139.723 Hz",
+        "f_free": "69.8613 Hz"
+      },
+      "expected_SI": {
+        "f": 139.723,
+        "f_free": 69.8613
+      },
+      "actual_SI": {
+        "f": {
+          "value": 139.72268855806115,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_surge (symbolic)"
+        },
+        "f_free": {
+          "value": 69.86134427903058,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_surge (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "f": {
+          "absolute_error": 0.0003114419388623446,
+          "relative_error": 2.228995504407611e-06,
+          "allowed_absolute_error": 0.279446,
+          "passed": true
+        },
+        "f_free": {
+          "absolute_error": 4.4279030575467004e-05,
+          "relative_error": 6.338134356999799e-07,
+          "allowed_absolute_error": 0.1397226,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "f = d\u221a(G/(2\u03c1))/(2\u03c0D\u00b2n) = 0.004\u00b7\u221a(79.3e9/(2\u00b77850))/(2\u03c0\u00b7(0.032)\u00b2\u00b710) = 0.004\u00b72247.43/0.0643393 = 8.98972/0.0643393 = 139.723 Hz (both ends fixed). Fixed\u2013free is half: f_free = 139.723/2 = 69.8613 Hz"
+      }
+    },
+    {
+      "id": "springs-012",
+      "calculator": "springs.extension_hook_stress",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "50 N",
+        "D": "20 mm",
+        "d": "3 mm",
+        "r1": "6 mm",
+        "r2": "8 mm"
+      },
+      "solve_for": [
+        "sigma_A",
+        "tau_B",
+        "C1",
+        "K_A",
+        "C2",
+        "K_B"
+      ],
+      "expected_as_specified": {
+        "sigma_A": "238.929 MPa",
+        "tau_B": "110.638 MPa",
+        "C1": 4,
+        "K_A": 1.22917,
+        "C2": 5.33333,
+        "K_B": 1.17308
+      },
+      "expected_SI": {
+        "sigma_A": 238929000.0,
+        "tau_B": 110638000.0,
+        "C1": 4.0,
+        "K_A": 1.22917,
+        "C2": 5.33333,
+        "K_B": 1.17308
+      },
+      "actual_SI": {
+        "sigma_A": {
+          "value": 238928902.22190708,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        },
+        "tau_B": {
+          "value": 110637624.25761384,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        },
+        "C1": {
+          "value": 4.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        },
+        "K_A": {
+          "value": 1.2291666666666665,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        },
+        "C2": {
+          "value": 5.333333333333333,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        },
+        "K_B": {
+          "value": 1.173076923076923,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "sigma_A": {
+          "absolute_error": 97.77809292078018,
+          "relative_error": 4.0923493138455435e-07,
+          "allowed_absolute_error": 119464.5,
+          "passed": true
+        },
+        "tau_B": {
+          "absolute_error": 375.74238616228104,
+          "relative_error": 3.3961422491574416e-06,
+          "allowed_absolute_error": 55319.0,
+          "passed": true
+        },
+        "C1": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "K_A": {
+          "absolute_error": 3.3333333335772153e-06,
+          "relative_error": 2.7118570527894553e-06,
+          "allowed_absolute_error": 0.0006145850000000001,
+          "passed": true
+        },
+        "C2": {
+          "absolute_error": 3.3333333329110815e-06,
+          "relative_error": 6.250003905460719e-07,
+          "allowed_absolute_error": 0.002666665,
+          "passed": true
+        },
+        "K_B": {
+          "absolute_error": 3.0769230769944755e-06,
+          "relative_error": 2.6229439398800386e-06,
+          "allowed_absolute_error": 0.00058654,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C\u2081 = 2r\u2081/d = 12/3 = 4; K_A = (4C\u2081\u00b2\u2212C\u2081\u22121)/(4C\u2081(C\u2081\u22121)) = (64\u22124\u22121)/(16\u00b73) = 59/48 = 1.22917. \u03c3_A = F\u00b7(K_A\u00b716D/(\u03c0d\u00b3) + 4/(\u03c0d\u00b2)) = 50\u00b7(1.22917\u00b716\u00b70.02/(\u03c0\u00b72.7e-8) + 4/(\u03c0\u00b79e-6)) = 50\u00b7(4.63708e6 + 141471) = 2.38929e8 Pa = 238.929 MPa. C\u2082 = 2r\u2082/d = 16/3 = 5.33333; K_B = (4C\u2082\u22121)/(4C\u2082\u22124) = 20.3333/17.3333 = 1.17308. \u03c4_B = K_B\u00b78FD/(\u03c0d\u00b3) = 1.17308\u00b78\u00b750\u00b70.02/(\u03c0\u00b72.7e-8) = 1.10638e8 Pa = 110.638 MPa"
+      }
+    },
+    {
+      "id": "springs-013",
+      "calculator": "springs.extension_hook_stress",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "80 N",
+        "D": "25 mm",
+        "d": "3.5 mm",
+        "r1": "6 mm",
+        "r2": "9 mm"
+      },
+      "solve_for": [
+        "sigma_A",
+        "tau_B",
+        "C1",
+        "K_A",
+        "C2",
+        "K_B"
+      ],
+      "expected_as_specified": {
+        "sigma_A": "312.122 MPa",
+        "tau_B": "140.291 MPa",
+        "C1": 3.42857,
+        "K_A": 1.2788,
+        "C2": 5.14286,
+        "K_B": 1.18103
+      },
+      "expected_SI": {
+        "sigma_A": 312122000.0,
+        "tau_B": 140291000.0,
+        "C1": 3.42857,
+        "K_A": 1.2788,
+        "C2": 5.14286,
+        "K_B": 1.18103
+      },
+      "actual_SI": {
+        "sigma_A": {
+          "value": 312122377.25462264,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        },
+        "tau_B": {
+          "value": 140290594.25251213,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        },
+        "C1": {
+          "value": 3.4285714285714284,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        },
+        "K_A": {
+          "value": 1.278799019607843,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        },
+        "C2": {
+          "value": 5.142857142857143,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        },
+        "K_B": {
+          "value": 1.1810344827586206,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.extension_hook_stress (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "sigma_A": {
+          "absolute_error": 377.25462263822556,
+          "relative_error": 1.2086768079091687e-06,
+          "allowed_absolute_error": 156061.0,
+          "passed": true
+        },
+        "tau_B": {
+          "absolute_error": 405.747487872839,
+          "relative_error": 2.8921847294041597e-06,
+          "allowed_absolute_error": 70145.5,
+          "passed": true
+        },
+        "C1": {
+          "absolute_error": 1.4285714282635809e-06,
+          "relative_error": 4.166668401880611e-07,
+          "allowed_absolute_error": 0.001714285,
+          "passed": true
+        },
+        "K_A": {
+          "absolute_error": 9.803921570128438e-07,
+          "relative_error": 7.666501071417296e-07,
+          "allowed_absolute_error": 0.0006393999999999999,
+          "passed": true
+        },
+        "C2": {
+          "absolute_error": 2.8571428565271617e-06,
+          "relative_error": 5.555552467940332e-07,
+          "allowed_absolute_error": 0.00257143,
+          "passed": true
+        },
+        "K_B": {
+          "absolute_error": 4.482758620527605e-06,
+          "relative_error": 3.7956348446081852e-06,
+          "allowed_absolute_error": 0.000590515,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C\u2081 = 12/3.5 = 3.42857; K_A = (4\u00b73.42857\u00b2\u22123.42857\u22121)/(4\u00b73.42857\u00b72.42857) = 42.5918/33.3061 = 1.27880. \u03c3_A = 80\u00b7(1.27880\u00b716\u00b70.025/(\u03c0\u00b7(0.0035)\u00b3) + 4/(\u03c0\u00b7(0.0035)\u00b2)) = 80\u00b7(3.79759e6 + 103938) = 3.12122e8 Pa = 312.122 MPa. C\u2082 = 18/3.5 = 5.14286; K_B = (4\u00b75.14286\u22121)/(4\u00b75.14286\u22124) = 19.5714/16.5714 = 1.18103. \u03c4_B = 1.18103\u00b78\u00b780\u00b70.025/(\u03c0\u00b7(0.0035)\u00b3) = 1.40291e8 Pa = 140.291 MPa"
+      }
+    },
+    {
+      "id": "springs-014",
+      "calculator": "springs.torsion_spring",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "M": "2 N*m",
+        "d": "4 mm",
+        "D": "30 mm",
+        "N_b": 5,
+        "l1": "40 mm",
+        "l2": "25 mm",
+        "E": "207 GPa"
+      },
+      "solve_for": [
+        "k_t",
+        "k_turn",
+        "k_prime",
+        "theta",
+        "C",
+        "K_i",
+        "sigma",
+        "N_a"
+      ],
+      "expected_as_specified": {
+        "N_a": 5.22989,
+        "C": 7.5,
+        "K_i": 1.11026,
+        "k_t": "5.27736 N*m/rad",
+        "k_turn": "33.1586 N*m/turn",
+        "k_prime": "31.2732 N*m/turn",
+        "theta": "0.378978 rad",
+        "sigma": "353.406 MPa"
+      },
+      "expected_SI": {
+        "N_a": 5.22989,
+        "C": 7.5,
+        "K_i": 1.11026,
+        "k_t": 5.27736,
+        "k_turn": 33.1586,
+        "k_prime": 31.2732,
+        "theta": 0.378978,
+        "sigma": 353406000.0
+      },
+      "actual_SI": {
+        "N_a": {
+          "value": 5.229890473354964,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.torsion_spring (symbolic)"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.torsion_spring (symbolic)"
+        },
+        "K_i": {
+          "value": 1.1102564102564103,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.torsion_spring (symbolic)"
+        },
+        "k_t": {
+          "value": 5.277357172318518,
+          "unit": "N*m/rad",
+          "kind": "derived",
+          "method": "mechcalc springs.torsion_spring (symbolic)"
+        },
+        "k_turn": {
+          "value": 33.15861304585041,
+          "unit": "N*m/turn",
+          "kind": "derived",
+          "method": "mechcalc springs.torsion_spring (symbolic)"
+        },
+        "k_prime": {
+          "value": 31.273227687813357,
+          "unit": "N*m/turn",
+          "kind": "derived",
+          "method": "mechcalc springs.torsion_spring (symbolic)"
+        },
+        "theta": {
+          "value": 0.37897757053296793,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc springs.torsion_spring (symbolic)"
+        },
+        "sigma": {
+          "value": 353405591.5835426,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.torsion_spring (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "N_a": {
+          "absolute_error": 4.7335496411449185e-07,
+          "relative_error": 9.050954496451968e-08,
+          "allowed_absolute_error": 0.002614945,
+          "passed": true
+        },
+        "C": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00375,
+          "passed": true
+        },
+        "K_i": {
+          "absolute_error": 3.589743589715866e-06,
+          "relative_error": 3.233245897101459e-06,
+          "allowed_absolute_error": 0.00055513,
+          "passed": true
+        },
+        "k_t": {
+          "absolute_error": 2.827681481853972e-06,
+          "relative_error": 5.358136420206263e-07,
+          "allowed_absolute_error": 0.00263868,
+          "passed": true
+        },
+        "k_turn": {
+          "absolute_error": 1.3045850408843762e-05,
+          "relative_error": 3.934379138095023e-07,
+          "allowed_absolute_error": 0.0165793,
+          "passed": true
+        },
+        "k_prime": {
+          "absolute_error": 2.7687813357601954e-05,
+          "relative_error": 8.853527415679225e-07,
+          "allowed_absolute_error": 0.0156366,
+          "passed": true
+        },
+        "theta": {
+          "absolute_error": 4.294670320481586e-07,
+          "relative_error": 1.1332241767283552e-06,
+          "allowed_absolute_error": 0.000189489,
+          "passed": true
+        },
+        "sigma": {
+          "absolute_error": 408.4164574146271,
+          "relative_error": 1.1556579611399553e-06,
+          "allowed_absolute_error": 176703.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "N_a = N_b + (l\u2081+l\u2082)/(3\u03c0D) = 5 + 0.065/(3\u03c0\u00b70.03) = 5 + 0.229890 = 5.22989. C = 30/4 = 7.5. K_i = (4C\u00b2\u2212C\u22121)/(4C(C\u22121)) = 216.5/195 = 1.11026. k_t = Ed\u2074/(64DN_a) = 207e9\u00b7(0.004)\u2074/(64\u00b70.03\u00b75.22989) = 52.992/10.0414 = 5.27736 N\u00b7m/rad. k_turn = 2\u03c0\u00b7k_t = 33.1586 N\u00b7m/turn. k_prime = Ed\u2074/(10.8DN_a) = 52.992/(10.8\u00b70.03\u00b75.22989) = 52.992/1.69448 = 31.2732 N\u00b7m/turn. \u03b8 = M/k_t = 2/5.27736 = 0.378978 rad. \u03c3 = K_i\u00b732M/(\u03c0d\u00b3) = 1.11026\u00b764/(\u03c0\u00b76.4e-8) = 3.53406e8 Pa = 353.406 MPa"
+      }
+    },
+    {
+      "id": "springs-015",
+      "calculator": "springs.torsion_spring",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "M": "-2 N*m",
+        "d": "4 mm",
+        "D": "30 mm",
+        "N_b": 5,
+        "l1": "40 mm",
+        "l2": "25 mm",
+        "E": "207 GPa"
+      },
+      "solve_for": [
+        "k_t",
+        "k_turn",
+        "k_prime",
+        "theta",
+        "C",
+        "K_i",
+        "sigma",
+        "N_a"
+      ],
+      "expected_as_specified": {
+        "theta": "-0.378978 rad",
+        "sigma": "-353.406 MPa",
+        "k_t": "5.27736 N*m/rad"
+      },
+      "expected_SI": {
+        "theta": -0.378978,
+        "sigma": -353406000.0,
+        "k_t": 5.27736
+      },
+      "actual_SI": {
+        "theta": {
+          "value": -0.37897757053296793,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc springs.torsion_spring (symbolic)"
+        },
+        "sigma": {
+          "value": -353405591.5835426,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.torsion_spring (symbolic)"
+        },
+        "k_t": {
+          "value": 5.277357172318518,
+          "unit": "N*m/rad",
+          "kind": "derived",
+          "method": "mechcalc springs.torsion_spring (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "theta": {
+          "absolute_error": 4.294670320481586e-07,
+          "relative_error": 1.1332241767283552e-06,
+          "allowed_absolute_error": 0.000189489,
+          "passed": true
+        },
+        "sigma": {
+          "absolute_error": 408.4164574146271,
+          "relative_error": 1.1556579611399553e-06,
+          "allowed_absolute_error": 176703.0,
+          "passed": true
+        },
+        "k_t": {
+          "absolute_error": 2.827681481853972e-06,
+          "relative_error": 5.358136420206263e-07,
+          "allowed_absolute_error": 0.00263868,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Reversing the moment sign flips \u03b8 and \u03c3 (signed) but leaves the rate: \u03b8 = M/k_t = \u22122/5.27736 = \u22120.378978 rad; \u03c3 = K_i\u00b732M/(\u03c0d\u00b3) = \u2212353.406 MPa; k_t unchanged at 5.27736 N\u00b7m/rad"
+      }
+    },
+    {
+      "id": "springs-016",
+      "calculator": "springs.leaf_spring",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "3 kN",
+        "L": "1 m",
+        "N": 6,
+        "b": "50 mm",
+        "t": "8 mm",
+        "E": "207 GPa"
+      },
+      "solve_for": [
+        "sigma",
+        "delta"
+      ],
+      "expected_as_specified": {
+        "sigma": "234.375 MPa",
+        "delta": "35.3827 mm"
+      },
+      "expected_SI": {
+        "sigma": 234375000.0,
+        "delta": 0.0353827
+      },
+      "actual_SI": {
+        "sigma": {
+          "value": 234374999.99999997,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.leaf_spring (symbolic)"
+        },
+        "delta": {
+          "value": 0.03538269927536232,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.leaf_spring (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma": {
+          "absolute_error": 2.9802322387695312e-08,
+          "relative_error": 1.2715657552083334e-16,
+          "allowed_absolute_error": 468750.0,
+          "passed": true
+        },
+        "delta": {
+          "absolute_error": 7.246376831915313e-10,
+          "relative_error": 2.047999963800194e-08,
+          "allowed_absolute_error": 7.07654e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c3 = 3FL/(2Nbt\u00b2) = 3\u00b73000\u00b71/(2\u00b76\u00b70.05\u00b7(0.008)\u00b2) = 9000/3.84e-5 = 2.34375e8 Pa; \u03b4 = 3FL\u00b3/(8ENbt\u00b3) = 3\u00b73000\u00b71/(8\u00b7207e9\u00b76\u00b70.05\u00b7(0.008)\u00b3) = 9000/254361.6 = 0.0353827 m"
+      }
+    },
+    {
+      "id": "springs-017",
+      "calculator": "springs.belleville",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "206 GPa",
+        "nu": 0.3,
+        "D_o": "100 mm",
+        "D_i": "50 mm",
+        "t": "4 mm",
+        "h": "6 mm",
+        "delta": "3 mm",
+        "form": "din_2092"
+      },
+      "solve_for": [
+        "F",
+        "C",
+        "K"
+      ],
+      "expected_as_specified": {
+        "C": 2,
+        "K": 0.694333,
+        "F": "46165.9 N"
+      },
+      "expected_SI": {
+        "C": 2.0,
+        "K": 0.694333,
+        "F": 46165.9
+      },
+      "actual_SI": {
+        "C": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.belleville (procedure)"
+        },
+        "K": {
+          "value": 0.6943332024001174,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.belleville (procedure)"
+        },
+        "F": {
+          "value": 46165.88315768561,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc springs.belleville (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "C": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "K": {
+          "absolute_error": 2.0240011744387942e-07,
+          "relative_error": 2.9150294951252416e-07,
+          "allowed_absolute_error": 0.0003471665,
+          "passed": true
+        },
+        "F": {
+          "absolute_error": 0.01684231439139694,
+          "relative_error": 3.6482153259000557e-07,
+          "allowed_absolute_error": 23.08295,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "C = D_o/D_i = 2. K1 (DIN 2092) = (1/\u03c0)\u00b7((C\u22121)/C)\u00b2/((C+1)/(C\u22121) \u2212 2/ln C) = 0.31831\u00b70.25/(3 \u2212 2.88539) = 0.0795775/0.114609 = 0.694333. F = 4E\u03b4/((1\u2212\u03bd\u00b2)\u00b7K\u00b7D_o\u00b2)\u00b7[(h\u2212\u03b4)(h\u2212\u03b4/2)t + t\u00b3] = 4\u00b7206e9\u00b70.003/(0.91\u00b70.694333\u00b70.01)\u00b7[0.003\u00b70.0045\u00b70.004 + 6.4e-8] = 2.472e9/0.00631843\u00b7(5.4e-8+6.4e-8) = 3.91236e11\u00b71.18e-7 = 46165.9 N"
+      }
+    },
+    {
+      "id": "springs-018",
+      "calculator": "springs.belleville",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "206 GPa",
+        "nu": 0.3,
+        "D_o": "100 mm",
+        "D_i": "50 mm",
+        "t": "4 mm",
+        "h": "6 mm",
+        "delta": "3 mm",
+        "form": "almen_laszlo"
+      },
+      "solve_for": [
+        "F",
+        "C",
+        "K"
+      ],
+      "expected_as_specified": {
+        "C": 2,
+        "K": 0.688836,
+        "F": "46534.3 N"
+      },
+      "expected_SI": {
+        "C": 2.0,
+        "K": 0.688836,
+        "F": 46534.3
+      },
+      "actual_SI": {
+        "C": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.belleville (procedure)"
+        },
+        "K": {
+          "value": 0.6888361413949278,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.belleville (procedure)"
+        },
+        "F": {
+          "value": 46534.2968642637,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc springs.belleville (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "C": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "K": {
+          "absolute_error": 1.413949277662141e-07,
+          "relative_error": 2.0526646076310485e-07,
+          "allowed_absolute_error": 0.00034441800000000004,
+          "passed": true
+        },
+        "F": {
+          "absolute_error": 0.0031357363041024655,
+          "relative_error": 6.738548348427859e-08,
+          "allowed_absolute_error": 23.26715,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Original Almen\u2013L\u00e1szl\u00f3 M = (6/(\u03c0\u00b7ln C))\u00b7((C\u22121)/C)\u00b2 = 6/(\u03c0\u00b70.693147)\u00b70.25 = 0.688836. F = 4E\u03b4/((1\u2212\u03bd\u00b2)\u00b7M\u00b7D_o\u00b2)\u00b7[(h\u2212\u03b4)(h\u2212\u03b4/2)t + t\u00b3] = 4\u00b7206e9\u00b70.003/(0.91\u00b70.688836\u00b70.01)\u00b71.18e-7 = 2.472e9/0.00626841\u00b71.18e-7 = 3.94359e11\u00b71.18e-7 = 46534.3 N"
+      }
+    },
+    {
+      "id": "springs-019",
+      "calculator": "springs.belleville",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "206 GPa",
+        "nu": 0.3,
+        "D_o": "100 mm",
+        "D_i": "50 mm",
+        "t": "4 mm",
+        "h": "6 mm",
+        "form": "din_2092",
+        "F": "46165.9 N"
+      },
+      "solve_for": [
+        "delta"
+      ],
+      "expected_as_specified": {
+        "delta": "3 mm"
+      },
+      "expected_SI": {
+        "delta": 0.003
+      },
+      "actual_SI": {
+        "delta": {
+          "value": 0.0030000028075440077,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.belleville (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "delta": {
+          "absolute_error": 2.807544007606827e-09,
+          "relative_error": 9.35848002535609e-07,
+          "allowed_absolute_error": 6e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: solve the Almen\u2013L\u00e1szl\u00f3 load for \u03b4 at the known load F = 46165.9 N (the DIN 2092 branch). The forward point \u03b4 = 3 mm reproduces this load, so the recovered deflection is 3 mm"
+      }
+    },
+    {
+      "id": "springs-020",
+      "calculator": "springs.spring_energy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "500 N",
+        "delta": "64.56 mm"
+      },
+      "solve_for": [
+        "U"
+      ],
+      "expected_as_specified": {
+        "U": "16.14 J"
+      },
+      "expected_SI": {
+        "U": 16.14
+      },
+      "actual_SI": {
+        "U": {
+          "value": 16.14,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_energy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "U": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.03228,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "U = F\u03b4/2 = 500\u00b70.06456/2 = 16.14 J"
+      }
+    },
+    {
+      "id": "springs-021",
+      "calculator": "springs.spring_fatigue",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "2 mm",
+        "A": "2211 MPa",
+        "m": 0.145,
+        "S_sa": "241 MPa",
+        "S_sm": "379 MPa",
+        "tau_a": "100 MPa",
+        "tau_m": "150 MPa"
+      },
+      "solve_for": [
+        "S_ut",
+        "S_su",
+        "S_se",
+        "S_se_gerber",
+        "n_goodman",
+        "n_gerber"
+      ],
+      "expected_as_specified": {
+        "S_ut": "1999.58 MPa",
+        "S_su": "1339.72 MPa",
+        "S_se": "336.073 MPa",
+        "S_se_gerber": "261.965 MPa",
+        "n_goodman": 2.4419,
+        "n_gerber": 2.42632
+      },
+      "expected_SI": {
+        "S_ut": 1999580000.0,
+        "S_su": 1339720000.0,
+        "S_se": 336073000.0,
+        "S_se_gerber": 261964999.99999997,
+        "n_goodman": 2.4419,
+        "n_gerber": 2.42632
+      },
+      "actual_SI": {
+        "S_ut": {
+          "value": 1999582803.7875657,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        },
+        "S_su": {
+          "value": 1339720478.5376692,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        },
+        "S_se": {
+          "value": 336073439.19537216,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        },
+        "S_se_gerber": {
+          "value": 261964917.74258935,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        },
+        "n_goodman": {
+          "value": 2.4418971008879273,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        },
+        "n_gerber": {
+          "value": 2.4263215304905845,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "S_ut": {
+          "absolute_error": 2803.7875657081604,
+          "relative_error": 1.4021882423849811e-06,
+          "allowed_absolute_error": 999790.0,
+          "passed": true
+        },
+        "S_su": {
+          "absolute_error": 478.53766918182373,
+          "relative_error": 3.571923007657001e-07,
+          "allowed_absolute_error": 669860.0,
+          "passed": true
+        },
+        "S_se": {
+          "absolute_error": 439.1953721642494,
+          "relative_error": 1.3068451561543159e-06,
+          "allowed_absolute_error": 168036.5,
+          "passed": true
+        },
+        "S_se_gerber": {
+          "absolute_error": 82.2574106156826,
+          "relative_error": 3.1400152927178293e-07,
+          "allowed_absolute_error": 130982.49999999999,
+          "passed": true
+        },
+        "n_goodman": {
+          "absolute_error": 2.899112072629606e-06,
+          "relative_error": 1.1872361983003425e-06,
+          "allowed_absolute_error": 0.00122095,
+          "passed": true
+        },
+        "n_gerber": {
+          "absolute_error": 1.5304905844892858e-06,
+          "relative_error": 6.307867818298023e-07,
+          "allowed_absolute_error": 0.00121316,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "S_ut = A\u00b7(1 mm/d)^m = 2211e6\u00b7(1/2)^0.145 = 2211e6\u00b70.904396 = 1999.58 MPa. S_su = 0.67\u00b7S_ut = 1339.72 MPa. S_se = S_sa/(1\u2212S_sm/S_su) = 241e6/(1\u2212379e6/1339.72e6) = 241e6/0.71710 = 336.073 MPa. Goodman 1/n = \u03c4_a/S_se + \u03c4_m/S_su = 100/336.073 + 150/1339.72 = 0.297549 + 0.111966 = 0.409515, n = 2.44190. Gerber: a = (\u03c4_m/S_su)\u00b2 = 0.111966\u00b2 = 0.0125364, Gerber-converted S_se,G = 241/(1 \u2212 0.282894\u00b2) = 241/0.919971 = 261.965 MPa; b = \u03c4_a/S_se,G = 0.381730; n = (\u221a(b\u00b2+4a)\u2212b)/(2a) = (\u221a(0.145718 + 0.0501456)\u22120.381730)/0.0250728 = 2.42632"
+      }
+    },
+    {
+      "id": "springs-022",
+      "calculator": "springs.spring_fatigue",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "2 mm",
+        "A": "2211 MPa",
+        "m": 0.145,
+        "S_sa": "241 MPa",
+        "S_sm": "379 MPa",
+        "tau_a": "100 MPa",
+        "tau_m": 0
+      },
+      "solve_for": [
+        "S_ut",
+        "S_su",
+        "S_se",
+        "S_se_gerber",
+        "n_goodman",
+        "n_gerber"
+      ],
+      "expected_as_specified": {
+        "n_goodman": 3.36073,
+        "n_gerber": 2.61965
+      },
+      "expected_SI": {
+        "n_goodman": 3.36073,
+        "n_gerber": 2.61965
+      },
+      "actual_SI": {
+        "n_goodman": {
+          "value": 3.360734391953722,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        },
+        "n_gerber": {
+          "value": 2.6196491774258934,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "n_goodman": {
+          "absolute_error": 4.391953721594177e-06,
+          "relative_error": 1.306845156139939e-06,
+          "allowed_absolute_error": 0.001680365,
+          "passed": true
+        },
+        "n_gerber": {
+          "absolute_error": 8.225741066070213e-07,
+          "relative_error": 3.140015294436361e-07,
+          "allowed_absolute_error": 0.0013098250000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Same S_se = 336.073 MPa. With \u03c4_m = 0 the criteria reduce to n = S_se/\u03c4_a: Goodman 336.073/100 = 3.36073; Gerber uses its own conversion S_se,G = 261.965 MPa \u2192 n = 2.61965 (the two differ only through the Zimmerli conversion)"
+      }
+    },
+    {
+      "id": "springs-023",
+      "calculator": "springs.spring_fatigue",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "5 mm",
+        "A": "1855 MPa",
+        "m": 0.187,
+        "S_sa": "398 MPa",
+        "S_sm": "534 MPa",
+        "tau_a": "120 MPa",
+        "tau_m": "200 MPa"
+      },
+      "solve_for": [
+        "S_ut",
+        "S_su",
+        "S_se",
+        "S_se_gerber",
+        "n_goodman",
+        "n_gerber"
+      ],
+      "expected_as_specified": {
+        "S_ut": "1372.89 MPa",
+        "S_su": "919.838 MPa",
+        "S_se": "948.832 MPa",
+        "S_se_gerber": "600.323 MPa",
+        "n_goodman": 2.90782,
+        "n_gerber": 2.9477
+      },
+      "expected_SI": {
+        "S_ut": 1372890000.0,
+        "S_su": 919838000.0,
+        "S_se": 948832000.0,
+        "S_se_gerber": 600323000.0,
+        "n_goodman": 2.90782,
+        "n_gerber": 2.9477
+      },
+      "actual_SI": {
+        "S_ut": {
+          "value": 1372892470.3681707,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        },
+        "S_su": {
+          "value": 919837955.1466744,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        },
+        "S_se": {
+          "value": 948832278.5901325,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        },
+        "S_se_gerber": {
+          "value": 600322711.2250314,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        },
+        "n_goodman": {
+          "value": 2.907814880246732,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        },
+        "n_gerber": {
+          "value": 2.947704202101017,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "S_ut": {
+          "absolute_error": 2470.36817073822,
+          "relative_error": 1.7993926467074712e-06,
+          "allowed_absolute_error": 686445.0,
+          "passed": true
+        },
+        "S_su": {
+          "absolute_error": 44.853325605392456,
+          "relative_error": 4.8762201176068455e-08,
+          "allowed_absolute_error": 459919.0,
+          "passed": true
+        },
+        "S_se": {
+          "absolute_error": 278.5901324748993,
+          "relative_error": 2.9361376141919674e-07,
+          "allowed_absolute_error": 474416.0,
+          "passed": true
+        },
+        "S_se_gerber": {
+          "absolute_error": 288.774968624115,
+          "relative_error": 4.810326584590545e-07,
+          "allowed_absolute_error": 300161.5,
+          "passed": true
+        },
+        "n_goodman": {
+          "absolute_error": 5.1197532680014035e-06,
+          "relative_error": 1.7606843848661209e-06,
+          "allowed_absolute_error": 0.00145391,
+          "passed": true
+        },
+        "n_gerber": {
+          "absolute_error": 4.202101016925752e-06,
+          "relative_error": 1.425552470375463e-06,
+          "allowed_absolute_error": 0.00147385,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "S_ut = 1855e6\u00b7(1/5)^0.187 = 1855e6\u00b70.740124 = 1372.89 MPa. S_su = 0.67\u00b71372.89 = 919.838 MPa. S_se = 398e6/(1\u2212534e6/919.838e6) = 398e6/0.419460 = 948.832 MPa. Goodman 1/n = 120/948.832 + 200/919.838 = 0.126472 + 0.217429 = 0.343901, n = 2.90782. Gerber: S_se,G = 398/(1 \u2212 (534/919.838)\u00b2) = 398/0.662974 = 600.323 MPa; a = 0.217429\u00b2 = 0.0472754, b = 120/600.323 = 0.199892, n = (\u221a(0.0399568+0.189102)\u22120.199892)/0.0945508 = 2.94770"
+      }
+    },
+    {
+      "id": "springs-024",
+      "calculator": "springs.spring_fatigue",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A": "2211 MPa",
+        "m": 0.145,
+        "S_sa": "241 MPa",
+        "S_sm": "379 MPa",
+        "tau_a": "100 MPa",
+        "tau_m": "150 MPa",
+        "S_ut": "1999.58 MPa"
+      },
+      "solve_for": [
+        "d"
+      ],
+      "expected_as_specified": {
+        "d": "2 mm"
+      },
+      "expected_SI": {
+        "d": 0.002
+      },
+      "actual_SI": {
+        "d": {
+          "value": 0.0020000193406074364,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc springs.spring_fatigue (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "d": {
+          "absolute_error": 1.9340607436326568e-08,
+          "relative_error": 9.670303718163284e-06,
+          "allowed_absolute_error": 4e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: S_ut = A\u00b7(1 mm/d)^m, so d = 1 mm\u00b7(S_ut/A)^(1/m) = 0.001\u00b7(1999.58e6/2211e6)^(1/0.145) = 0.001\u00b70.904396^6.89655 = 0.001\u00b70.5 = 0.002 m = 2 mm"
+      }
+    }
+  ],
+  "passed": 24,
+  "failed": 0
+}

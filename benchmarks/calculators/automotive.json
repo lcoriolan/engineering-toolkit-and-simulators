@@ -1,0 +1,3535 @@
+{
+  "section": "automotive",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k automotive",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "automotive.rolling_resistance": {
+      "title": "Rolling resistance force (F = C_rr\u00b7N)",
+      "variables": [
+        {
+          "name": "F_rr",
+          "unit": "N",
+          "desc": "rolling resistance force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_rr",
+          "unit": "",
+          "desc": "rolling resistance coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "N",
+          "desc": "normal load on the driven tyres",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F_rr = C_rr*N"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F_rr"
+      ],
+      "assumptions": [
+        "C_rr is a tyre-road input (tyre maker or road-test data); it rises slightly with speed and inflation pressure, treated constant here."
+      ],
+      "method_references": [
+        "Rolling resistance F = C_rr\u00b7N"
+      ],
+      "synthetic_example": {
+        "C_rr": 0.015,
+        "N": 15000.0
+      }
+    },
+    "automotive.road_load": {
+      "title": "Tractive effort and road-load power (rolling + aero + grade)",
+      "variables": [
+        {
+          "name": "F_t",
+          "unit": "N",
+          "desc": "tractive effort required at the wheels (negative downhill)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_req",
+          "unit": "W",
+          "desc": "road-load power required (F_t\u00b7v; negative when descending)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_rr",
+          "unit": "",
+          "desc": "rolling resistance coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "vehicle weight",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "grade angle (0 = level; negative = downhill)",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "air density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Cd",
+          "unit": "",
+          "desc": "drag coefficient",
+          "lo": null,
+          "hi": 2.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "frontal area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "vehicle speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F_t = C_rr*W*cos(theta) + 0.5*rho*Cd*A*v**2 + W*sin(theta)",
+        "P_req = F_t*v"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F_t",
+        "P_req"
+      ],
+      "assumptions": [
+        "Steady speed on a constant grade; no headwind. \u03b8 is signed: positive = uphill, negative = downhill (on a steep enough descent gravity overcomes drag + rolling resistance, so F_t and P_req go negative \u2014 the vehicle needs braking, not drive). F_t is the traction demand, not the tyre limit (that needs the available tractive force, see tractive_effort / gradeability)."
+      ],
+      "method_references": [
+        "Road-load equation F = C_rr\u00b7W\u00b7cos\u03b8 + \u00bd\u03c1CdAv\u00b2 + W\u00b7sin\u03b8"
+      ],
+      "synthetic_example": {
+        "C_rr": 0.015,
+        "W": 15000.0,
+        "theta": 0.06981317007977318,
+        "rho": 1.225,
+        "Cd": 0.32,
+        "A": 2.2,
+        "v": 25.0
+      }
+    },
+    "automotive.gradeability": {
+      "title": "Maximum grade from available tractive effort",
+      "variables": [
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "maximum grade angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "grade_pct",
+          "unit": "",
+          "desc": "grade as a percentage (100\u00b7tan\u03b8)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_avail",
+          "unit": "N",
+          "desc": "available tractive effort (tyre/adhesion-limited)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "vehicle weight",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_rr",
+          "unit": "",
+          "desc": "rolling resistance coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "theta = asin((F_avail/W)/sqrt(1 + C_rr**2)) - atan(C_rr)",
+        "grade_pct = 100*tan(theta)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "theta",
+        "grade_pct"
+      ],
+      "assumptions": [
+        "Low-speed climb (aerodynamic drag neglected). The equilibrium on a grade is W\u00b7sin\u03b8 + C_rr\u00b7W\u00b7cos\u03b8 = F_avail, solved exactly as \u03b8 = asin((F_avail/W)/\u221a(1 + C_rr\u00b2)) \u2212 atan(C_rr) \u2014 consistent with the cos\u03b8 rolling term in road_load. F_avail is the lesser of engine-traction and tyre-adhesion limit; valid for F_avail/W \u2264 \u221a(1 + C_rr\u00b2)."
+      ],
+      "method_references": [
+        "Equilibrium on a grade: W\u00b7sin\u03b8 + C_rr\u00b7W\u00b7cos\u03b8 = F_avail"
+      ],
+      "synthetic_example": {
+        "F_avail": 3000.0,
+        "W": 15000.0,
+        "C_rr": 0.015
+      }
+    },
+    "automotive.acceleration": {
+      "title": "Longitudinal acceleration from excess tractive force",
+      "variables": [
+        {
+          "name": "a",
+          "unit": "m/s^2",
+          "desc": "acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_t",
+          "unit": "N",
+          "desc": "tractive effort at the wheels",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_rr",
+          "unit": "N",
+          "desc": "rolling resistance force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_d",
+          "unit": "N",
+          "desc": "aerodynamic drag force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_m",
+          "unit": "",
+          "desc": "rotational mass factor (\u2265 1)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "vehicle mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "a = (F_t - F_rr - F_d)/(k_m*m)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "a"
+      ],
+      "assumptions": [
+        "Flat road, one value of resistance at the instant considered (get F_rr from rolling_resistance, F_d from fluid_dynamics.drag_lift, or F_t directly from road_load). k_m accounts for rotating inertia (\u2248 1.04\u20131.10 in low gears)."
+      ],
+      "method_references": [
+        "Newton's second law with effective (rotating) mass"
+      ],
+      "synthetic_example": {
+        "F_t": 4000.0,
+        "F_rr": 225.0,
+        "F_d": 388.0,
+        "k_m": 1.08,
+        "m": 1500.0
+      }
+    },
+    "automotive.top_speed": {
+      "title": "Top speed from an engine torque curve and gear ratios",
+      "variables": [
+        {
+          "name": "torque_curve",
+          "unit": "",
+          "desc": "full-throttle engine torque [[rpm, N*m], ...] ascending",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "gear_ratios",
+          "unit": "",
+          "desc": "overall gear ratios (transmission x final drive), one per gear",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "r_wheel",
+          "unit": "m",
+          "desc": "driven-wheel rolling radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "vehicle mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Cd",
+          "unit": "",
+          "desc": "drag coefficient",
+          "lo": null,
+          "hi": 2.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "frontal area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_rr",
+          "unit": "",
+          "desc": "rolling resistance coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "air density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta_driveline",
+          "unit": "",
+          "desc": "driveline efficiency (\u2264 1)",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "standard gravity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_max",
+          "unit": "m/s",
+          "desc": "top speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_max_wheel",
+          "unit": "W",
+          "desc": "wheel power at top speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gear_at_top",
+          "unit": "",
+          "desc": "gear (1-based) that reaches the top speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_e_top",
+          "unit": "rad/s",
+          "desc": "engine speed at top speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9e",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _top_speed(values):\n    \"\"\"Top speed: largest speed where the best tractive force (over all gears whose engine speed is inside\n    the torque curve) meets the road load, or the top-gear redline speed if force still exceeds it there.\n\n    At each speed only gears with w_min <= v\u00b7i/r_w <= w_max contribute; the best gear is the one giving the\n    largest tractive force. Below the first gear's idle speed no gear can pull (clutch-slip region), so the\n    crossing is sought above that speed. The top speed is the first speed where the best force falls below\n    road load; if the force is still above road load at the top-gear redline, the top speed is redline-limited.\n    \"\"\"\n    curve = values['torque_curve']\n    ratios = values['gear_ratios']\n    if not isinstance(curve, list) or len(curve) < 2:\n        raise MechError('torque_curve: give [[rpm, N*m], ...] with at least 2 points')\n    if not isinstance(ratios, list) or not ratios:\n        raise MechError('gear_ratios: give a non-empty list of overall (transmission x final drive) ratios')\n    rows = []\n    for r in curve:\n        if not isinstance(r, (list, tuple)) or len(r) != 2:\n            raise MechError('torque_curve rows must be [rpm, N*m]')\n        rows.append((float(r[0]), float(r[1])))\n    rows.sort(key=lambda t: t[0])\n    rpm = np.array([t[0] for t in rows], dtype=float)\n    tor = np.array([t[1] for t in rows], dtype=float)\n    if rpm[0] <= 0 or np.any(np.diff(rpm) <= 0):\n        raise MechError('torque_curve engine speeds must be positive and strictly increasing')\n    ratios = [float(i) for i in ratios]\n    if any(i <= 0 for i in ratios):\n        raise MechError('gear_ratios must be positive')\n    w_curve = rpm * (2 * PI / 60)          # rad/s; redline = top of the torque curve\n    w_min, w_max = w_curve[0], w_curve[-1]\n    rw, m, Cd, A = values['r_wheel'], values['m'], values['Cd'], values['A']\n    Crr, rho, eta, g = values['C_rr'], values['rho'], values['eta_driveline'], values['g']\n    F_roll = Crr * m * g\n    i_top = min(ratios)                     # top gear = smallest overall ratio\n    v_red_top = w_max * rw / i_top\n\n    def road(v):\n        return F_roll + 0.5 * rho * Cd * A * v * v\n\n    def gear_force(v, ig):\n        \"\"\"Tractive force of one gear, or -inf when the engine speed is outside the torque curve.\"\"\"\n        we = v * ig / rw\n        if we < w_min or we > w_max:\n            return float('-inf')\n        return eta * float(np.interp(we, w_curve, tor)) * ig / rw\n\n    def best_force(v):\n        return max(gear_force(v, ig) for ig in ratios)\n\n    v = np.linspace(0.0, v_red_top, 1200)\n    ex = np.array([best_force(x) - road(x) for x in v])\n    moving = [k for k in range(len(v)) if ex[k] >= 0.0]\n    if not moving:\n        raise MechError('no solution: available tractive effort never exceeds the road load')\n    start = moving[0]\n    cross = None\n    for k in range(start, len(v) - 1):\n        if ex[k] >= 0.0 and ex[k + 1] < 0.0:\n            cross = k\n            break\n    if cross is None:\n        vmax, redline = v_red_top, True\n    else:\n        a, b = v[cross], v[cross + 1]\n        for _ in range(80):                 # bisect the force balance at the crossing\n            mid = 0.5 * (a + b)\n            if best_force(mid) - road(mid) >= 0.0:\n                a = mid\n            else:\n                b = mid\n        vmax, redline = 0.5 * (a + b), False\n    kbest = max(range(len(ratios)), key=lambda k: gear_force(vmax, ratios[k]))\n    i_best = ratios[kbest]\n    F_top = gear_force(vmax, i_best)\n    out = {'v_max': vmax,\n           'P_max_wheel': F_top * vmax,\n           'gear_at_top': float(kbest + 1),    # 1-based gear number\n           'omega_e_top': min(vmax * i_best / rw, w_max)}\n    if redline:\n        out['_warnings'] = ['top speed is at the engine redline in the top (longest) gear '\n                            '(speed-limited rather than drag-limited)']\n    return out\n",
+        "source": "automotive.py",
+        "line": 39
+      },
+      "outputs": [
+        "v_max",
+        "P_max_wheel",
+        "gear_at_top",
+        "omega_e_top"
+      ],
+      "assumptions": [
+        "At each speed the best tractive force is taken over every gear whose engine speed is inside the torque curve; the top speed is the first speed where that best force falls below the road load, or the top-gear (smallest-ratio) redline speed if force still exceeds it there. The torque curve is interpolated linearly between points; below the first gear's idle speed no gear can pull (the clutch slips), so the crossing is sought above it. A redline-limited result is reported with a warning."
+      ],
+      "method_references": [
+        "Power available (\u03b7\u00b7T\u00b7\u03c9) = power required ((C_rr\u00b7m\u00b7g + \u00bd\u03c1CdAv\u00b2)\u00b7v) at the top speed"
+      ],
+      "synthetic_example": {
+        "torque_curve": [
+          [
+            1000,
+            200
+          ],
+          [
+            2500,
+            240
+          ],
+          [
+            4000,
+            250
+          ],
+          [
+            5500,
+            220
+          ],
+          [
+            6500,
+            190
+          ]
+        ],
+        "gear_ratios": [
+          13.5,
+          8.2,
+          5.6,
+          4.1,
+          3.2
+        ],
+        "r_wheel": 0.31,
+        "m": 1500.0,
+        "Cd": 0.32,
+        "A": 2.2,
+        "C_rr": 0.015,
+        "rho": 1.225,
+        "eta_driveline": 0.88,
+        "g": 9.80665
+      }
+    },
+    "automotive.gear_ratio": {
+      "title": "Gear pair: torque and speed through a reduction",
+      "variables": [
+        {
+          "name": "T_out",
+          "unit": "N*m",
+          "desc": "output torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_out",
+          "unit": "rad/s",
+          "desc": "output angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9out",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_in",
+          "unit": "N*m",
+          "desc": "input torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_in",
+          "unit": "rad/s",
+          "desc": "input angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9in",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i",
+          "unit": "",
+          "desc": "gear ratio (N_in/N_out)",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "gear efficiency (\u2264 1)",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T_out = T_in*i*eta",
+        "omega_out = omega_in/i"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T_out",
+        "omega_out"
+      ],
+      "assumptions": [
+        "Single mesh with efficiency \u03b7; i > 1 reduces speed and multiplies torque."
+      ],
+      "method_references": [
+        "Ideal gear power balance: T_out\u00b7\u03c9_out = \u03b7\u00b7T_in\u00b7\u03c9_in"
+      ],
+      "synthetic_example": {
+        "T_in": 250.0,
+        "omega_in": 418.87902047863906,
+        "i": 3.5,
+        "eta": 0.96
+      }
+    },
+    "automotive.vehicle_speed": {
+      "title": "Vehicle speed from engine speed and overall gear ratio",
+      "variables": [
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "vehicle speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_e",
+          "unit": "rad/s",
+          "desc": "engine angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9e",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_wheel",
+          "unit": "m",
+          "desc": "driven-wheel rolling radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i_total",
+          "unit": "",
+          "desc": "overall gear ratio (trans x final)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v = omega_e*r_wheel/i_total"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v"
+      ],
+      "assumptions": [
+        "No tyre slip (drive wheels roll without slipping)."
+      ],
+      "method_references": [
+        "Rolling contact: v = \u03c9_e\u00b7r_wheel/i_total"
+      ],
+      "synthetic_example": {
+        "omega_e": 314.1592653589793,
+        "r_wheel": 0.31,
+        "i_total": 5.6
+      }
+    },
+    "automotive.tractive_effort": {
+      "title": "Tractive effort at the wheels from engine torque",
+      "variables": [
+        {
+          "name": "F_t",
+          "unit": "N",
+          "desc": "tractive effort at the driven wheels",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_e",
+          "unit": "N*m",
+          "desc": "engine torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i_g",
+          "unit": "",
+          "desc": "transmission gear ratio",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i_d",
+          "unit": "",
+          "desc": "final drive (axle) ratio",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "driveline efficiency (\u2264 1)",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_wheel",
+          "unit": "m",
+          "desc": "driven-wheel rolling radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F_t = T_e*i_g*i_d*eta/r_wheel"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F_t"
+      ],
+      "assumptions": [
+        "Overall ratio i_g\u00b7i_d from the engine to the wheels, with driveline efficiency \u03b7; no tyre slip. This is the engine-side tractive effort \u2014 compare with road_load to see whether the vehicle can accelerate at a given speed."
+      ],
+      "method_references": [
+        "Tractive effort F = T\u00b7i_g\u00b7i_d\u00b7\u03b7/r"
+      ],
+      "synthetic_example": {
+        "T_e": 250.0,
+        "i_g": 3.5,
+        "i_d": 4.0,
+        "eta": 0.9,
+        "r_wheel": 0.31
+      }
+    },
+    "automotive.engine_power": {
+      "title": "Engine power required from wheel power",
+      "variables": [
+        {
+          "name": "P_eng",
+          "unit": "W",
+          "desc": "engine (brake) power required",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_wheel",
+          "unit": "W",
+          "desc": "power required at the wheels",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "driveline efficiency (\u2264 1)",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P_eng = P_wheel/eta"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P_eng"
+      ],
+      "assumptions": [
+        "The engine must deliver P_wheel/\u03b7 to overcome a road-load power P_wheel at the wheels (the driveline dissipates (1 \u2212 \u03b7)\u00b7P_eng). Get P_wheel from road_load."
+      ],
+      "method_references": [
+        "Driveline power balance: P_eng = P_wheel/\u03b7"
+      ],
+      "synthetic_example": {
+        "P_wheel": 30000.0,
+        "eta": 0.88
+      }
+    },
+    "automotive.braking_distance": {
+      "title": "Braking distance with reaction time (flat road)",
+      "variables": [
+        {
+          "name": "a_dec",
+          "unit": "m/s^2",
+          "desc": "braking deceleration magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "total stopping distance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "tyre-road friction coefficient (all wheels at the limit)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "standard gravity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "initial speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t_r",
+          "unit": "s",
+          "desc": "driver reaction time (distance travelled before braking)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "a_dec = mu*g",
+        "d = v*t_r + v**2/(2*a_dec)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "a_dec",
+        "d"
+      ],
+      "assumptions": [
+        "All wheels braked at the adhesion limit (\u03bc); flat, dry-road single value. d = v\u00b7t_r (reaction) + v\u00b2/(2\u03bcg) (braking). On a grade, replace \u03bc\u00b7g by g\u00b7(\u03bc\u00b7cos\u03b8 + sin\u03b8) for braking uphill."
+      ],
+      "method_references": [
+        "Constant-deceleration kinematics: d = v\u00b7t_r + v\u00b2/(2a) with a = \u03bcg"
+      ],
+      "synthetic_example": {
+        "mu": 0.85,
+        "g": 9.80665,
+        "v": 30.0,
+        "t_r": 1.0
+      }
+    },
+    "automotive.weight_transfer": {
+      "title": "Longitudinal weight transfer and dynamic axle loads",
+      "variables": [
+        {
+          "name": "delta_W",
+          "unit": "N",
+          "desc": "longitudinal load transfer (rearward + for acceleration)",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394W",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_f_dyn",
+          "unit": "N",
+          "desc": "dynamic front-axle load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_r_dyn",
+          "unit": "N",
+          "desc": "dynamic rear-axle load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "vehicle weight",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l_f",
+          "unit": "m",
+          "desc": "front axle to centre of gravity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l_r",
+          "unit": "m",
+          "desc": "rear axle to centre of gravity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "centre-of-gravity height",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m/s^2",
+          "desc": "longitudinal acceleration (positive forward, negative braking)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "standard gravity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "delta_W = W*a*h/(g*(l_f + l_r))",
+        "W_f_dyn = W*l_r/(l_f + l_r) - delta_W",
+        "W_r_dyn = W*l_f/(l_f + l_r) + delta_W"
+      ],
+      "procedure": null,
+      "outputs": [
+        "delta_W",
+        "W_f_dyn",
+        "W_r_dyn"
+      ],
+      "assumptions": [
+        "Rigid vehicle, quasi-static transfer, small pitch (CG height taken constant). A negative dynamic axle load means that axle has lifted off \u2014 the vehicle is about to tip."
+      ],
+      "method_references": [
+        "Moment equilibrium about the axles: \u0394W = m\u00b7a\u00b7h/L"
+      ],
+      "synthetic_example": {
+        "W": 15000.0,
+        "l_f": 1.3,
+        "l_r": 1.5,
+        "h": 0.55,
+        "a": 3.0,
+        "g": 9.80665
+      }
+    },
+    "automotive.brake_distribution": {
+      "title": "Brake force distribution from vehicle geometry (ideal split)",
+      "variables": [
+        {
+          "name": "a_g",
+          "unit": "",
+          "desc": "braking deceleration in g (= \u03bc at the adhesion limit)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_W",
+          "unit": "N",
+          "desc": "longitudinal load transfer to the front axle",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394W",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_f_dyn",
+          "unit": "N",
+          "desc": "dynamic front-axle load (braking)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_r_dyn",
+          "unit": "N",
+          "desc": "dynamic rear-axle load (braking)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_bf",
+          "unit": "N",
+          "desc": "front brake force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_br",
+          "unit": "N",
+          "desc": "rear brake force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "front_frac",
+          "unit": "",
+          "desc": "front fraction of total brake force",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "vehicle weight",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l_f",
+          "unit": "m",
+          "desc": "front axle to centre of gravity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l_r",
+          "unit": "m",
+          "desc": "rear axle to centre of gravity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "centre-of-gravity height",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "tyre-road friction coefficient (deceleration in g at the limit)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "a_g = mu",
+        "delta_W = W*a_g*h/(l_f + l_r)",
+        "W_f_dyn = W*l_r/(l_f + l_r) + delta_W",
+        "W_r_dyn = W*l_f/(l_f + l_r) - delta_W",
+        "F_bf = mu*W_f_dyn",
+        "F_br = mu*W_r_dyn",
+        "front_frac = (l_r + mu*h)/(l_f + l_r)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "a_g",
+        "delta_W",
+        "W_f_dyn",
+        "W_r_dyn",
+        "F_bf",
+        "F_br",
+        "front_frac"
+      ],
+      "assumptions": [
+        "Ideal (both axles at lockup simultaneously): the braking deceleration in g equals the friction coefficient (a_g = \u03bc), the front axle gains \u0394W = W\u00b7a_g\u00b7h/L, and each axle carries \u03bc \u00d7 its dynamic load. The front fraction (l_r + \u03bc\u00b7h)/L is the brake bias that locks both axles together. Real proportioning valves bias toward the front and fall below this ideal line."
+      ],
+      "method_references": [
+        "Brake force proportional to dynamic normal load at each axle; front fraction (l_r + \u03bc\u00b7h)/L"
+      ],
+      "synthetic_example": {
+        "W": 12000.0,
+        "l_f": 1.2,
+        "l_r": 1.4,
+        "h": 0.5,
+        "mu": 0.85
+      }
+    },
+    "automotive.tyre_lateral_force": {
+      "title": "Tyre lateral force from cornering stiffness (linear model)",
+      "variables": [
+        {
+          "name": "F_y",
+          "unit": "N",
+          "desc": "tyre lateral (cornering) force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_alpha",
+          "unit": "N/rad",
+          "desc": "cornering stiffness",
+          "lo": null,
+          "hi": null,
+          "label": "C\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "rad",
+          "desc": "slip angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F_y = C_alpha*alpha"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F_y"
+      ],
+      "assumptions": [
+        "Linear (small-slip-angle) tyre model: F_y = C_\u03b1\u00b7\u03b1. C_\u03b1 is a tyre input (N/rad); the model saturates at large slip (\u03b1 \u2273 5\u20138\u00b0, tyre-specific) where F_y \u2248 \u03bc\u00b7F_z instead. For the pure centripetal force of a vehicle in a turn see kinetics.centripetal_force."
+      ],
+      "method_references": [
+        "Linear tyre model F_y = C_\u03b1\u00b7\u03b1"
+      ],
+      "synthetic_example": {
+        "C_alpha": 60000.0,
+        "alpha": 0.05
+      }
+    },
+    "automotive.understeer_gradient": {
+      "title": "Slip angles and understeer gradient (bicycle model)",
+      "variables": [
+        {
+          "name": "alpha_f",
+          "unit": "rad",
+          "desc": "front axle slip angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b1f",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha_r",
+          "unit": "rad",
+          "desc": "rear axle slip angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b1r",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_us",
+          "unit": "rad",
+          "desc": "understeer gradient (positive = understeer)",
+          "lo": null,
+          "hi": null,
+          "label": "Kus",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_f",
+          "unit": "N",
+          "desc": "front axle static load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_r",
+          "unit": "N",
+          "desc": "rear axle static load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_af",
+          "unit": "N/rad",
+          "desc": "front axle cornering stiffness",
+          "lo": null,
+          "hi": null,
+          "label": "C\u03b1f",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_ar",
+          "unit": "N/rad",
+          "desc": "rear axle cornering stiffness",
+          "lo": null,
+          "hi": null,
+          "label": "C\u03b1r",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_y",
+          "unit": "m/s^2",
+          "desc": "lateral acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "standard gravity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "alpha_f = W_f*a_y/(g*C_af)",
+        "alpha_r = W_r*a_y/(g*C_ar)",
+        "K_us = W_f/C_af - W_r/C_ar"
+      ],
+      "procedure": null,
+      "outputs": [
+        "alpha_f",
+        "alpha_r",
+        "K_us"
+      ],
+      "assumptions": [
+        "Linear (small-slip-angle) bicycle model; cornering stiffness C_af, C_ar are axle sums and tyre inputs (N/rad). K_us is the slip-angle difference at a_y = g, i.e. radians per g: positive = understeer, negative = oversteer."
+      ],
+      "method_references": [
+        "Bicycle-model slip angles \u03b1 = W\u00b7a_y/(g\u00b7C_\u03b1); understeer gradient K_us = W_f/C_\u03b1f \u2212 W_r/C_\u03b1r"
+      ],
+      "synthetic_example": {
+        "W_f": 7800.0,
+        "W_r": 7200.0,
+        "C_af": 60000.0,
+        "C_ar": 60000.0,
+        "a_y": 4.0,
+        "g": 9.80665
+      }
+    },
+    "automotive.rollover_threshold": {
+      "title": "Static rollover (tip-over) threshold",
+      "variables": [
+        {
+          "name": "a_y_roll",
+          "unit": "m/s^2",
+          "desc": "lateral acceleration at the rollover threshold",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_y_g",
+          "unit": "",
+          "desc": "rollover threshold in g",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "track",
+          "unit": "m",
+          "desc": "track width",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "centre-of-gravity height",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "standard gravity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "a_y_roll = g*track/(2*h)",
+        "a_y_g = track/(2*h)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "a_y_roll",
+        "a_y_g"
+      ],
+      "assumptions": [
+        "Rigid vehicle, no suspension compliance (the quasi-static tip-over limit). The static stability factor is track/(2h); suspension roll and tyre forces lower the real threshold."
+      ],
+      "method_references": [
+        "Moment balance about the outer tyre contact: a_y/g = track/(2h)"
+      ],
+      "synthetic_example": {
+        "track": 1.5,
+        "h": 0.55,
+        "g": 9.80665
+      }
+    },
+    "automotive.suspension_frequency": {
+      "title": "Ride (bounce) natural frequency with spring and tyre in series",
+      "variables": [
+        {
+          "name": "f_n",
+          "unit": "Hz",
+          "desc": "ride natural frequency",
+          "lo": null,
+          "hi": null,
+          "label": "fn",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_ride",
+          "unit": "N/m",
+          "desc": "ride rate (spring and tyre in series)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_s",
+          "unit": "N/m",
+          "desc": "spring rate at the wheel (spring rate x motion-ratio\u00b2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_t",
+          "unit": "N/m",
+          "desc": "tyre vertical (radial) stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "sprung mass carried by the axle",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "k_ride = k_s*k_t/(k_s + k_t)",
+        "f_n = sqrt(k_ride/m)/(2*pi)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "k_ride",
+        "f_n"
+      ],
+      "assumptions": [
+        "Single corner quarter-car, undamped. Spring and tyre are springs in series, k_ride = k_s\u00b7k_t/(k_s + k_t); k_s is the wheel rate (spring rate \u00d7 motion-ratio\u00b2 for a spring not mounted on the wheel centreline)."
+      ],
+      "method_references": [
+        "Series springs 1/k = 1/k_s + 1/k_t; f_n = (1/2\u03c0)\u00b7\u221a(k/m)"
+      ],
+      "synthetic_example": {
+        "k_s": 25000.0,
+        "k_t": 200000.0,
+        "m": 350.0
+      }
+    },
+    "automotive.fuel_consumption": {
+      "title": "Fuel consumption rate and fuel economy",
+      "variables": [
+        {
+          "name": "m_dot_f",
+          "unit": "kg/s",
+          "desc": "fuel mass flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_dot",
+          "unit": "m^3/s",
+          "desc": "fuel volume flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "economy",
+          "unit": "m/m^3",
+          "desc": "fuel economy (distance per fuel volume)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "bsfc",
+          "unit": "kg/J",
+          "desc": "brake-specific fuel consumption (engine)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "W",
+          "desc": "engine brake power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho_f",
+          "unit": "kg/m^3",
+          "desc": "fuel density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1f",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "vehicle speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "m_dot_f = bsfc*P",
+        "V_dot = m_dot_f/rho_f",
+        "economy = v/V_dot"
+      ],
+      "procedure": null,
+      "outputs": [
+        "m_dot_f",
+        "V_dot",
+        "economy"
+      ],
+      "assumptions": [
+        "Engine bsfc is a user input (\u2248 0.25\u20130.28 kg/kWh typical SI range); the example uses 250 g/kWh. Steady speed; economy = v/V_dot in m per m\u00b3 (multiply by 1e-3 for km/L)."
+      ],
+      "method_references": [
+        "Fuel mass rate = bsfc\u00b7P; economy = distance / fuel volume"
+      ],
+      "synthetic_example": {
+        "bsfc": 6.944444444444444e-08,
+        "P": 40000.0,
+        "rho_f": 745.0,
+        "v": 25.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "automotive-001",
+      "calculator": "automotive.rolling_resistance",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C_rr": 0.012,
+        "N": "12 kN"
+      },
+      "solve_for": [
+        "F_rr"
+      ],
+      "expected_as_specified": {
+        "F_rr": "144 N"
+      },
+      "expected_SI": {
+        "F_rr": 144.0
+      },
+      "actual_SI": {
+        "F_rr": {
+          "value": 144.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.rolling_resistance (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_rr": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.28800000000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = C_rr\u00b7N = 0.012 \u00d7 12000 = 144 N"
+      }
+    },
+    {
+      "id": "automotive-002",
+      "calculator": "automotive.road_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C_rr": 0.015,
+        "W": "15 kN",
+        "theta": "5 deg",
+        "rho": 1.225,
+        "Cd": 0.3,
+        "A": "2.0 m^2",
+        "v": "20 m/s"
+      },
+      "solve_for": [
+        "F_t",
+        "P_req"
+      ],
+      "expected_as_specified": {
+        "F_t": "1678.480 N",
+        "P_req": "33569.60 W"
+      },
+      "expected_SI": {
+        "F_t": 1678.48,
+        "P_req": 33569.6
+      },
+      "actual_SI": {
+        "F_t": {
+          "value": 1678.479948285515,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.road_load (symbolic)"
+        },
+        "P_req": {
+          "value": 33569.598965710305,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc automotive.road_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_t": {
+          "absolute_error": 5.171448492546915e-05,
+          "relative_error": 3.08103074957516e-08,
+          "allowed_absolute_error": 3.35696,
+          "passed": true
+        },
+        "P_req": {
+          "absolute_error": 0.0010342896930524148,
+          "relative_error": 3.081030733319476e-08,
+          "allowed_absolute_error": 67.1392,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "rolling = 0.015\u00b715000\u00b7cos5\u00b0 = 224.144; aero = \u00bd\u00b71.225\u00b70.3\u00b72\u00b7400 = 147.0; grade = 15000\u00b7sin5\u00b0 = 1307.34; F_t = 1678.48 N; P = 1678.48\u00b720 = 33569.6 W"
+      }
+    },
+    {
+      "id": "automotive-003",
+      "calculator": "automotive.road_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C_rr": 0.015,
+        "W": "15 kN",
+        "theta": "-6 deg",
+        "rho": 1.225,
+        "Cd": 0.32,
+        "A": "2.2 m^2",
+        "v": "20 m/s"
+      },
+      "solve_for": [
+        "F_t",
+        "P_req"
+      ],
+      "expected_as_specified": {
+        "F_t": "-1171.680 N"
+      },
+      "expected_SI": {
+        "F_t": -1171.68
+      },
+      "actual_SI": {
+        "F_t": {
+          "value": -1171.6795225569406,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.road_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_t": {
+          "absolute_error": 0.00047744305948071997,
+          "relative_error": 4.0748588307449125e-07,
+          "allowed_absolute_error": 2.34336,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Downhill: rolling = 0.015\u00b715000\u00b7cos(\u22126\u00b0) = 223.83; aero = \u00bd\u00b71.225\u00b70.32\u00b72.2\u00b7400 = 172.48; grade = 15000\u00b7sin(\u22126\u00b0) = \u22121568.0; F_t = 223.83 + 172.48 \u2212 1568.0 = \u22121171.68 N (negative = braking, not drive)"
+      }
+    },
+    {
+      "id": "automotive-004",
+      "calculator": "automotive.gradeability",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F_avail": "3.5 kN",
+        "W": "15 kN",
+        "C_rr": 0.02
+      },
+      "solve_for": [
+        "theta",
+        "grade_pct"
+      ],
+      "expected_as_specified": {
+        "theta": "0.2154589 rad",
+        "grade_pct": 21.88561
+      },
+      "expected_SI": {
+        "theta": 0.2154589,
+        "grade_pct": 21.88561
+      },
+      "actual_SI": {
+        "theta": {
+          "value": 0.21545892603449684,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc automotive.gradeability (symbolic)"
+        },
+        "grade_pct": {
+          "value": 21.885607252429278,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc automotive.gradeability (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "theta": {
+          "absolute_error": 2.60344968361359e-08,
+          "relative_error": 1.2083277523525785e-07,
+          "allowed_absolute_error": 0.0004309178,
+          "passed": true
+        },
+        "grade_pct": {
+          "absolute_error": 2.747570722050341e-06,
+          "relative_error": 1.2554234138551957e-07,
+          "allowed_absolute_error": 0.04377122,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "W\u00b7sin\u03b8 + C_rr\u00b7W\u00b7cos\u03b8 = F_avail \u21d2 \u03b8 = asin((F/W)/\u221a(1+C_rr\u00b2)) \u2212 atan(C_rr) = asin(0.233333/1.000200) \u2212 atan(0.02) = asin(0.233287) \u2212 0.019997 = 0.235456 \u2212 0.019997 = 0.215459 rad; grade = 100\u00b7tan\u03b8 = 21.8856 %"
+      }
+    },
+    {
+      "id": "automotive-005",
+      "calculator": "automotive.gradeability",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "theta": "0.21545892603449684 rad",
+        "W": "15 kN",
+        "C_rr": 0.02
+      },
+      "solve_for": [
+        "F_avail",
+        "grade_pct"
+      ],
+      "expected_as_specified": {
+        "F_avail": "3.5 kN"
+      },
+      "expected_SI": {
+        "F_avail": 3500.0
+      },
+      "actual_SI": {
+        "F_avail": {
+          "value": 3500.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.gradeability (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_avail": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 7.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: F_avail = W\u00b7\u221a(1+C_rr\u00b2)\u00b7sin(\u03b8 + atan(C_rr)) = 15000\u00b71.000200\u00b7sin(0.235456) = 15003\u00b70.233287 = 3500 N"
+      }
+    },
+    {
+      "id": "automotive-006",
+      "calculator": "automotive.acceleration",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F_t": "4 kN",
+        "F_rr": "300 N",
+        "F_d": "500 N",
+        "k_m": 1.05,
+        "m": "1400 kg"
+      },
+      "solve_for": [
+        "a"
+      ],
+      "expected_as_specified": {
+        "a": "2.176871 m/s^2"
+      },
+      "expected_SI": {
+        "a": 2.176871
+      },
+      "actual_SI": {
+        "a": {
+          "value": 2.17687074829932,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc automotive.acceleration (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a": {
+          "absolute_error": 2.517006798541388e-07,
+          "relative_error": 1.1562498643885597e-07,
+          "allowed_absolute_error": 0.004353742,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = (4000 \u2212 300 \u2212 500)/(1.05\u00b71400) = 3200/1470 = 2.17687 m/s\u00b2"
+      }
+    },
+    {
+      "id": "automotive-007",
+      "calculator": "automotive.top_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "torque_curve": [
+          [
+            1000,
+            150
+          ],
+          [
+            6000,
+            150
+          ]
+        ],
+        "gear_ratios": [
+          12,
+          6,
+          3
+        ],
+        "r_wheel": 0.3,
+        "m": 1000,
+        "Cd": 0.3,
+        "A": 2.0,
+        "C_rr": 0.01,
+        "rho": 1.2,
+        "eta_driveline": 1.0,
+        "g": 9.81
+      },
+      "solve_for": [
+        "v_max",
+        "P_max_wheel",
+        "gear_at_top",
+        "omega_e_top"
+      ],
+      "expected_as_specified": {
+        "v_max": "62.40326 m/s",
+        "P_max_wheel": "93604.89 W",
+        "gear_at_top": 3,
+        "omega_e_top": "624.0326 rad/s"
+      },
+      "expected_SI": {
+        "v_max": 62.40326,
+        "P_max_wheel": 93604.89,
+        "gear_at_top": 3.0,
+        "omega_e_top": 624.0326
+      },
+      "actual_SI": {
+        "v_max": {
+          "value": 62.40325846193184,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc automotive.top_speed (procedure)"
+        },
+        "P_max_wheel": {
+          "value": 93604.88769289776,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc automotive.top_speed (procedure)"
+        },
+        "gear_at_top": {
+          "value": 3.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc automotive.top_speed (procedure)"
+        },
+        "omega_e_top": {
+          "value": 624.0325846193184,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc automotive.top_speed (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "v_max": {
+          "absolute_error": 1.5380681617216396e-06,
+          "relative_error": 2.4647240572393806e-08,
+          "allowed_absolute_error": 0.006240326000000001,
+          "passed": true
+        },
+        "P_max_wheel": {
+          "absolute_error": 0.0023071022442309186,
+          "relative_error": 2.464724059000463e-08,
+          "allowed_absolute_error": 9.360489000000001,
+          "passed": true
+        },
+        "gear_at_top": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00030000000000000003,
+          "passed": true
+        },
+        "omega_e_top": {
+          "absolute_error": 1.5380681588794687e-05,
+          "relative_error": 2.4647240526848577e-08,
+          "allowed_absolute_error": 0.06240326,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Flat torque curve: in top gear (i=3) tractive force F = \u03b7Ti/r = 150\u00b73/0.3 = 1500 N constant. Balance 1500 = 0.01\u00b71000\u00b79.81 + \u00bd\u00b71.2\u00b70.3\u00b72\u00b7v\u00b2 = 98.1 + 0.36v\u00b2 \u2192 v = sqrt(1401.9/0.36) = 62.4033 m/s (below the 62.83 m/s redline). Lower gears are redline-limited at 15.7 and 31.4 m/s, so gear 3 wins. P = 1500\u00b762.4033 = 93604.9 W; \u03c9e = v\u00b7i/r = 624.03 rad/s"
+      }
+    },
+    {
+      "id": "automotive-008",
+      "calculator": "automotive.top_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "torque_curve": [
+          [
+            1000,
+            5
+          ],
+          [
+            4000,
+            320
+          ],
+          [
+            6000,
+            320
+          ]
+        ],
+        "gear_ratios": [
+          10,
+          6,
+          3.2
+        ],
+        "r_wheel": 0.3,
+        "m": 1200,
+        "Cd": 0.25,
+        "A": 1.8,
+        "C_rr": 0.01,
+        "rho": 1.225,
+        "eta_driveline": 0.9,
+        "g": 9.81
+      },
+      "solve_for": [
+        "v_max",
+        "P_max_wheel",
+        "gear_at_top",
+        "omega_e_top"
+      ],
+      "expected_as_specified": {
+        "v_max": "58.90486 m/s",
+        "gear_at_top": 3
+      },
+      "expected_SI": {
+        "v_max": 58.90486,
+        "gear_at_top": 3.0
+      },
+      "actual_SI": {
+        "v_max": {
+          "value": 58.90486225480862,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc automotive.top_speed (procedure)"
+        },
+        "gear_at_top": {
+          "value": 3.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc automotive.top_speed (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "v_max": {
+          "absolute_error": 2.254808620705262e-06,
+          "relative_error": 3.827882148782396e-08,
+          "allowed_absolute_error": 0.005890486,
+          "passed": true
+        },
+        "gear_at_top": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00030000000000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Peaky curve. Gear 3 (i=3.2) reaches its redline at v = 6000\u00b72\u03c0/60\u00b70.3/3.2 = 58.9049 m/s, where the engine still makes 320 N\u00b7m: tractive 0.9\u00b7320\u00b73.2/0.3 = 3072 N vs road load 0.01\u00b71200\u00b79.81 + \u00bd\u00b71.225\u00b70.25\u00b71.8\u00b758.9049\u00b2 = 1074 N, so the top speed is the gear-3 redline (dense sweep of the best-gear force envelope; gears 1 and 2 redline at 18.85 and 31.42 m/s)"
+      }
+    },
+    {
+      "id": "automotive-009",
+      "calculator": "automotive.top_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "torque_curve": [
+          [
+            1000,
+            300
+          ],
+          [
+            7000,
+            300
+          ]
+        ],
+        "gear_ratios": [
+          10,
+          7,
+          5.5
+        ],
+        "r_wheel": 0.3,
+        "m": 1200,
+        "Cd": 0.25,
+        "A": 1.8,
+        "C_rr": 0.01,
+        "rho": 1.225,
+        "eta_driveline": 0.9,
+        "g": 9.81
+      },
+      "solve_for": [
+        "v_max",
+        "P_max_wheel",
+        "gear_at_top",
+        "omega_e_top"
+      ],
+      "expected_as_specified": {
+        "v_max": "39.98391 m/s",
+        "P_max_wheel": "197920.3 W",
+        "gear_at_top": 3,
+        "omega_e_top": "733.0383 rad/s"
+      },
+      "expected_SI": {
+        "v_max": 39.98391,
+        "P_max_wheel": 197920.3,
+        "gear_at_top": 3.0,
+        "omega_e_top": 733.0383
+      },
+      "actual_SI": {
+        "v_max": {
+          "value": 39.98390650023372,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc automotive.top_speed (procedure)"
+        },
+        "P_max_wheel": {
+          "value": 197920.33717615693,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc automotive.top_speed (procedure)"
+        },
+        "gear_at_top": {
+          "value": 3.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc automotive.top_speed (procedure)"
+        },
+        "omega_e_top": {
+          "value": 733.0382858376183,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc automotive.top_speed (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "v_max": {
+          "absolute_error": 3.4997662794467033e-06,
+          "relative_error": 8.752936567350974e-08,
+          "allowed_absolute_error": 0.0039983910000000004,
+          "passed": true
+        },
+        "P_max_wheel": {
+          "absolute_error": 0.037176156940404326,
+          "relative_error": 1.878339763046253e-07,
+          "allowed_absolute_error": 19.79203,
+          "passed": true
+        },
+        "gear_at_top": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00030000000000000003,
+          "passed": true
+        },
+        "omega_e_top": {
+          "absolute_error": 1.4162381717142125e-05,
+          "relative_error": 1.9320111537340032e-08,
+          "allowed_absolute_error": 0.07330383000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Flat 300 N\u00b7m to 7000 rpm. Top gear (i=5.5) reaches its redline at v = 7000\u00b72\u03c0/60\u00b70.3/5.5 = 39.9839 m/s with tractive 0.9\u00b7300\u00b75.5/0.3 = 4950 N vs road load 0.01\u00b71200\u00b79.81 + \u00bd\u00b71.225\u00b70.25\u00b71.8\u00b739.9839\u00b2 = 558.4 N, so it is redline-limited (dense sweep confirms 39.9839 m/s in gear 3); P = 4950\u00b739.9839 = 197920 W; \u03c9e = 7000\u00b72\u03c0/60 = 733.04 rad/s"
+      }
+    },
+    {
+      "id": "automotive-010",
+      "calculator": "automotive.gear_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T_in": "200 N*m",
+        "omega_in": "1500 rpm",
+        "i": 4,
+        "eta": 0.95
+      },
+      "solve_for": [
+        "T_out",
+        "omega_out"
+      ],
+      "expected_as_specified": {
+        "T_out": "760 N*m",
+        "omega_out": "39.26991 rad/s"
+      },
+      "expected_SI": {
+        "T_out": 760.0,
+        "omega_out": 39.26991
+      },
+      "actual_SI": {
+        "T_out": {
+          "value": 760.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc automotive.gear_ratio (symbolic)"
+        },
+        "omega_out": {
+          "value": 39.269908169872416,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc automotive.gear_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T_out": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.52,
+          "passed": true
+        },
+        "omega_out": {
+          "absolute_error": 1.8301275872545375e-06,
+          "relative_error": 4.6603814148148986e-08,
+          "allowed_absolute_error": 0.07853982000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T_out = 200\u00b74\u00b70.95 = 760 N\u00b7m; \u03c9_out = (1500\u00b72\u03c0/60)/4 = 157.080/4 = 39.2699 rad/s"
+      }
+    },
+    {
+      "id": "automotive-011",
+      "calculator": "automotive.vehicle_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega_e": "3000 rpm",
+        "r_wheel": "0.3 m",
+        "i_total": 4
+      },
+      "solve_for": [
+        "v"
+      ],
+      "expected_as_specified": {
+        "v": "23.56194 m/s"
+      },
+      "expected_SI": {
+        "v": 23.56194
+      },
+      "actual_SI": {
+        "v": {
+          "value": 23.56194490192345,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc automotive.vehicle_speed (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v": {
+          "absolute_error": 4.901923450262302e-06,
+          "relative_error": 2.0804413602030658e-07,
+          "allowed_absolute_error": 0.04712388,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c9e = 314.159 rad/s; v = 314.159\u00b70.3/4 = 23.5619 m/s"
+      }
+    },
+    {
+      "id": "automotive-012",
+      "calculator": "automotive.tractive_effort",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T_e": "300 N*m",
+        "i_g": 3.0,
+        "i_d": 4.5,
+        "eta": 0.92,
+        "r_wheel": "0.32 m"
+      },
+      "solve_for": [
+        "F_t"
+      ],
+      "expected_as_specified": {
+        "F_t": "11643.75 N"
+      },
+      "expected_SI": {
+        "F_t": 11643.75
+      },
+      "actual_SI": {
+        "F_t": {
+          "value": 11643.75,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.tractive_effort (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 23.2875,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F_t = T\u00b7i_g\u00b7i_d\u00b7\u03b7/r = 300\u00b73\u00b74.5\u00b70.92/0.32 = 3726/0.32 = 11643.75 N"
+      }
+    },
+    {
+      "id": "automotive-013",
+      "calculator": "automotive.engine_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P_wheel": "35 kW",
+        "eta": 0.87
+      },
+      "solve_for": [
+        "P_eng"
+      ],
+      "expected_as_specified": {
+        "P_eng": "40229.89 W"
+      },
+      "expected_SI": {
+        "P_eng": 40229.89
+      },
+      "actual_SI": {
+        "P_eng": {
+          "value": 40229.88505747126,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc automotive.engine_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P_eng": {
+          "absolute_error": 0.004942528736137319,
+          "relative_error": 1.2285712777582337e-07,
+          "allowed_absolute_error": 80.45978,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P_eng = P_wheel/\u03b7 = 35000/0.87 = 40229.9 W"
+      }
+    },
+    {
+      "id": "automotive-014",
+      "calculator": "automotive.braking_distance",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.8,
+        "g": 9.81,
+        "v": "25 m/s",
+        "t_r": "0.8 s"
+      },
+      "solve_for": [
+        "a_dec",
+        "d"
+      ],
+      "expected_as_specified": {
+        "a_dec": "7.848 m/s^2",
+        "d": "59.81906 m"
+      },
+      "expected_SI": {
+        "a_dec": 7.848,
+        "d": 59.81906
+      },
+      "actual_SI": {
+        "a_dec": {
+          "value": 7.848000000000001,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc automotive.braking_distance (symbolic)"
+        },
+        "d": {
+          "value": 59.8190621814475,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc automotive.braking_distance (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a_dec": {
+          "absolute_error": 8.881784197001252e-16,
+          "relative_error": 1.13172581511229e-16,
+          "allowed_absolute_error": 0.015696,
+          "passed": true
+        },
+        "d": {
+          "absolute_error": 2.1814474990833332e-06,
+          "relative_error": 3.64674319369668e-08,
+          "allowed_absolute_error": 0.11963812,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = 0.8\u00b79.81 = 7.848 m/s\u00b2; d = 25\u00b70.8 + 25\u00b2/(2\u00b77.848) = 20 + 39.8191 = 59.8191 m"
+      }
+    },
+    {
+      "id": "automotive-015",
+      "calculator": "automotive.braking_distance",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.8,
+        "g": 9.81,
+        "d": "59.8190621814475 m",
+        "t_r": "0.8 s"
+      },
+      "solve_for": [
+        "v",
+        "a_dec"
+      ],
+      "expected_as_specified": {
+        "v": "25 m/s"
+      },
+      "expected_SI": {
+        "v": 25.0
+      },
+      "actual_SI": {
+        "v": {
+          "value": 25.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc automotive.braking_distance (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: v = \u03bc\u00b7g\u00b7(\u2212t_r + \u221a(t_r\u00b2 + 2d/(\u03bc\u00b7g))) = 7.848\u00b7(\u22120.8 + \u221a(0.64 + 15.2447)) = 7.848\u00b7(\u22120.8 + 3.9853) = 25.0 m/s"
+      }
+    },
+    {
+      "id": "automotive-016",
+      "calculator": "automotive.weight_transfer",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "12 kN",
+        "l_f": "1.2 m",
+        "l_r": "1.4 m",
+        "h": "0.5 m",
+        "a": "2.5 m/s^2",
+        "g": 9.81
+      },
+      "solve_for": [
+        "delta_W",
+        "W_f_dyn",
+        "W_r_dyn"
+      ],
+      "expected_as_specified": {
+        "delta_W": "588.0969 N",
+        "W_f_dyn": "5873.442 N",
+        "W_r_dyn": "6126.558 N"
+      },
+      "expected_SI": {
+        "delta_W": 588.0969,
+        "W_f_dyn": 5873.442,
+        "W_r_dyn": 6126.558
+      },
+      "actual_SI": {
+        "delta_W": {
+          "value": 588.0969183721477,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.weight_transfer (symbolic)"
+        },
+        "W_f_dyn": {
+          "value": 5873.441543166314,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.weight_transfer (symbolic)"
+        },
+        "W_r_dyn": {
+          "value": 6126.558456833686,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.weight_transfer (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "delta_W": {
+          "absolute_error": 1.8372147678746842e-05,
+          "relative_error": 3.124000088887876e-08,
+          "allowed_absolute_error": 1.1761938,
+          "passed": true
+        },
+        "W_f_dyn": {
+          "absolute_error": 0.00045683368625759613,
+          "relative_error": 7.777955179562446e-08,
+          "allowed_absolute_error": 11.746884,
+          "passed": true
+        },
+        "W_r_dyn": {
+          "absolute_error": 0.00045683368625759613,
+          "relative_error": 7.456612444664625e-08,
+          "allowed_absolute_error": 12.253116,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u0394W = 12000\u00b72.5\u00b70.5/(9.81\u00b72.6) = 15000/25.506 = 588.097 N; W_f = 12000\u00b71.4/2.6 \u2212 \u0394W = 6461.54 \u2212 588.10 = 5873.44 N; W_r = 12000\u00b71.2/2.6 + \u0394W = 5538.46 + 588.10 = 6126.56 N"
+      }
+    },
+    {
+      "id": "automotive-017",
+      "calculator": "automotive.weight_transfer",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "12 kN",
+        "l_f": "1.2 m",
+        "l_r": "1.4 m",
+        "h": "0.5 m",
+        "a": "-5 m/s^2",
+        "g": 9.81
+      },
+      "solve_for": [
+        "delta_W",
+        "W_f_dyn",
+        "W_r_dyn"
+      ],
+      "expected_as_specified": {
+        "delta_W": "-1176.194 N"
+      },
+      "expected_SI": {
+        "delta_W": -1176.194
+      },
+      "actual_SI": {
+        "delta_W": {
+          "value": -1176.1938367442954,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.weight_transfer (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "delta_W": {
+          "absolute_error": 0.0001632557045923022,
+          "relative_error": 1.3879998077893802e-07,
+          "allowed_absolute_error": 2.352388,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Braking is negative acceleration: \u0394W = 12000\u00b7(\u22125)\u00b70.5/(9.81\u00b72.6) = \u22121176.19 N (forward transfer, front axle gains)"
+      }
+    },
+    {
+      "id": "automotive-018",
+      "calculator": "automotive.brake_distribution",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "12 kN",
+        "l_f": "1.2 m",
+        "l_r": "1.4 m",
+        "h": "0.5 m",
+        "mu": 0.85
+      },
+      "solve_for": [
+        "a_g",
+        "delta_W",
+        "W_f_dyn",
+        "W_r_dyn",
+        "F_bf",
+        "F_br",
+        "front_frac"
+      ],
+      "expected_as_specified": {
+        "a_g": 0.85,
+        "delta_W": "1961.538 N",
+        "W_f_dyn": "8423.077 N",
+        "W_r_dyn": "3576.923 N",
+        "F_bf": "7159.615 N",
+        "F_br": "3040.385 N",
+        "front_frac": 0.7019231
+      },
+      "expected_SI": {
+        "a_g": 0.85,
+        "delta_W": 1961.538,
+        "W_f_dyn": 8423.077,
+        "W_r_dyn": 3576.923,
+        "F_bf": 7159.615,
+        "F_br": 3040.385,
+        "front_frac": 0.7019231
+      },
+      "actual_SI": {
+        "a_g": {
+          "value": 0.85,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc automotive.brake_distribution (symbolic)"
+        },
+        "delta_W": {
+          "value": 1961.538461538462,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.brake_distribution (symbolic)"
+        },
+        "W_f_dyn": {
+          "value": 8423.076923076924,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.brake_distribution (symbolic)"
+        },
+        "W_r_dyn": {
+          "value": 3576.9230769230776,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.brake_distribution (symbolic)"
+        },
+        "F_bf": {
+          "value": 7159.615384615386,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.brake_distribution (symbolic)"
+        },
+        "F_br": {
+          "value": 3040.384615384616,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.brake_distribution (symbolic)"
+        },
+        "front_frac": {
+          "value": 0.701923076923077,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc automotive.brake_distribution (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a_g": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0017,
+          "passed": true
+        },
+        "delta_W": {
+          "absolute_error": 0.00046153846187735326,
+          "relative_error": 2.3529417318316202e-07,
+          "allowed_absolute_error": 3.923076,
+          "passed": true
+        },
+        "W_f_dyn": {
+          "absolute_error": 7.69230755395256e-05,
+          "relative_error": 9.132419843665872e-09,
+          "allowed_absolute_error": 16.846154,
+          "passed": true
+        },
+        "W_r_dyn": {
+          "absolute_error": 7.692307781326235e-05,
+          "relative_error": 2.1505377055436295e-08,
+          "allowed_absolute_error": 7.153846,
+          "passed": true
+        },
+        "F_bf": {
+          "absolute_error": 0.0003846153858830803,
+          "relative_error": 5.372012124717325e-08,
+          "allowed_absolute_error": 14.31923,
+          "passed": true
+        },
+        "F_br": {
+          "absolute_error": 0.0003846153840640909,
+          "relative_error": 1.2650219760460958e-07,
+          "allowed_absolute_error": 6.08077,
+          "passed": true
+        },
+        "front_frac": {
+          "absolute_error": 2.3076923039155872e-08,
+          "relative_error": 3.287671119408361e-08,
+          "allowed_absolute_error": 0.0014038462000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L = 2.6; a_g = \u03bc = 0.85; \u0394W = 12000\u00b70.85\u00b70.5/2.6 = 1961.54 N; W_f = 12000\u00b71.4/2.6 + 1961.54 = 8423.08 N; W_r = 12000\u00b71.2/2.6 \u2212 1961.54 = 3576.92 N; F_bf = 0.85\u00b78423.08 = 7159.6 N; F_br = 0.85\u00b73576.92 = 3040.4 N; front_frac = (1.4 + 0.85\u00b70.5)/2.6 = 0.70192"
+      }
+    },
+    {
+      "id": "automotive-019",
+      "calculator": "automotive.brake_distribution",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "15 kN",
+        "l_f": "1.0 m",
+        "l_r": "1.6 m",
+        "h": "0.6 m",
+        "mu": 0.7
+      },
+      "solve_for": [
+        "a_g",
+        "delta_W",
+        "W_f_dyn",
+        "W_r_dyn",
+        "F_bf",
+        "F_br",
+        "front_frac"
+      ],
+      "expected_as_specified": {
+        "front_frac": 0.7769231,
+        "F_bf": "8157.692 N",
+        "F_br": "2342.308 N"
+      },
+      "expected_SI": {
+        "front_frac": 0.7769231,
+        "F_bf": 8157.692,
+        "F_br": 2342.308
+      },
+      "actual_SI": {
+        "front_frac": {
+          "value": 0.7769230769230769,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc automotive.brake_distribution (symbolic)"
+        },
+        "F_bf": {
+          "value": 8157.692307692308,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.brake_distribution (symbolic)"
+        },
+        "F_br": {
+          "value": 2342.3076923076924,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.brake_distribution (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "front_frac": {
+          "absolute_error": 2.3076923039155872e-08,
+          "relative_error": 2.9702969366152032e-08,
+          "allowed_absolute_error": 0.0015538462,
+          "passed": true
+        },
+        "F_bf": {
+          "absolute_error": 0.0003076923076150706,
+          "relative_error": 3.7718058933221626e-08,
+          "allowed_absolute_error": 16.315384,
+          "passed": true
+        },
+        "F_br": {
+          "absolute_error": 0.0003076923076150706,
+          "relative_error": 1.3136287269439827e-07,
+          "allowed_absolute_error": 4.684616,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Second geometry: L = 2.6; \u0394W = 15000\u00b70.7\u00b70.6/2.6 = 2423.08 N; W_f = 15000\u00b71.6/2.6 + 2423.08 = 11653.85 N; W_r = 15000\u00b71.0/2.6 \u2212 2423.08 = 3346.15 N; F_bf = 0.7\u00b711653.85 = 8157.69 N; F_br = 0.7\u00b73346.15 = 2342.31 N; front_frac = (1.6 + 0.7\u00b70.6)/2.6 = 0.77692"
+      }
+    },
+    {
+      "id": "automotive-020",
+      "calculator": "automotive.brake_distribution",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "12 kN",
+        "l_f": "1.2 m",
+        "l_r": "1.4 m",
+        "h": "0.5 m",
+        "front_frac": 0.7019231
+      },
+      "solve_for": [
+        "mu",
+        "a_g",
+        "delta_W",
+        "W_f_dyn",
+        "W_r_dyn",
+        "F_bf",
+        "F_br"
+      ],
+      "expected_as_specified": {
+        "mu": 0.85
+      },
+      "expected_SI": {
+        "mu": 0.85
+      },
+      "actual_SI": {
+        "mu": {
+          "value": 0.8500001199999998,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc automotive.brake_distribution (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "mu": {
+          "absolute_error": 1.19999999825815e-07,
+          "relative_error": 1.4117647038331177e-07,
+          "allowed_absolute_error": 0.0017,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: \u03bc = (front_frac\u00b7L \u2212 l_r)/h = (0.701923\u00b72.6 \u2212 1.4)/0.5 = (1.825 \u2212 1.4)/0.5 = 0.85 (front_frac given, mu and the remaining outputs solved)"
+      }
+    },
+    {
+      "id": "automotive-021",
+      "calculator": "automotive.tyre_lateral_force",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C_alpha": "70 kN/rad",
+        "alpha": "3 deg"
+      },
+      "solve_for": [
+        "F_y"
+      ],
+      "expected_as_specified": {
+        "F_y": "3665.191 N"
+      },
+      "expected_SI": {
+        "F_y": 3665.191
+      },
+      "actual_SI": {
+        "F_y": {
+          "value": 3665.191429188092,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc automotive.tyre_lateral_force (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_y": {
+          "absolute_error": 0.00042918809231196065,
+          "relative_error": 1.1709842469654669e-07,
+          "allowed_absolute_error": 7.330382,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F_y = C_\u03b1\u00b7\u03b1 = 70000\u00b73\u00b0 = 70000\u00b70.0523599 = 3665.19 N"
+      }
+    },
+    {
+      "id": "automotive-022",
+      "calculator": "automotive.understeer_gradient",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W_f": "8 kN",
+        "W_r": "6 kN",
+        "C_af": "50 kN/rad",
+        "C_ar": "50 kN/rad",
+        "a_y": "3 m/s^2",
+        "g": 9.81
+      },
+      "solve_for": [
+        "alpha_f",
+        "alpha_r",
+        "K_us"
+      ],
+      "expected_as_specified": {
+        "alpha_f": "0.04892966 rad",
+        "alpha_r": "0.03669725 rad",
+        "K_us": "0.04 rad"
+      },
+      "expected_SI": {
+        "alpha_f": 0.04892966,
+        "alpha_r": 0.03669725,
+        "K_us": 0.04
+      },
+      "actual_SI": {
+        "alpha_f": {
+          "value": 0.04892966360856269,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc automotive.understeer_gradient (symbolic)"
+        },
+        "alpha_r": {
+          "value": 0.03669724770642202,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc automotive.understeer_gradient (symbolic)"
+        },
+        "K_us": {
+          "value": 0.04,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc automotive.understeer_gradient (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "alpha_f": {
+          "absolute_error": 3.608562691714834e-09,
+          "relative_error": 7.375000545098483e-08,
+          "allowed_absolute_error": 9.785932000000001e-05,
+          "passed": true
+        },
+        "alpha_r": {
+          "absolute_error": 2.293577980316819e-09,
+          "relative_error": 6.249999605738355e-08,
+          "allowed_absolute_error": 7.33945e-05,
+          "passed": true
+        },
+        "K_us": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 8e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b1f = 8000\u00b73/(9.81\u00b750000) = 24000/490500 = 0.048930 rad; \u03b1r = 18000/490500 = 0.036697 rad; K_us = 8000/50000 \u2212 6000/50000 = 0.04 rad"
+      }
+    },
+    {
+      "id": "automotive-023",
+      "calculator": "automotive.understeer_gradient",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W_f": "5 kN",
+        "W_r": "9 kN",
+        "C_af": "50 kN/rad",
+        "C_ar": "50 kN/rad",
+        "a_y": "3 m/s^2",
+        "g": 9.81
+      },
+      "solve_for": [
+        "alpha_f",
+        "alpha_r",
+        "K_us"
+      ],
+      "expected_as_specified": {
+        "K_us": "-0.08 rad"
+      },
+      "expected_SI": {
+        "K_us": -0.08
+      },
+      "actual_SI": {
+        "K_us": {
+          "value": -0.08,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc automotive.understeer_gradient (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "K_us": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00016,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Oversteer case: K_us = 5000/50000 \u2212 9000/50000 = \u22120.08 rad (negative = oversteer, exercises the signed output)"
+      }
+    },
+    {
+      "id": "automotive-024",
+      "calculator": "automotive.rollover_threshold",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "track": "1.4 m",
+        "h": "0.5 m",
+        "g": 9.81
+      },
+      "solve_for": [
+        "a_y_roll",
+        "a_y_g"
+      ],
+      "expected_as_specified": {
+        "a_y_roll": "13.734 m/s^2",
+        "a_y_g": 1.4
+      },
+      "expected_SI": {
+        "a_y_roll": 13.734,
+        "a_y_g": 1.4
+      },
+      "actual_SI": {
+        "a_y_roll": {
+          "value": 13.734,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc automotive.rollover_threshold (symbolic)"
+        },
+        "a_y_g": {
+          "value": 1.4,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc automotive.rollover_threshold (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a_y_roll": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.027468,
+          "passed": true
+        },
+        "a_y_g": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0028,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a_y = 9.81\u00b71.4/(2\u00b70.5) = 13.734 m/s\u00b2; in g: 1.4/1.0 = 1.4"
+      }
+    },
+    {
+      "id": "automotive-025",
+      "calculator": "automotive.suspension_frequency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k_s": "25 kN/m",
+        "k_t": "200 kN/m",
+        "m": "350 kg"
+      },
+      "solve_for": [
+        "k_ride",
+        "f_n"
+      ],
+      "expected_as_specified": {
+        "k_ride": "22222.22 N/m",
+        "f_n": "1.268177 Hz"
+      },
+      "expected_SI": {
+        "k_ride": 22222.22,
+        "f_n": 1.268177
+      },
+      "actual_SI": {
+        "k_ride": {
+          "value": 22222.222222222223,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc automotive.suspension_frequency (symbolic)"
+        },
+        "f_n": {
+          "value": 1.2681769420028044,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc automotive.suspension_frequency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "k_ride": {
+          "absolute_error": 0.002222222221462289,
+          "relative_error": 1.0000000996580399e-07,
+          "allowed_absolute_error": 44.44444,
+          "passed": true
+        },
+        "f_n": {
+          "absolute_error": 5.799719571264461e-08,
+          "relative_error": 4.5732729510663425e-08,
+          "allowed_absolute_error": 0.002536354,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "k_ride = 25000\u00b7200000/225000 = 22222.2 N/m; f_n = \u221a(22222.2/350)/(2\u03c0) = 7.9680/6.28319 = 1.26818 Hz"
+      }
+    },
+    {
+      "id": "automotive-026",
+      "calculator": "automotive.fuel_consumption",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "bsfc": "220 g/kWh",
+        "P": "50 kW",
+        "rho_f": "750 kg/m^3",
+        "v": "20 m/s"
+      },
+      "solve_for": [
+        "m_dot_f",
+        "V_dot",
+        "economy"
+      ],
+      "expected_as_specified": {
+        "m_dot_f": "0.003055556 kg/s",
+        "V_dot": "4.074074e-6 m^3/s",
+        "economy": "4909091 m/m^3"
+      },
+      "expected_SI": {
+        "m_dot_f": 0.003055556,
+        "V_dot": 4.074074e-06,
+        "economy": 4909091.0
+      },
+      "actual_SI": {
+        "m_dot_f": {
+          "value": 0.0030555555555555557,
+          "unit": "kg/s",
+          "kind": "derived",
+          "method": "mechcalc automotive.fuel_consumption (symbolic)"
+        },
+        "V_dot": {
+          "value": 4.074074074074074e-06,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc automotive.fuel_consumption (symbolic)"
+        },
+        "economy": {
+          "value": 4909090.909090909,
+          "unit": "m/m^3",
+          "kind": "derived",
+          "method": "mechcalc automotive.fuel_consumption (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "m_dot_f": {
+          "absolute_error": 4.444444443550688e-10,
+          "relative_error": 1.4545452426827354e-07,
+          "allowed_absolute_error": 6.111112e-06,
+          "passed": true
+        },
+        "V_dot": {
+          "absolute_error": 7.407407393494663e-14,
+          "relative_error": 1.8181818478247235e-08,
+          "allowed_absolute_error": 8.148148e-09,
+          "passed": true
+        },
+        "economy": {
+          "absolute_error": 0.09090909082442522,
+          "relative_error": 1.8518518158336283e-08,
+          "allowed_absolute_error": 9818.182,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "bsfc = 220/3.6e9 = 6.1111e-8 kg/J; m_dot = 6.1111e-8\u00b750000 = 3.05556e-3 kg/s; V_dot = 3.05556e-3/750 = 4.07407e-6 m\u00b3/s; economy = 20/4.07407e-6 = 4.90909e6 m/m\u00b3"
+      }
+    }
+  ],
+  "passed": 26,
+  "failed": 0
+}

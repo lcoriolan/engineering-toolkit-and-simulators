@@ -1,0 +1,556 @@
+{
+  "section": "metrology",
+  "cases": [
+    {
+      "calc": "metrology.measurement_stats",
+      "inputs": {
+        "measurements": [
+          0.01,
+          0.011,
+          0.012
+        ]
+      },
+      "expect": {
+        "mean": "11 mm",
+        "sd": "1 mm",
+        "range": "2 mm",
+        "n": 3,
+        "min": "10 mm",
+        "max": "12 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "mean = 0.011; deviations −1, 0, +1 mm; var = 2e-6/2 = 1e-6 → sd = 1e-3 m; range = 0.002; n = 3"
+      }
+    },
+    {
+      "calc": "metrology.measurement_uncertainty",
+      "inputs": {
+        "u_A": "0.5 mm",
+        "u_B": "0.3 mm",
+        "k": 2.0
+      },
+      "expect": {
+        "u_c": "0.583095 mm",
+        "U": "1.16619 mm"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "u_c = √(0.5² + 0.3²) = √0.34 = 0.583095 mm; U = 2·0.583095 = 1.16619 mm"
+      }
+    },
+    {
+      "calc": "metrology.measurement_uncertainty",
+      "inputs": {
+        "u_c": "0.583095 mm",
+        "u_B": "0.3 mm",
+        "k": 2.0
+      },
+      "solve_for": [
+        "u_A",
+        "U"
+      ],
+      "expect": {
+        "u_A": "0.5 mm",
+        "U": "1.16619 mm"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "u_A = √(u_c² − u_B²) = √(0.34 − 0.09) = 0.5 mm; U = k·u_c = 2·0.583095 = 1.16619 mm"
+      }
+    },
+    {
+      "calc": "metrology.gauge_rr",
+      "inputs": {
+        "n_trials": 2,
+        "n_appraisers": 3,
+        "n_parts": 5,
+        "k_sigma": 5.15,
+        "R_bar": "5 um",
+        "X_bar_diff": "10 um",
+        "R_p": "50 um",
+        "tol": "0.5 mm"
+      },
+      "expect": {
+        "EV": "22.82034 um",
+        "AV": "25.95716 um",
+        "GRR": "34.56215 um",
+        "PV": "103.7785 um",
+        "TV": "109.3824 um",
+        "pct_GRR_TV": 31.597532,
+        "pct_GRR_Tol": 6.91243,
+        "ndc": 4.233755
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "K1 uses the plain d2(2) = 1.128379 → K1 = 5.15/1.128379 = 4.564069. The single-range constants use d2* = √(d2² + d3²): d2*(3) = √(1.692569² + 0.888368²) = √3.653988 = 1.911540 → K2 = 5.15/1.911540 = 2.694162; d2*(5) = √(2.325929² + 0.864082²) = √6.156584 = 2.481246 → K3 = 5.15/2.481246 = 2.075570. EV = 5e-6·4.564069 = 2.28203e-5; AV = √((1e-5·2.694162)² − EV²/10) = √(7.25851e-10 − 5.20768e-11) = 2.59572e-5; GRR = √(EV²+AV²) = 3.45622e-5; PV = 5e-5·2.075570 = 1.03778e-4; TV = √(GRR²+PV²) = 1.09382e-4; %TV = 31.5975; %Tol = 6.91243; ndc = 1.41·PV/GRR = 4.23375"
+      }
+    },
+    {
+      "calc": "metrology.cp_cpk",
+      "inputs": {
+        "mu": "10 mm",
+        "sigma": "0.1 mm",
+        "USL": "10.4 mm",
+        "LSL": "9.6 mm"
+      },
+      "expect": {
+        "Cp": 1.3333333,
+        "Cpk": 1.3333333
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Cp = 0.8/(6·0.1) = 1.3333; Cpk = min(0.4, 0.4)/(3·0.1) = 1.3333 (centered)"
+      }
+    },
+    {
+      "calc": "metrology.cp_cpk",
+      "inputs": {
+        "mu": "10.2 mm",
+        "sigma": "0.1 mm",
+        "USL": "10.4 mm",
+        "LSL": "9.6 mm"
+      },
+      "expect": {
+        "Cp": 1.3333333,
+        "Cpk": 0.6666667
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Mean shifted toward USL: Cp = 1.3333 (unchanged); Cpk = min(0.2, 0.6)/(0.3) = 0.6667"
+      }
+    },
+    {
+      "calc": "metrology.cp_cpk",
+      "inputs": {
+        "mu": "10.6 mm",
+        "sigma": "0.1 mm",
+        "USL": "10.4 mm",
+        "LSL": "9.6 mm"
+      },
+      "expect": {
+        "Cp": 1.3333333,
+        "Cpk": -0.6666667
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Mean OUTSIDE the spec (μ > USL): Cpk = min(USL−μ, μ−LSL)/(3σ) = min(−0.2, 1.0)/0.3 = −0.6667 (signed index)"
+      }
+    },
+    {
+      "calc": "metrology.pp_ppk",
+      "inputs": {
+        "mu": "10 mm",
+        "sigma_total": "0.15 mm",
+        "USL": "10.4 mm",
+        "LSL": "9.6 mm"
+      },
+      "expect": {
+        "Pp": 0.8888889,
+        "Ppk": 0.8888889
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Pp = 0.8/(6·0.15) = 0.8889; Ppk = 0.4/(3·0.15) = 0.8889"
+      }
+    },
+    {
+      "calc": "metrology.pp_ppk",
+      "inputs": {
+        "mu": "10.6 mm",
+        "sigma_total": "0.15 mm",
+        "USL": "10.4 mm",
+        "LSL": "9.6 mm"
+      },
+      "expect": {
+        "Pp": 0.8888889,
+        "Ppk": -0.4444444
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Mean outside spec: Ppk = min(−0.2, 1.0)/(3·0.15) = −0.2/0.45 = −0.4444"
+      }
+    },
+    {
+      "calc": "metrology.control_chart_constants",
+      "inputs": {
+        "n": 5
+      },
+      "expect": {
+        "d2": 2.326,
+        "d3": 0.864,
+        "A2": 0.577,
+        "D3": 0.0,
+        "D4": 2.114
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "cited",
+        "ref": "Published Shewhart control-chart constants for n = 5 (standard quality-control table; recalled, not re-read): d2 = 2.326, d3 = 0.864, A2 = 0.577, D3 = 0, D4 = 2.114"
+      }
+    },
+    {
+      "calc": "metrology.control_chart_constants",
+      "inputs": {
+        "n": 2
+      },
+      "expect": {
+        "d2": 1.128379,
+        "A2": 1.88
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: d2(2) = E[range of 2 standard normals] = 2/√π = 1.128379; A2 = 3/(d2·√2) = 1.880 (recalled)"
+      }
+    },
+    {
+      "calc": "metrology.control_limits_xbar_r",
+      "inputs": {
+        "X_bar_bar": "10 mm",
+        "R_bar": "0.5 mm",
+        "n": 5
+      },
+      "expect": {
+        "UCL_x": "10.2884 mm",
+        "LCL_x": "9.7116 mm",
+        "CL_x": "10 mm",
+        "UCL_R": "1.05725 mm",
+        "LCL_R": "0 mm",
+        "CL_R": "0.5 mm"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "A2(5)=0.5768, D3=0, D4=2.1145: UCL_x = 10 + 0.5768·0.5 = 10.2884; LCL_x = 10 − 0.2884 = 9.7116; UCL_R = 2.1145·0.5 = 1.05725; LCL_R = 0"
+      }
+    },
+    {
+      "calc": "metrology.control_limits_p",
+      "inputs": {
+        "p_bar": 0.1,
+        "n": 100.0
+      },
+      "expect": {
+        "UCL": 0.19,
+        "LCL": 0.01,
+        "CL": 0.1
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ = √(0.1·0.9/100) = 0.03; UCL = 0.1 + 0.09 = 0.19; LCL = 0.1 − 0.09 = 0.01; CL = 0.1"
+      }
+    },
+    {
+      "calc": "metrology.control_limits_p",
+      "inputs": {
+        "p_bar": 0.02,
+        "n": 50.0
+      },
+      "expect": {
+        "UCL": 0.0793969,
+        "LCL": 0.0,
+        "CL": 0.02
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "σ = √(0.02·0.98/50) = √3.92e-4 = 0.019799; UCL = 0.02 + 0.059397 = 0.079397; LCL = 0.02 − 0.059397 = −0.039397 → floored at 0 (a p-chart has no negative lower limit)"
+      }
+    },
+    {
+      "calc": "metrology.control_limits_p",
+      "inputs": {
+        "p_bar": 0.9,
+        "n": 5.0
+      },
+      "expect": {
+        "UCL": 1.0,
+        "LCL": 0.497508,
+        "CL": 0.9
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "σ = √(0.9·0.1/5) = √0.018 = 0.134164; UCL = 0.9 + 0.402492 = 1.30249 → capped at 1; LCL = 0.9 − 0.402492 = 0.497508"
+      }
+    },
+    {
+      "calc": "metrology.dpmo",
+      "inputs": {
+        "D": 5.0,
+        "N": 1000.0,
+        "O": 10.0
+      },
+      "expect": {
+        "dpmo": 500.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "dpmo = 5/(1000·10)·1e6 = 500"
+      }
+    },
+    {
+      "calc": "metrology.dpmo",
+      "inputs": {
+        "dpmo": 500.0,
+        "N": 1000.0,
+        "O": 10.0
+      },
+      "solve_for": [
+        "D"
+      ],
+      "expect": {
+        "D": 5.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 500·1000·10/1e6 = 5"
+      }
+    },
+    {
+      "calc": "metrology.sigma_level",
+      "inputs": {
+        "yield": 0.5
+      },
+      "expect": {
+        "Z_lt": 0.0,
+        "Z_st": 1.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Landmark: Φ⁻¹(0.5) = 0 → Z_lt = 0 (long-term); short-term Z_st = 0 + 1.5 = 1.5"
+      }
+    },
+    {
+      "calc": "metrology.sigma_level",
+      "inputs": {
+        "yield": 0.9986501
+      },
+      "expect": {
+        "Z_lt": 3.0,
+        "Z_st": 4.5
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "1350 DPMO long-term yield: Φ⁻¹(0.9986501) = 3.0 → Z_lt = 3.0; Z_st = 3.0 + 1.5 = 4.5"
+      }
+    },
+    {
+      "calc": "metrology.sigma_level",
+      "inputs": {
+        "yield": 0.9999966
+      },
+      "expect": {
+        "Z_lt": 4.499854,
+        "Z_st": 5.999854
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "3.4 DPMO landmark: Φ⁻¹(0.9999966) = 4.49985 → Z_lt = 4.5; Z_st = 4.5 + 1.5 = 6.0"
+      }
+    },
+    {
+      "calc": "metrology.sigma_level_dpmo",
+      "inputs": {
+        "dpmo": 3.4
+      },
+      "expect": {
+        "Z_lt": 4.499854,
+        "Z_st": 5.999854
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "yield = 1 − 3.4e-6 = 0.9999966; Φ⁻¹(0.9999966) = 4.49985 → Z_lt = 4.5; Z_st = 6.0 (the classic 3.4 DPMO ↔ 6σ)"
+      }
+    },
+    {
+      "calc": "metrology.sigma_level_dpmo",
+      "inputs": {
+        "dpmo": 1350.0
+      },
+      "expect": {
+        "Z_lt": 2.999977,
+        "Z_st": 4.499977
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "yield = 1 − 0.00135 = 0.99865; Φ⁻¹(0.99865) = 2.99998 → Z_lt = 3.0; Z_st = 4.5"
+      }
+    },
+    {
+      "calc": "metrology.acceptance_sampling",
+      "inputs": {
+        "N": 1000,
+        "n": 80,
+        "c": 3,
+        "p": 0.05
+      },
+      "expect": {
+        "P_a": 0.420477,
+        "AOQ": 0.0193419
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 50 defective in 1000; hypergeometric P(X≤3) = Σ C(50,d)C(950,80−d)/C(1000,80) = 0.420477 (scipy hypergeom, independent); AOQ = 0.05·0.420477·920/1000 = 0.019342"
+      }
+    },
+    {
+      "calc": "metrology.oc_binomial",
+      "inputs": {
+        "n": 80,
+        "c": 3,
+        "p": 0.05
+      },
+      "expect": {
+        "P_a": 0.428449
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Binomial P(X≤3) = Σ C(80,k)·0.05^k·0.95^(80−k), k=0..3 = 0.428449 (scipy binom, independent)"
+      }
+    },
+    {
+      "calc": "metrology.sine_bar",
+      "inputs": {
+        "H": "25 mm",
+        "L": "100 mm"
+      },
+      "expect": {
+        "theta": "14.4775 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "sin θ = 25/100 = 0.25 → θ = 14.4775°"
+      }
+    },
+    {
+      "calc": "metrology.sine_bar",
+      "inputs": {
+        "theta": "14.4775 deg",
+        "L": "100 mm"
+      },
+      "solve_for": [
+        "H"
+      ],
+      "expect": {
+        "H": "25 mm"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "H = L·sin θ = 0.1·0.25 = 0.025 m"
+      }
+    },
+    {
+      "calc": "metrology.gauge_blocks",
+      "inputs": {
+        "target": "25.231 mm",
+        "blocks": [
+          0.02,
+          0.01,
+          0.005,
+          0.002,
+          0.0012,
+          0.00103,
+          0.001001
+        ]
+      },
+      "expect": {
+        "selected": [
+          0.02,
+          0.002,
+          0.0012,
+          0.00103,
+          0.001001
+        ],
+        "residual": "0 m",
+        "n_blocks": 5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "25.231 mm = 20 + 2 + 1.2 + 1.03 + 1.001 (the standard wipe-digit stack); no exact stack uses fewer than 5 of the given blocks, so residual = 0 and 5 blocks"
+      }
+    },
+    {
+      "calc": "metrology.gauge_blocks",
+      "inputs": {
+        "target": "5 mm",
+        "blocks": [
+          0.001,
+          0.002,
+          0.003,
+          0.004,
+          0.005
+        ]
+      },
+      "expect": {
+        "selected": [
+          0.005
+        ],
+        "residual": "0 m",
+        "n_blocks": 1
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Target 5 mm from {1..5} mm: both {5} and {3+2} (and {4+1}) are exact, but the minimum-block-count search returns the single 5 mm block"
+      }
+    },
+    {
+      "calc": "metrology.gauge_blocks",
+      "inputs": {
+        "target": "6 mm",
+        "blocks": [
+          0.001,
+          0.002,
+          0.003,
+          0.004,
+          0.005
+        ]
+      },
+      "expect": {
+        "n_blocks": 2,
+        "residual": 0.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Target 6 mm from {1..5} mm: {5+1} and {4+2} are both 2-block exact stacks ({3+2+1} is 3), so 2 blocks is minimal; the search returns the largest-first stack {5, 1}"
+      },
+      "abs_tol": 1e-12
+    },
+    {
+      "calc": "metrology.gauge_blocks",
+      "inputs": {
+        "blocks": [
+          0.001,
+          0.002,
+          0.003,
+          0.004
+        ],
+        "target": "9 mm"
+      },
+      "expect": {
+        "selected": [
+          0.004,
+          0.003,
+          0.002
+        ],
+        "n_blocks": 3
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Distinct blocks from {1,2,3,4} mm summing to 9 mm: only 4+3+2 (4+5 impossible, 4+4+1 reuses a block) → 3 blocks.]"
+      }
+    }
+  ]
+}

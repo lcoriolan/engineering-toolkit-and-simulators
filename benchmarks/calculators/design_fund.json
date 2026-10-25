@@ -1,0 +1,1587 @@
+{
+  "section": "design_fund",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k design_fund",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "design_fund.factor_of_safety": {
+      "title": "Factor of safety (n = strength / stress)",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "factor of safety (design factor)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S",
+          "unit": "Pa",
+          "desc": "material strength (e.g. yield S_y or ultimate S_ut)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "Pa",
+          "desc": "working stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "n = S/sigma"
+      ],
+      "procedure": null,
+      "outputs": [
+        "n"
+      ],
+      "assumptions": [
+        "Probabilistic stress\u2013strength reliability lives in reliability.reliability_index (not duplicated here).",
+        "Static loading. The same relation is the design factor (the required n_d) and the realized factor of safety (achieved n). Use the strength that matches the failure mode (yield for ductile, ultimate for brittle)."
+      ],
+      "method_references": [
+        "n = S/sigma"
+      ],
+      "synthetic_example": {
+        "S": 350000000.0,
+        "sigma": 120000000.0
+      }
+    },
+    "design_fund.tolerance_stackup": {
+      "title": "Tolerance stack-up: worst case and RSS (statistical)",
+      "variables": [
+        {
+          "name": "parts",
+          "unit": "",
+          "desc": "rows [nominal, +/-tol] of each dimension in m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "total_nominal",
+          "unit": "m",
+          "desc": "sum of the nominal dimensions",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "worst_max",
+          "unit": "m",
+          "desc": "worst-case maximum sum",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "worst_min",
+          "unit": "m",
+          "desc": "worst-case minimum sum",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rss_tol",
+          "unit": "m",
+          "desc": "root-sum-square tolerance (statistical)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _tolerance_stackup(values):\n    \"\"\"Worst-case and RSS (statistical) tolerance stack of dimensions [[nominal, +/-tol], ...].\"\"\"\n    parts = values['parts']\n    if not isinstance(parts, list) or not parts:\n        raise MechError('parts: give [[nominal, +/-tol], ...]')\n    total = worst_max = worst_min = rss2 = 0.0\n    for row in parts:\n        if len(row) != 2:\n            raise MechError('each part row must be [nominal, +/-tol]')\n        nom, tol = float(row[0]), float(row[1])\n        total += nom\n        worst_max += nom + tol\n        worst_min += nom - tol\n        rss2 += tol * tol\n    return {'total_nominal': total, 'worst_max': worst_max, 'worst_min': worst_min,\n            'rss_tol': math.sqrt(rss2)}\n",
+        "source": "design_fund.py",
+        "line": 35
+      },
+      "outputs": [
+        "total_nominal",
+        "worst_max",
+        "worst_min",
+        "rss_tol"
+      ],
+      "assumptions": [
+        "Arithmetic (worst-case) stack adds all +/-tolerances; the RSS (root-sum-square) value assumes independent, normally distributed dimensions. The parts rows and the outputs are in m (enter any compatible length unit)."
+      ],
+      "method_references": [
+        "Worst-case and root-sum-square tolerance accumulation"
+      ],
+      "synthetic_example": {
+        "parts": [
+          [
+            10.0,
+            0.1
+          ],
+          [
+            20.0,
+            0.2
+          ],
+          [
+            5.0,
+            0.05
+          ]
+        ]
+      }
+    },
+    "design_fund.limits_fit": {
+      "title": "Limits and fits: clearance or interference from hole and shaft deviations",
+      "variables": [
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "basic (nominal) size",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "hole_es",
+          "unit": "m",
+          "desc": "hole upper deviation ES",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "hole_ei",
+          "unit": "m",
+          "desc": "hole lower deviation EI",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shaft_es",
+          "unit": "m",
+          "desc": "shaft upper deviation es",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shaft_ei",
+          "unit": "m",
+          "desc": "shaft lower deviation ei",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D_max",
+          "unit": "m",
+          "desc": "maximum hole size",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D_min",
+          "unit": "m",
+          "desc": "minimum hole size",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_max",
+          "unit": "m",
+          "desc": "maximum shaft size",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_min",
+          "unit": "m",
+          "desc": "minimum shaft size",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "max_clearance",
+          "unit": "m",
+          "desc": "maximum clearance (D_max - d_min)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "min_clearance",
+          "unit": "m",
+          "desc": "minimum clearance (D_min - d_max; negative = interference)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "D_max = D + hole_es",
+        "D_min = D + hole_ei",
+        "d_max = D + shaft_es",
+        "d_min = D + shaft_ei",
+        "max_clearance = D_max - d_min",
+        "min_clearance = D_min - d_max"
+      ],
+      "procedure": null,
+      "outputs": [
+        "D_max",
+        "D_min",
+        "d_max",
+        "d_min",
+        "max_clearance",
+        "min_clearance"
+      ],
+      "assumptions": [
+        "ISO 286 deviations are entered explicitly (not tabulated). min_clearance > 0 is a clearance fit, < 0 an interference fit, straddling zero a transition fit."
+      ],
+      "method_references": [
+        "Hole/shaft limit sizes from the four ISO 286 fundamental deviations"
+      ],
+      "synthetic_example": {
+        "D": 0.05,
+        "hole_es": 2.5e-05,
+        "hole_ei": 0.0,
+        "shaft_es": -2.5e-05,
+        "shaft_ei": -5e-05
+      }
+    },
+    "design_fund.interference_pressure": {
+      "title": "Shrink-fit contact pressure (thick-cylinder / Lam\u00e9)",
+      "variables": [
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "contact pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta",
+          "unit": "m",
+          "desc": "diametral interference",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "nominal (joint) diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_o",
+          "unit": "m",
+          "desc": "hub outer diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_i",
+          "unit": "m",
+          "desc": "shaft inner diameter (0 for solid)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_o",
+          "unit": "Pa",
+          "desc": "hub modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu_o",
+          "unit": "",
+          "desc": "hub Poisson ratio",
+          "lo": null,
+          "hi": 0.5,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_i",
+          "unit": "Pa",
+          "desc": "shaft modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu_i",
+          "unit": "",
+          "desc": "shaft Poisson ratio",
+          "lo": null,
+          "hi": 0.5,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "p = delta/(d*((1/E_o)*((d_o**2 + d**2)/(d_o**2 - d**2) + nu_o) + (1/E_i)*((d**2 + d_i**2)/(d**2 - d_i**2) - nu_i)))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "p"
+      ],
+      "assumptions": [
+        "Linear elastic, uniform interference, both members thick-walled; the Lam\u00e9 radial-displacement sums equal the diametral interference. Solid shaft: d_i = 0."
+      ],
+      "method_references": [
+        "Thick-cylinder interference fit: delta = p d [(1/E_o)((d_o^2+d^2)/(d_o^2-d^2)+nu_o) + (1/E_i)((d^2+d_i^2)/(d^2-d_i^2)-nu_i)] (recalled form)"
+      ],
+      "synthetic_example": {
+        "delta": 4e-05,
+        "d": 0.05,
+        "d_o": 0.09,
+        "d_i": 0.0,
+        "E_o": 207000000000.0,
+        "nu_o": 0.3,
+        "E_i": 207000000000.0,
+        "nu_i": 0.3
+      }
+    },
+    "design_fund.press_force": {
+      "title": "Axial force to press a shrink fit together",
+      "variables": [
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "maximum press (assembly) force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "joint diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "engagement length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "contact pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F = pi*d*L*p*mu"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F"
+      ],
+      "assumptions": [
+        "Coulomb friction over the whole engagement; use the peak contact pressure."
+      ],
+      "method_references": [
+        "F = pi d L p mu (axial press force)"
+      ],
+      "synthetic_example": {
+        "d": 0.05,
+        "L": 0.03,
+        "p": 57244000.0,
+        "mu": 0.15
+      }
+    },
+    "design_fund.holding_torque": {
+      "title": "Torque capacity of a shrink (interference) fit",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "holding (friction) torque capacity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "joint diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "engagement length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "contact pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = pi/2*d**2*L*p*mu"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T"
+      ],
+      "assumptions": [
+        "Torque transmitted by friction on the cylindrical interface; T = F d/2 with F the press force."
+      ],
+      "method_references": [
+        "T = (pi/2) d^2 L p mu"
+      ],
+      "synthetic_example": {
+        "d": 0.05,
+        "L": 0.03,
+        "p": 57244000.0,
+        "mu": 0.15
+      }
+    },
+    "design_fund.preferred_number": {
+      "title": "Preferred number from a Renard series (10^(i/n))",
+      "variables": [
+        {
+          "name": "value",
+          "unit": "",
+          "desc": "preferred number",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "i",
+          "unit": "",
+          "desc": "index within the decade",
+          "lo": 0.0,
+          "hi": 80.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "steps per decade (5, 10, 20, 40 for R5/R10/R20/R40)",
+          "lo": 5.0,
+          "hi": 80.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "value = 10**(i/n)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "value"
+      ],
+      "assumptions": [
+        "Unrounded Renard value 10^(i/n) in the decade [1, 10). The ISO rounded preferred numbers (e.g. R20: 1.12, 1.25, 1.4, ...) differ slightly from these exact values."
+      ],
+      "method_references": [
+        "Renard series value = 10^(i/n)"
+      ],
+      "synthetic_example": {
+        "i": 6,
+        "n": 20
+      }
+    },
+    "design_fund.renard_series": {
+      "title": "Renard preferred number series over one decade (unrounded)",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "series steps per decade: 5, 10, 20, 40 or 80",
+          "lo": 5.0,
+          "hi": 80.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "values",
+          "unit": "",
+          "desc": "preferred numbers 10^(i/n) for i = 0..n-1 (decade [1, 10))",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "count",
+          "unit": "",
+          "desc": "number of values (= n)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _renard_series(values):\n    \"\"\"Unrounded Renard preferred numbers of series R(n) over one decade: 10^(i/n) for i = 0..n-1.\"\"\"\n    n = int(round(values['n']))\n    if n not in (5, 10, 20, 40, 80):\n        raise MechError('n must be 5, 10, 20, 40 or 80 (Renard R5/R10/R20/R40/R80)')\n    vals = [10.0 ** (i / n) for i in range(n)]\n    return {'values': vals, 'count': float(n)}\n",
+        "source": "design_fund.py",
+        "line": 53
+      },
+      "outputs": [
+        "values",
+        "count"
+      ],
+      "assumptions": [
+        "Returns the UNROUNDED series 10^(i/n); ISO R-series tables use rounded values (R5: 1.0, 1.6, 2.5, 4.0, 6.3, 10). Scale the decade as needed (multiply by 10^k)."
+      ],
+      "method_references": [
+        "Renard series 10^(i/n), i = 0..n-1"
+      ],
+      "synthetic_example": {
+        "n": 20
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "design_fund-001",
+      "calculator": "design_fund.factor_of_safety",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "S": "350 MPa",
+        "sigma": "120 MPa"
+      },
+      "solve_for": [
+        "n"
+      ],
+      "expected_as_specified": {
+        "n": 2.9166667
+      },
+      "expected_SI": {
+        "n": 2.9166667
+      },
+      "actual_SI": {
+        "n": {
+          "value": 2.9166666666666665,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc design_fund.factor_of_safety (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n": {
+          "absolute_error": 3.333333342681044e-08,
+          "relative_error": 1.142857133000848e-08,
+          "allowed_absolute_error": 0.0058333334,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "n = 350/120 = 2.91667"
+      }
+    },
+    {
+      "id": "design_fund-002",
+      "calculator": "design_fund.factor_of_safety",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 3.0,
+        "S": "350 MPa"
+      },
+      "solve_for": [
+        "sigma"
+      ],
+      "expected_as_specified": {
+        "sigma": "116.66667 MPa"
+      },
+      "expected_SI": {
+        "sigma": 116666670.0
+      },
+      "actual_SI": {
+        "sigma": {
+          "value": 116666666.66666667,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc design_fund.factor_of_safety (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "sigma": {
+          "absolute_error": 3.3333333283662796,
+          "relative_error": 2.857142771252732e-08,
+          "allowed_absolute_error": 58333.335,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma = S/n = 350/3 = 116.667 MPa"
+      }
+    },
+    {
+      "id": "design_fund-003",
+      "calculator": "design_fund.tolerance_stackup",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "parts": [
+          [
+            10.0,
+            0.1
+          ],
+          [
+            20.0,
+            0.2
+          ],
+          [
+            5.0,
+            0.05
+          ]
+        ]
+      },
+      "solve_for": [
+        "total_nominal",
+        "worst_max",
+        "worst_min",
+        "rss_tol"
+      ],
+      "expected_as_specified": {
+        "total_nominal": 35.0,
+        "worst_max": 35.35,
+        "worst_min": 34.65,
+        "rss_tol": 0.2291288
+      },
+      "expected_SI": {
+        "total_nominal": 35.0,
+        "worst_max": 35.35,
+        "worst_min": 34.65,
+        "rss_tol": 0.2291288
+      },
+      "actual_SI": {
+        "total_nominal": {
+          "value": 35.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.tolerance_stackup (procedure)"
+        },
+        "worst_max": {
+          "value": 35.349999999999994,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.tolerance_stackup (procedure)"
+        },
+        "worst_min": {
+          "value": 34.650000000000006,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.tolerance_stackup (procedure)"
+        },
+        "rss_tol": {
+          "value": 0.22912878474779202,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.tolerance_stackup (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "total_nominal": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.07,
+          "passed": true
+        },
+        "worst_max": {
+          "absolute_error": 7.105427357601002e-15,
+          "relative_error": 2.0100218833383314e-16,
+          "allowed_absolute_error": 0.0707,
+          "passed": true
+        },
+        "worst_min": {
+          "absolute_error": 7.105427357601002e-15,
+          "relative_error": 2.0506283860320352e-16,
+          "allowed_absolute_error": 0.0693,
+          "passed": true
+        },
+        "rss_tol": {
+          "absolute_error": 1.5252207968829978e-08,
+          "relative_error": 6.656608845692894e-08,
+          "allowed_absolute_error": 0.0004582576,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "nominal = 10+20+5 = 35; worst max = 35 + (0.1+0.2+0.05) = 35.35; worst min = 35 - 0.35 = 34.65; RSS = sqrt(0.1^2+0.2^2+0.05^2) = sqrt(0.0525) = 0.229129"
+      }
+    },
+    {
+      "id": "design_fund-004",
+      "calculator": "design_fund.limits_fit",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "D": "50 mm",
+        "hole_es": "25 um",
+        "hole_ei": "0 um",
+        "shaft_es": "-25 um",
+        "shaft_ei": "-50 um"
+      },
+      "solve_for": [
+        "D_max",
+        "D_min",
+        "d_max",
+        "d_min",
+        "max_clearance",
+        "min_clearance"
+      ],
+      "expected_as_specified": {
+        "D_max": "50.025 mm",
+        "D_min": "50.000 mm",
+        "d_max": "49.975 mm",
+        "d_min": "49.950 mm",
+        "max_clearance": "0.075 mm",
+        "min_clearance": "0.025 mm"
+      },
+      "expected_SI": {
+        "D_max": 0.050025,
+        "D_min": 0.05,
+        "d_max": 0.049975000000000006,
+        "d_min": 0.04995,
+        "max_clearance": 7.5e-05,
+        "min_clearance": 2.5e-05
+      },
+      "actual_SI": {
+        "D_max": {
+          "value": 0.050025,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.limits_fit (symbolic)"
+        },
+        "D_min": {
+          "value": 0.05,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.limits_fit (symbolic)"
+        },
+        "d_max": {
+          "value": 0.049975000000000006,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.limits_fit (symbolic)"
+        },
+        "d_min": {
+          "value": 0.04995,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.limits_fit (symbolic)"
+        },
+        "max_clearance": {
+          "value": 7.5e-05,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.limits_fit (symbolic)"
+        },
+        "min_clearance": {
+          "value": 2.4999999999999998e-05,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.limits_fit (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "D_max": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00010005,
+          "passed": true
+        },
+        "D_min": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0001,
+          "passed": true
+        },
+        "d_max": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 9.995000000000002e-05,
+          "passed": true
+        },
+        "d_min": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 9.99e-05,
+          "passed": true
+        },
+        "max_clearance": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.5e-07,
+          "passed": true
+        },
+        "min_clearance": {
+          "absolute_error": 3.3881317890172014e-21,
+          "relative_error": 1.3552527156068805e-16,
+          "allowed_absolute_error": 5.0000000000000004e-08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Hole: 50 + 0.025/0 = 50.025/50.000 mm; shaft: 50 - 0.025/0.050 = 49.975/49.950 mm; max clearance = 50.025 - 49.950 = 0.075 mm; min clearance = 50.000 - 49.975 = 0.025 mm (a clearance fit)"
+      }
+    },
+    {
+      "id": "design_fund-005",
+      "calculator": "design_fund.interference_pressure",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "delta": "40 um",
+        "d": "50 mm",
+        "d_o": "90 mm",
+        "d_i": "0 mm",
+        "E_o": "207 GPa",
+        "nu_o": 0.3,
+        "E_i": "207 GPa",
+        "nu_i": 0.3
+      },
+      "solve_for": [
+        "p"
+      ],
+      "expected_as_specified": {
+        "p": "57.244444 MPa"
+      },
+      "expected_SI": {
+        "p": 57244444.0
+      },
+      "actual_SI": {
+        "p": {
+          "value": 57244444.44444444,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc design_fund.interference_pressure (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "p": {
+          "absolute_error": 0.444444440305233,
+          "relative_error": 7.76397514325116e-09,
+          "allowed_absolute_error": 28622.222,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Same material, solid shaft: the nu terms cancel and p = delta E (d_o^2 - d^2)/(2 d d_o^2) = 40e-6 * 207e9 * (0.0081-0.0025)/(2*0.05*0.0081) = 40e-6*207e9*0.0056/0.00081 = 46368/0.00081 = 57.2444 MPa"
+      }
+    },
+    {
+      "id": "design_fund-006",
+      "calculator": "design_fund.interference_pressure",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p": "57.244444 MPa",
+        "d": "50 mm",
+        "d_o": "90 mm",
+        "d_i": "0 mm",
+        "E_o": "207 GPa",
+        "nu_o": 0.3,
+        "E_i": "207 GPa",
+        "nu_i": 0.3
+      },
+      "solve_for": [
+        "delta"
+      ],
+      "expected_as_specified": {
+        "delta": "40 um"
+      },
+      "expected_SI": {
+        "delta": 3.9999999999999996e-05
+      },
+      "actual_SI": {
+        "delta": {
+          "value": 3.9999999689441e-05,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.interference_pressure (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "delta": {
+          "absolute_error": 3.1055899903575587e-13,
+          "relative_error": 7.763974975893897e-09,
+          "allowed_absolute_error": 1.9999999999999997e-08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "delta = p * 2 d d_o^2/(E (d_o^2 - d^2)) = 57.244444e6 * 2*0.05*0.0081/(207e9*0.0056) = 57.244444e6*0.00081/(1.1592e9) = 40e-6 m"
+      }
+    },
+    {
+      "id": "design_fund-007",
+      "calculator": "design_fund.press_force",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "50 mm",
+        "L": "30 mm",
+        "p": "57.244444 MPa",
+        "mu": 0.15
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expected_as_specified": {
+        "F": "40463.713 N"
+      },
+      "expected_SI": {
+        "F": 40463.713
+      },
+      "actual_SI": {
+        "F": {
+          "value": 40463.71306407727,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc design_fund.press_force (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "F": {
+          "absolute_error": 6.407726323232055e-05,
+          "relative_error": 1.583573490458489e-09,
+          "allowed_absolute_error": 20.231856500000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = pi d L p mu = pi*0.05*0.03*57.244444e6*0.15 = pi*0.0015*8.586667e6 = pi*12880.0 = 40463.7 N"
+      }
+    },
+    {
+      "id": "design_fund-008",
+      "calculator": "design_fund.holding_torque",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "50 mm",
+        "L": "30 mm",
+        "p": "57.244444 MPa",
+        "mu": 0.15
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expected_as_specified": {
+        "T": "1011.5928 N*m"
+      },
+      "expected_SI": {
+        "T": 1011.5928
+      },
+      "actual_SI": {
+        "T": {
+          "value": 1011.5928266019318,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc design_fund.holding_torque (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T": {
+          "absolute_error": 2.6601931836012227e-05,
+          "relative_error": 2.629707510374948e-08,
+          "allowed_absolute_error": 0.5057964,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = (pi/2) d^2 L p mu = (pi/2)*0.0025*0.03*57.244444e6*0.15 = (pi/2)*0.0025*0.03*8.586667e6 = 1011.59 N*m"
+      }
+    },
+    {
+      "id": "design_fund-009",
+      "calculator": "design_fund.preferred_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "i": 6,
+        "n": 20
+      },
+      "solve_for": [
+        "value"
+      ],
+      "expected_as_specified": {
+        "value": 1.9952623
+      },
+      "expected_SI": {
+        "value": 1.9952623
+      },
+      "actual_SI": {
+        "value": {
+          "value": 1.9952623149688795,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc design_fund.preferred_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "value": {
+          "absolute_error": 1.4968879469279273e-08,
+          "relative_error": 7.502211347991326e-09,
+          "allowed_absolute_error": 0.0039905246,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R20 value = 10^(6/20) = 10^0.3 = 1.9952623"
+      }
+    },
+    {
+      "id": "design_fund-010",
+      "calculator": "design_fund.preferred_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "value": 1.9952623,
+        "n": 20
+      },
+      "solve_for": [
+        "i"
+      ],
+      "expected_as_specified": {
+        "i": 6.0
+      },
+      "expected_SI": {
+        "i": 6.0
+      },
+      "actual_SI": {
+        "i": {
+          "value": 5.9999999348366195,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc design_fund.preferred_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "i": {
+          "absolute_error": 6.516338046935743e-08,
+          "relative_error": 1.0860563411559573e-08,
+          "allowed_absolute_error": 0.003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "i = n log10(value) = 20*0.3 = 6"
+      }
+    },
+    {
+      "id": "design_fund-011",
+      "calculator": "design_fund.renard_series",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 20
+      },
+      "solve_for": [
+        "values",
+        "count"
+      ],
+      "expected_as_specified": {
+        "count": 20,
+        "values": [
+          1.0,
+          1.1220185,
+          1.2589254,
+          1.4125375,
+          1.5848932,
+          1.7782794,
+          1.9952623,
+          2.2387211,
+          2.5118864,
+          2.8183829,
+          3.1622777,
+          3.5481339,
+          3.9810717,
+          4.4668359,
+          5.0118723,
+          5.6234133,
+          6.3095734,
+          7.0794578,
+          7.9432823,
+          8.9125094
+        ]
+      },
+      "expected_SI": {
+        "count": 20.0,
+        "values": [
+          1.0,
+          1.1220185,
+          1.2589254,
+          1.4125375,
+          1.5848932,
+          1.7782794,
+          1.9952623,
+          2.2387211,
+          2.5118864,
+          2.8183829,
+          3.1622777,
+          3.5481339,
+          3.9810717,
+          4.4668359,
+          5.0118723,
+          5.6234133,
+          6.3095734,
+          7.0794578,
+          7.9432823,
+          8.9125094
+        ]
+      },
+      "actual_SI": {
+        "count": {
+          "value": 20.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc design_fund.renard_series (procedure)"
+        },
+        "values": {
+          "value": [
+            1.0,
+            1.1220184543019633,
+            1.2589254117941673,
+            1.4125375446227544,
+            1.5848931924611136,
+            1.7782794100389228,
+            1.9952623149688795,
+            2.2387211385683394,
+            2.51188643150958,
+            2.8183829312644537,
+            3.1622776601683795,
+            3.548133892335755,
+            3.9810717055349722,
+            4.466835921509632,
+            5.011872336272722,
+            5.623413251903491,
+            6.309573444801933,
+            7.079457843841379,
+            7.943282347242816,
+            8.912509381337454
+          ],
+          "kind": "derived",
+          "method": "mechcalc design_fund.renard_series (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "count": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "values": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.0001,
+            "passed": true
+          },
+          {
+            "absolute_error": 4.5698036688079924e-08,
+            "relative_error": 4.072841641031759e-08,
+            "allowed_absolute_error": 0.00011220185000000001,
+            "passed": true
+          },
+          {
+            "absolute_error": 1.1794167198431182e-08,
+            "relative_error": 9.368440098540534e-09,
+            "allowed_absolute_error": 0.00012589254000000002,
+            "passed": true
+          },
+          {
+            "absolute_error": 4.4622754380441165e-08,
+            "relative_error": 3.159049184920129e-08,
+            "allowed_absolute_error": 0.00014125375,
+            "passed": true
+          },
+          {
+            "absolute_error": 7.538886404034884e-09,
+            "relative_error": 4.756715723201339e-09,
+            "allowed_absolute_error": 0.00015848932000000002,
+            "passed": true
+          },
+          {
+            "absolute_error": 1.0038922804156414e-08,
+            "relative_error": 5.645301185042358e-09,
+            "allowed_absolute_error": 0.00017782794000000002,
+            "passed": true
+          },
+          {
+            "absolute_error": 1.4968879469279273e-08,
+            "relative_error": 7.502211347991326e-09,
+            "allowed_absolute_error": 0.00019952623,
+            "passed": true
+          },
+          {
+            "absolute_error": 3.856833963311601e-08,
+            "relative_error": 1.722784478741725e-08,
+            "allowed_absolute_error": 0.00022387210999999998,
+            "passed": true
+          },
+          {
+            "absolute_error": 3.150958027831052e-08,
+            "relative_error": 1.2544190007283182e-08,
+            "allowed_absolute_error": 0.00025118864,
+            "passed": true
+          },
+          {
+            "absolute_error": 3.1264453692614325e-08,
+            "relative_error": 1.1093046900268351e-08,
+            "allowed_absolute_error": 0.00028183829,
+            "passed": true
+          },
+          {
+            "absolute_error": 3.983162066845125e-08,
+            "relative_error": 1.2595864262158648e-08,
+            "allowed_absolute_error": 0.00031622777000000005,
+            "passed": true
+          },
+          {
+            "absolute_error": 7.664244794369779e-09,
+            "relative_error": 2.160077666282487e-09,
+            "allowed_absolute_error": 0.00035481339,
+            "passed": true
+          },
+          {
+            "absolute_error": 5.534972036258523e-09,
+            "relative_error": 1.3903221175992693e-09,
+            "allowed_absolute_error": 0.00039810717000000005,
+            "passed": true
+          },
+          {
+            "absolute_error": 2.1509631409344365e-08,
+            "relative_error": 4.815406675079414e-09,
+            "allowed_absolute_error": 0.00044668359000000005,
+            "passed": true
+          },
+          {
+            "absolute_error": 3.627272171513596e-08,
+            "relative_error": 7.237359522335786e-09,
+            "allowed_absolute_error": 0.00050118723,
+            "passed": true
+          },
+          {
+            "absolute_error": 4.8096508997730325e-08,
+            "relative_error": 8.55290309138941e-09,
+            "allowed_absolute_error": 0.00056234133,
+            "passed": true
+          },
+          {
+            "absolute_error": 4.480193371847463e-08,
+            "relative_error": 7.100628026369363e-09,
+            "allowed_absolute_error": 0.00063095734,
+            "passed": true
+          },
+          {
+            "absolute_error": 4.384137852753156e-08,
+            "relative_error": 6.192759356165886e-09,
+            "allowed_absolute_error": 0.00070794578,
+            "passed": true
+          },
+          {
+            "absolute_error": 4.7242815881531897e-08,
+            "relative_error": 5.947518179170328e-09,
+            "allowed_absolute_error": 0.00079432823,
+            "passed": true
+          },
+          {
+            "absolute_error": 1.8662545286929344e-08,
+            "relative_error": 2.093972017233367e-09,
+            "allowed_absolute_error": 0.0008912509399999999,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R20 series (unrounded) = 10^(i/20) for i = 0..19: 10^0=1.0, 10^0.05=1.1220, 10^0.1=1.2589, ... 10^0.95=8.9125. These are the exact geometric values, not the ISO-rounded preferred numbers."
+      }
+    }
+  ],
+  "passed": 11,
+  "failed": 0
+}

@@ -1,0 +1,634 @@
+{
+  "section": "renewables",
+  "cases": [
+    {
+      "calc": "renewables.solar_declination",
+      "inputs": {
+        "n": 172
+      },
+      "expect": {
+        "delta": "23.45 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Summer solstice: 2π(284+172)/365 = 2π·456/365 = 7.84966 rad; sin = 0.99999 → δ = 23.45°·0.99999 = 23.45°"
+      }
+    },
+    {
+      "calc": "renewables.solar_declination",
+      "inputs": {
+        "n": 355
+      },
+      "expect": {
+        "delta": "-23.45 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Winter solstice: 2π(284+355)/365 = 2π·639/365; sin(630.25°) = −0.99999 → δ = −23.45°"
+      }
+    },
+    {
+      "calc": "renewables.solar_declination",
+      "inputs": {
+        "n": 81
+      },
+      "expect": {
+        "delta": "0 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "March equinox: 2π(284+81)/365 = 2π·365/365 = 2π; sin(2π) = 0 → δ = 0"
+      }
+    },
+    {
+      "calc": "renewables.solar_declination",
+      "inputs": {
+        "delta": "0 deg"
+      },
+      "solve_for": [
+        "n"
+      ],
+      "expect": {
+        "n": 263.5
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverting δ = 0 gives two days, n = 81 (March equinox) and n = 263.5 (September equinox); the solver returns the root closest in log-distance to the example n = 172: |log(263.5/172)| = 0.427 < |log(81/172)| = 0.753, so n = 263.5"
+      }
+    },
+    {
+      "calc": "renewables.solar_hour_angle",
+      "inputs": {
+        "h": 14
+      },
+      "expect": {
+        "omega": "30 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "2 hours after solar noon: ω = (π/12)(14 − 12) = π/6 = 30°"
+      }
+    },
+    {
+      "calc": "renewables.solar_hour_angle",
+      "inputs": {
+        "omega": "-30 deg"
+      },
+      "solve_for": [
+        "h"
+      ],
+      "expect": {
+        "h": 10
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "h = 12 + 12ω/π = 12 − 2 = 10 (2 hours before noon)"
+      }
+    },
+    {
+      "calc": "renewables.solar_incidence",
+      "inputs": {
+        "delta": "0 deg",
+        "phi": "40 deg",
+        "beta": "45 deg",
+        "gamma": "0 deg",
+        "omega": "0 deg"
+      },
+      "expect": {
+        "theta": "5 deg",
+        "cos_theta": 0.9961947
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Equinox noon, south-facing: cosθ = cosδ cosφ cosβ cosω + cosδ sinφ sinβ cosγ cosω = cos(φ − β) = cos(−5°) = 0.996195 → θ = 5°"
+      }
+    },
+    {
+      "calc": "renewables.solar_incidence",
+      "inputs": {
+        "delta": "20 deg",
+        "phi": "40 deg",
+        "beta": "30 deg",
+        "gamma": "15 deg",
+        "omega": "-30 deg"
+      },
+      "expect": {
+        "theta": "37.2904 deg",
+        "cos_theta": 0.7955745
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "D&B relation: cosθ = sin20 sin40 cos30 − sin20 cos40 sin30 cos15 + cos20 cos40 cos30 cos30 + cos20 sin40 sin30 cos15 cos30 + cos20 sin30 sin15 sin(−30) = 0.190414 − 0.126538 + 0.539911 + 0.252632 − 0.060803 = 0.795575 → θ = 37.290°"
+      }
+    },
+    {
+      "calc": "renewables.solar_incidence",
+      "inputs": {
+        "delta": "20 deg",
+        "phi": "40 deg",
+        "beta": "30 deg",
+        "gamma": "45 deg",
+        "omega": "30 deg"
+      },
+      "expect": {
+        "theta": "8.619853 deg",
+        "cos_theta": 0.9887045
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Afternoon (ω = +30°, sun west of noon) and west-facing (γ = +45°): cosθ = sin20 sin40 cos30 − sin20 cos40 sin30 cos45 + cos20 cos40 cos30 cos30 + cos20 sin40 sin30 cos45 cos30 + cos20 sin30 sin45 sin30 = 0.190414 − 0.089476 + 0.539911 + 0.253632 + 0.094223 = 0.988705 → θ = 8.6199°"
+      }
+    },
+    {
+      "calc": "renewables.solar_incidence",
+      "inputs": {
+        "delta": "-15 deg",
+        "phi": "-35 deg",
+        "beta": "30 deg",
+        "gamma": "0 deg",
+        "omega": "0 deg"
+      },
+      "expect": {
+        "theta": "50 deg",
+        "cos_theta": 0.6427876
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Southern hemisphere, SOUTH-facing (pole-facing) panel: γ = 0 means due south in this convention in both hemispheres. Noon: cosθ = cos(φ − β − δ) = cos(−35° − 30° − (−15°)) = cos(−50°) = 0.642788 → θ = 50° (independent ENU sun-vector · panel-normal gives 50.000°). [Relabelled after verify21f: previously described as north-facing]"
+      }
+    },
+    {
+      "calc": "renewables.tilted_irradiance",
+      "inputs": {
+        "G_bn": "1000 W/m^2",
+        "G_d": "100 W/m^2",
+        "rho_g": 0.25,
+        "beta": "0 deg",
+        "gamma": "0 deg",
+        "phi": "40 deg",
+        "delta": "0 deg",
+        "omega": "0 deg"
+      },
+      "expect": {
+        "G_T": "866.0444 W/m^2",
+        "cos_theta_z": 0.7660444,
+        "R_b": 1.0,
+        "G_bT": "766.0444 W/m^2",
+        "G_dT": "100 W/m^2",
+        "G_rT": "0 W/m^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Horizontal surface at equinox noon: cosθz = cosφ = cos40° = 0.766044; R_b = 1; G_bT = 1000·0.766044 = 766.044; G_dT = 100 (sky view factor (1+1)/2 = 1); ground term (1−cosβ)/2 = 0. G_T = 866.044 W/m²"
+      }
+    },
+    {
+      "calc": "renewables.tilted_irradiance",
+      "inputs": {
+        "G_bn": "800 W/m^2",
+        "G_d": "150 W/m^2",
+        "rho_g": 0.2,
+        "beta": "30 deg",
+        "gamma": "15 deg",
+        "phi": "40 deg",
+        "delta": "20 deg",
+        "omega": "-30 deg"
+      },
+      "expect": {
+        "G_T": "787.4591 W/m^2",
+        "R_b": 0.9434606,
+        "G_bT": "636.4596 W/m^2",
+        "G_dT": "139.9519 W/m^2",
+        "G_rT": "11.0476 W/m^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "cosθz = 0.843252, cosθ = 0.795575 (see incidence oracle). R_b = 0.795575/0.843252 = 0.943461. G_bT = 800·0.795575 = 636.460; G_dT = 150(1+cos30°)/2 = 139.952; G_rT = (800·0.843252 + 150)·0.2·(1−cos30°)/2 = 824.60·0.0133975 = 11.0476; G_T = 787.459 W/m²"
+      }
+    },
+    {
+      "calc": "renewables.tilted_irradiance",
+      "inputs": {
+        "G_bn": "1000 W/m^2",
+        "G_d": "100 W/m^2",
+        "rho_g": 0.2,
+        "beta": "90 deg",
+        "gamma": "180 deg",
+        "phi": "40 deg",
+        "delta": "0 deg",
+        "omega": "0 deg"
+      },
+      "expect": {
+        "G_T": "136.6044 W/m^2",
+        "cos_theta": -0.6427876,
+        "R_b": 0.0,
+        "G_bT": "0 W/m^2",
+        "G_dT": "50 W/m^2",
+        "G_rT": "86.60444 W/m^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "North-facing wall (γ = 180°, β = 90°) at equinox noon: the surface faces away from the sun, cosθ = −sin40° = −0.642788 ≤ 0, so the beam is clipped to zero. cosθz = cos40° = 0.766044; G_dT = 100(1+cos90°)/2 = 50; ground-reflected = (1000·0.766044 + 100)·0.2·(1−cos90°)/2 = 866.044·0.1 = 86.604; G_T = 0 + 50 + 86.604 = 136.604 W/m²"
+      }
+    },
+    {
+      "calc": "renewables.solar_collector",
+      "inputs": {
+        "Fr_ta": 0.75,
+        "Fr_UL": "4 W/(m^2*K)",
+        "T_in": "60 degC",
+        "T_amb": "20 degC",
+        "G": "800 W/m^2",
+        "A_c": "2 m^2"
+      },
+      "expect": {
+        "eta": 0.55,
+        "Q_u": "880 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ΔT = 40 K; Q_u = 2(0.75·800 − 4·40) = 2(600 − 160) = 880 W; η = 880/(2·800) = 0.55"
+      }
+    },
+    {
+      "calc": "renewables.solar_collector",
+      "inputs": {
+        "Fr_ta": 0.75,
+        "Fr_UL": "4 W/(m^2*K)",
+        "T_in": "60 degC",
+        "T_amb": "20 degC",
+        "G": "100 W/m^2",
+        "A_c": "2 m^2"
+      },
+      "expect": {
+        "eta": -0.85,
+        "Q_u": "-170 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Low insolation: Q_u = 2(0.75·100 − 4·40) = 2(75 − 160) = −170 W (net loss); η = −170/200 = −0.85"
+      }
+    },
+    {
+      "calc": "renewables.solar_collector",
+      "inputs": {
+        "Fr_ta": 0.75,
+        "T_in": "60 degC",
+        "T_amb": "20 degC",
+        "G": "800 W/m^2",
+        "A_c": "2 m^2",
+        "eta": 0.55
+      },
+      "solve_for": [
+        "Fr_UL"
+      ],
+      "expect": {
+        "Fr_UL": "4 W/(m^2*K)"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η = Fr_ta − Fr_UL·ΔT/G → Fr_UL = (0.75 − 0.55)·800/40 = 4 W/(m²K)"
+      }
+    },
+    {
+      "calc": "renewables.pv_power",
+      "inputs": {
+        "G": "1000 W/m^2",
+        "A": "1.6 m^2",
+        "eta": 0.18
+      },
+      "expect": {
+        "P": "288 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P = 1000·1.6·0.18 = 288 W"
+      }
+    },
+    {
+      "calc": "renewables.pv_power",
+      "inputs": {
+        "P": "288 W",
+        "G": "1000 W/m^2",
+        "A": "1.6 m^2"
+      },
+      "solve_for": [
+        "eta"
+      ],
+      "expect": {
+        "eta": 0.18
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η = 288/(1000·1.6) = 0.18"
+      }
+    },
+    {
+      "calc": "renewables.pv_derate",
+      "inputs": {
+        "eta_ref": 0.2,
+        "beta_T": "0.004 1/K",
+        "T_c": "45 degC",
+        "T_ref": "25 degC"
+      },
+      "expect": {
+        "eta": 0.184
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T_c − T_ref = 20 K; η = 0.20(1 − 0.004·20) = 0.20·0.92 = 0.184"
+      }
+    },
+    {
+      "calc": "renewables.pv_derate",
+      "inputs": {
+        "eta_ref": 0.2,
+        "beta_T": "0.004 1/K",
+        "T_c": "10 degC",
+        "T_ref": "25 degC"
+      },
+      "expect": {
+        "eta": 0.212
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Cell cooler than reference: T_c − T_ref = −15 K; η = 0.20(1 − 0.004·(−15)) = 0.20·1.06 = 0.212"
+      }
+    },
+    {
+      "calc": "renewables.pv_derate",
+      "inputs": {
+        "eta_ref": 0.2,
+        "beta_T": "0.004 1/K",
+        "T_ref": "25 degC",
+        "eta": 0.184
+      },
+      "solve_for": [
+        "T_c"
+      ],
+      "expect": {
+        "T_c": "45 degC"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "T_c = T_ref + (1 − η/η_ref)/β_T = 298.15 + (1 − 0.92)/0.004 = 298.15 + 20 = 318.15 K = 45 °C"
+      }
+    },
+    {
+      "calc": "renewables.wind_power_density",
+      "inputs": {
+        "rho": "1.225 kg/m^3",
+        "v": "12 m/s"
+      },
+      "expect": {
+        "p_density": "1058.4 W/m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "½·1.225·12³ = 0.6125·1728 = 1058.4 W/m²"
+      }
+    },
+    {
+      "calc": "renewables.wind_power_density",
+      "inputs": {
+        "rho": "1.1 kg/m^3",
+        "p_density": "550 W/m^2"
+      },
+      "solve_for": [
+        "v"
+      ],
+      "expect": {
+        "v": "10 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v = (2·p/ρ)^(1/3) = (2·550/1.1)^(1/3) = 1000^(1/3) = 10 m/s"
+      }
+    },
+    {
+      "calc": "renewables.geothermal_efficiency",
+      "inputs": {
+        "W_net": "10 MW",
+        "Q_in": "120 MW",
+        "mdot": "100 kg/s",
+        "h_in": "1.5 MJ/kg",
+        "h_0": "0.15 MJ/kg"
+      },
+      "expect": {
+        "eta_th": 0.0833333,
+        "eta_util": 0.0740741
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "ηth = 10/120 = 0.08333; ηu = 10e6/(100·(1.5e6 − 0.15e6)) = 10e6/1.35e8 = 0.074074"
+      }
+    },
+    {
+      "calc": "renewables.geothermal_efficiency",
+      "inputs": {
+        "W_net": "10 MW",
+        "Q_in": "120 MW",
+        "h_in": "1.5 MJ/kg",
+        "h_0": "0.15 MJ/kg",
+        "eta_util": 0.0740741
+      },
+      "solve_for": [
+        "mdot"
+      ],
+      "expect": {
+        "mdot": "100 kg/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "ṁ = W_net/(ηu·(h_in − h_0)) = 10e6/(0.0740741·1.35e6) = 100 kg/s"
+      }
+    },
+    {
+      "calc": "renewables.boiler_efficiency",
+      "inputs": {
+        "mdot_s": "10 kg/s",
+        "mdot_f": "0.8 kg/s",
+        "HHV": "45 MJ/kg",
+        "steam_condition": "saturated",
+        "T_steam": "453.03 K",
+        "P_steam": "2 MPa",
+        "T_feed": "60 degC",
+        "P_feed": "1.2 MPa"
+      },
+      "expect": {
+        "eta": 0.7072559,
+        "h_steam": 2798292.6,
+        "h_feed": 252171.2
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Independent IAPWS-IF97 (CoolProp) lookup, not mechcalc: h(saturated vapour, 2 MPa) = 2798292.6 J/kg; h(60 °C, 1.2 MPa) = 252171.2 J/kg. Δh = 2546121.4 J/kg. Q_steam = 10·2546121.4 = 25461213.8 W; Q_fuel = 0.8·45e6 = 36e6 W; η = 25461213.8/36e6 = 0.707256"
+      }
+    },
+    {
+      "calc": "renewables.boiler_efficiency",
+      "inputs": {
+        "mdot_s": "10 kg/s",
+        "mdot_f": "0.8 kg/s",
+        "HHV": "45 MJ/kg",
+        "steam_condition": "superheated",
+        "T_steam": "500 K",
+        "P_steam": "1 MPa",
+        "T_feed": "60 degC",
+        "P_feed": "1.2 MPa"
+      },
+      "expect": {
+        "eta": 0.7330686,
+        "h_steam": 2891218.3
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Superheated steam: h(500 K, 1 MPa) = 2891218.3 J/kg (independent CoolProp lookup); h_feed = 252171.2 J/kg. Δh = 2639047.1 J/kg. Q_steam = 26390470.7 W; η = 26390470.7/36e6 = 0.733069"
+      }
+    },
+    {
+      "calc": "renewables.steam_generation_rate",
+      "inputs": {
+        "Q_in": "20.25 MW",
+        "steam_condition": "saturated",
+        "T_steam": "453.03 K",
+        "P_steam": "2 MPa",
+        "T_feed": "60 degC",
+        "P_feed": "1.2 MPa"
+      },
+      "expect": {
+        "mdot_s": "7.95327 kg/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "h(sat. vapour, 2 MPa) = 2798292.6 J/kg, h(60 °C, 1.2 MPa) = 252171.2 J/kg → Δh = 2546121.4 J/kg; ṁ = 20.25e6/2546121.4 = 7.9533 kg/s"
+      }
+    },
+    {
+      "calc": "renewables.steam_generation_rate",
+      "inputs": {
+        "Q_in": "20.25 MW",
+        "steam_condition": "superheated",
+        "T_steam": "500 K",
+        "P_steam": "1 MPa",
+        "T_feed": "60 degC",
+        "P_feed": "1.2 MPa"
+      },
+      "expect": {
+        "mdot_s": "7.67322 kg/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "h(500 K, 1 MPa) = 2891218.3 J/kg, h(60 °C, 1.2 MPa) = 252171.2 J/kg → Δh = 2639047.1 J/kg; ṁ = 20.25e6/2639047.1 = 7.6732 kg/s"
+      }
+    },
+    {
+      "calc": "renewables.heat_rate",
+      "inputs": {
+        "eta": 0.4
+      },
+      "expect": {
+        "HR": 2.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "HR = 1/η = 1/0.4 = 2.5 (dimensionless; ×3600 → 9000 kJ/kWh)"
+      }
+    },
+    {
+      "calc": "renewables.heat_rate",
+      "inputs": {
+        "HR": 2.5
+      },
+      "solve_for": [
+        "eta"
+      ],
+      "expect": {
+        "eta": 0.4
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η = 1/HR = 1/2.5 = 0.4"
+      }
+    },
+    {
+      "calc": "renewables.heat_rate",
+      "inputs": {
+        "eta": 0.35
+      },
+      "expect": {
+        "HR": 2.8571429
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "HR = 1/0.35 = 2.8571429 (×3600 → 10285.7 kJ/kWh)"
+      }
+    },
+    {
+      "calc": "renewables.capacity_factor",
+      "inputs": {
+        "E": "500 GWh",
+        "P": "100 MW",
+        "t": "8760 h"
+      },
+      "expect": {
+        "CF": 0.570776
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "E = 500e9·3600 = 1.8e15 J; P·t = 1e8·8760·3600 = 3.1536e15 J; CF = 1.8e15/3.1536e15 = 0.570776"
+      }
+    },
+    {
+      "calc": "renewables.capacity_factor",
+      "inputs": {
+        "E": "1.8e15 J",
+        "P": "100 MW",
+        "CF": 0.5707763
+      },
+      "solve_for": [
+        "t"
+      ],
+      "expect": {
+        "t": "8760 h"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "t = E/(P·CF) = 1.8e15/(1e8·0.5707763) = 3.1536e7 s = 8760 h"
+      }
+    },
+    {
+      "calc": "renewables.solar_incidence",
+      "inputs": {
+        "delta": "-15 deg",
+        "phi": "-35 deg",
+        "beta": "30 deg",
+        "gamma": "180 deg",
+        "omega": "0 deg"
+      },
+      "expect": {
+        "theta": "10 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Southern hemisphere, equator-facing (north-facing, γ = 180°) panel at solar noon: sun zenith angle |φ − δ| = 20° toward the north; panel tilted 30° toward north → θ = 30° − 20° = 10° (ENU sun-vector · panel-normal gives 10.000°)"
+      }
+    }
+  ]
+}

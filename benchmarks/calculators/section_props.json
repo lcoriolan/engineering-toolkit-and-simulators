@@ -1,0 +1,5582 @@
+{
+  "section": "section_props",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k section_props",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "section_props.first_moment": {
+      "title": "First moment of area about the x-axis (Q = A\u00b7\u0233)",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "m^3",
+          "desc": "first moment about the x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ybar",
+          "unit": "m",
+          "desc": "centroid distance from the x-axis",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q = A*ybar"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "First moment of area Q = A\u00b7\u0233 (recalled)"
+      ],
+      "synthetic_example": {
+        "A": 0.02,
+        "ybar": 0.1
+      }
+    },
+    "section_props.parallel_axis": {
+      "title": "Parallel-axis theorem (I\u2032 = I + A\u00b7d\u00b2)",
+      "variables": [
+        {
+          "name": "I_prime",
+          "unit": "m^4",
+          "desc": "moment about the offset axis",
+          "lo": null,
+          "hi": null,
+          "label": "I\u2032",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "m^4",
+          "desc": "moment about the centroidal axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "distance between the parallel axes",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "I_prime = I + A*d**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "I_prime"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Parallel-axis (Steiner) theorem (recalled)"
+      ],
+      "synthetic_example": {
+        "I": 8e-06,
+        "A": 0.02,
+        "d": 0.1
+      }
+    },
+    "section_props.section_modulus": {
+      "title": "Elastic section modulus (S = I/c)",
+      "variables": [
+        {
+          "name": "S",
+          "unit": "m^3",
+          "desc": "section modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "m^4",
+          "desc": "second moment about the axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "distance from the neutral axis to the extreme fibre",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "S = I/c"
+      ],
+      "procedure": null,
+      "outputs": [
+        "S"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Elastic section modulus S = I/c (recalled)"
+      ],
+      "synthetic_example": {
+        "I": 8e-06,
+        "c": 0.1
+      }
+    },
+    "section_props.radius_gyration": {
+      "title": "Radius of gyration (r = \u221a(I/A))",
+      "variables": [
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radius of gyration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "m^4",
+          "desc": "second moment about the axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "r = sqrt(I/A)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "r"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Radius of gyration r = sqrt(I/A) (recalled)"
+      ],
+      "synthetic_example": {
+        "I": 8e-06,
+        "A": 0.02
+      }
+    },
+    "section_props.principal_axes": {
+      "title": "Principal moments and orientation from Ix, Iy, Ixy",
+      "variables": [
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Iy",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal y-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ixy",
+          "unit": "m^4",
+          "desc": "product of inertia about the centroid, Ixy = \u222bxy\u00b7dA (signed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "m^4",
+          "desc": "major principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "m^4",
+          "desc": "minor principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_p",
+          "unit": "rad",
+          "desc": "angle of the I1 axis from +x",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _principal_axes(v):\n    Ix, Iy, Ixy = _finite(v['Ix'], 'Ix'), _finite(v['Iy'], 'Iy'), _finite(v['Ixy'], 'Ixy')\n    Iavg = (Ix + Iy) / 2\n    R = math.hypot((Ix - Iy) / 2, Ixy)\n    return {'I1': Iavg + R, 'I2': Iavg - R, 'theta_p': math.atan2(-2 * Ixy, Ix - Iy) / 2}\n",
+        "source": "section_props.py",
+        "line": 335
+      },
+      "outputs": [
+        "I1",
+        "I2",
+        "theta_p"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Principal moments of a second-moment tensor; \u03b8p = \u00bd\u00b7atan2(\u22122\u00b7Ixy, Ix \u2212 Iy) (recalled)"
+      ],
+      "synthetic_example": {
+        "Ix": 1e-05,
+        "Iy": 4e-06,
+        "Ixy": 3e-06
+      }
+    },
+    "section_props.rectangle": {
+      "title": "Rectangle section properties",
+      "variables": [
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "width (horizontal)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "height (vertical)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "xbar",
+          "unit": "m",
+          "desc": "centroid x\u0304",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ybar",
+          "unit": "m",
+          "desc": "centroid \u0233",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Iy",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal y-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ixy",
+          "unit": "m^4",
+          "desc": "product of inertia about the centroid, Ixy = \u222bxy\u00b7dA (signed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment J = Ix + Iy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sx",
+          "unit": "m^3",
+          "desc": "elastic section modulus about x, Ix/cx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "m^3",
+          "desc": "elastic section modulus about y, Iy/cy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zx",
+          "unit": "m^3",
+          "desc": "plastic section modulus about x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zy",
+          "unit": "m^3",
+          "desc": "plastic section modulus about y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rx",
+          "unit": "m",
+          "desc": "radius of gyration about x, sqrt(Ix/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ry",
+          "unit": "m",
+          "desc": "radius of gyration about y, sqrt(Iy/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_x",
+          "unit": "",
+          "desc": "shape factor Zx/Sx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_y",
+          "unit": "",
+          "desc": "shape factor Zy/Sy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "m^4",
+          "desc": "major principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "m^4",
+          "desc": "minor principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_p",
+          "unit": "rad",
+          "desc": "angle of the I1 axis from +x",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J_t",
+          "unit": "m^4",
+          "desc": "Saint-Venant torsion constant (long side b_t \u2265 t_t)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _rectangle(v):\n    b, h = _finite(v['b'], 'b'), _finite(v['h'], 'h')\n    w, t = (b, h) if b >= h else (h, b)\n    jt = w * t ** 3 * (1 / 3 - 0.21 * (t / w) * (1 - (t / w) ** 4 / 12))\n    return _shape([[b, h, b / 2, h / 2]], jt)\n",
+        "source": "section_props.py",
+        "line": 255
+      },
+      "outputs": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "assumptions": [
+        "Shape factor = 1.5 for a rectangle (landmark). J_t uses the standard Saint-Venant approximation b\u00b7t\u00b3(1/3 \u2212 0.21(t/b)(1 \u2212 (t/b)\u2074/12))."
+      ],
+      "method_references": [
+        "Rectangle: A = bh, Ix = bh\u00b3/12, Zx = bh\u00b2/4 (recalled)"
+      ],
+      "synthetic_example": {
+        "b": 0.2,
+        "h": 0.1
+      }
+    },
+    "section_props.hollow_rectangle": {
+      "title": "Hollow (box) rectangle section properties",
+      "variables": [
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "outer width (horizontal)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "outer height (vertical)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "bi",
+          "unit": "m",
+          "desc": "inner width (hole)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "hi",
+          "unit": "m",
+          "desc": "inner height (hole)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "xbar",
+          "unit": "m",
+          "desc": "centroid x\u0304",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ybar",
+          "unit": "m",
+          "desc": "centroid \u0233",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Iy",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal y-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ixy",
+          "unit": "m^4",
+          "desc": "product of inertia about the centroid, Ixy = \u222bxy\u00b7dA (signed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment J = Ix + Iy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sx",
+          "unit": "m^3",
+          "desc": "elastic section modulus about x, Ix/cx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "m^3",
+          "desc": "elastic section modulus about y, Iy/cy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zx",
+          "unit": "m^3",
+          "desc": "plastic section modulus about x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zy",
+          "unit": "m^3",
+          "desc": "plastic section modulus about y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rx",
+          "unit": "m",
+          "desc": "radius of gyration about x, sqrt(Ix/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ry",
+          "unit": "m",
+          "desc": "radius of gyration about y, sqrt(Iy/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_x",
+          "unit": "",
+          "desc": "shape factor Zx/Sx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_y",
+          "unit": "",
+          "desc": "shape factor Zy/Sy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "m^4",
+          "desc": "major principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "m^4",
+          "desc": "minor principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_p",
+          "unit": "rad",
+          "desc": "angle of the I1 axis from +x",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _hollow_rectangle(v):\n    b, h, bi, hi = (_finite(v[k], k) for k in ('b', 'h', 'bi', 'hi'))\n    if bi <= 0 or hi <= 0 or bi >= b or hi >= h:\n        raise MechError('hollow_rectangle: need 0 < bi < b and 0 < hi < h')\n    tw, th = (b - bi) / 2, (h - hi) / 2  # wall thicknesses (symmetric walls)\n    rects = [[b, th, b / 2, th / 2], [b, th, b / 2, h - th / 2],\n             [tw, hi, tw / 2, h / 2], [tw, hi, b - tw / 2, h / 2]]\n    return _shape(rects)\n",
+        "source": "section_props.py",
+        "line": 262
+      },
+      "outputs": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p"
+      ],
+      "assumptions": [
+        "Symmetric walls; Ix = (b\u00b7h\u00b3 \u2212 bi\u00b7hi\u00b3)/12. Torsion constant omitted (thin-wall closed-section formula not recalled confidently)."
+      ],
+      "method_references": [
+        "Hollow rectangle: subtract the hole moments of area (recalled)"
+      ],
+      "synthetic_example": {
+        "b": 0.2,
+        "h": 0.1,
+        "bi": 0.16,
+        "hi": 0.06
+      }
+    },
+    "section_props.circle": {
+      "title": "Solid circular section properties",
+      "variables": [
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "xbar",
+          "unit": "m",
+          "desc": "centroid x\u0304",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ybar",
+          "unit": "m",
+          "desc": "centroid \u0233",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Iy",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal y-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ixy",
+          "unit": "m^4",
+          "desc": "product of inertia about the centroid, Ixy = \u222bxy\u00b7dA (signed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment J = Ix + Iy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sx",
+          "unit": "m^3",
+          "desc": "elastic section modulus about x, Ix/cx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "m^3",
+          "desc": "elastic section modulus about y, Iy/cy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zx",
+          "unit": "m^3",
+          "desc": "plastic section modulus about x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zy",
+          "unit": "m^3",
+          "desc": "plastic section modulus about y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rx",
+          "unit": "m",
+          "desc": "radius of gyration about x, sqrt(Ix/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ry",
+          "unit": "m",
+          "desc": "radius of gyration about y, sqrt(Iy/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_x",
+          "unit": "",
+          "desc": "shape factor Zx/Sx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_y",
+          "unit": "",
+          "desc": "shape factor Zy/Sy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "m^4",
+          "desc": "major principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "m^4",
+          "desc": "minor principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_p",
+          "unit": "rad",
+          "desc": "angle of the I1 axis from +x",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J_t",
+          "unit": "m^4",
+          "desc": "Saint-Venant torsion constant",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _circle(v):\n    d = _finite(v['d'], 'd')\n    A = math.pi * d ** 2 / 4\n    I = math.pi * d ** 4 / 64\n    J = math.pi * d ** 4 / 32\n    S = math.pi * d ** 3 / 32\n    Z = d ** 3 / 6\n    return {'A': A, 'xbar': d / 2, 'ybar': d / 2, 'Ix': I, 'Iy': I, 'Ixy': 0.0, 'J': J,\n            'Sx': S, 'Sy': S, 'Zx': Z, 'Zy': Z, 'rx': d / 4, 'ry': d / 4,\n            'shape_x': Z / S, 'shape_y': Z / S, 'I1': I, 'I2': I, 'theta_p': 0.0, 'J_t': J}\n",
+        "source": "section_props.py",
+        "line": 272
+      },
+      "outputs": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "assumptions": [
+        "Shape factor = 16/(3\u03c0) \u2248 1.698 for a solid circle."
+      ],
+      "method_references": [
+        "Circle: I = \u03c0d\u2074/64, J = \u03c0d\u2074/32, Z = d\u00b3/6 (recalled)"
+      ],
+      "synthetic_example": {
+        "d": 0.2
+      }
+    },
+    "section_props.tube": {
+      "title": "Circular tube section properties",
+      "variables": [
+        {
+          "name": "do",
+          "unit": "m",
+          "desc": "outer diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "di",
+          "unit": "m",
+          "desc": "inner diameter (hole)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "xbar",
+          "unit": "m",
+          "desc": "centroid x\u0304",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ybar",
+          "unit": "m",
+          "desc": "centroid \u0233",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Iy",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal y-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ixy",
+          "unit": "m^4",
+          "desc": "product of inertia about the centroid, Ixy = \u222bxy\u00b7dA (signed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment J = Ix + Iy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sx",
+          "unit": "m^3",
+          "desc": "elastic section modulus about x, Ix/cx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "m^3",
+          "desc": "elastic section modulus about y, Iy/cy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zx",
+          "unit": "m^3",
+          "desc": "plastic section modulus about x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zy",
+          "unit": "m^3",
+          "desc": "plastic section modulus about y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rx",
+          "unit": "m",
+          "desc": "radius of gyration about x, sqrt(Ix/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ry",
+          "unit": "m",
+          "desc": "radius of gyration about y, sqrt(Iy/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_x",
+          "unit": "",
+          "desc": "shape factor Zx/Sx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_y",
+          "unit": "",
+          "desc": "shape factor Zy/Sy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "m^4",
+          "desc": "major principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "m^4",
+          "desc": "minor principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_p",
+          "unit": "rad",
+          "desc": "angle of the I1 axis from +x",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J_t",
+          "unit": "m^4",
+          "desc": "Saint-Venant torsion constant",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _tube(v):\n    do, di = _finite(v['do'], 'do'), _finite(v['di'], 'di')\n    if di <= 0 or di >= do:\n        raise MechError('tube: need 0 < di < do')\n    A = math.pi * (do ** 2 - di ** 2) / 4\n    I = math.pi * (do ** 4 - di ** 4) / 64\n    J = math.pi * (do ** 4 - di ** 4) / 32\n    S = math.pi * (do ** 4 - di ** 4) / (32 * do)\n    Z = (do ** 3 - di ** 3) / 6\n    r = math.sqrt(I / A)\n    return {'A': A, 'xbar': do / 2, 'ybar': do / 2, 'Ix': I, 'Iy': I, 'Ixy': 0.0, 'J': J,\n            'Sx': S, 'Sy': S, 'Zx': Z, 'Zy': Z, 'rx': r, 'ry': r,\n            'shape_x': Z / S, 'shape_y': Z / S, 'I1': I, 'I2': I, 'theta_p': 0.0, 'J_t': J}\n",
+        "source": "section_props.py",
+        "line": 284
+      },
+      "outputs": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "assumptions": [
+        "J_t = \u03c0(do\u2074 \u2212 di\u2074)/32 exactly for a circular tube."
+      ],
+      "method_references": [
+        "Hollow circle: I = \u03c0(do\u2074 \u2212 di\u2074)/64, Z = (do\u00b3 \u2212 di\u00b3)/6 (recalled)"
+      ],
+      "synthetic_example": {
+        "do": 0.2,
+        "di": 0.16
+      }
+    },
+    "section_props.i_section": {
+      "title": "I/W-section properties (symmetric, equal flanges)",
+      "variables": [
+        {
+          "name": "bf",
+          "unit": "m",
+          "desc": "flange width",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tf",
+          "unit": "m",
+          "desc": "flange thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "overall depth",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tw",
+          "unit": "m",
+          "desc": "web thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "xbar",
+          "unit": "m",
+          "desc": "centroid x\u0304",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ybar",
+          "unit": "m",
+          "desc": "centroid \u0233",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Iy",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal y-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ixy",
+          "unit": "m^4",
+          "desc": "product of inertia about the centroid, Ixy = \u222bxy\u00b7dA (signed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment J = Ix + Iy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sx",
+          "unit": "m^3",
+          "desc": "elastic section modulus about x, Ix/cx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "m^3",
+          "desc": "elastic section modulus about y, Iy/cy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zx",
+          "unit": "m^3",
+          "desc": "plastic section modulus about x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zy",
+          "unit": "m^3",
+          "desc": "plastic section modulus about y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rx",
+          "unit": "m",
+          "desc": "radius of gyration about x, sqrt(Ix/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ry",
+          "unit": "m",
+          "desc": "radius of gyration about y, sqrt(Iy/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_x",
+          "unit": "",
+          "desc": "shape factor Zx/Sx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_y",
+          "unit": "",
+          "desc": "shape factor Zy/Sy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "m^4",
+          "desc": "major principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "m^4",
+          "desc": "minor principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_p",
+          "unit": "rad",
+          "desc": "angle of the I1 axis from +x",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J_t",
+          "unit": "m^4",
+          "desc": "Saint-Venant torsion constant (thin-walled open approximation)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _i_section(v):\n    bf, tf, d, tw = (_finite(v[k], k) for k in ('bf', 'tf', 'd', 'tw'))\n    if tf <= 0 or tw <= 0 or d <= 2 * tf or bf <= tw:\n        raise MechError('i_section: need tf, tw > 0, d > 2\u00b7tf and bf > tw')\n    rects = [[bf, tf, bf / 2, d - tf / 2], [bf, tf, bf / 2, tf / 2], [tw, d - 2 * tf, bf / 2, d / 2]]\n    jt = (2 * bf * tf ** 3 + (d - 2 * tf) * tw ** 3) / 3  # thin-walled open-section approximation\n    return _shape(rects, jt)\n",
+        "source": "section_props.py",
+        "line": 299
+      },
+      "outputs": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "assumptions": [
+        "Equal flanges, symmetric. Ix = [bf\u00b7d\u00b3 \u2212 (bf \u2212 tw)(d \u2212 2tf)\u00b3]/12. J_t is the open-section approximation \u03a3 b\u00b7t\u00b3/3."
+      ],
+      "method_references": [
+        "I-section: A = 2\u00b7bf\u00b7tf + (d \u2212 2tf)\u00b7tw; plastic Zx = bf\u00b7tf(d \u2212 tf) + tw(d \u2212 2tf)\u00b2/4 (recalled)"
+      ],
+      "synthetic_example": {
+        "bf": 0.2,
+        "tf": 0.02,
+        "d": 0.4,
+        "tw": 0.01
+      }
+    },
+    "section_props.channel": {
+      "title": "Channel section properties",
+      "variables": [
+        {
+          "name": "bf",
+          "unit": "m",
+          "desc": "flange width (from back of web to toe)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tf",
+          "unit": "m",
+          "desc": "flange thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "overall depth",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tw",
+          "unit": "m",
+          "desc": "web thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "xbar",
+          "unit": "m",
+          "desc": "centroid x\u0304",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ybar",
+          "unit": "m",
+          "desc": "centroid \u0233",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Iy",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal y-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ixy",
+          "unit": "m^4",
+          "desc": "product of inertia about the centroid, Ixy = \u222bxy\u00b7dA (signed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment J = Ix + Iy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sx",
+          "unit": "m^3",
+          "desc": "elastic section modulus about x, Ix/cx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "m^3",
+          "desc": "elastic section modulus about y, Iy/cy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zx",
+          "unit": "m^3",
+          "desc": "plastic section modulus about x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zy",
+          "unit": "m^3",
+          "desc": "plastic section modulus about y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rx",
+          "unit": "m",
+          "desc": "radius of gyration about x, sqrt(Ix/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ry",
+          "unit": "m",
+          "desc": "radius of gyration about y, sqrt(Iy/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_x",
+          "unit": "",
+          "desc": "shape factor Zx/Sx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_y",
+          "unit": "",
+          "desc": "shape factor Zy/Sy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "m^4",
+          "desc": "major principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "m^4",
+          "desc": "minor principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_p",
+          "unit": "rad",
+          "desc": "angle of the I1 axis from +x",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J_t",
+          "unit": "m^4",
+          "desc": "Saint-Venant torsion constant (thin-walled open approximation)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _channel(v):\n    bf, tf, d, tw = (_finite(v[k], k) for k in ('bf', 'tf', 'd', 'tw'))\n    if tf <= 0 or tw <= 0 or d <= 2 * tf or bf <= tw:\n        raise MechError('channel: need tf, tw > 0, d > 2\u00b7tf and bf > tw')\n    rects = [[bf, tf, bf / 2, d - tf / 2], [bf, tf, bf / 2, tf / 2], [tw, d - 2 * tf, tw / 2, d / 2]]\n    jt = (2 * bf * tf ** 3 + (d - 2 * tf) * tw ** 3) / 3\n    return _shape(rects, jt)\n",
+        "source": "section_props.py",
+        "line": 308
+      },
+      "outputs": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "assumptions": [
+        "x\u0304 is measured from the back of the web; the shear centre lies outside the web (see channel_shear_center). J_t is the open-section approximation \u03a3 b\u00b7t\u00b3/3."
+      ],
+      "method_references": [
+        "Channel centroid and second moments by the parallel-axis theorem (recalled)"
+      ],
+      "synthetic_example": {
+        "bf": 0.1,
+        "tf": 0.012,
+        "d": 0.2,
+        "tw": 0.008
+      }
+    },
+    "section_props.tee": {
+      "title": "Tee section properties",
+      "variables": [
+        {
+          "name": "bf",
+          "unit": "m",
+          "desc": "flange width",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tf",
+          "unit": "m",
+          "desc": "flange thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "overall depth",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tw",
+          "unit": "m",
+          "desc": "stem thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "xbar",
+          "unit": "m",
+          "desc": "centroid x\u0304",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ybar",
+          "unit": "m",
+          "desc": "centroid \u0233",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Iy",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal y-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ixy",
+          "unit": "m^4",
+          "desc": "product of inertia about the centroid, Ixy = \u222bxy\u00b7dA (signed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment J = Ix + Iy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sx",
+          "unit": "m^3",
+          "desc": "elastic section modulus about x, Ix/cx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "m^3",
+          "desc": "elastic section modulus about y, Iy/cy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zx",
+          "unit": "m^3",
+          "desc": "plastic section modulus about x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zy",
+          "unit": "m^3",
+          "desc": "plastic section modulus about y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rx",
+          "unit": "m",
+          "desc": "radius of gyration about x, sqrt(Ix/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ry",
+          "unit": "m",
+          "desc": "radius of gyration about y, sqrt(Iy/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_x",
+          "unit": "",
+          "desc": "shape factor Zx/Sx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_y",
+          "unit": "",
+          "desc": "shape factor Zy/Sy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "m^4",
+          "desc": "major principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "m^4",
+          "desc": "minor principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_p",
+          "unit": "rad",
+          "desc": "angle of the I1 axis from +x",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J_t",
+          "unit": "m^4",
+          "desc": "Saint-Venant torsion constant (thin-walled open approximation)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _tee(v):\n    bf, tf, d, tw = (_finite(v[k], k) for k in ('bf', 'tf', 'd', 'tw'))\n    if tf <= 0 or tw <= 0 or d <= tf or bf <= tw:\n        raise MechError('tee: need tf, tw > 0, d > tf and bf > tw')\n    rects = [[bf, tf, bf / 2, d - tf / 2], [tw, d - tf, bf / 2, (d - tf) / 2]]\n    jt = (bf * tf ** 3 + (d - tf) * tw ** 3) / 3\n    return _shape(rects, jt)\n",
+        "source": "section_props.py",
+        "line": 317
+      },
+      "outputs": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "assumptions": [
+        "\u0233 is measured from the bottom of the stem; the shear centre is at the flange/stem junction on the symmetry axis."
+      ],
+      "method_references": [
+        "Tee centroid and second moments by the parallel-axis theorem (recalled)"
+      ],
+      "synthetic_example": {
+        "bf": 0.15,
+        "tf": 0.02,
+        "d": 0.2,
+        "tw": 0.01
+      }
+    },
+    "section_props.angle": {
+      "title": "Equal-leg angle section properties",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "leg length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "leg thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "xbar",
+          "unit": "m",
+          "desc": "centroid x\u0304",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ybar",
+          "unit": "m",
+          "desc": "centroid \u0233",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Iy",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal y-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ixy",
+          "unit": "m^4",
+          "desc": "product of inertia about the centroid, Ixy = \u222bxy\u00b7dA (signed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment J = Ix + Iy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sx",
+          "unit": "m^3",
+          "desc": "elastic section modulus about x, Ix/cx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "m^3",
+          "desc": "elastic section modulus about y, Iy/cy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zx",
+          "unit": "m^3",
+          "desc": "plastic section modulus about x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zy",
+          "unit": "m^3",
+          "desc": "plastic section modulus about y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rx",
+          "unit": "m",
+          "desc": "radius of gyration about x, sqrt(Ix/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ry",
+          "unit": "m",
+          "desc": "radius of gyration about y, sqrt(Iy/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_x",
+          "unit": "",
+          "desc": "shape factor Zx/Sx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_y",
+          "unit": "",
+          "desc": "shape factor Zy/Sy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "m^4",
+          "desc": "major principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "m^4",
+          "desc": "minor principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_p",
+          "unit": "rad",
+          "desc": "angle of the I1 axis from +x",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J_t",
+          "unit": "m^4",
+          "desc": "Saint-Venant torsion constant (thin-walled open approximation)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _angle(v):\n    L, t = _finite(v['L'], 'L'), _finite(v['t'], 't')\n    if t <= 0 or t >= L:\n        raise MechError('angle: need 0 < t < L')\n    rects = [[t, L - t, t / 2, (L + t) / 2], [L - t, t, (L + t) / 2, t / 2], [t, t, t / 2, t / 2]]\n    jt = 2 * L * t ** 3 / 3  # thin-walled open-section approximation (two legs)\n    return _shape(rects, jt)\n",
+        "source": "section_props.py",
+        "line": 326
+      },
+      "outputs": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "assumptions": [
+        "x\u0304 = \u0233 measured from the heel (back of the legs); principal axes at \u00b145\u00b0 to the legs; A = t(2L \u2212 t). J_t is the open-section approximation (two legs)."
+      ],
+      "method_references": [
+        "Equal-leg angle: A = t(2L \u2212 t), \u0233 = (L\u00b2 + Lt \u2212 t\u00b2)/(2(2L \u2212 t)) (recalled)"
+      ],
+      "synthetic_example": {
+        "L": 0.1,
+        "t": 0.01
+      }
+    },
+    "section_props.channel_shear_center": {
+      "title": "Shear centre of a thin-walled channel",
+      "variables": [
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "flange width (web centreline to flange tip)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "web depth (between flange centrelines)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "uniform wall thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "e",
+          "unit": "m",
+          "desc": "shear-centre distance from the web centreline (opposite the toes)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _channel_shear_center(v):\n    \"\"\"Shear centre of a thin-walled channel (uniform thickness t): distance e from the web centreline,\n    on the side opposite the flange toes, e = 3\u00b7b\u00b2/(6\u00b7b + h). b = flange width measured from the web\n    centreline to the flange tip; h = web depth measured between flange centrelines.\"\"\"\n    b, h, t = _finite(v['b'], 'b'), _finite(v['h'], 'h'), _finite(v['t'], 't')\n    if b <= 0 or h <= 0 or t <= 0:\n        raise MechError('channel_shear_center: b, h, t must be positive')\n    Ix = t * h ** 2 * (h + 6 * b) / 12\n    return {'Ix': Ix, 'e': 3 * b ** 2 / (6 * b + h), 'A': t * (2 * b + h)}\n",
+        "source": "section_props.py",
+        "line": 342
+      },
+      "outputs": [
+        "Ix",
+        "e",
+        "A"
+      ],
+      "assumptions": [
+        "Thin uniform wall (t \u226a b, h). Shear centre lies on the symmetry axis, outside the web."
+      ],
+      "method_references": [
+        "Channel shear-centre distance e = 3b\u00b2/(6b + h) (recalled)"
+      ],
+      "synthetic_example": {
+        "b": 0.05,
+        "h": 0.1,
+        "t": 0.005
+      }
+    },
+    "section_props.polygon_properties": {
+      "title": "General polygon section properties",
+      "variables": [
+        {
+          "name": "vertices",
+          "unit": "",
+          "desc": "[[x, y], ...] vertices (m), any winding order",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "xbar",
+          "unit": "m",
+          "desc": "centroid x\u0304",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ybar",
+          "unit": "m",
+          "desc": "centroid \u0233",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Iy",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal y-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ixy",
+          "unit": "m^4",
+          "desc": "product of inertia about the centroid, Ixy = \u222bxy\u00b7dA (signed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment J = Ix + Iy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sx",
+          "unit": "m^3",
+          "desc": "elastic section modulus about x, Ix/cx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "m^3",
+          "desc": "elastic section modulus about y, Iy/cy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zx",
+          "unit": "m^3",
+          "desc": "plastic section modulus about x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zy",
+          "unit": "m^3",
+          "desc": "plastic section modulus about y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rx",
+          "unit": "m",
+          "desc": "radius of gyration about x, sqrt(Ix/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ry",
+          "unit": "m",
+          "desc": "radius of gyration about y, sqrt(Iy/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_x",
+          "unit": "",
+          "desc": "shape factor Zx/Sx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_y",
+          "unit": "",
+          "desc": "shape factor Zy/Sy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "m^4",
+          "desc": "major principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "m^4",
+          "desc": "minor principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_p",
+          "unit": "rad",
+          "desc": "angle of the I1 axis from +x",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _polygon(v):\n    return _geom_outputs(_poly_geom(v['vertices']))\n",
+        "source": "section_props.py",
+        "line": 353
+      },
+      "outputs": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p"
+      ],
+      "assumptions": [
+        "Simple polygon; Zx/Zy by bisection of the equal-area axis. Concave sections are also served by the rectangle-composite procedure."
+      ],
+      "method_references": [
+        "Area, centroid and second moments of a polygon by Green\u2019s theorem (recalled)"
+      ],
+      "synthetic_example": {
+        "vertices": [
+          [
+            0,
+            0
+          ],
+          [
+            0.2,
+            0
+          ],
+          [
+            0.2,
+            0.1
+          ],
+          [
+            0,
+            0.1
+          ]
+        ]
+      }
+    },
+    "section_props.composite": {
+      "title": "Composite of rectangles: full section properties",
+      "variables": [
+        {
+          "name": "rects",
+          "unit": "",
+          "desc": "[[b, h, xc, yc], ...] rows (m); non-overlapping rectangles",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "xbar",
+          "unit": "m",
+          "desc": "centroid x\u0304",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ybar",
+          "unit": "m",
+          "desc": "centroid \u0233",
+          "lo": null,
+          "hi": null,
+          "label": "\u0233",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ix",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal x-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Iy",
+          "unit": "m^4",
+          "desc": "second moment about the centroidal y-axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ixy",
+          "unit": "m^4",
+          "desc": "product of inertia about the centroid, Ixy = \u222bxy\u00b7dA (signed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "polar second moment J = Ix + Iy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sx",
+          "unit": "m^3",
+          "desc": "elastic section modulus about x, Ix/cx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "m^3",
+          "desc": "elastic section modulus about y, Iy/cy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zx",
+          "unit": "m^3",
+          "desc": "plastic section modulus about x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Zy",
+          "unit": "m^3",
+          "desc": "plastic section modulus about y",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rx",
+          "unit": "m",
+          "desc": "radius of gyration about x, sqrt(Ix/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ry",
+          "unit": "m",
+          "desc": "radius of gyration about y, sqrt(Iy/A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_x",
+          "unit": "",
+          "desc": "shape factor Zx/Sx",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "shape_y",
+          "unit": "",
+          "desc": "shape factor Zy/Sy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I1",
+          "unit": "m^4",
+          "desc": "major principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I2",
+          "unit": "m^4",
+          "desc": "minor principal moment",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_p",
+          "unit": "rad",
+          "desc": "angle of the I1 axis from +x",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _composite(v):\n    return _geom_outputs(_rect_geom(v['rects']))\n",
+        "source": "section_props.py",
+        "line": 357
+      },
+      "outputs": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p"
+      ],
+      "assumptions": [
+        "Parallel-axis combination; Zx/Zy by bisection of the equal-area axis."
+      ],
+      "method_references": [
+        "Composite section by the parallel-axis theorem (recalled)"
+      ],
+      "synthetic_example": {
+        "rects": [
+          [
+            0.2,
+            0.02,
+            0.1,
+            0.19
+          ],
+          [
+            0.2,
+            0.02,
+            0.1,
+            0.01
+          ],
+          [
+            0.01,
+            0.16,
+            0.1,
+            0.1
+          ]
+        ]
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "section_props-001",
+      "calculator": "section_props.first_moment",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A": "200 cm^2",
+        "ybar": "10 cm"
+      },
+      "solve_for": [
+        "Q"
+      ],
+      "expected_as_specified": {
+        "Q": "0.002 m^3"
+      },
+      "expected_SI": {
+        "Q": 0.002
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 0.002,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.first_moment (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = A\u00b7ybar = 0.02 m^2 x 0.1 m = 0.002 m^3"
+      }
+    },
+    {
+      "id": "section_props-002",
+      "calculator": "section_props.parallel_axis",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "8e-6 m^4",
+        "A": "0.02 m^2",
+        "d": "0.1 m"
+      },
+      "solve_for": [
+        "I_prime"
+      ],
+      "expected_as_specified": {
+        "I_prime": "2.08e-4 m^4"
+      },
+      "expected_SI": {
+        "I_prime": 0.000208
+      },
+      "actual_SI": {
+        "I_prime": {
+          "value": 0.00020800000000000004,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.parallel_axis (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "I_prime": {
+          "absolute_error": 5.421010862427522e-20,
+          "relative_error": 2.606255222320924e-16,
+          "allowed_absolute_error": 4.1599999999999997e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "I' = 8e-6 + 0.02 x 0.01 = 8e-6 + 2e-4 = 2.08e-4 m^4"
+      }
+    },
+    {
+      "id": "section_props-003",
+      "calculator": "section_props.parallel_axis",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I_prime": "2.08e-4 m^4",
+        "I": "8e-6 m^4",
+        "A": "0.02 m^2"
+      },
+      "solve_for": [
+        "d"
+      ],
+      "expected_as_specified": {
+        "d": "0.1 m"
+      },
+      "expected_SI": {
+        "d": 0.1
+      },
+      "actual_SI": {
+        "d": {
+          "value": 0.1,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc section_props.parallel_axis (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "d": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "d = sqrt((I' - I)/A) = sqrt(2e-4/0.02) = sqrt(0.01) = 0.1 m"
+      }
+    },
+    {
+      "id": "section_props-004",
+      "calculator": "section_props.section_modulus",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "8e-6 m^4",
+        "c": "0.1 m"
+      },
+      "solve_for": [
+        "S"
+      ],
+      "expected_as_specified": {
+        "S": "8e-5 m^3"
+      },
+      "expected_SI": {
+        "S": 8e-05
+      },
+      "actual_SI": {
+        "S": {
+          "value": 7.999999999999999e-05,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.section_modulus (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "S": {
+          "absolute_error": 1.3552527156068805e-20,
+          "relative_error": 1.6940658945086004e-16,
+          "allowed_absolute_error": 1.6e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "S = I/c = 8e-6/0.1 = 8e-5 m^3"
+      }
+    },
+    {
+      "id": "section_props-005",
+      "calculator": "section_props.radius_gyration",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "8e-6 m^4",
+        "A": "0.02 m^2"
+      },
+      "solve_for": [
+        "r"
+      ],
+      "expected_as_specified": {
+        "r": "0.02 m"
+      },
+      "expected_SI": {
+        "r": 0.02
+      },
+      "actual_SI": {
+        "r": {
+          "value": 0.02,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc section_props.radius_gyration (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "r": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = sqrt(8e-6/0.02) = sqrt(4e-4) = 0.02 m"
+      }
+    },
+    {
+      "id": "section_props-006",
+      "calculator": "section_props.principal_axes",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Ix": "10e-6 m^4",
+        "Iy": "4e-6 m^4",
+        "Ixy": "3e-6 m^4"
+      },
+      "solve_for": [
+        "I1",
+        "I2",
+        "theta_p"
+      ],
+      "expected_as_specified": {
+        "I1": "1.1242641e-5 m^4",
+        "I2": "2.7573593e-6 m^4",
+        "theta_p": "-22.5 deg"
+      },
+      "expected_SI": {
+        "I1": 1.1242641e-05,
+        "I2": 2.7573593e-06,
+        "theta_p": -0.39269908169872414
+      },
+      "actual_SI": {
+        "I1": {
+          "value": 1.1242640687119286e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.principal_axes (procedure)"
+        },
+        "I2": {
+          "value": 2.757359312880715e-06,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.principal_axes (procedure)"
+        },
+        "theta_p": {
+          "value": -0.39269908169872414,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc section_props.principal_axes (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "I1": {
+          "absolute_error": 3.12880714650114e-13,
+          "relative_error": 2.782982349521914e-08,
+          "allowed_absolute_error": 1.1242641e-09,
+          "passed": true
+        },
+        "I2": {
+          "absolute_error": 1.2880715255931792e-14,
+          "relative_error": 4.671395293290865e-09,
+          "allowed_absolute_error": 2.7573593e-10,
+          "passed": true
+        },
+        "theta_p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 3.9269908169872414e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "avg = 7e-6; R = sqrt(3e-6^2 + 3e-6^2) = 4.24264e-6; I1 = 1.124264e-5, I2 = 2.757359e-6; theta_p = 1/2 atan2(-2\u00b73, 10-4) = 1/2 atan2(-6, 6) = -22.5 deg (I1 axis; Ixy = +\u222bxy dA)"
+      }
+    },
+    {
+      "id": "section_props-007",
+      "calculator": "section_props.principal_axes",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I1": "1.1242641e-5 m^4",
+        "Ix": "10e-6 m^4",
+        "Iy": "4e-6 m^4"
+      },
+      "solve_for": [
+        "Ixy"
+      ],
+      "expected_as_specified": {
+        "Ixy": "3e-6 m^4"
+      },
+      "expected_SI": {
+        "Ixy": 3e-06
+      },
+      "actual_SI": {
+        "Ixy": {
+          "value": 3.000000442480132e-06,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.principal_axes (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "Ixy": {
+          "absolute_error": 4.424801318533497e-13,
+          "relative_error": 1.4749337728444992e-07,
+          "allowed_absolute_error": 3e-10,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Ixy = sqrt(((I1-I2)/2)^2 - ((Ix-Iy)/2)^2) with I2 = Ix+Iy-I1; recovers 3e-6 m^4"
+      }
+    },
+    {
+      "id": "section_props-008",
+      "calculator": "section_props.rectangle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "b": "200 mm",
+        "h": "10 cm"
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "expected_as_specified": {
+        "A": "0.02 m^2",
+        "Ix": "1.6666667e-5 m^4",
+        "Iy": "6.6666667e-5 m^4",
+        "Zx": "5e-4 m^3",
+        "shape_x": 1.5,
+        "J_t": "4.5776042e-5 m^4"
+      },
+      "expected_SI": {
+        "A": 0.02,
+        "Ix": 1.6666667e-05,
+        "Iy": 6.6666667e-05,
+        "Zx": 0.0005,
+        "shape_x": 1.5,
+        "J_t": 4.5776042e-05
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.020000000000000004,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.rectangle (procedure)"
+        },
+        "Ix": {
+          "value": 1.666666666666667e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.rectangle (procedure)"
+        },
+        "Iy": {
+          "value": 6.666666666666668e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.rectangle (procedure)"
+        },
+        "Zx": {
+          "value": 0.0005,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.rectangle (procedure)"
+        },
+        "shape_x": {
+          "value": 1.4999999999999998,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc section_props.rectangle (procedure)"
+        },
+        "J_t": {
+          "value": 4.577604166666668e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.rectangle (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A": {
+          "absolute_error": 3.469446951953614e-18,
+          "relative_error": 1.734723475976807e-16,
+          "allowed_absolute_error": 2.0000000000000003e-06,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 3.3333332974264454e-13,
+          "relative_error": 1.9999999384558686e-08,
+          "allowed_absolute_error": 1.6666667000000002e-09,
+          "passed": true
+        },
+        "Iy": {
+          "absolute_error": 3.3333332296638096e-13,
+          "relative_error": 4.999999819495715e-09,
+          "allowed_absolute_error": 6.666666700000001e-09,
+          "passed": true
+        },
+        "Zx": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5.0000000000000004e-08,
+          "passed": true
+        },
+        "shape_x": {
+          "absolute_error": 2.220446049250313e-16,
+          "relative_error": 1.4802973661668753e-16,
+          "allowed_absolute_error": 0.00015000000000000001,
+          "passed": true
+        },
+        "J_t": {
+          "absolute_error": 3.333333161901174e-13,
+          "relative_error": 7.2818291321499e-09,
+          "allowed_absolute_error": 4.5776042e-09,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "b = 0.2 m, h = 0.1 m; A = 0.02; Ix = 0.2\u00b70.001/12 = 1.66667e-5; Iy = 0.1\u00b70.008/12 = 6.66667e-5; Zx = bh^2/4 = 5e-4; shape = 1.5 (landmark); J_t = 0.2\u00b70.001(1/3 - 0.21\u00b70.5(1 - 0.0625/12)) = 4.57760e-5"
+      }
+    },
+    {
+      "id": "section_props-009",
+      "calculator": "section_props.rectangle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A": "0.02 m^2",
+        "h": "0.1 m"
+      },
+      "solve_for": [
+        "b"
+      ],
+      "expected_as_specified": {
+        "b": "0.2 m"
+      },
+      "expected_SI": {
+        "b": 0.2
+      },
+      "actual_SI": {
+        "b": {
+          "value": 0.2,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc section_props.rectangle (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "b": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "b = A/h = 0.02/0.1 = 0.2 m"
+      }
+    },
+    {
+      "id": "section_props-010",
+      "calculator": "section_props.hollow_rectangle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "b": "0.2 m",
+        "h": "0.1 m",
+        "bi": "0.16 m",
+        "hi": "0.06 m"
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p"
+      ],
+      "expected_as_specified": {
+        "A": "0.0104 m^2",
+        "Ix": "1.3786667e-5 m^4",
+        "Zx": "3.56e-4 m^3"
+      },
+      "expected_SI": {
+        "A": 0.0104,
+        "Ix": 1.3786667e-05,
+        "Zx": 0.000356
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.010400000000000003,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.hollow_rectangle (procedure)"
+        },
+        "Ix": {
+          "value": 1.378666666666667e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.hollow_rectangle (procedure)"
+        },
+        "Zx": {
+          "value": 0.00035600000000000014,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.hollow_rectangle (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A": {
+          "absolute_error": 3.469446951953614e-18,
+          "relative_error": 3.336006684570783e-16,
+          "allowed_absolute_error": 1.04e-06,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 3.3333332974264454e-13,
+          "relative_error": 2.4177948864844895e-08,
+          "allowed_absolute_error": 1.3786667e-09,
+          "passed": true
+        },
+        "Zx": {
+          "absolute_error": 1.6263032587282567e-19,
+          "relative_error": 4.56826758069735e-16,
+          "allowed_absolute_error": 3.56e-08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 0.02 - 0.0096 = 0.0104; Ix = (0.2\u00b70.001 - 0.16\u00b70.000216)/12 = (2e-4 - 3.456e-5)/12 = 1.37867e-5; Zx = (b h^2 - bi hi^2)/4 = (2e-3 - 5.76e-4)/4 = 3.56e-4"
+      }
+    },
+    {
+      "id": "section_props-011",
+      "calculator": "section_props.circle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "0.2 m"
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "expected_as_specified": {
+        "A": "0.03141593 m^2",
+        "Ix": "7.8539816e-5 m^4",
+        "Zx": "1.3333333e-3 m^3",
+        "shape_x": 1.6976527
+      },
+      "expected_SI": {
+        "A": 0.03141593,
+        "Ix": 7.8539816e-05,
+        "Zx": 0.0013333333,
+        "shape_x": 1.6976527
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.031415926535897934,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.circle (procedure)"
+        },
+        "Ix": {
+          "value": 7.853981633974484e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.circle (procedure)"
+        },
+        "Zx": {
+          "value": 0.0013333333333333337,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.circle (procedure)"
+        },
+        "shape_x": {
+          "value": 1.6976527263135506,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc section_props.circle (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A": {
+          "absolute_error": 3.4641020676962064e-09,
+          "relative_error": 1.1026578133119746e-07,
+          "allowed_absolute_error": 3.141593e-06,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 3.397448473810641e-13,
+          "relative_error": 4.3257657667680825e-09,
+          "allowed_absolute_error": 7.8539816e-09,
+          "passed": true
+        },
+        "Zx": {
+          "absolute_error": 3.333333370610092e-11,
+          "relative_error": 2.5000000904575712e-08,
+          "allowed_absolute_error": 1.3333333e-07,
+          "passed": true
+        },
+        "shape_x": {
+          "absolute_error": 2.6313550671730468e-08,
+          "relative_error": 1.5499961017780886e-08,
+          "allowed_absolute_error": 0.00016976527,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = pi\u00b70.04/4 = 0.0314159; Ix = pi\u00b70.0016/64 = 7.85398e-5; Zx = d^3/6 = 1.33333e-3; shape = Z/S = 16/(3pi) = 1.697653 (landmark)"
+      }
+    },
+    {
+      "id": "section_props-012",
+      "calculator": "section_props.tube",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "do": "0.2 m",
+        "di": "0.16 m"
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "expected_as_specified": {
+        "A": "0.01130973 m^2",
+        "Ix": "4.6369908e-5 m^4",
+        "Zx": "6.5066667e-4 m^3",
+        "J_t": "9.2739815e-5 m^4"
+      },
+      "expected_SI": {
+        "A": 0.01130973,
+        "Ix": 4.6369908e-05,
+        "Zx": 0.00065066667,
+        "J_t": 9.2739815e-05
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.01130973355292326,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.tube (procedure)"
+        },
+        "Ix": {
+          "value": 4.636990756698536e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.tube (procedure)"
+        },
+        "Zx": {
+          "value": 0.0006506666666666669,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.tube (procedure)"
+        },
+        "J_t": {
+          "value": 9.273981513397072e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.tube (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A": {
+          "absolute_error": 3.552923259417251e-09,
+          "relative_error": 3.1414748711218134e-07,
+          "allowed_absolute_error": 1.1309730000000002e-06,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 4.330146403117366e-13,
+          "relative_error": 9.338268264662863e-09,
+          "allowed_absolute_error": 4.6369908e-09,
+          "passed": true
+        },
+        "Zx": {
+          "absolute_error": 3.3333330670334838e-12,
+          "relative_error": 5.122950384155199e-09,
+          "allowed_absolute_error": 6.5066667e-08,
+          "passed": true
+        },
+        "J_t": {
+          "absolute_error": 1.3397071538072403e-13,
+          "relative_error": 1.444586830162687e-09,
+          "allowed_absolute_error": 9.273981500000002e-09,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = pi(0.04 - 0.0256)/4 = 0.0113097; Ix = pi(0.0016 - 0.00065536)/64 = 4.63699e-5; Zx = (do^3 - di^3)/6 = (0.008 - 0.004096)/6 = 6.50667e-4; J_t = pi(do^4-di^4)/32 = pi(0.00094464)/32 = 9.27398e-5 [Corrected 2026-09-15 03:26 MDT: first draft mis-typed 9.27698e-5]"
+      }
+    },
+    {
+      "id": "section_props-013",
+      "calculator": "section_props.i_section",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "bf": "0.2 m",
+        "tf": "0.02 m",
+        "d": "0.4 m",
+        "tw": "0.01 m"
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "expected_as_specified": {
+        "A": "0.0116 m^2",
+        "Ix": "3.2794667e-4 m^4",
+        "Iy": "2.6696667e-5 m^4",
+        "Zx": "1.844e-3 m^3",
+        "shape_x": 1.1245731
+      },
+      "expected_SI": {
+        "A": 0.0116,
+        "Ix": 0.00032794667,
+        "Iy": 2.6696667e-05,
+        "Zx": 0.001844,
+        "shape_x": 1.1245731
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.011600000000000001,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.i_section (procedure)"
+        },
+        "Ix": {
+          "value": 0.0003279466666666667,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.i_section (procedure)"
+        },
+        "Iy": {
+          "value": 2.6696666666666675e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.i_section (procedure)"
+        },
+        "Zx": {
+          "value": 0.001844,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.i_section (procedure)"
+        },
+        "shape_x": {
+          "value": 1.124573101317287,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc section_props.i_section (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A": {
+          "absolute_error": 1.734723475976807e-18,
+          "relative_error": 1.4954512723937993e-16,
+          "allowed_absolute_error": 1.16e-06,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 3.3333332838739183e-12,
+          "relative_error": 1.0164254096173376e-08,
+          "allowed_absolute_error": 3.2794667e-08,
+          "passed": true
+        },
+        "Iy": {
+          "absolute_error": 3.3333332635451275e-13,
+          "relative_error": 1.248595288522394e-08,
+          "allowed_absolute_error": 2.6696667e-09,
+          "passed": true
+        },
+        "Zx": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.844e-07,
+          "passed": true
+        },
+        "shape_x": {
+          "absolute_error": 1.3172869461897108e-09,
+          "relative_error": 1.171366224383022e-09,
+          "allowed_absolute_error": 0.00011245731000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 2\u00b70.2\u00b70.02 + 0.36\u00b70.01 = 0.0116; Ix = (0.2\u00b70.064 - 0.19\u00b70.046656)/12 = (0.0128 - 0.00886464)/12 = 3.27947e-4; Iy = (2\u00b70.02\u00b70.008 + 0.36e-6)/12 = 2.66967e-5; Zx (closed form) = bf\u00b7tf(d-tf) + tw(d-2tf)^2/4 = 0.00152 + 0.000324 = 1.844e-3; shape = 1.844e-3/(Ix/0.2) = 1.12457"
+      }
+    },
+    {
+      "id": "section_props-014",
+      "calculator": "section_props.channel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "bf": "0.1 m",
+        "tf": "0.012 m",
+        "d": "0.2 m",
+        "tw": "0.008 m"
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "expected_as_specified": {
+        "A": "0.003808 m^2",
+        "xbar": "0.0329916 m",
+        "Ix": "2.4869717e-5 m^4",
+        "Zx": "2.87552e-4 m^3"
+      },
+      "expected_SI": {
+        "A": 0.003808,
+        "xbar": 0.0329916,
+        "Ix": 2.4869717e-05,
+        "Zx": 0.000287552
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.0038080000000000006,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.channel (procedure)"
+        },
+        "xbar": {
+          "value": 0.03299159663865546,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc section_props.channel (procedure)"
+        },
+        "Ix": {
+          "value": 2.4869717333333333e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.channel (procedure)"
+        },
+        "Zx": {
+          "value": 0.00028755200000000005,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.channel (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A": {
+          "absolute_error": 4.336808689942018e-19,
+          "relative_error": 1.138867828241076e-16,
+          "allowed_absolute_error": 3.808e-07,
+          "passed": true
+        },
+        "xbar": {
+          "absolute_error": 3.3613445429847566e-09,
+          "relative_error": 1.0188485987296028e-07,
+          "allowed_absolute_error": 3.2991600000000003e-06,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 3.3333333313077633e-13,
+          "relative_error": 1.3403181593533063e-08,
+          "allowed_absolute_error": 2.4869717000000003e-09,
+          "passed": true
+        },
+        "Zx": {
+          "absolute_error": 5.421010862427522e-20,
+          "relative_error": 1.8852280152555093e-16,
+          "allowed_absolute_error": 2.8755200000000003e-08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 2\u00b70.1\u00b70.012 + 0.176\u00b70.008 = 0.003808; xbar = (bf^2 tf + (d-2tf)tw^2/2)/A = (1.2e-4 + 5.632e-6)/0.003808 = 0.0329916; Ix = (0.1\u00b70.008 - 0.092\u00b70.176^3)/12 = (8e-4 - 5.0157e-4)/12 = 2.48697e-5; Zx = bf tf(d-tf) + tw(d-2tf)^2/4 = 2.256e-4 + 6.1952e-5 = 2.87552e-4"
+      }
+    },
+    {
+      "id": "section_props-015",
+      "calculator": "section_props.tee",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "bf": "0.15 m",
+        "tf": "0.02 m",
+        "d": "0.2 m",
+        "tw": "0.01 m"
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "expected_as_specified": {
+        "A": "0.0048 m^2",
+        "ybar": "0.1525 m",
+        "Ix": "1.621e-5 m^4",
+        "Zx": "1.896e-4 m^3"
+      },
+      "expected_SI": {
+        "A": 0.0048,
+        "ybar": 0.1525,
+        "Ix": 1.621e-05,
+        "Zx": 0.0001896
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.0048000000000000004,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.tee (procedure)"
+        },
+        "ybar": {
+          "value": 0.1525,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc section_props.tee (procedure)"
+        },
+        "Ix": {
+          "value": 1.621e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.tee (procedure)"
+        },
+        "Zx": {
+          "value": 0.00018960000000000008,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.tee (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A": {
+          "absolute_error": 8.673617379884035e-19,
+          "relative_error": 1.8070036208091741e-16,
+          "allowed_absolute_error": 4.8e-07,
+          "passed": true
+        },
+        "ybar": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.525e-05,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.6209999999999999e-09,
+          "passed": true
+        },
+        "Zx": {
+          "absolute_error": 8.131516293641283e-20,
+          "relative_error": 4.28877441647747e-16,
+          "allowed_absolute_error": 1.8960000000000002e-08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 0.15\u00b70.02 + 0.01\u00b70.18 = 0.0048; ybar = (0.003\u00b70.19 + 0.0018\u00b70.09)/0.0048 = 0.1525; Ix = 1e-7 + 4.21875e-6 + 4.86e-6 + 7.03125e-6 = 1.621e-5; Zx by equal-area bisection = 1.896e-4"
+      }
+    },
+    {
+      "id": "section_props-016",
+      "calculator": "section_props.angle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L": "0.1 m",
+        "t": "0.01 m"
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p",
+        "J_t"
+      ],
+      "expected_as_specified": {
+        "A": "0.0019 m^2",
+        "xbar": "0.0286842 m",
+        "Ix": "1.8000439e-6 m^4",
+        "I1": "2.8658333e-6 m^4",
+        "theta_p": "45 deg"
+      },
+      "expected_SI": {
+        "A": 0.0019,
+        "xbar": 0.0286842,
+        "Ix": 1.8000439e-06,
+        "I1": 2.8658333e-06,
+        "theta_p": 0.7853981633974483
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.0019000000000000002,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.angle (procedure)"
+        },
+        "xbar": {
+          "value": 0.028684210526315788,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc section_props.angle (procedure)"
+        },
+        "Ix": {
+          "value": 1.8000438596491232e-06,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.angle (procedure)"
+        },
+        "I1": {
+          "value": 2.865833333333334e-06,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.angle (procedure)"
+        },
+        "theta_p": {
+          "value": 0.7853981633974483,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc section_props.angle (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A": {
+          "absolute_error": 2.168404344971009e-19,
+          "relative_error": 1.1412654447215835e-16,
+          "allowed_absolute_error": 1.9e-07,
+          "passed": true
+        },
+        "xbar": {
+          "absolute_error": 1.0526315787767748e-08,
+          "relative_error": 3.669726116735955e-07,
+          "allowed_absolute_error": 2.86842e-06,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 4.0350876767236265e-14,
+          "relative_error": 2.2416607043437254e-08,
+          "allowed_absolute_error": 1.8000439e-10,
+          "passed": true
+        },
+        "I1": {
+          "absolute_error": 3.333333416011058e-14,
+          "relative_error": 1.1631288588945693e-08,
+          "allowed_absolute_error": 2.8658333e-10,
+          "passed": true
+        },
+        "theta_p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 7.853981633974483e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = t(2L-t) = 0.01\u00b70.19 = 0.0019; xbar = (L^2+Lt-t^2)/(2(2L-t)) = 0.0109/0.38 = 0.0286842; Ix = [t(L-x)^3 + L x^3 - (L-t)(x-t)^3]/3 = (3.6267e-6+2.3603e-6-5.8716e-7)/3 = 1.80004e-6; Ixy = t^2(2L^2-t^2)/4 - A x^2 = 4.975e-7 - 1.5633e-6 = -1.0658e-6; I1 = Ix+|Ixy| = 2.86583e-6; heel at origin puts the section in the +x+y quadrant, so Ixy < 0 and theta_p = 1/2 atan2(-2\u00b7Ixy, 0) = +45 deg (I1 axis along the legs' bisector)"
+      }
+    },
+    {
+      "id": "section_props-017",
+      "calculator": "section_props.channel_shear_center",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "b": "50 mm",
+        "h": "100 mm",
+        "t": "5 mm"
+      },
+      "solve_for": [
+        "Ix",
+        "e",
+        "A"
+      ],
+      "expected_as_specified": {
+        "e": "0.01875 m",
+        "Ix": "1.6666667e-6 m^4",
+        "A": "0.001 m^2"
+      },
+      "expected_SI": {
+        "e": 0.01875,
+        "Ix": 1.6666667e-06,
+        "A": 0.001
+      },
+      "actual_SI": {
+        "e": {
+          "value": 0.018750000000000003,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc section_props.channel_shear_center (procedure)"
+        },
+        "Ix": {
+          "value": 1.666666666666667e-06,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.channel_shear_center (procedure)"
+        },
+        "A": {
+          "value": 0.001,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.channel_shear_center (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "e": {
+          "absolute_error": 3.469446951953614e-18,
+          "relative_error": 1.8503717077085943e-16,
+          "allowed_absolute_error": 1.875e-06,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 3.333333288956116e-14,
+          "relative_error": 1.999999933373671e-08,
+          "allowed_absolute_error": 1.6666667e-10,
+          "passed": true
+        },
+        "A": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.0000000000000001e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "b=0.05, h=0.1, t=0.005; e = 3b^2/(6b+h) = 0.0075/0.4 = 0.01875 m; Ix = t h^2(h+6b)/12 = 0.005\u00b70.01\u00b70.4/12 = 1.66667e-6; A = t(2b+h) = 0.005\u00b70.2 = 0.001"
+      }
+    },
+    {
+      "id": "section_props-018",
+      "calculator": "section_props.polygon_properties",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "vertices": [
+          [
+            0,
+            0
+          ],
+          [
+            0.2,
+            0
+          ],
+          [
+            0.2,
+            0.1
+          ],
+          [
+            0,
+            0.1
+          ]
+        ]
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p"
+      ],
+      "expected_as_specified": {
+        "A": "0.02 m^2",
+        "Ix": "1.6666667e-5 m^4",
+        "Zx": "5e-4 m^3",
+        "Zy": "1e-3 m^3",
+        "shape_y": 1.5
+      },
+      "expected_SI": {
+        "A": 0.02,
+        "Ix": 1.6666667e-05,
+        "Zx": 0.0005,
+        "Zy": 0.001,
+        "shape_y": 1.5
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.020000000000000004,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "Ix": {
+          "value": 1.666666666666668e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "Zx": {
+          "value": 0.0005,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "Zy": {
+          "value": 0.001,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "shape_y": {
+          "value": 1.499999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A": {
+          "absolute_error": 3.469446951953614e-18,
+          "relative_error": 1.734723475976807e-16,
+          "allowed_absolute_error": 2.0000000000000003e-06,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 3.3333331957824917e-13,
+          "relative_error": 1.9999998774694973e-08,
+          "allowed_absolute_error": 1.6666667000000002e-09,
+          "passed": true
+        },
+        "Zx": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5.0000000000000004e-08,
+          "passed": true
+        },
+        "Zy": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.0000000000000001e-07,
+          "passed": true
+        },
+        "shape_y": {
+          "absolute_error": 1.1102230246251565e-15,
+          "relative_error": 7.401486830834377e-16,
+          "allowed_absolute_error": 0.00015000000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "0.2 x 0.1 rectangle polygon: A = 0.02, Ix = bh^3/12 = 1.66667e-5, Zx = bh^2/4 = 5e-4, Zy = hb^2/4 = 0.1\u00b70.04/4 = 1e-3, shape_y = 1.5 (rectangle landmark; agrees with the rectangle calculator)"
+      }
+    },
+    {
+      "id": "section_props-019",
+      "calculator": "section_props.polygon_properties",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "vertices": [
+          [
+            0,
+            0
+          ],
+          [
+            0.2,
+            0
+          ],
+          [
+            0,
+            0.1
+          ]
+        ]
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p"
+      ],
+      "expected_as_specified": {
+        "A": "0.01 m^2",
+        "xbar": "0.06666667 m",
+        "Ix": "5.5555556e-6 m^4",
+        "Ixy": "-5.5555556e-6 m^4",
+        "Zx": "1.9526215e-4 m^3",
+        "shape_x": 2.3431458,
+        "Zy": "3.9052429e-4 m^3",
+        "shape_y": 2.3431458
+      },
+      "expected_SI": {
+        "A": 0.01,
+        "xbar": 0.06666667,
+        "Ix": 5.5555556e-06,
+        "Ixy": -5.5555556e-06,
+        "Zx": 0.00019526215,
+        "shape_x": 2.3431458,
+        "Zy": 0.00039052429,
+        "shape_y": 2.3431458
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.010000000000000002,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "xbar": {
+          "value": 0.06666666666666667,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "Ix": {
+          "value": 5.555555555555563e-06,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "Ixy": {
+          "value": -5.555555555555549e-06,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "Zx": {
+          "value": 0.00019526214587563495,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "shape_x": {
+          "value": 2.3431457505076168,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "Zy": {
+          "value": 0.0003905242917512699,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "shape_y": {
+          "value": 2.3431457505076168,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A": {
+          "absolute_error": 1.734723475976807e-18,
+          "relative_error": 1.734723475976807e-16,
+          "allowed_absolute_error": 1.0000000000000002e-06,
+          "passed": true
+        },
+        "xbar": {
+          "absolute_error": 3.333333331578814e-09,
+          "relative_error": 4.999999747368234e-08,
+          "allowed_absolute_error": 6.666667e-06,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 4.4444437076484634e-14,
+          "relative_error": 7.999998609767246e-09,
+          "allowed_absolute_error": 5.5555556e-10,
+          "passed": true
+        },
+        "Ixy": {
+          "absolute_error": 4.444445062901179e-14,
+          "relative_error": 8.000001049222114e-09,
+          "allowed_absolute_error": 5.5555556e-10,
+          "passed": true
+        },
+        "Zx": {
+          "absolute_error": 4.124365047620052e-12,
+          "relative_error": 2.1122194176495813e-08,
+          "allowed_absolute_error": 1.9526215e-08,
+          "passed": true
+        },
+        "shape_x": {
+          "absolute_error": 4.949238308071813e-08,
+          "relative_error": 2.1122195247396954e-08,
+          "allowed_absolute_error": 0.00023431458,
+          "passed": true
+        },
+        "Zy": {
+          "absolute_error": 1.7512699190119774e-12,
+          "relative_error": 4.484407151759952e-09,
+          "allowed_absolute_error": 3.9052429e-08,
+          "passed": true
+        },
+        "shape_y": {
+          "absolute_error": 4.949238308071813e-08,
+          "relative_error": 2.1122195247396954e-08,
+          "allowed_absolute_error": 0.00023431458,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Right triangle b=0.2, h=0.1: A = 0.01; xbar = b/3 = 0.0666667; Ix = bh^3/36 = 5.55556e-6; Ixy = -b^2 h^2/72 = -5.55556e-6; Zx: equal-area axis at c = h(1-1/sqrt2) = 0.0292893, Q_above = b(h-c)^3/(6h) = 1.17851e-4, Zx = 2Q - A(ybar-c) = 1.95262e-4; shape_x = 2.34315 (triangle landmark). For the vertical axis: c = b(1-1/sqrt2) = 0.0585786, Q_above = hb^2/(12\u00b7sqrt2) = 2.35702e-4, Zy = 2Q - A(xbar-c) = 4.71405e-4 - 8.08803e-5 = 3.90524e-4; shape_y = 2.34315 (same triangle landmark)"
+      }
+    },
+    {
+      "id": "section_props-020",
+      "calculator": "section_props.composite",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rects": [
+          [
+            0.1,
+            0.1,
+            0.05,
+            0.05
+          ],
+          [
+            0.1,
+            0.1,
+            0.15,
+            0.15
+          ]
+        ]
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p"
+      ],
+      "expected_as_specified": {
+        "A": "0.02 m^2",
+        "Ix": "6.6666667e-5 m^4",
+        "Ixy": "5e-5 m^4",
+        "Zx": "1e-3 m^3",
+        "I1": "1.1666667e-4 m^4",
+        "theta_p": "-45 deg"
+      },
+      "expected_SI": {
+        "A": 0.02,
+        "Ix": 6.6666667e-05,
+        "Ixy": 5e-05,
+        "Zx": 0.001,
+        "I1": 0.00011666667,
+        "theta_p": -0.7853981633974483
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.020000000000000004,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc section_props.composite (procedure)"
+        },
+        "Ix": {
+          "value": 6.666666666666667e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.composite (procedure)"
+        },
+        "Ixy": {
+          "value": 5e-05,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.composite (procedure)"
+        },
+        "Zx": {
+          "value": 0.0010000000000000002,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.composite (procedure)"
+        },
+        "I1": {
+          "value": 0.00011666666666666667,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc section_props.composite (procedure)"
+        },
+        "theta_p": {
+          "value": -0.7853981633974483,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc section_props.composite (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A": {
+          "absolute_error": 3.469446951953614e-18,
+          "relative_error": 1.734723475976807e-16,
+          "allowed_absolute_error": 2.0000000000000003e-06,
+          "passed": true
+        },
+        "Ix": {
+          "absolute_error": 3.333333365189081e-13,
+          "relative_error": 5.000000022783621e-09,
+          "allowed_absolute_error": 6.666666700000001e-09,
+          "passed": true
+        },
+        "Ixy": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5e-09,
+          "passed": true
+        },
+        "Zx": {
+          "absolute_error": 2.168404344971009e-19,
+          "relative_error": 2.1684043449710089e-16,
+          "allowed_absolute_error": 1.0000000000000001e-07,
+          "passed": true
+        },
+        "I1": {
+          "absolute_error": 3.333333338084027e-12,
+          "relative_error": 2.8571427795822293e-08,
+          "allowed_absolute_error": 1.1666667000000001e-08,
+          "passed": true
+        },
+        "theta_p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 7.853981633974483e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two 0.1x0.1 squares at (0.05,0.05) and (0.15,0.15): A = 0.02, centroid (0.1,0.1); Ix = 2(0.1\u00b70.001/12) + 2\u00b70.01\u00b70.0025 = 6.66667e-5; Ixy = 2\u00b70.01\u00b70.0025 = 5e-5; equal-area axis between the squares at c=0.1, Zx = 2\u00b70.01\u00b70.05 = 1e-3; I1 = Ix + |Ixy| = 1.16667e-4; with Ix = Iy and Ixy > 0, theta_p = 1/2 atan2(-2\u00b7Ixy, 0) = -45 deg (I1 axis across the +45-deg diagonal pair)"
+      }
+    },
+    {
+      "id": "section_props-021",
+      "calculator": "section_props.polygon_properties",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "vertices": [
+          [
+            1,
+            0
+          ],
+          [
+            1.2,
+            0
+          ],
+          [
+            1.2,
+            0.1
+          ],
+          [
+            1,
+            0.1
+          ]
+        ]
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p"
+      ],
+      "expected_as_specified": {
+        "Zx": "5e-4 m^3",
+        "Zy": "1e-3 m^3"
+      },
+      "expected_SI": {
+        "Zx": 0.0005,
+        "Zy": 0.001
+      },
+      "actual_SI": {
+        "Zx": {
+          "value": 0.0004999999999999999,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "Zy": {
+          "value": 0.0009999999999999974,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Zx": {
+          "absolute_error": 1.0842021724855044e-19,
+          "relative_error": 2.1684043449710089e-16,
+          "allowed_absolute_error": 1e-06,
+          "passed": true
+        },
+        "Zy": {
+          "absolute_error": 2.6020852139652106e-18,
+          "relative_error": 2.6020852139652106e-15,
+          "allowed_absolute_error": 2e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Same 0.2 \u00d7 0.1 m rectangle translated to x = 1 m: plastic moduli are translation-invariant, Zx = b h\u00b2/4 = 0.2\u00b70.01/4 = 5e-4, Zy = h b\u00b2/4 = 0.1\u00b70.04/4 = 1e-3 m\u00b3"
+      }
+    },
+    {
+      "id": "section_props-022",
+      "calculator": "section_props.polygon_properties",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "vertices": [
+          [
+            -0.05,
+            0
+          ],
+          [
+            0.05,
+            0
+          ],
+          [
+            0.05,
+            0.01
+          ],
+          [
+            0.005,
+            0.01
+          ],
+          [
+            0.005,
+            0.06
+          ],
+          [
+            -0.005,
+            0.06
+          ],
+          [
+            -0.005,
+            0.01
+          ],
+          [
+            -0.05,
+            0.01
+          ]
+        ]
+      },
+      "solve_for": [
+        "A",
+        "xbar",
+        "ybar",
+        "Ix",
+        "Iy",
+        "Ixy",
+        "J",
+        "Sx",
+        "Sy",
+        "Zx",
+        "Zy",
+        "rx",
+        "ry",
+        "shape_x",
+        "shape_y",
+        "I1",
+        "I2",
+        "theta_p"
+      ],
+      "expected_as_specified": {
+        "Zx": "1.6875e-5 m^3",
+        "Zy": "2.625e-5 m^3"
+      },
+      "expected_SI": {
+        "Zx": 1.6875e-05,
+        "Zy": 2.625e-05
+      },
+      "actual_SI": {
+        "Zx": {
+          "value": 1.6875000000000004e-05,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        },
+        "Zy": {
+          "value": 2.625e-05,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc section_props.polygon_properties (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Zx": {
+          "absolute_error": 3.3881317890172014e-21,
+          "relative_error": 2.0077818008990822e-16,
+          "allowed_absolute_error": 3.375e-08,
+          "passed": true
+        },
+        "Zy": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5.25e-08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Flange-down tee: flange 100\u00d710 mm (A 1e-3), web 10\u00d750 mm (A 5e-4), total 1.5e-3. Equal-area axis in the flange at y = 7.5 mm. Zx = 7.5e-4\u00b73.75e-3 + 2.5e-4\u00b71.25e-3 + 5e-4\u00b7(35 \u2212 7.5)e-3 = 2.8125e-6 + 3.125e-7 + 1.375e-5 = 1.6875e-5. Zy (symmetric about x = 0) = 2\u00b7(5e-4\u00b70.025) + 2\u00b7(2.5e-4\u00b70.0025) = 2.5e-5 + 1.25e-6 = 2.625e-5 m\u00b3. Also matched a 1600\u00b2 raster integration."
+      }
+    }
+  ],
+  "passed": 22,
+  "failed": 0
+}

@@ -1,0 +1,392 @@
+{
+  "PROJECT": "Engineering simulation reference data",
+  "DESCRIPTION": "Cited filler library for science toolkit compounding screens.",
+  "records": [
+    {
+      "id": "glass_e_short",
+      "name": "E-glass short fibre (chopped strand)",
+      "density_g_cm3": {
+        "value": 2.55,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Owens Corning E-glass / NEG datasheet (recalled) density (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 72.0,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Owens Corning E-glass / NEG datasheet (recalled) modulus (recalled)"
+      },
+      "strength_mpa": {
+        "value": 2000.0,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Owens Corning E-glass / NEG datasheet (recalled) fibre/particle strength (recalled)"
+      },
+      "diameter_um": {
+        "value": 10.0,
+        "unit": "um",
+        "kind": "unverified",
+        "source": "Owens Corning E-glass / NEG datasheet (recalled) diameter (recalled)"
+      },
+      "aspect_ratio": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "fibre: length/diameter varies with retention",
+        "note": "aspect ratio from retained length"
+      },
+      "sizing_notes": {
+        "value": "PET/PA-compatible silane sizing recommended for coupling; unsized glass is far weaker",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Owens Corning E-glass / NEG datasheet (recalled) sizing (recalled)"
+      },
+      "refractive_index": {
+        "value": 1.56,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "literature refractive index (recalled)"
+      },
+      "notes": "The rPET engine's fibre constants (strength 2000 MPa, diameter 10 um) match this record so compound.screen reproduces rpet.screen."
+    },
+    {
+      "id": "carbon_fibre",
+      "name": "Carbon fibre (PAN, chopped)",
+      "density_g_cm3": {
+        "value": 1.78,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Toray / Teijin carbon fibre datasheet (recalled) density (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 230.0,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Toray / Teijin carbon fibre datasheet (recalled) modulus (recalled)"
+      },
+      "strength_mpa": {
+        "value": 4000.0,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Toray / Teijin carbon fibre datasheet (recalled) fibre/particle strength (recalled)"
+      },
+      "diameter_um": {
+        "value": 7.0,
+        "unit": "um",
+        "kind": "unverified",
+        "source": "Toray / Teijin carbon fibre datasheet (recalled) diameter (recalled)"
+      },
+      "aspect_ratio": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "fibre: length/diameter varies with retention",
+        "note": "aspect ratio from retained length"
+      },
+      "sizing_notes": {
+        "value": "epoxy-compatible sizing standard; PA/PET need dedicated sizing",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Toray / Teijin carbon fibre datasheet (recalled) sizing (recalled)"
+      },
+      "refractive_index": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "not applicable",
+        "note": "opaque filler"
+      },
+      "notes": "Electrically conductive; strength/modulus far above glass but costly."
+    },
+    {
+      "id": "talc_filler",
+      "name": "Talc (microcrystalline)",
+      "density_g_cm3": {
+        "value": 2.78,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Imerys / Mondo talc datasheet (recalled) density (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 70.0,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Imerys / Mondo talc datasheet (recalled) modulus (recalled)"
+      },
+      "strength_mpa": {
+        "value": null,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Imerys / Mondo talc datasheet (recalled) fibre/particle strength (recalled)"
+      },
+      "diameter_um": {
+        "value": null,
+        "unit": "um",
+        "kind": "unverified",
+        "source": "platelet/particle filler",
+        "note": "use aspect ratio, not diameter"
+      },
+      "aspect_ratio": {
+        "value": 20.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Imerys / Mondo talc datasheet (recalled) aspect ratio (recalled)"
+      },
+      "sizing_notes": {
+        "value": "surface treated grades improve dispersion",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Imerys / Mondo talc datasheet (recalled) sizing (recalled)"
+      },
+      "refractive_index": {
+        "value": 1.57,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "literature refractive index (recalled)"
+      },
+      "notes": "Platelet (aspect ~20) stiffens and nucleates; lowers toughness and clarity."
+    },
+    {
+      "id": "caco3",
+      "name": "Calcium carbonate (ground)",
+      "density_g_cm3": {
+        "value": 2.71,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Omya calcium carbonate datasheet (recalled) density (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 70.0,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Omya calcium carbonate datasheet (recalled) modulus (recalled)"
+      },
+      "strength_mpa": {
+        "value": null,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Omya calcium carbonate datasheet (recalled) fibre/particle strength (recalled)"
+      },
+      "diameter_um": {
+        "value": null,
+        "unit": "um",
+        "kind": "unverified",
+        "source": "platelet/particle filler",
+        "note": "use aspect ratio, not diameter"
+      },
+      "aspect_ratio": {
+        "value": 5.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Omya calcium carbonate datasheet (recalled) aspect ratio (recalled)"
+      },
+      "sizing_notes": {
+        "value": "stearate-coated grades aid dispersion",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Omya calcium carbonate datasheet (recalled) sizing (recalled)"
+      },
+      "refractive_index": {
+        "value": 1.58,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "literature refractive index (recalled)"
+      },
+      "notes": "Low-cost filler; raises density; minimal stiffening at low aspect."
+    },
+    {
+      "id": "wollastonite",
+      "name": "Wollastonite (calcium metasilicate)",
+      "density_g_cm3": {
+        "value": 2.9,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "NYCO wollastonite datasheet (recalled) density (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 300.0,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "NYCO wollastonite datasheet (recalled) modulus (recalled)"
+      },
+      "strength_mpa": {
+        "value": null,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "NYCO wollastonite datasheet (recalled) fibre/particle strength (recalled)"
+      },
+      "diameter_um": {
+        "value": null,
+        "unit": "um",
+        "kind": "unverified",
+        "source": "platelet/particle filler",
+        "note": "use aspect ratio, not diameter"
+      },
+      "aspect_ratio": {
+        "value": 15.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "NYCO wollastonite datasheet (recalled) aspect ratio (recalled)"
+      },
+      "sizing_notes": {
+        "value": "acicular mineral; silane or maleated-PP coupling improves strength",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "NYCO wollastonite datasheet (recalled) sizing (recalled)"
+      },
+      "refractive_index": {
+        "value": 1.63,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "literature refractive index (recalled)"
+      },
+      "notes": "Acicular (needle) filler; moderate reinforcement with lower density than talc."
+    },
+    {
+      "id": "mica",
+      "name": "Mica (muscovite flake)",
+      "density_g_cm3": {
+        "value": 2.85,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Suzorite / Imerys mica datasheet (recalled) density (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 172.0,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Suzorite / Imerys mica datasheet (recalled) modulus (recalled)"
+      },
+      "strength_mpa": {
+        "value": null,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Suzorite / Imerys mica datasheet (recalled) fibre/particle strength (recalled)"
+      },
+      "diameter_um": {
+        "value": null,
+        "unit": "um",
+        "kind": "unverified",
+        "source": "platelet/particle filler",
+        "note": "use aspect ratio, not diameter"
+      },
+      "aspect_ratio": {
+        "value": 40.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Suzorite / Imerys mica datasheet (recalled) aspect ratio (recalled)"
+      },
+      "sizing_notes": {
+        "value": "surface treated grades available",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Suzorite / Imerys mica datasheet (recalled) sizing (recalled)"
+      },
+      "refractive_index": {
+        "value": 1.58,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "literature refractive index (recalled)"
+      },
+      "notes": "High-aspect platelet; excellent stiffness and barrier; anisotropic shrinkage."
+    },
+    {
+      "id": "glass_beads",
+      "name": "Glass beads (solid)",
+      "density_g_cm3": {
+        "value": 2.5,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Potters glass beads datasheet (recalled) density (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 70.0,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Potters glass beads datasheet (recalled) modulus (recalled)"
+      },
+      "strength_mpa": {
+        "value": null,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Potters glass beads datasheet (recalled) fibre/particle strength (recalled)"
+      },
+      "diameter_um": {
+        "value": 30.0,
+        "unit": "um",
+        "kind": "unverified",
+        "source": "Potters glass beads datasheet (recalled) diameter (recalled)"
+      },
+      "aspect_ratio": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "fibre: length/diameter varies with retention",
+        "note": "aspect ratio from retained length"
+      },
+      "sizing_notes": {
+        "value": "silane sizing for coupling",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Potters glass beads datasheet (recalled) sizing (recalled)"
+      },
+      "refractive_index": {
+        "value": 1.52,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "literature refractive index (recalled)"
+      },
+      "notes": "Spherical: isotropic shrinkage, little warpage, minimal reinforcement."
+    },
+    {
+      "id": "aramid",
+      "name": "Aramid fibre (p-aramid, chopped)",
+      "density_g_cm3": {
+        "value": 1.44,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Teijin Twaron / DuPont Kevlar datasheet (recalled) density (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 130.0,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Teijin Twaron / DuPont Kevlar datasheet (recalled) modulus (recalled)"
+      },
+      "strength_mpa": {
+        "value": 3600.0,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Teijin Twaron / DuPont Kevlar datasheet (recalled) fibre/particle strength (recalled)"
+      },
+      "diameter_um": {
+        "value": 12.0,
+        "unit": "um",
+        "kind": "unverified",
+        "source": "Teijin Twaron / DuPont Kevlar datasheet (recalled) diameter (recalled)"
+      },
+      "aspect_ratio": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "fibre: length/diameter varies with retention",
+        "note": "aspect ratio from retained length"
+      },
+      "sizing_notes": {
+        "value": "p-aramid is hard to cut/disperse; surface treatment needed",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Teijin Twaron / DuPont Kevlar datasheet (recalled) sizing (recalled)"
+      },
+      "refractive_index": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "not applicable",
+        "note": "opaque filler"
+      },
+      "notes": "High toughness, low density; fibrillates during compounding."
+    }
+  ]
+}

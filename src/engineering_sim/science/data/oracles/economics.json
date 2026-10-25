@@ -1,0 +1,618 @@
+{
+  "section": "economics",
+  "cases": [
+    {
+      "calc": "economics.simple_interest",
+      "inputs": {
+        "P": 1000.0,
+        "i": "5 percent",
+        "n": 3.0
+      },
+      "expect": {
+        "F": 1150.0,
+        "I": 150.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 1000(1 + 3·0.05) = 1150; I = 1000·0.05·3 = 150"
+      }
+    },
+    {
+      "calc": "economics.simple_interest",
+      "inputs": {
+        "P": 1000.0,
+        "n": 3.0,
+        "F": 1150.0
+      },
+      "solve_for": [
+        "i",
+        "I"
+      ],
+      "expect": {
+        "i": 0.05
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "i = (F/P − 1)/n = (1.15 − 1)/3 = 0.05"
+      }
+    },
+    {
+      "calc": "economics.compound_interest",
+      "inputs": {
+        "P": 5000.0,
+        "i": "6 percent",
+        "n": 5.0
+      },
+      "expect": {
+        "F": 6691.1279
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 5000·1.06⁵ = 5000·1.338226 = 6691.128"
+      }
+    },
+    {
+      "calc": "economics.compound_interest",
+      "inputs": {
+        "P": 1000.0,
+        "i": 0.05,
+        "F": 1157.625
+      },
+      "solve_for": [
+        "n"
+      ],
+      "expect": {
+        "n": 3.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "n = ln(F/P)/ln(1+i) = ln(1.157625)/ln(1.05) = 0.14635/0.048790 = 3.0"
+      }
+    },
+    {
+      "calc": "economics.effective_rate",
+      "inputs": {
+        "r": "12 percent",
+        "m": 12.0
+      },
+      "expect": {
+        "i_eff": 0.126825
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "i_eff = (1 + 0.12/12)^12 − 1 = 1.01^12 − 1 = 1.126825 − 1 = 0.126825"
+      }
+    },
+    {
+      "calc": "economics.effective_rate",
+      "inputs": {
+        "r": 0.12,
+        "i_eff": 0.126825
+      },
+      "solve_for": [
+        "m"
+      ],
+      "expect": {
+        "m": 12.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "monthly compounding: 1.01^12 = 1.126825, so m = 12"
+      }
+    },
+    {
+      "calc": "economics.annual_worth",
+      "inputs": {
+        "P": 5000.0,
+        "i": "6 percent",
+        "n": 5.0
+      },
+      "expect": {
+        "A": 1186.982
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "CRF = i(1+i)^n/((1+i)^n−1) = 0.06·1.338226/0.338226 = 0.237397; A = 5000·0.237397 = 1186.98"
+      }
+    },
+    {
+      "calc": "economics.annual_worth",
+      "inputs": {
+        "A": 1186.982,
+        "i": 0.06,
+        "n": 5.0
+      },
+      "solve_for": [
+        "P"
+      ],
+      "expect": {
+        "P": 5000.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P = A/CRF = 1186.982/0.237397 = 5000"
+      }
+    },
+    {
+      "calc": "economics.sinking_fund",
+      "inputs": {
+        "F": 5000.0,
+        "i": "6 percent",
+        "n": 5.0
+      },
+      "expect": {
+        "A": 886.982
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "A = F·i/((1+i)^n−1) = 5000·0.06/0.338226 = 886.98"
+      }
+    },
+    {
+      "calc": "economics.irr",
+      "inputs": {
+        "cash_flows": [
+          -100.0,
+          60.0,
+          60.0
+        ]
+      },
+      "expect": {
+        "irr": [
+          0.1306624
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "NPV(r)·(1+r)² = −100(1+r)² + 60(1+r) + 60 = 0 → (1+r) = (60 + √(3600+24000))/200 = 1.130662 → IRR = 13.066 %"
+      }
+    },
+    {
+      "calc": "economics.irr",
+      "inputs": {
+        "cash_flows": [
+          -100.0,
+          230.0,
+          -132.0
+        ]
+      },
+      "expect": {
+        "irr": [
+          0.1,
+          0.2
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "−100(1+r)² + 230(1+r) − 132 = 0 → (1+r) = (230 ± 10)/200 = 1.2 or 1.1 → IRR = 20 % and 10 % (two sign changes)"
+      }
+    },
+    {
+      "calc": "economics.irr",
+      "inputs": {
+        "cash_flows": [
+          -1000.0,
+          300.0,
+          400.0,
+          500.0
+        ]
+      },
+      "expect": {
+        "irr": [
+          0.0889634
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "numpy.roots of −1000x³ + 300x² + 400x + 500 = 0 → x = 1.088963 → IRR = 8.896 %"
+      }
+    },
+    {
+      "calc": "economics.irr",
+      "inputs": {
+        "cash_flows": [
+          1.0,
+          -2.0,
+          1.0
+        ]
+      },
+      "expect": {
+        "irr": [
+          0.0
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Tangent (double) root: NPV·(1+r)² = (1+r)² − 2(1+r) + 1 = r² = 0 → IRR = 0 (even multiplicity; NPV touches zero without a sign change)"
+      }
+    },
+    {
+      "calc": "economics.irr",
+      "inputs": {
+        "cash_flows": [
+          -1000.0,
+          5000.0,
+          -8000.0,
+          4000.0
+        ]
+      },
+      "expect": {
+        "irr": [
+          0.0,
+          1.0
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "−1000x³ + 5000x² − 8000x + 4000 = −1000(x−1)(x−2)² = 0 → x = 1 (r = 0) and x = 2 (r = 1.0, double root)"
+      }
+    },
+    {
+      "calc": "economics.irr",
+      "inputs": {
+        "cash_flows": [
+          -100.0,
+          0.6
+        ]
+      },
+      "expect": {
+        "irr": [
+          -0.994
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "NPV(r) = −100 + 0.6/(1+r) = 0 → 1 + r = 0.006 → r = −0.994 (rate near −100 %)"
+      }
+    },
+    {
+      "calc": "economics.payback",
+      "inputs": {
+        "C0": 15000.0,
+        "A": 2500.0
+      },
+      "expect": {
+        "PP": 6.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "PP = 15000/2500 = 6 periods"
+      }
+    },
+    {
+      "calc": "economics.benefit_cost_ratio",
+      "inputs": {
+        "B": 120000.0,
+        "C": 100000.0
+      },
+      "expect": {
+        "bc": 1.2
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "B/C = 120000/100000 = 1.2"
+      }
+    },
+    {
+      "calc": "economics.depreciation_sl",
+      "inputs": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 2.0
+      },
+      "expect": {
+        "D": 1800.0,
+        "BV_k": 6400.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "D = (10000 − 1000)/5 = 1800; BV_2 = 10000 − 2·1800 = 6400"
+      }
+    },
+    {
+      "calc": "economics.depreciation_sl",
+      "inputs": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 5.0
+      },
+      "expect": {
+        "D": 1800.0,
+        "BV_k": 1000.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "End of life: BV_5 = 10000 − 5·1800 = 1000 = salvage"
+      }
+    },
+    {
+      "calc": "economics.depreciation_db",
+      "inputs": {
+        "P": 10000.0,
+        "d": 0.4,
+        "k": 2.0
+      },
+      "expect": {
+        "BV_k": 3600.0,
+        "D_k": 2400.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "BV_2 = 10000·0.6² = 3600; D_2 = 10000·0.6·0.4 = 2400"
+      }
+    },
+    {
+      "calc": "economics.depreciation_db",
+      "inputs": {
+        "P": 10000.0,
+        "d": 0.4,
+        "k": 1.0
+      },
+      "expect": {
+        "BV_k": 6000.0,
+        "D_k": 4000.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "D_1 = 10000·0.4 = 4000; BV_1 = 6000"
+      }
+    },
+    {
+      "calc": "economics.depreciation_soyd",
+      "inputs": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 2.0
+      },
+      "expect": {
+        "SOYD": 15.0,
+        "D_k": 2400.0,
+        "BV_k": 4600.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "SOYD = 5·6/2 = 15; D_2 = 9000·4/15 = 2400; BV_2 = 10000 − 9000·(12−3)/15 = 10000 − 5400 = 4600"
+      }
+    },
+    {
+      "calc": "economics.depreciation_soyd",
+      "inputs": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 1.0
+      },
+      "expect": {
+        "SOYD": 15.0,
+        "D_k": 3000.0,
+        "BV_k": 7000.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "D_1 = 9000·5/15 = 3000; BV_1 = 10000 − 9000·(6−1)/15 = 10000 − 3000 = 7000"
+      }
+    },
+    {
+      "calc": "economics.depreciation_table",
+      "inputs": {
+        "P": 10000.0,
+        "rates": [
+          20.0,
+          32.0,
+          19.2,
+          11.52,
+          11.52,
+          5.76
+        ]
+      },
+      "expect": {
+        "first_year": 2000.0,
+        "depreciation": [
+          2000.0,
+          3200.0,
+          1920.0,
+          1152.0,
+          1152.0,
+          576.0
+        ],
+        "book_values": [
+          8000.0,
+          4800.0,
+          2880.0,
+          1728.0,
+          576.0,
+          0.0
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "MACRS 5-year rates applied to P = 10000: 20 % → 2000, 32 % → 3200, …; book values subtract cumulatively to 0"
+      }
+    },
+    {
+      "calc": "economics.break_even",
+      "inputs": {
+        "FC": 10000.0,
+        "p": 50.0,
+        "v": 30.0
+      },
+      "expect": {
+        "Q": 500.0,
+        "R": 25000.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = 10000/(50−30) = 500; R = 50·500 = 25000"
+      }
+    },
+    {
+      "calc": "economics.break_even",
+      "inputs": {
+        "FC": 20000.0,
+        "p": 40.0,
+        "v": 25.0
+      },
+      "expect": {
+        "Q": 1333.3333,
+        "R": 53333.3333
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = 20000/15 = 1333.333; R = 40·1333.333 = 53333.33"
+      }
+    },
+    {
+      "calc": "economics.life_cycle_cost",
+      "inputs": {
+        "C0": 100000.0,
+        "C_annual": 5000.0,
+        "i": "5 percent",
+        "n": 10.0
+      },
+      "expect": {
+        "LCC": 138608.67
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "PW factor = ((1.05)^10 − 1)/(0.05·1.05^10) = 7.72173; LCC = 100000 + 5000·7.72173 = 138608.7"
+      }
+    },
+    {
+      "calc": "economics.annual_worth",
+      "inputs": {
+        "P": 1000.0,
+        "i": 0.0,
+        "n": 3.0
+      },
+      "expect": {
+        "A": 333.3333
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "i = 0 limit of the capital-recovery factor: A = P/n = 1000/3 = 333.333 (the 0/0 form i(1+i)^n/((1+i)^n−1) is replaced by its limit)"
+      }
+    },
+    {
+      "calc": "economics.sinking_fund",
+      "inputs": {
+        "F": 1000.0,
+        "i": 0.0,
+        "n": 4.0
+      },
+      "expect": {
+        "A": 250.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "i = 0 limit of the sinking-fund factor: A = F/n = 1000/4 = 250"
+      }
+    },
+    {
+      "calc": "economics.life_cycle_cost",
+      "inputs": {
+        "C0": 100000.0,
+        "C_annual": 5000.0,
+        "i": 0.0,
+        "n": 10.0
+      },
+      "expect": {
+        "LCC": 150000.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "i = 0 limit: no discounting, LCC = C0 + n·C_annual = 100000 + 10·5000 = 150000"
+      }
+    },
+    {
+      "calc": "economics.depreciation_soyd",
+      "inputs": {
+        "P": 10000.0,
+        "S": 1000.0,
+        "n": 5.0,
+        "k": 5.0
+      },
+      "expect": {
+        "SOYD": 15.0,
+        "D_k": 600.0,
+        "BV_k": 1000.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "End of life (k = n): SOYD = 15; D_5 = 9000·(5−5+1)/15 = 600; BV_5 = 10000 − 9000 = 1000 = salvage"
+      }
+    },
+    {
+      "calc": "economics.cash_flow_series",
+      "inputs": {
+        "cash_flows": [
+          -1000.0,
+          300.0,
+          400.0,
+          500.0
+        ],
+        "i": "5 percent"
+      },
+      "expect": {
+        "npv": 80.444876,
+        "fw": 93.125,
+        "aw": 29.540048,
+        "payback": 2.81375
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Discounted flows: −1000, 285.71429, 362.81179, 431.91877 → NPV = 80.44488; FW = NPV·1.05³ = 93.125; AW = NPV·CRF(5 %, 3) = 80.44488·0.3672086 = 29.54005; payback = 2 + (1000 − 285.71429 − 362.81179)/431.91877 = 2 + 0.81375 = 2.81375"
+      }
+    },
+    {
+      "calc": "economics.modified_bc",
+      "inputs": {
+        "B": 120000.0,
+        "O": 30000.0,
+        "C": 80000.0
+      },
+      "expect": {
+        "mbc": 1.125
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "mbc = (B − O)/C = (120000 − 30000)/80000 = 90000/80000 = 1.125"
+      }
+    },
+    {
+      "calc": "economics.continuous_compounding",
+      "inputs": {
+        "r": "10 percent"
+      },
+      "expect": {
+        "i_eff": 0.1051709
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "i_eff = e^0.1 − 1 = 1.1051709 − 1 = 0.1051709"
+      }
+    },
+    {
+      "calc": "economics.cash_flow_series",
+      "inputs": {
+        "cash_flows": [
+          -1000,
+          500,
+          500
+        ],
+        "i": 0.1
+      },
+      "expect": {
+        "npv": -132.2314,
+        "fw": -160.0
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Rejected project: NPV = −1000 + 500/1.1 + 500/1.21 = −1000 + 454.5455 + 413.2231 = −132.2314; FW = NPV·1.1² = −160.0; payback undefined (warning)."
+      }
+    }
+  ]
+}

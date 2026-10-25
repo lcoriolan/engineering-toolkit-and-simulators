@@ -1,0 +1,18 @@
+{
+  "name": "alzn_mey",
+  "file": "alzn_mey.tdb",
+  "source_url": "https://raw.githubusercontent.com/pycalphad/pycalphad/develop/pycalphad/tests/databases/alzn_mey.tdb",
+  "retrieved": "2026-09-15",
+  "reference": "Sabine an Mey, Reevaluation of the Al-Zn System, Z. Metallkd. 84 (1993) 451-455.",
+  "elements": [
+    "AL",
+    "ZN"
+  ],
+  "phases": [
+    "LIQUID",
+    "FCC_A1",
+    "HCP_A3"
+  ],
+  "license": "Copyright (C) NIMS 2009. TDB created by T. Abe, K. Hashimoto and Y. Sawada, Particle Simulation and Thermodynamics Group, National Institute for Materials Science; parameters taken from the Mey (1993) Al-Zn reassessment. Redistributed in the pycalphad open-source test suite.",
+  "notes": "Metadata only: the referenced NIMS Al-Zn TDB is not bundled in this repository. Obtain any database separately under its applicable terms. Its citation and copyright notice are preserved; this project does not grant a replacement license for the database."
+}

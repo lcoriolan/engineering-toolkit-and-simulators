@@ -1,0 +1,501 @@
+{
+  "section": "instrumentation",
+  "cases": [
+    {
+      "calc": "instrumentation.sensor_sensitivity",
+      "inputs": {
+        "dy": 5.0,
+        "dx": 10.0
+      },
+      "expect": {
+        "S": 0.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "S = Δout/Δin = 5/10 = 0.5 [output]/[input]"
+      }
+    },
+    {
+      "calc": "instrumentation.sensor_span",
+      "inputs": {
+        "x_max": 100.0,
+        "x_min": 20.0
+      },
+      "expect": {
+        "span": 80.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "span = 100 − 20 = 80"
+      }
+    },
+    {
+      "calc": "instrumentation.adc_resolution",
+      "inputs": {
+        "span": 10.0,
+        "n": 8
+      },
+      "expect": {
+        "res": 0.0390625
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "res = 10/2⁸ = 10/256 = 0.0390625"
+      }
+    },
+    {
+      "calc": "instrumentation.adc_resolution",
+      "inputs": {
+        "span": 10.0,
+        "n": 12
+      },
+      "expect": {
+        "res": 0.00244140625
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "res = 10/2¹² = 10/4096 = 0.00244140625"
+      }
+    },
+    {
+      "calc": "instrumentation.strain_gauge",
+      "inputs": {
+        "dR": "240 mohm",
+        "R": "120 ohm",
+        "eps": 0.001
+      },
+      "expect": {
+        "GF": 2.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ΔR/R = 0.24/120 = 0.002; GF = 0.002/0.001 = 2.0"
+      }
+    },
+    {
+      "calc": "instrumentation.wheatstone_bridge",
+      "inputs": {
+        "V_ex": "10 V",
+        "GF": 2.0,
+        "eps": 0.0005,
+        "k": 1
+      },
+      "expect": {
+        "V_out": "2.5 mV"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "quarter bridge: V_o = 10·2·500e-6/4 = 2.5e-3 V = 2.5 mV"
+      }
+    },
+    {
+      "calc": "instrumentation.wheatstone_bridge",
+      "inputs": {
+        "V_ex": "5 V",
+        "GF": 2.05,
+        "eps": 0.001,
+        "k": 4
+      },
+      "expect": {
+        "V_out": "10.25 mV"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "full bridge: V_o = 5·2.05·1000e-6·4/4 = 10.25e-3 V = 10.25 mV"
+      }
+    },
+    {
+      "calc": "instrumentation.thermocouple_seebeck",
+      "inputs": {
+        "S": "41 uV/K",
+        "T_junction": "100 degC",
+        "T_ref": "0 degC"
+      },
+      "expect": {
+        "V": "4.1 mV"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ΔT = 100 − 0 = 100 K; V = 41e-6·100 = 4.1e-3 V = 4.1 mV"
+      }
+    },
+    {
+      "calc": "instrumentation.thermocouple_seebeck",
+      "inputs": {
+        "S": "41 uV/K",
+        "T_junction": "20 degC",
+        "T_ref": "100 degC"
+      },
+      "expect": {
+        "V": "-3.28 mV"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ΔT = 20 − 100 = −80 K; V = 41e-6·(−80) = −3.28e-3 V = −3.28 mV (junction colder than reference → negative emf)"
+      }
+    },
+    {
+      "calc": "instrumentation.thermocouple_seebeck",
+      "inputs": {
+        "V": "4.1 mV",
+        "S": "41 uV/K",
+        "T_ref": "0 degC"
+      },
+      "solve_for": [
+        "T_junction"
+      ],
+      "expect": {
+        "T_junction": "373.15 K"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "T_j = T_ref + V/S = 273.15 + 4.1e-3/41e-6 = 273.15 + 100 = 373.15 K (inverse)"
+      }
+    },
+    {
+      "calc": "instrumentation.thermocouple_polynomial",
+      "inputs": {
+        "coeffs": [
+          0.0,
+          4e-05,
+          1e-08
+        ],
+        "T_junction": "373.15 K",
+        "T_ref": "273.15 K"
+      },
+      "expect": {
+        "V": "4.1 mV"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V = 4e-5·100 + 1e-8·100² = 4e-3 + 1e-4 = 4.1e-3 V"
+      }
+    },
+    {
+      "calc": "instrumentation.thermocouple_polynomial",
+      "inputs": {
+        "coeffs": [
+          0.0,
+          4e-05
+        ],
+        "T_junction": "20 degC",
+        "T_ref": "100 degC"
+      },
+      "expect": {
+        "V": "-3.2 mV"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V = 4e-5·(20 − 100) = 4e-5·(−80) = −3.2e-3 V = −3.2 mV (junction colder than reference → negative emf)"
+      }
+    },
+    {
+      "calc": "instrumentation.rtd_cvd",
+      "inputs": {
+        "R0": "100 ohm",
+        "A": 0.0039083,
+        "B": -5.775e-07,
+        "C": -4.183e-12,
+        "T": "100 degC"
+      },
+      "expect": {
+        "R": "138.5055 ohm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T = 100 °C → T_C = 100; R = 100(1 + 3.9083e-3·100 − 5.775e-7·10000) = 100·1.385055 = 138.5055 Ω (Pt100 at 100 °C)"
+      }
+    },
+    {
+      "calc": "instrumentation.rtd_cvd",
+      "inputs": {
+        "R0": "100 ohm",
+        "A": 0.0039083,
+        "B": -5.775e-07,
+        "C": -4.183e-12,
+        "T": "-50 degC"
+      },
+      "expect": {
+        "R": "80.3063 ohm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T = −50 °C → T_C = −50 (< 0, C term active): R = 100(1 + 3.9083e-3(−50) − 5.775e-7·2500 − 4.183e-12·(−150)(−125000)) = 100·0.8030628 = 80.3063 Ω (Pt100 at −50 °C)"
+      }
+    },
+    {
+      "calc": "instrumentation.lvdt",
+      "inputs": {
+        "S": "2 V/mm",
+        "x": "1 mm"
+      },
+      "expect": {
+        "V_out": "2 V"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V_out = 2000 V/m · 0.001 m = 2 V"
+      }
+    },
+    {
+      "calc": "instrumentation.accelerometer",
+      "inputs": {
+        "S": "10 mV/g0",
+        "a": "1 g0"
+      },
+      "expect": {
+        "V_out": "10 mV"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "10 mV/g · 1 g = 10 mV (sensitivity times one standard gravity)"
+      }
+    },
+    {
+      "calc": "instrumentation.snr",
+      "inputs": {
+        "P_sig": "1 mW",
+        "P_noise": "1 uW"
+      },
+      "expect": {
+        "SNR": 1000.0,
+        "SNR_dB": 30.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "SNR = 1e-3/1e-6 = 1000; SNR_dB = 10 log10(1000) = 30 dB"
+      }
+    },
+    {
+      "calc": "instrumentation.snr",
+      "inputs": {
+        "P_sig": "1 uW",
+        "P_noise": "1 mW"
+      },
+      "expect": {
+        "SNR": 0.001,
+        "SNR_dB": -30.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "SNR = 1e-6/1e-3 = 0.001 (signal below noise); SNR_dB = 10 log10(0.001) = −30 dB"
+      }
+    },
+    {
+      "calc": "instrumentation.decibel",
+      "inputs": {
+        "V2": "10 V",
+        "V1": "1 V"
+      },
+      "expect": {
+        "dB": 20.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "dB = 20 log10(10/1) = 20 dB"
+      }
+    },
+    {
+      "calc": "instrumentation.decibel",
+      "inputs": {
+        "V2": "0.1 V",
+        "V1": "1 V"
+      },
+      "expect": {
+        "dB": -20.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "dB = 20 log10(0.1/1) = 20·(−1) = −20 dB (attenuation)"
+      }
+    },
+    {
+      "calc": "instrumentation.nyquist",
+      "inputs": {
+        "f_s": "2 kHz"
+      },
+      "expect": {
+        "f_N": "1 kHz"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "f_N = 2000/2 = 1000 Hz"
+      }
+    },
+    {
+      "calc": "instrumentation.nyquist",
+      "inputs": {
+        "f_N": "1 kHz"
+      },
+      "solve_for": [
+        "f_s"
+      ],
+      "expect": {
+        "f_s": "2 kHz"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "f_s = 2 f_N = 2000 Hz (inverse)"
+      }
+    },
+    {
+      "calc": "instrumentation.aliased_frequency",
+      "inputs": {
+        "f_s": "100 Hz",
+        "f_sig": "130 Hz"
+      },
+      "expect": {
+        "f_alias": "30 Hz"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "round(130/100) = 1; f_alias = |130 − 100·1| = 30 Hz (classic undersampling fold)"
+      }
+    },
+    {
+      "calc": "instrumentation.aliased_frequency",
+      "inputs": {
+        "f_s": "100 Hz",
+        "f_sig": "30 Hz"
+      },
+      "expect": {
+        "f_alias": "30 Hz"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "30 Hz < 50 Hz (Nyquist) → no aliasing; f_alias = 30 Hz unchanged"
+      }
+    },
+    {
+      "calc": "instrumentation.uncertainty_propagation",
+      "inputs": {
+        "setup": {
+          "expr": "a*b + c**2",
+          "variables": {
+            "a": [
+              2.0,
+              0.1
+            ],
+            "b": [
+              3.0,
+              0.2
+            ],
+            "c": [
+              4.0,
+              0.05
+            ]
+          }
+        }
+      },
+      "expect": {
+        "value": 22.0,
+        "uncertainty": 0.6403124
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "value = 2·3 + 16 = 22; ∂/∂a = 3, ∂/∂b = 2, ∂/∂c = 8; u = √((3·0.1)² + (2·0.2)² + (8·0.05)²) = √(0.09 + 0.16 + 0.16) = √0.41 = 0.64031"
+      }
+    },
+    {
+      "calc": "instrumentation.standard_error",
+      "inputs": {
+        "sigma": 0.5,
+        "n": 16
+      },
+      "expect": {
+        "SE": 0.125
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "SE = 0.5/√16 = 0.5/4 = 0.125"
+      }
+    },
+    {
+      "calc": "instrumentation.first_order_response",
+      "inputs": {
+        "y_ss": 10.0,
+        "t": "2 s",
+        "tau": "2 s"
+      },
+      "expect": {
+        "y": 6.321206,
+        "frac": 0.6321206
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "at t = τ: y = 10(1 − e⁻¹) = 6.32121; frac = 1 − e⁻¹ = 0.63212 (63.2 % landmark)"
+      }
+    },
+    {
+      "calc": "instrumentation.first_order_response",
+      "inputs": {
+        "y_ss": 10.0,
+        "t": "2 s",
+        "frac": 0.6321206
+      },
+      "solve_for": [
+        "tau",
+        "y"
+      ],
+      "expect": {
+        "tau": "2 s",
+        "y": 6.321206
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "τ = −t/ln(1 − frac) = −2/ln(0.367879) = −2/(−1) = 2 s; y = y_ss·frac = 6.32121 (inverse)"
+      }
+    },
+    {
+      "calc": "instrumentation.second_order_params",
+      "inputs": {
+        "m": "1 kg",
+        "k": "100 N/m",
+        "c": "2 N*s/m"
+      },
+      "expect": {
+        "wn": "10 rad/s",
+        "zeta": 0.1
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ωn = √(100/1) = 10 rad/s; ζ = 2/(2√(100·1)) = 2/20 = 0.1"
+      }
+    },
+    {
+      "calc": "instrumentation.second_order_params",
+      "inputs": {
+        "m": "1 kg",
+        "k": "100 N/m",
+        "c": "40 N*s/m"
+      },
+      "expect": {
+        "wn": "10 rad/s",
+        "zeta": 2.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ωn = √(100/1) = 10 rad/s; ζ = 40/(2√(100·1)) = 40/20 = 2 (overdamped: ζ ≥ 1 is allowed)"
+      }
+    },
+    {
+      "calc": "instrumentation.second_order_freq_response",
+      "inputs": {
+        "zeta": 0.1,
+        "r": 0.5
+      },
+      "expect": {
+        "AR": 1.3216372,
+        "phase": "-0.1325515 rad"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "AR = 1/√((1−0.25)² + (2·0.1·0.5)²) = 1/√(0.5625 + 0.01) = 1/√0.5725 = 1.3216372; φ = −atan2(0.1, 0.75) = −atan(0.133333) = −0.1325515 rad"
+      }
+    }
+  ]
+}

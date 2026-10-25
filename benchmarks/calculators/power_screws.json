@@ -1,0 +1,909 @@
+{
+  "section": "power_screws",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k power_screws",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "power_screws.power_screw_torque": {
+      "title": "Power screw raising and lowering torque (square or Acme)",
+      "variables": [
+        {
+          "name": "T_R",
+          "unit": "N*m",
+          "desc": "torque to raise the load (thread only, collar excluded)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_L",
+          "unit": "N*m",
+          "desc": "torque to lower (thread only; negative = overhauling)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l",
+          "unit": "m",
+          "desc": "lead (advance per revolution = starts \u00d7 pitch)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam",
+          "unit": "rad",
+          "desc": "lead angle atan(l/(\u03c0\u00b7d_m))",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "axial load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_m",
+          "unit": "m",
+          "desc": "mean (pitch) diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "",
+          "desc": "thread friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "f",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "rad",
+          "desc": "thread flank half-angle (0 square, 14.5\u00b0 Acme, 15\u00b0 ISO trapezoidal)",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_s",
+          "unit": "",
+          "desc": "number of thread starts",
+          "lo": 1,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "m",
+          "desc": "pitch",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T_R = F*d_m/2*(l + pi*f*d_m/cos(alpha))/(pi*d_m - f*l/cos(alpha))",
+        "T_L = F*d_m/2*(pi*f*d_m/cos(alpha) - l)/(pi*d_m + f*l/cos(alpha))",
+        "l = n_s*p",
+        "lam = atan(l/(pi*d_m))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T_R",
+        "T_L",
+        "l",
+        "lam"
+      ],
+      "assumptions": [
+        "1/cos(\u03b1) is the secant wedge term (\u03b1 the flank half-angle; sec \u03b1 = 1 for square threads). Collar friction is separate \u2014 add the collar torque T_c to T_R and T_L for the total.",
+        "T_L > 0 means self-locking against back-drive. Multi-start lead l = n_s\u00b7p."
+      ],
+      "method_references": [
+        "Power screw torque with thread angle (Shigley eqs. 8-1/8-2 form, recalled)"
+      ],
+      "synthetic_example": {
+        "F": 5000.0,
+        "d_m": 0.032,
+        "f": 0.15,
+        "alpha": 0.0,
+        "n_s": 1,
+        "p": 0.006
+      }
+    },
+    "power_screws.power_screw_collar": {
+      "title": "Collar friction torque",
+      "variables": [
+        {
+          "name": "T_c",
+          "unit": "N*m",
+          "desc": "collar friction torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "axial load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_c",
+          "unit": "",
+          "desc": "collar friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "fc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_c",
+          "unit": "m",
+          "desc": "mean collar diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T_c = F*f_c*d_c/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T_c"
+      ],
+      "assumptions": [
+        "Uniform pressure on a flat annular collar with friction at the mean radius; add this torque to the thread torque for the total input."
+      ],
+      "method_references": [
+        "T_c = F\u00b7f_c\u00b7d_c/2"
+      ],
+      "synthetic_example": {
+        "F": 5000.0,
+        "f_c": 0.15,
+        "d_c": 0.05
+      }
+    },
+    "power_screws.power_screw_efficiency": {
+      "title": "Power screw efficiency and self-locking condition",
+      "variables": [
+        {
+          "name": "e",
+          "unit": "",
+          "desc": "thread efficiency (collar excluded)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_lock",
+          "unit": "",
+          "desc": "self-locking factor \u03c0\u00b7f\u00b7d_m/(l\u00b7cos \u03b1); > 1 self-locking",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_m",
+          "unit": "m",
+          "desc": "mean (pitch) diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l",
+          "unit": "m",
+          "desc": "lead",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "",
+          "desc": "thread friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "f",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "rad",
+          "desc": "thread flank half-angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "e = l*(pi*d_m - f*l/cos(alpha))/(pi*d_m*(l + pi*f*d_m/cos(alpha)))",
+        "n_lock = pi*f*d_m/(l*cos(alpha))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "e",
+        "n_lock"
+      ],
+      "assumptions": [
+        "Thread-only efficiency e = F\u00b7l/(2\u03c0\u00b7T_R); collar friction lowers the overall efficiency below this. Self-locking (no back-drive) requires \u03c0\u00b7f\u00b7d_m > l\u00b7cos \u03b1, i.e. n_lock > 1, equivalently T_L > 0 in power_screw_torque."
+      ],
+      "method_references": [
+        "Power screw efficiency; self-locking condition (recalled)"
+      ],
+      "synthetic_example": {
+        "d_m": 0.032,
+        "l": 0.006,
+        "f": 0.15,
+        "alpha": 0.0
+      }
+    },
+    "power_screws.power_screw_thread_stress": {
+      "title": "Power screw thread bearing and bending stress",
+      "variables": [
+        {
+          "name": "sigma_B",
+          "unit": "Pa",
+          "desc": "thread bearing stress (compressive; magnitude)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_b",
+          "unit": "Pa",
+          "desc": "thread root bending stress (magnitude)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c_arm",
+          "unit": "m",
+          "desc": "thread depth (d_m \u2212 d_r)/2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "axial load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_m",
+          "unit": "m",
+          "desc": "mean (pitch) diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_r",
+          "unit": "m",
+          "desc": "root (minor) diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "m",
+          "desc": "pitch",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_t",
+          "unit": "",
+          "desc": "number of engaged threads",
+          "lo": 1,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "thread thickness at the root (square p/2; 29\u00b0 Acme \u2248 0.63p \u2014 not the 0.37p flat width)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_B = 2*F/(pi*d_m*n_t*p)",
+        "c_arm = (d_m - d_r)/2",
+        "sigma_b = 6*F*c_arm/(pi*d_r*n_t*t**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_B",
+        "c_arm",
+        "sigma_b"
+      ],
+      "assumptions": [
+        "Bearing stress uses the projected pitch-line area \u03c0\u00b7d_m\u00b7(p/2) per engaged thread, so \u03c3_B = 2F/(\u03c0\u00b7d_m\u00b7n_t\u00b7p). Bending models each thread as a cantilever of depth c_arm = (d_m \u2212 d_r)/2 and root section \u03c0\u00b7d_r\u00b7t carrying F/n_t at the pitch line (\u03c3_b = M\u00b7(t/2)/I with M = (F/n_t)\u00b7c_arm and I = \u03c0\u00b7d_r\u00b7t\u00b3/12). Threads are assumed to share the load equally \u2014 real nut threads load unevenly (first engaged thread \u2248 0.38F).",
+        "For a square thread (depth p/2, so c_arm = p/4 and t = p/2) this reduces exactly to the standard \u03c3_b = 6F/(\u03c0\u00b7d_r\u00b7n_t\u00b7p). The root thickness t is a geometry input (square: p/2; 29\u00b0 Acme \u2248 p/2 + 2\u00b7(0.25p)\u00b7tan14.5\u00b0 \u2248 0.63p), not a built-in table. [Reviewer fix 2026-09-15: Acme guidance previously quoted the 0.37p flat width; example geometry made a consistent square thread.]"
+      ],
+      "method_references": [
+        "\u03c3_B = 2F/(\u03c0\u00b7d_m\u00b7n_t\u00b7p); cantilever thread-bending model (Shigley sec. 8-2 form, recalled)"
+      ],
+      "synthetic_example": {
+        "F": 5000.0,
+        "d_m": 0.032,
+        "d_r": 0.029,
+        "p": 0.006,
+        "n_t": 8,
+        "t": 0.003
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "power_screws-001",
+      "calculator": "power_screws.power_screw_torque",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "5 kN",
+        "d_m": "32 mm",
+        "f": 0.15,
+        "alpha": "0 deg",
+        "n_s": 1,
+        "p": "6 mm"
+      },
+      "solve_for": [
+        "T_R",
+        "T_L",
+        "l",
+        "lam"
+      ],
+      "expected_as_specified": {
+        "T_R": "16.9262 N*m",
+        "T_L": "7.16124 N*m",
+        "l": "6 mm",
+        "lam": "3.41554 deg"
+      },
+      "expected_SI": {
+        "T_R": 16.9262,
+        "T_L": 7.16124,
+        "l": 0.006,
+        "lam": 0.059612418733567124
+      },
+      "actual_SI": {
+        "T_R": {
+          "value": 16.926179330084263,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_torque (numeric)"
+        },
+        "T_L": {
+          "value": 7.161240944400882,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_torque (numeric)"
+        },
+        "l": {
+          "value": 0.006,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_torque (numeric)"
+        },
+        "lam": {
+          "value": 0.05961238954338379,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_torque (numeric)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T_R": {
+          "absolute_error": 2.0669915738125155e-05,
+          "relative_error": 1.221178748811024e-06,
+          "allowed_absolute_error": 0.008463100000000001,
+          "passed": true
+        },
+        "T_L": {
+          "absolute_error": 9.444008819414762e-07,
+          "relative_error": 1.3187672553098014e-07,
+          "allowed_absolute_error": 0.00358062,
+          "passed": true
+        },
+        "l": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 3e-06,
+          "passed": true
+        },
+        "lam": {
+          "absolute_error": 2.9190183332972186e-08,
+          "relative_error": 4.89666145965916e-07,
+          "allowed_absolute_error": 2.9806209366783563e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Square thread (\u03b1=0, sec\u03b1=1): l = 1\u00b76 = 6 mm; \u03bb = atan(6/(\u03c0\u00b732)) = 3.41554\u00b0. \u03c0\u00b7f\u00b7d_m = \u03c0\u00b70.15\u00b70.032 = 0.0150796, \u03c0\u00b7d_m = 0.100531, f\u00b7l = 0.0009. T_R = F\u00b7d_m/2\u00b7(l+\u03c0fd_m)/(\u03c0d_m\u2212fl) = 5000\u00b70.016\u00b70.0210796/0.099631 = 80\u00b70.211577 = 16.9262 N\u00b7m. T_L = 80\u00b7(0.0150796\u22120.006)/(0.100531+0.0009) = 80\u00b70.089519 = 7.16124 N\u00b7m (positive \u2192 self-locking)"
+      }
+    },
+    {
+      "id": "power_screws-002",
+      "calculator": "power_screws.power_screw_torque",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "8 kN",
+        "d_m": "40 mm",
+        "f": 0.12,
+        "alpha": "14.5 deg",
+        "n_s": 2,
+        "p": "5 mm"
+      },
+      "solve_for": [
+        "T_R",
+        "T_L",
+        "l",
+        "lam"
+      ],
+      "expected_as_specified": {
+        "T_R": "32.8885 N*m",
+        "T_L": "7.02995 N*m",
+        "l": "10 mm",
+        "lam": "4.54987 deg"
+      },
+      "expected_SI": {
+        "T_R": 32.8885,
+        "T_L": 7.02995,
+        "l": 0.01,
+        "lam": 0.07941021203771441
+      },
+      "actual_SI": {
+        "T_R": {
+          "value": 32.888475984615,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_torque (numeric)"
+        },
+        "T_L": {
+          "value": 7.029950827739272,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_torque (numeric)"
+        },
+        "l": {
+          "value": 0.01,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_torque (numeric)"
+        },
+        "lam": {
+          "value": 0.07941013016643253,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_torque (numeric)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T_R": {
+          "absolute_error": 2.4015385001519007e-05,
+          "relative_error": 7.302061511324325e-07,
+          "allowed_absolute_error": 0.01644425,
+          "passed": true
+        },
+        "T_L": {
+          "absolute_error": 8.277392717914722e-07,
+          "relative_error": 1.1774468833938679e-07,
+          "allowed_absolute_error": 0.003514975,
+          "passed": true
+        },
+        "l": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5e-06,
+          "passed": true
+        },
+        "lam": {
+          "absolute_error": 8.187128187897574e-08,
+          "relative_error": 1.030991855809332e-06,
+          "allowed_absolute_error": 3.970510601885721e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Acme 2-start: l = 2\u00b75 = 10 mm; \u03bb = atan(10/(\u03c0\u00b740)) = 4.54987\u00b0. sec(14.5\u00b0) = 1.03293. \u03c0\u00b7f\u00b7d_m\u00b7sec\u03b1 = \u03c0\u00b70.12\u00b70.04\u00b71.03293 = 0.0155792, \u03c0\u00b7d_m = 0.125664, f\u00b7l\u00b7sec\u03b1 = 0.12\u00b70.01\u00b71.03293 = 0.0012395. T_R = 8000\u00b70.02\u00b7(0.01+0.0155792)/(0.125664\u22120.0012395) = 160\u00b70.0255792/0.124424 = 160\u00b70.205581 = 32.893 N\u00b7m \u2248 32.8885 (full precision). T_L = 160\u00b7(0.0155792\u22120.01)/(0.125664+0.0012395) = 160\u00b70.043963 = 7.02995 N\u00b7m"
+      }
+    },
+    {
+      "id": "power_screws-003",
+      "calculator": "power_screws.power_screw_collar",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "5 kN",
+        "f_c": 0.15,
+        "d_c": "50 mm"
+      },
+      "solve_for": [
+        "T_c"
+      ],
+      "expected_as_specified": {
+        "T_c": "18.75 N*m"
+      },
+      "expected_SI": {
+        "T_c": 18.75
+      },
+      "actual_SI": {
+        "T_c": {
+          "value": 18.75,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_collar (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T_c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0375,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T_c = F\u00b7f_c\u00b7d_c/2 = 5000\u00b70.15\u00b70.05/2 = 18.75 N\u00b7m"
+      }
+    },
+    {
+      "id": "power_screws-004",
+      "calculator": "power_screws.power_screw_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d_m": "32 mm",
+        "l": "6 mm",
+        "f": 0.15,
+        "alpha": "0 deg"
+      },
+      "solve_for": [
+        "e",
+        "n_lock"
+      ],
+      "expected_as_specified": {
+        "e": 0.282087,
+        "n_lock": 2.51327
+      },
+      "expected_SI": {
+        "e": 0.282087,
+        "n_lock": 2.51327
+      },
+      "actual_SI": {
+        "e": {
+          "value": 0.28208659495120036,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_efficiency (symbolic)"
+        },
+        "n_lock": {
+          "value": 2.5132741228718345,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "e": {
+          "absolute_error": 4.050487996121177e-07,
+          "relative_error": 1.4359002705268863e-06,
+          "allowed_absolute_error": 0.000564174,
+          "passed": true
+        },
+        "n_lock": {
+          "absolute_error": 4.122871834599806e-06,
+          "relative_error": 1.6404412715704266e-06,
+          "allowed_absolute_error": 0.0050265399999999995,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Square: e = l(\u03c0d_m \u2212 f\u00b7l)/(\u03c0d_m(l + \u03c0f\u00b7d_m)) = 0.006(0.100531\u22120.0009)/(0.100531\u00b7(0.006+0.0150796)) = 0.00059779/0.00211906 = 0.282087; n_lock = \u03c0\u00b7f\u00b7d_m/l = 0.0150796/0.006 = 2.51327 (>1 \u2192 self-locking)"
+      }
+    },
+    {
+      "id": "power_screws-005",
+      "calculator": "power_screws.power_screw_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n_lock": 1.0,
+        "d_m": "32 mm",
+        "f": 0.15,
+        "alpha": "0 deg"
+      },
+      "solve_for": [
+        "l",
+        "e"
+      ],
+      "expected_as_specified": {
+        "l": "15.0796 mm",
+        "e": 0.48875
+      },
+      "expected_SI": {
+        "l": 0.0150796,
+        "e": 0.48875
+      },
+      "actual_SI": {
+        "l": {
+          "value": 0.015079644737231007,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_efficiency (symbolic)"
+        },
+        "e": {
+          "value": 0.48875,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "l": {
+          "absolute_error": 4.473723100653637e-08,
+          "relative_error": 2.966738574400937e-06,
+          "allowed_absolute_error": 3.01592e-05,
+          "passed": true
+        },
+        "e": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0009775,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Self-locking boundary \u03c0\u00b7f\u00b7d_m = l\u00b7cos\u03b1 \u2192 l = \u03c0\u00b70.15\u00b70.032/1 = 0.0150796 m. e at that lead = l(\u03c0d_m \u2212 f\u00b7l)/(\u03c0d_m(l+\u03c0fd_m)) = 0.0150796(0.100531\u22120.0022619)/(0.100531(0.0150796+0.0150796)) = 0.00148187/0.00303191 = 0.48875"
+      }
+    },
+    {
+      "id": "power_screws-006",
+      "calculator": "power_screws.power_screw_thread_stress",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "5 kN",
+        "d_m": "32 mm",
+        "d_r": "29 mm",
+        "p": "6 mm",
+        "n_t": 8,
+        "t": "3 mm"
+      },
+      "solve_for": [
+        "sigma_B",
+        "c_arm",
+        "sigma_b"
+      ],
+      "expected_as_specified": {
+        "sigma_B": "2.07233 MPa",
+        "c_arm": "1.5 mm",
+        "sigma_b": "6.86013 MPa"
+      },
+      "expected_SI": {
+        "sigma_B": 2072330.0,
+        "c_arm": 0.0015,
+        "sigma_b": 6860130.0
+      },
+      "actual_SI": {
+        "sigma_B": {
+          "value": 2072329.9881757202,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_thread_stress (symbolic)"
+        },
+        "c_arm": {
+          "value": 0.0014999999999999996,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_thread_stress (symbolic)"
+        },
+        "sigma_b": {
+          "value": 6860126.857409282,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc power_screws.power_screw_thread_stress (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_B": {
+          "absolute_error": 0.011824279790744185,
+          "relative_error": 5.705790000021321e-09,
+          "allowed_absolute_error": 4144.66,
+          "passed": true
+        },
+        "c_arm": {
+          "absolute_error": 4.336808689942018e-19,
+          "relative_error": 2.8912057932946783e-16,
+          "allowed_absolute_error": 3e-06,
+          "passed": true
+        },
+        "sigma_b": {
+          "absolute_error": 3.142590718343854,
+          "relative_error": 4.5809492215801363e-07,
+          "allowed_absolute_error": 13720.26,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Consistent square thread p = 6 mm, d_m = 32, d_r = 29 mm: \u03c3_B = 2\u00b75000/(\u03c0\u00b70.032\u00b78\u00b70.006) = 2.07233 MPa; landmark: square thread reduces to Shigley \u03c3_b = 6F/(\u03c0 d_r n_t p) = 30000/(\u03c0\u00b70.029\u00b78\u00b70.006) = 6.86013 MPa; c_arm = (32 \u2212 29)/2 = 1.5 mm = p/4. [Reviewer rewrite 2026-09-15: previous geometry d_r = 26 mm was not a real square thread.]"
+      }
+    }
+  ],
+  "passed": 6,
+  "failed": 0
+}

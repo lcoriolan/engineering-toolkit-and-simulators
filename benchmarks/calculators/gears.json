@@ -1,0 +1,4054 @@
+{
+  "section": "gears",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k gears",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "gears.spur_geometry": {
+      "title": "Spur gear module, circular pitch and pitch diameter (metric)",
+      "variables": [
+        {
+          "name": "m",
+          "unit": "m",
+          "desc": "module (pitch diameter / teeth)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "m",
+          "desc": "circular pitch (arc length between adjacent teeth on the pitch circle)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "pitch diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "",
+          "desc": "number of teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "m = d/N",
+        "p = pi*m"
+      ],
+      "procedure": null,
+      "outputs": [
+        "m",
+        "p"
+      ],
+      "assumptions": [
+        "Metric (module) system. Circular pitch p = pi m. For the imperial diametral-pitch system see diametral_pitch (m in mm = 25.4 / P_d)."
+      ],
+      "method_references": [
+        "m = d/N; p = pi m (recalled)"
+      ],
+      "synthetic_example": {
+        "d": 0.08,
+        "N": 20
+      }
+    },
+    "gears.diametral_pitch": {
+      "title": "Diametral pitch (imperial, teeth per unit length)",
+      "variables": [
+        {
+          "name": "P_d",
+          "unit": "1/m",
+          "desc": "diametral pitch (teeth per metre)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "",
+          "desc": "number of teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "pitch diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P_d = N/d"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P_d"
+      ],
+      "assumptions": [
+        "P_d = N/d. The conventional diametral pitch in teeth/inch = P_d x 0.0254 (so d = 2.5 in and N = 20 give 8 teeth/inch). Module m (mm) = 25.4 / P_d(in^-1)."
+      ],
+      "method_references": [
+        "Diametral pitch P_d = N/d (recalled)"
+      ],
+      "synthetic_example": {
+        "N": 20,
+        "d": 0.0635
+      }
+    },
+    "gears.tooth_proportions": {
+      "title": "Standard full-depth tooth proportions (addendum, dedendum, clearance)",
+      "variables": [
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "addendum (radial tooth height above the pitch circle)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "dedendum (radial depth below the pitch circle)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "clearance (root clearance)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_t",
+          "unit": "m",
+          "desc": "whole tooth depth (a + b)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "m",
+          "desc": "module",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "a = m",
+        "b = 1.25*m",
+        "c = 0.25*m",
+        "h_t = a + b"
+      ],
+      "procedure": null,
+      "outputs": [
+        "a",
+        "b",
+        "c",
+        "h_t"
+      ],
+      "assumptions": [
+        "Standard 20 deg full-depth involute proportions: addendum = m, dedendum = 1.25 m, clearance = 0.25 m. Stub and other systems use different coefficients."
+      ],
+      "method_references": [
+        "Standard full-depth tooth proportions (recalled)"
+      ],
+      "synthetic_example": {
+        "m": 0.004
+      }
+    },
+    "gears.center_distance": {
+      "title": "Center distance and pitch diameters of a gear pair",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "m",
+          "desc": "center distance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d1",
+          "unit": "m",
+          "desc": "pinion pitch diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d2",
+          "unit": "m",
+          "desc": "gear pitch diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "m",
+          "desc": "module",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N1",
+          "unit": "",
+          "desc": "pinion teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N2",
+          "unit": "",
+          "desc": "gear teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "d1 = m*N1",
+        "d2 = m*N2",
+        "C = (d1 + d2)/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "d1",
+        "d2",
+        "C"
+      ],
+      "assumptions": [
+        "Standard centers (no profile shift): C = (d1 + d2)/2 = m(N1 + N2)/2."
+      ],
+      "method_references": [
+        "Center distance C = (d1 + d2)/2 (recalled)"
+      ],
+      "synthetic_example": {
+        "m": 0.004,
+        "N1": 20,
+        "N2": 40
+      }
+    },
+    "gears.gear_ratio": {
+      "title": "Gear ratio, speed ratio and torque ratio",
+      "variables": [
+        {
+          "name": "i",
+          "unit": "",
+          "desc": "gear (train) ratio N2/N1 = omega1/omega2 = T2/T1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N1",
+          "unit": "",
+          "desc": "driving (pinion) teeth",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N2",
+          "unit": "",
+          "desc": "driven (gear) teeth",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega1",
+          "unit": "rad/s",
+          "desc": "driving angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c91",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega2",
+          "unit": "rad/s",
+          "desc": "driven angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c92",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T1",
+          "unit": "N*m",
+          "desc": "driving torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2",
+          "unit": "N*m",
+          "desc": "driven torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "i = N2/N1",
+        "omega2 = omega1/i",
+        "T2 = i*T1"
+      ],
+      "procedure": null,
+      "outputs": [
+        "i",
+        "omega2",
+        "T2"
+      ],
+      "assumptions": [
+        "Ideal (100% efficiency) single mesh: power is conserved, T1 omega1 = T2 omega2, so T2 = i T1. Multiply by an efficiency for real losses. i > 1 is a speed reducer. i is a MAGNITUDE (|N2/N1|); the signed train value with direction (external vs internal mesh) is carried by mechanisms.gear_pair."
+      ],
+      "method_references": [
+        "Speed/torque ratio of a gear pair (recalled)"
+      ],
+      "synthetic_example": {
+        "N1": 20,
+        "N2": 40,
+        "omega1": 100.0,
+        "T1": 10.0
+      }
+    },
+    "gears.contact_ratio": {
+      "title": "Contact ratio of a standard spur gear pair",
+      "variables": [
+        {
+          "name": "m",
+          "unit": "m",
+          "desc": "module",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "pressure angle (deg input)",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N1",
+          "unit": "",
+          "desc": "pinion teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N2",
+          "unit": "",
+          "desc": "gear teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r1",
+          "unit": "m",
+          "desc": "pinion pitch radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r2",
+          "unit": "m",
+          "desc": "gear pitch radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_c",
+          "unit": "",
+          "desc": "contact ratio (mean number of teeth in contact)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "r1 = m*N1/2",
+        "r2 = m*N2/2",
+        "m_c = (sqrt((r1 + m)**2 - (r1*cos(phi))**2) + sqrt((r2 + m)**2 - (r2*cos(phi))**2) - (r1 + r2)*sin(phi))/(pi*m*cos(phi))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "r1",
+        "r2",
+        "m_c"
+      ],
+      "assumptions": [
+        "Standard full-depth 20 deg involute (addendum = m). m_c = path of contact / base pitch. Requires m_c > 1.2 for smooth running; addendum modification (profile shift) changes it."
+      ],
+      "method_references": [
+        "Length of path of contact / base pitch (AGMA geometry; recalled)"
+      ],
+      "synthetic_example": {
+        "m": 0.004,
+        "phi": 0.3490658503988659,
+        "N1": 20,
+        "N2": 40
+      }
+    },
+    "gears.min_teeth_interference": {
+      "title": "Minimum teeth to avoid interference (with a rack / large gear)",
+      "variables": [
+        {
+          "name": "N_min",
+          "unit": "",
+          "desc": "minimum teeth to avoid undercut",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "desc": "addendum factor (addendum/module; 1 for standard full depth)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "pressure angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "N_min = 2*k/sin(phi)**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "N_min"
+      ],
+      "assumptions": [
+        "N_min = 2k/sin^2(phi) is the smallest tooth count on a gear meshing with a rack (or a very large gear) that avoids undercut. Standard 20 deg full-depth: N_min = 17.1, so use >= 17 (18 recommended). Profile shift allows fewer teeth."
+      ],
+      "method_references": [
+        "Minimum teeth to avoid interference N_min = 2k/sin^2(phi) (recalled)"
+      ],
+      "synthetic_example": {
+        "k": 1.0,
+        "phi": 0.3490658503988659
+      }
+    },
+    "gears.min_teeth_pinion": {
+      "title": "Minimum pinion teeth to avoid interference with a mating gear (ratio m_G)",
+      "variables": [
+        {
+          "name": "N_P",
+          "unit": "",
+          "desc": "minimum pinion teeth to avoid interference with the gear",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "desc": "addendum factor (addendum/module; 1 for standard full depth)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_G",
+          "unit": "",
+          "desc": "gear ratio N_G/N_P (mating gear teeth / pinion teeth)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "pressure angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "N_P = 2*k/((1 + 2*m_G)*sin(phi)**2) * (m_G + sqrt(m_G**2 + (1 + 2*m_G)*sin(phi)**2))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "N_P"
+      ],
+      "assumptions": [
+        "Minimum pinion teeth to avoid interference (undercut) when meshing with a gear of ratio m_G = N_G/N_P. Reduces to the rack limit N_min = 2k/sin^2(phi) as m_G -> inf. Standard 20 deg full-depth, m_G = 2: N_P = 14.16 (use 15+). Profile shift allows fewer teeth."
+      ],
+      "method_references": [
+        "Minimum pinion teeth to avoid interference with a mating gear (recalled)"
+      ],
+      "synthetic_example": {
+        "k": 1.0,
+        "m_G": 2.0,
+        "phi": 0.3490658503988659
+      }
+    },
+    "gears.spur_tooth_forces": {
+      "title": "Spur gear tooth forces: tangential and radial (separating)",
+      "variables": [
+        {
+          "name": "W_t",
+          "unit": "N",
+          "desc": "transmitted (tangential) tooth force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_r",
+          "unit": "N",
+          "desc": "radial (separating) tooth force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "torque on the gear being analysed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "pitch diameter of that gear",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "pressure angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "W_t = 2*T/d",
+        "W_r = W_t*tan(phi)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "W_t",
+        "W_r"
+      ],
+      "assumptions": [
+        "Spur gears carry no axial load (W_a = 0). W_t is tangential at the pitch point; use the pitch diameter (AGMA uses the operating pitch diameter)."
+      ],
+      "method_references": [
+        "Tangential tooth load W_t = 2T/d; W_r = W_t tan(phi) (recalled)"
+      ],
+      "synthetic_example": {
+        "T": 200.0,
+        "d": 0.08,
+        "phi": 0.3490658503988659
+      }
+    },
+    "gears.helical_pitch": {
+      "title": "Helical gear normal/transverse pitches, modules and pitch diameter",
+      "variables": [
+        {
+          "name": "p_n",
+          "unit": "m",
+          "desc": "normal circular pitch",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_t",
+          "unit": "m",
+          "desc": "transverse circular pitch",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_n",
+          "unit": "m",
+          "desc": "normal module (tooling/standard module)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_t",
+          "unit": "m",
+          "desc": "transverse module",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "psi",
+          "unit": "rad",
+          "desc": "helix angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "",
+          "desc": "number of teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "pitch diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "p_n = pi*m_n",
+        "m_t = m_n/cos(psi)",
+        "p_t = pi*m_t",
+        "d = m_t*N"
+      ],
+      "procedure": null,
+      "outputs": [
+        "p_n",
+        "m_t",
+        "p_t",
+        "d"
+      ],
+      "assumptions": [
+        "Helical gears are cut in the normal plane, so m_n (and p_n) are the standard values. Transverse quantities are the axial-projected ones: m_t = m_n/cos(psi), p_t = p_n/cos(psi), d = m_t N."
+      ],
+      "method_references": [
+        "Helical gear normal/transverse pitch relations (recalled)"
+      ],
+      "synthetic_example": {
+        "m_n": 0.004,
+        "psi": 0.5235987755982988,
+        "N": 20
+      }
+    },
+    "gears.helical_angles": {
+      "title": "Helical gear transverse pressure angle from normal pressure angle",
+      "variables": [
+        {
+          "name": "phi_t",
+          "unit": "rad",
+          "desc": "transverse pressure angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6t",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi_n",
+          "unit": "rad",
+          "desc": "normal pressure angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "psi",
+          "unit": "rad",
+          "desc": "helix angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "phi_t = atan(tan(phi_n)/cos(psi))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "phi_t"
+      ],
+      "assumptions": [
+        "tan(phi_t) = tan(phi_n)/cos(psi). phi_t > phi_n for helical gears."
+      ],
+      "method_references": [
+        "Transverse pressure angle of a helical gear (recalled)"
+      ],
+      "synthetic_example": {
+        "phi_n": 0.3490658503988659,
+        "psi": 0.5235987755982988
+      }
+    },
+    "gears.helical_tooth_forces": {
+      "title": "Helical gear tooth forces: tangential, radial and axial thrust",
+      "variables": [
+        {
+          "name": "W_t",
+          "unit": "N",
+          "desc": "transmitted (tangential) tooth force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_r",
+          "unit": "N",
+          "desc": "radial (separating) tooth force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_a",
+          "unit": "N",
+          "desc": "axial (thrust) tooth force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "torque on the gear being analysed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "pitch diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi_n",
+          "unit": "rad",
+          "desc": "normal pressure angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "psi",
+          "unit": "rad",
+          "desc": "helix angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "W_t = 2*T/d",
+        "W_r = W_t*tan(phi_n)/cos(psi)",
+        "W_a = W_t*tan(psi)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "W_t",
+        "W_r",
+        "W_a"
+      ],
+      "assumptions": [
+        "W_a = W_t tan(psi) is the axial thrust the helix produces (use thrust bearings). W_r uses the normal pressure angle resolved through the helix."
+      ],
+      "method_references": [
+        "Helical tooth force components (recalled)"
+      ],
+      "synthetic_example": {
+        "T": 200.0,
+        "d": 0.08,
+        "phi_n": 0.3490658503988659,
+        "psi": 0.5235987755982988
+      }
+    },
+    "gears.bevel_angles": {
+      "title": "Bevel gear pitch cone angles (shaft angle Sigma)",
+      "variables": [
+        {
+          "name": "gamma1",
+          "unit": "rad",
+          "desc": "pinion pitch cone angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b31",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma2",
+          "unit": "rad",
+          "desc": "gear pitch cone angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b32",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N1",
+          "unit": "",
+          "desc": "pinion teeth",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N2",
+          "unit": "",
+          "desc": "gear teeth",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sigma",
+          "unit": "rad",
+          "desc": "shaft (included) angle",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03a3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "gamma1 = atan(sin(Sigma)/(N2/N1 + cos(Sigma)))",
+        "gamma2 = atan(sin(Sigma)/(N1/N2 + cos(Sigma)))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "gamma1",
+        "gamma2"
+      ],
+      "assumptions": [
+        "Straight/spiral bevel gears. For the common right-angle case (Sigma = 90 deg): tan(gamma1) = N1/N2, tan(gamma2) = N2/N1 and gamma1 + gamma2 = Sigma."
+      ],
+      "method_references": [
+        "Bevel pitch cone angles (recalled)"
+      ],
+      "synthetic_example": {
+        "N1": 20,
+        "N2": 40,
+        "Sigma": 1.5707963267948966
+      }
+    },
+    "gears.bevel_forces": {
+      "title": "Bevel gear tooth forces: tangential, radial and axial",
+      "variables": [
+        {
+          "name": "W_t",
+          "unit": "N",
+          "desc": "transmitted (tangential) tooth force at the mean radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_r",
+          "unit": "N",
+          "desc": "radial tooth force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_a",
+          "unit": "N",
+          "desc": "axial (thrust) tooth force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "torque on the gear being analysed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_m",
+          "unit": "m",
+          "desc": "mean pitch diameter of that gear",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "pressure angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "rad",
+          "desc": "pitch cone angle of that gear",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "W_t = 2*T/d_m",
+        "W_r = W_t*tan(phi)*cos(gamma)",
+        "W_a = W_t*tan(phi)*sin(gamma)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "W_t",
+        "W_r",
+        "W_a"
+      ],
+      "assumptions": [
+        "Forces at the mean radius of the bevel gear. The radial/axial split depends on the pitch cone angle gamma: the axial component is W_t tan(phi) sin(gamma)."
+      ],
+      "method_references": [
+        "Bevel gear force components (recalled)"
+      ],
+      "synthetic_example": {
+        "T": 200.0,
+        "d_m": 0.08,
+        "phi": 0.3490658503988659,
+        "gamma": 0.46364671579229366
+      }
+    },
+    "gears.worm_geometry": {
+      "title": "Worm lead, lead angle and axial pitch",
+      "variables": [
+        {
+          "name": "L_w",
+          "unit": "m",
+          "desc": "worm lead (advance per revolution)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_x",
+          "unit": "m",
+          "desc": "axial pitch",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N_w",
+          "unit": "",
+          "desc": "number of starts (threads)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam",
+          "unit": "rad",
+          "desc": "lead angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_w",
+          "unit": "m",
+          "desc": "worm pitch diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "L_w = p_x*N_w",
+        "lam = atan(L_w/(pi*d_w))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "L_w",
+        "lam"
+      ],
+      "assumptions": [
+        "Lead L_w = axial pitch x number of starts; tan(lambda) = L_w/(pi d_w)."
+      ],
+      "method_references": [
+        "Worm lead and lead angle (recalled)"
+      ],
+      "synthetic_example": {
+        "p_x": 0.01,
+        "N_w": 2,
+        "d_w": 0.04
+      }
+    },
+    "gears.worm_efficiency": {
+      "title": "Worm gear efficiency (worm driving)",
+      "variables": [
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "efficiency (worm driving the gear)",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi_n",
+          "unit": "rad",
+          "desc": "normal pressure angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "",
+          "desc": "coefficient of friction at the mesh",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam",
+          "unit": "rad",
+          "desc": "lead angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eta = (cos(phi_n) - f*tan(lam))/(cos(phi_n) + f/tan(lam))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eta"
+      ],
+      "assumptions": [
+        "Worm driving the gear. If the gear tries to drive the worm (reversal) the efficiency is (cos(phi_n) - f/tan(lam))/(cos(phi_n) + f*tan(lam)); the worm is self-locking when f >= cos(phi_n)*tan(lam) (the normal pressure angle reduces the effective lead-angle tangent; the bare f >= tan(lam) overstates the locking limit)."
+      ],
+      "method_references": [
+        "Worm-gear efficiency (worm driving) (recalled)"
+      ],
+      "synthetic_example": {
+        "phi_n": 0.3490658503988659,
+        "f": 0.05,
+        "lam": 0.15783119028815884
+      }
+    },
+    "gears.worm_heat": {
+      "title": "Worm gear power loss and heat dissipation capacity",
+      "variables": [
+        {
+          "name": "H_loss",
+          "unit": "W",
+          "desc": "power lost to heat (1 - eta) P_in",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H_diss",
+          "unit": "W",
+          "desc": "housing heat-dissipation capacity h A dT",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_in",
+          "unit": "W",
+          "desc": "input power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "W/(m^2*K)",
+          "desc": "overall heat-transfer coefficient of the housing (input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "housing surface area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dT",
+          "unit": "K",
+          "desc": "allowable temperature rise (delta, K = degC difference)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "H_loss = (1 - eta)*P_in",
+        "H_diss = h*A*dT"
+      ],
+      "procedure": null,
+      "outputs": [
+        "H_loss",
+        "H_diss"
+      ],
+      "assumptions": [
+        "Worm drives are usually limited by heat, not strength: require H_diss >= H_loss. h is an input (h ~ 10-15 W/m^2/K for still air, higher with a fan on the worm shaft)."
+      ],
+      "method_references": [
+        "Worm-gear heat balance (recalled)"
+      ],
+      "synthetic_example": {
+        "P_in": 2000.0,
+        "eta": 0.74,
+        "h": 15.0,
+        "A": 0.3,
+        "dT": 40.0
+      }
+    },
+    "gears.planetary_torques": {
+      "title": "Planetary gear torques (ideal, lossless)",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "",
+          "desc": "ring-to-sun tooth ratio Z_R/Z_S",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_S",
+          "unit": "N*m",
+          "desc": "sun torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_R",
+          "unit": "N*m",
+          "desc": "ring torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_C",
+          "unit": "N*m",
+          "desc": "carrier torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Z_S",
+          "unit": "",
+          "desc": "sun teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Z_R",
+          "unit": "",
+          "desc": "ring teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "R = Z_R/Z_S",
+        "T_R = R*T_S",
+        "T_C = -(1 + R)*T_S"
+      ],
+      "procedure": null,
+      "outputs": [
+        "R",
+        "T_R",
+        "T_C"
+      ],
+      "assumptions": [
+        "Ideal lossless train: T_S + T_R + T_C = 0, T_R = R T_S, T_C = -(1 + R) T_S. The carrier carries the largest (reaction) torque. Multiply by efficiency for losses. Speeds (the Willis relation omega_S - omega_C = -(Z_R/Z_S)(omega_R - omega_C)) are owned by mechanisms.planetary_trains; this calculator gives only the torques that follow from power balance."
+      ],
+      "method_references": [
+        "Planetary torque equilibrium (power balance; recalled)"
+      ],
+      "synthetic_example": {
+        "Z_S": 20,
+        "Z_R": 60,
+        "T_S": 10.0
+      }
+    },
+    "gears.lewis_bending": {
+      "title": "Lewis bending stress (sigma = W_t / (F m Y))",
+      "variables": [
+        {
+          "name": "sigma",
+          "unit": "Pa",
+          "desc": "tooth bending stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_t",
+          "unit": "N",
+          "desc": "transmitted (tangential) tooth force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "m",
+          "desc": "face width",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "m",
+          "desc": "module",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Y",
+          "unit": "",
+          "desc": "Lewis form factor (module/diametral-pitch based; table/input for the tooth count)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma = W_t/(F*m*Y)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma"
+      ],
+      "assumptions": [
+        "Static Lewis stress. Y is the Lewis form factor for the standard full-depth tooth, based on the module (SI) / diametral-pitch (imperial) system and read from a table for the tooth count (input). For a moving tooth the dynamic stress MULTIPLIES by the Barth velocity factor Kv (>= 1): sigma = Kv Wt/(F m Y), consistent with the AGMA Kv (see barth_velocity_factor). Compare with the material allowable bending stress."
+      ],
+      "method_references": [
+        "Lewis bending equation sigma = W_t/(F m Y) (recalled)"
+      ],
+      "synthetic_example": {
+        "W_t": 5000.0,
+        "F": 0.04,
+        "m": 0.004,
+        "Y": 0.3
+      }
+    },
+    "gears.barth_velocity_factor": {
+      "title": "Barth velocity (dynamic) factor Kv (multiplying form, Kv >= 1)",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "m/s",
+          "desc": "pitch-line velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kv_cast",
+          "unit": "",
+          "desc": "Kv for cast-iron / cast teeth = (3.05 + V)/3.05",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kv_cut",
+          "unit": "",
+          "desc": "Kv for cut/milled teeth = (6.1 + V)/6.1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kv_hobbed",
+          "unit": "",
+          "desc": "Kv for hobbed/shaped teeth = (3.56 + sqrt(V))/3.56",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kv_shaved",
+          "unit": "",
+          "desc": "Kv for shaved/ground teeth = (5.56 + sqrt(V))/5.56",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _barth(values):\n    \"\"\"Barth velocity factor Kv (multiplying form, Kv >= 1) for the Lewis bending path, V in m/s.\n\n    Kv_cast   = (3.05 + V)/3.05        cast-iron / cast teeth\n    Kv_cut    = (6.1 + V)/6.1          cut or milled teeth\n    Kv_hobbed = (3.56 + sqrt(V))/3.56  hobbed or shaped teeth\n    Kv_shaved = (5.56 + sqrt(V))/5.56  shaved or ground teeth\n    The additive constants carry units of m/s (sqrt(V) terms carry sqrt(m/s)), so this is a procedure\n    (not a dimensional equation). Kv >= 1 multiplies the static Lewis stress: sigma = Kv Wt/(F m Y).\n    \"\"\"\n    V = values['V']\n    sv = math.sqrt(V)\n    return {'Kv_cast': (3.05 + V) / 3.05,\n            'Kv_cut': (6.1 + V) / 6.1,\n            'Kv_hobbed': (3.56 + sv) / 3.56,\n            'Kv_shaved': (5.56 + sv) / 5.56}\n",
+        "source": "gears.py",
+        "line": 38
+      },
+      "outputs": [
+        "Kv_cast",
+        "Kv_cut",
+        "Kv_hobbed",
+        "Kv_shaved"
+      ],
+      "assumptions": [
+        "Barth empirical velocity factor in MULTIPLYING form Kv >= 1, V in m/s. The additive constants (3.05, 6.1, 3.56, 5.56 m/s) are empirical; the sqrt(V) forms apply to the hobbed/shaped and shaved/ground accuracy classes. Use Kv with the static Lewis stress as sigma = Kv Wt/(F m Y); the AGMA quality-number Kv (an input to agma_bending) is a different dynamic factor."
+      ],
+      "method_references": [
+        "Barth velocity factor (multiplying form; recalled)"
+      ],
+      "synthetic_example": {
+        "V": 10.0
+      }
+    },
+    "gears.agma_bending": {
+      "title": "AGMA bending stress (all modifying factors)",
+      "variables": [
+        {
+          "name": "sigma_b",
+          "unit": "Pa",
+          "desc": "AGMA bending stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3b",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_t",
+          "unit": "N",
+          "desc": "transmitted tangential load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ko",
+          "unit": "",
+          "desc": "overload factor (AGMA 2001 table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kv",
+          "unit": "",
+          "desc": "dynamic factor (AGMA figure/table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ks",
+          "unit": "",
+          "desc": "size factor (AGMA table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Km",
+          "unit": "",
+          "desc": "load-distribution factor (AGMA table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "KB",
+          "unit": "",
+          "desc": "rim-thickness factor (AGMA table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "m",
+          "desc": "face width (narrowest member)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "m",
+          "desc": "module (transverse, m_t for helical)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "",
+          "desc": "geometry factor for bending strength (AGMA figure)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_b = W_t*Ko*Kv*Ks*Km*KB/(F*m*J)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_b"
+      ],
+      "assumptions": [
+        "AGMA 2001-C95/2101-D04 bending stress (SI form). All modifying factors Ko/Kv/Ks/Km/KB and the geometry factor J are INPUTS naming the AGMA tables/figures. Feed the result to gear_safety_factors."
+      ],
+      "method_references": [
+        "AGMA fundamental bending stress equation (recalled)"
+      ],
+      "synthetic_example": {
+        "W_t": 5000.0,
+        "Ko": 1.25,
+        "Kv": 1.1,
+        "Ks": 1.0,
+        "Km": 1.3,
+        "KB": 1.0,
+        "F": 0.04,
+        "m": 0.004,
+        "J": 0.3
+      }
+    },
+    "gears.agma_contact": {
+      "title": "AGMA contact (pitting) stress (all modifying factors)",
+      "variables": [
+        {
+          "name": "sigma_c",
+          "unit": "Pa",
+          "desc": "AGMA contact stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3c",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_t",
+          "unit": "N",
+          "desc": "transmitted tangential load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ko",
+          "unit": "",
+          "desc": "overload factor (AGMA 2001 table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kv",
+          "unit": "",
+          "desc": "dynamic factor (AGMA figure/table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ks",
+          "unit": "",
+          "desc": "size factor (AGMA table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Km",
+          "unit": "",
+          "desc": "load-distribution factor (AGMA table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Cf",
+          "unit": "",
+          "desc": "surface-condition factor (AGMA table; = 1 standard)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Cp",
+          "unit": "Pa^0.5",
+          "desc": "elastic coefficient (AGMA table; e.g. 191 MPa^0.5 steel/steel)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_p",
+          "unit": "m",
+          "desc": "pinion operating pitch diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "m",
+          "desc": "face width (narrowest member)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "",
+          "desc": "geometry factor for pitting resistance (AGMA figure)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_c = Cp*sqrt(W_t*Ko*Kv*Ks*Km*Cf/(d_p*F*I))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_c"
+      ],
+      "assumptions": [
+        "AGMA 2101-D04 contact (pitting) stress (SI form), sigma_c = Cp sqrt(Wt Ko Kv Ks Km Cf /(d_p F I)). Cp, Cf, all modifying factors and the geometry factor I are INPUTS naming the AGMA tables/figures."
+      ],
+      "method_references": [
+        "AGMA fundamental contact stress equation (recalled)"
+      ],
+      "synthetic_example": {
+        "W_t": 4000.0,
+        "Ko": 1.25,
+        "Kv": 1.1,
+        "Ks": 1.0,
+        "Km": 1.3,
+        "Cf": 1.0,
+        "Cp": 191000.0,
+        "d_p": 0.08,
+        "F": 0.04,
+        "I": 0.1
+      }
+    },
+    "gears.gear_safety_factors": {
+      "title": "Gear safety factors against bending and pitting",
+      "variables": [
+        {
+          "name": "n_b",
+          "unit": "",
+          "desc": "factor of safety against bending fatigue",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_c",
+          "unit": "",
+          "desc": "factor of safety against pitting",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_b",
+          "unit": "Pa",
+          "desc": "AGMA bending stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3b",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_c",
+          "unit": "Pa",
+          "desc": "AGMA contact stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3c",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S_t",
+          "unit": "Pa",
+          "desc": "allowable bending stress (material, AGMA S-N)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S_c",
+          "unit": "Pa",
+          "desc": "allowable contact stress (material, AGMA S-N)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "YN",
+          "unit": "",
+          "desc": "stress-cycle factor for bending (AGMA figure)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ZN",
+          "unit": "",
+          "desc": "stress-cycle factor for pitting (AGMA figure)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "CH",
+          "unit": "",
+          "desc": "hardness-ratio factor (AGMA table; = 1 for equal hardness)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "KT",
+          "unit": "",
+          "desc": "temperature factor (AGMA table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "KR",
+          "unit": "",
+          "desc": "reliability factor (AGMA table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "n_b = S_t*YN/(KT*KR*sigma_b)",
+        "n_c = S_c*ZN*CH/(KT*KR*sigma_c)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "n_b",
+        "n_c"
+      ],
+      "assumptions": [
+        "S_t, S_c, YN, ZN, CH, KT, KR are INPUTS naming the AGMA material/figures/tables. n_b is the bending factor of safety S_F, compared directly (stress-linear). n_c is S_H, a strength/stress ratio: pitting is a Hertzian (stress-squared) failure, so the pitting factor of safety is S_H^2 = n_c^2 \u2014 compare S_F with S_H^2, not with S_H. n_b, n_c >= 1 (design codes apply larger minimums)."
+      ],
+      "method_references": [
+        "AGMA factor of safety (allowable/applied stress) (recalled)"
+      ],
+      "synthetic_example": {
+        "sigma_b": 186200000.0,
+        "sigma_c": 902800000.0,
+        "S_t": 300000000.0,
+        "S_c": 1200000000.0,
+        "YN": 1.0,
+        "ZN": 1.0,
+        "CH": 1.0,
+        "KT": 1.0,
+        "KR": 1.0
+      }
+    },
+    "gears.gear_life_cycles": {
+      "title": "Gear life: number of load cycles from hours at speed",
+      "variables": [
+        {
+          "name": "N",
+          "unit": "",
+          "desc": "number of load (tooth) cycles",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_h",
+          "unit": "h",
+          "desc": "design life in hours",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "Hz",
+          "desc": "shaft speed in rev/s (enter rpm/60 or \"1/min\")",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _gear_life_cycles(values):\n    \"\"\"Number of load cycles at speed n (rev/s) over L_h hours: N = L_h * 3600 * n.\"\"\"\n    return {'N': values['L_h'] * 3600.0 * values['n']}\n",
+        "source": "gears.py",
+        "line": 56
+      },
+      "outputs": [
+        "N"
+      ],
+      "assumptions": [
+        "N = L_h * 3600 * n revolutions of that shaft; each tooth of that gear sees one load application per revolution in a single mesh. For a gear with several meshes per revolution (idler, planet) multiply by the number of meshes. Use the pinion speed for the pinion tooth and the gear speed for the gear tooth; feed N into the stress-cycle factors YN/ZN (inputs)."
+      ],
+      "method_references": [
+        "Load cycles N = L_h * 3600 * n (recalled)"
+      ],
+      "synthetic_example": {
+        "L_h": 5000.0,
+        "n": 30.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "gears-001",
+      "calculator": "gears.spur_geometry",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "80 mm",
+        "N": 20
+      },
+      "solve_for": [
+        "m",
+        "p"
+      ],
+      "expected_as_specified": {
+        "m": "4 mm",
+        "p": "12.5664 mm"
+      },
+      "expected_SI": {
+        "m": 0.004,
+        "p": 0.0125664
+      },
+      "actual_SI": {
+        "m": {
+          "value": 0.004,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.spur_geometry (symbolic)"
+        },
+        "p": {
+          "value": 0.012566370614359173,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.spur_geometry (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "m": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 8e-06,
+          "passed": true
+        },
+        "p": {
+          "absolute_error": 2.9385640826912196e-08,
+          "relative_error": 2.3384295284975966e-06,
+          "allowed_absolute_error": 2.51328e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "m = d/N = 0.08/20 = 0.004 m; p = pi*m = pi*0.004 = 0.0125664 m"
+      }
+    },
+    {
+      "id": "gears-002",
+      "calculator": "gears.spur_geometry",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "4 mm",
+        "d": "80 mm"
+      },
+      "solve_for": [
+        "N",
+        "p"
+      ],
+      "expected_as_specified": {
+        "N": 20,
+        "p": "12.5664 mm"
+      },
+      "expected_SI": {
+        "N": 20.0,
+        "p": 0.0125664
+      },
+      "actual_SI": {
+        "N": {
+          "value": 20.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.spur_geometry (symbolic)"
+        },
+        "p": {
+          "value": 0.012566370614359173,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.spur_geometry (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "N": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.04,
+          "passed": true
+        },
+        "p": {
+          "absolute_error": 2.9385640826912196e-08,
+          "relative_error": 2.3384295284975966e-06,
+          "allowed_absolute_error": 2.51328e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "N = d/m = 80/4 = 20; p = pi*m = 12.5664 mm"
+      }
+    },
+    {
+      "id": "gears-003",
+      "calculator": "gears.diametral_pitch",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "N": 20,
+        "d": "2.5 in"
+      },
+      "solve_for": [
+        "P_d"
+      ],
+      "expected_as_specified": {
+        "P_d": "314.9606 1/m"
+      },
+      "expected_SI": {
+        "P_d": 314.9606
+      },
+      "actual_SI": {
+        "P_d": {
+          "value": 314.96062992125985,
+          "unit": "1/m",
+          "kind": "derived",
+          "method": "mechcalc gears.diametral_pitch (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P_d": {
+          "absolute_error": 2.99212598520171e-05,
+          "relative_error": 9.500000905515516e-08,
+          "allowed_absolute_error": 0.6299212,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P_d = N/d = 20/0.0635 = 314.9606 1/m (equals 8 teeth/inch since 314.9606 x 0.0254 = 8.0)"
+      }
+    },
+    {
+      "id": "gears-004",
+      "calculator": "gears.tooth_proportions",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "4 mm"
+      },
+      "solve_for": [
+        "a",
+        "b",
+        "c",
+        "h_t"
+      ],
+      "expected_as_specified": {
+        "a": "4 mm",
+        "b": "5 mm",
+        "c": "1 mm",
+        "h_t": "9 mm"
+      },
+      "expected_SI": {
+        "a": 0.004,
+        "b": 0.005,
+        "c": 0.001,
+        "h_t": 0.009000000000000001
+      },
+      "actual_SI": {
+        "a": {
+          "value": 0.004,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.tooth_proportions (symbolic)"
+        },
+        "b": {
+          "value": 0.005,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.tooth_proportions (symbolic)"
+        },
+        "c": {
+          "value": 0.001,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.tooth_proportions (symbolic)"
+        },
+        "h_t": {
+          "value": 0.009000000000000001,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.tooth_proportions (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 8e-06,
+          "passed": true
+        },
+        "b": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1e-05,
+          "passed": true
+        },
+        "c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2e-06,
+          "passed": true
+        },
+        "h_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.8000000000000004e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = m = 4; b = 1.25 m = 5; c = 0.25 m = 1; h_t = a + b = 9 mm (full-depth 20 deg system)"
+      }
+    },
+    {
+      "id": "gears-005",
+      "calculator": "gears.center_distance",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "4 mm",
+        "N1": 20,
+        "N2": 40
+      },
+      "solve_for": [
+        "d1",
+        "d2",
+        "C"
+      ],
+      "expected_as_specified": {
+        "d1": "80 mm",
+        "d2": "160 mm",
+        "C": "120 mm"
+      },
+      "expected_SI": {
+        "d1": 0.08,
+        "d2": 0.16,
+        "C": 0.12
+      },
+      "actual_SI": {
+        "d1": {
+          "value": 0.08,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.center_distance (symbolic)"
+        },
+        "d2": {
+          "value": 0.16,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.center_distance (symbolic)"
+        },
+        "C": {
+          "value": 0.12,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.center_distance (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "d1": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00016,
+          "passed": true
+        },
+        "d2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00032,
+          "passed": true
+        },
+        "C": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00024,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "d1 = 4*20 = 80 mm; d2 = 4*40 = 160 mm; C = (80+160)/2 = 120 mm"
+      }
+    },
+    {
+      "id": "gears-006",
+      "calculator": "gears.gear_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "N1": 20,
+        "N2": 40,
+        "omega1": "100 rad/s",
+        "T1": "10 N*m"
+      },
+      "solve_for": [
+        "i",
+        "omega2",
+        "T2"
+      ],
+      "expected_as_specified": {
+        "i": 2,
+        "omega2": "50 rad/s",
+        "T2": "20 N*m"
+      },
+      "expected_SI": {
+        "i": 2.0,
+        "omega2": 50.0,
+        "T2": 20.0
+      },
+      "actual_SI": {
+        "i": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.gear_ratio (symbolic)"
+        },
+        "omega2": {
+          "value": 50.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc gears.gear_ratio (symbolic)"
+        },
+        "T2": {
+          "value": 20.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc gears.gear_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "i": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "omega2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.1,
+          "passed": true
+        },
+        "T2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.04,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "i = 40/20 = 2; omega2 = 100/2 = 50 rad/s; T2 = 2*10 = 20 N.m"
+      }
+    },
+    {
+      "id": "gears-007",
+      "calculator": "gears.contact_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "4 mm",
+        "phi": "20 deg",
+        "N1": 20,
+        "N2": 40
+      },
+      "solve_for": [
+        "r1",
+        "r2",
+        "m_c"
+      ],
+      "expected_as_specified": {
+        "r1": "40 mm",
+        "r2": "80 mm",
+        "m_c": 1.63519
+      },
+      "expected_SI": {
+        "r1": 0.04,
+        "r2": 0.08,
+        "m_c": 1.63519
+      },
+      "actual_SI": {
+        "r1": {
+          "value": 0.04,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.contact_ratio (numeric)"
+        },
+        "r2": {
+          "value": 0.08,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.contact_ratio (numeric)"
+        },
+        "m_c": {
+          "value": 1.6351859635714607,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.contact_ratio (numeric)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "r1": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2e-05,
+          "passed": true
+        },
+        "r2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4e-05,
+          "passed": true
+        },
+        "m_c": {
+          "absolute_error": 4.036428539189174e-06,
+          "relative_error": 2.4684767759032127e-06,
+          "allowed_absolute_error": 0.000817595,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r1 = 0.004*20/2 = 0.04; r2 = 0.08. sqrt((0.044^2 - 0.037588^2)) + sqrt((0.084^2 - 0.075175^2)) - 0.12*sin20 = 0.022873 + 0.037479 - 0.041042 = 0.019310; base pitch pi*0.004*cos20 = 0.011809; m_c = 0.019310/0.011809 = 1.6352"
+      }
+    },
+    {
+      "id": "gears-008",
+      "calculator": "gears.min_teeth_interference",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "k": 1.0,
+        "phi": "20 deg"
+      },
+      "solve_for": [
+        "N_min"
+      ],
+      "expected_as_specified": {
+        "N_min": 17.0973
+      },
+      "expected_SI": {
+        "N_min": 17.0973
+      },
+      "actual_SI": {
+        "N_min": {
+          "value": 17.09726434082606,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.min_teeth_interference (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "N_min": {
+          "absolute_error": 3.5659173938995536e-05,
+          "relative_error": 2.085661124212334e-06,
+          "allowed_absolute_error": 0.0341946,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: minimum teeth to avoid undercut with a rack, N_min = 2/sin^2(phi) = 2/0.116978 = 17.10 for standard 20 deg full-depth teeth (universal textbook result; recalled, not re-read)."
+      }
+    },
+    {
+      "id": "gears-009",
+      "calculator": "gears.min_teeth_interference",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "N_min": 17.0973,
+        "k": 1.0
+      },
+      "solve_for": [
+        "phi"
+      ],
+      "expected_as_specified": {
+        "phi": "20 deg"
+      },
+      "expected_SI": {
+        "phi": 0.3490658503988659
+      },
+      "actual_SI": {
+        "phi": {
+          "value": 0.34906547083941025,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc gears.min_teeth_interference (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "phi": {
+          "absolute_error": 3.7955945564327465e-07,
+          "relative_error": 1.0873577441321308e-06,
+          "allowed_absolute_error": 0.0006981317007977319,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sin^2(phi) = 2k/N_min = 2/17.0973 = 0.116978 -> phi = asin(0.342020) = 20 deg"
+      }
+    },
+    {
+      "id": "gears-010",
+      "calculator": "gears.min_teeth_pinion",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "k": 1.0,
+        "m_G": 2.0,
+        "phi": "20 deg"
+      },
+      "solve_for": [
+        "N_P"
+      ],
+      "expected_as_specified": {
+        "N_P": 14.1608
+      },
+      "expected_SI": {
+        "N_P": 14.1608
+      },
+      "actual_SI": {
+        "N_P": {
+          "value": 14.160759149691255,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.min_teeth_pinion (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "N_P": {
+          "absolute_error": 4.085030874456663e-05,
+          "relative_error": 2.8847458296541604e-06,
+          "allowed_absolute_error": 0.028321600000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: minimum pinion teeth meshing with a gear of ratio m_G = 2 at 20 deg full-depth is N_P = 14.16 (machine-design texts; recalled, not re-read). Verified by independent arithmetic: 2/((1+4) sin^2 20) x (2 + sqrt(4 + 5 sin^2 20)) = 2/0.584889 x 4.141240 = 14.1608."
+      }
+    },
+    {
+      "id": "gears-011",
+      "calculator": "gears.min_teeth_pinion",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "N_P": 14.1608,
+        "k": 1.0,
+        "m_G": 2.0
+      },
+      "solve_for": [
+        "phi"
+      ],
+      "expected_as_specified": {
+        "phi": "20 deg"
+      },
+      "expected_SI": {
+        "phi": 0.3490658503988659
+      },
+      "actual_SI": {
+        "phi": {
+          "value": 0.3490653075134739,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc gears.min_teeth_pinion (numeric)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "phi": {
+          "absolute_error": 5.428853919742238e-07,
+          "relative_error": 1.55525208597142e-06,
+          "allowed_absolute_error": 0.0006981317007977319,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: N_P = 14.1608 at m_G = 2, k = 1 solves to sin^2(phi) = 0.116978 -> phi = 20 deg (monotonic in phi)"
+      }
+    },
+    {
+      "id": "gears-012",
+      "calculator": "gears.spur_tooth_forces",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T": "200 N*m",
+        "d": "80 mm",
+        "phi": "20 deg"
+      },
+      "solve_for": [
+        "W_t",
+        "W_r"
+      ],
+      "expected_as_specified": {
+        "W_t": "5 kN",
+        "W_r": "1819.85 N"
+      },
+      "expected_SI": {
+        "W_t": 5000.0,
+        "W_r": 1819.85
+      },
+      "actual_SI": {
+        "W_t": {
+          "value": 5000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc gears.spur_tooth_forces (symbolic)"
+        },
+        "W_r": {
+          "value": 1819.8511713310118,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc gears.spur_tooth_forces (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "W_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 10.0,
+          "passed": true
+        },
+        "W_r": {
+          "absolute_error": 0.0011713310118466325,
+          "relative_error": 6.436415154252453e-07,
+          "allowed_absolute_error": 3.6397,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "W_t = 2*200/0.08 = 5000 N; W_r = 5000*tan20 = 5000*0.363970 = 1819.85 N"
+      }
+    },
+    {
+      "id": "gears-013",
+      "calculator": "gears.helical_pitch",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m_n": "4 mm",
+        "psi": "30 deg",
+        "N": 20
+      },
+      "solve_for": [
+        "p_n",
+        "m_t",
+        "p_t",
+        "d"
+      ],
+      "expected_as_specified": {
+        "p_n": "12.5664 mm",
+        "m_t": "4.61880 mm",
+        "p_t": "14.5104 mm",
+        "d": "92.3760 mm"
+      },
+      "expected_SI": {
+        "p_n": 0.0125664,
+        "m_t": 0.0046188,
+        "p_t": 0.014510400000000001,
+        "d": 0.092376
+      },
+      "actual_SI": {
+        "p_n": {
+          "value": 0.012566370614359173,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.helical_pitch (symbolic)"
+        },
+        "m_t": {
+          "value": 0.0046188021535170055,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.helical_pitch (symbolic)"
+        },
+        "p_t": {
+          "value": 0.014510394913873742,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.helical_pitch (symbolic)"
+        },
+        "d": {
+          "value": 0.09237604307034011,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.helical_pitch (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "p_n": {
+          "absolute_error": 2.9385640826912196e-08,
+          "relative_error": 2.3384295284975966e-06,
+          "allowed_absolute_error": 2.51328e-05,
+          "passed": true
+        },
+        "m_t": {
+          "absolute_error": 2.1535170053460506e-09,
+          "relative_error": 4.662503259171323e-07,
+          "allowed_absolute_error": 9.237600000000001e-06,
+          "passed": true
+        },
+        "p_t": {
+          "absolute_error": 5.0861262597401424e-09,
+          "relative_error": 3.505159237333321e-07,
+          "allowed_absolute_error": 2.9020800000000005e-05,
+          "passed": true
+        },
+        "d": {
+          "absolute_error": 4.3070340113859906e-08,
+          "relative_error": 4.6625032599224806e-07,
+          "allowed_absolute_error": 0.000184752,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "p_n = pi*4 = 12.5664 mm; m_t = 4/cos30 = 4/0.866025 = 4.61880 mm; p_t = pi*4.61880 = 14.5104 mm; d = 4.61880*20 = 92.3760 mm"
+      }
+    },
+    {
+      "id": "gears-014",
+      "calculator": "gears.helical_angles",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "phi_n": "20 deg",
+        "psi": "30 deg"
+      },
+      "solve_for": [
+        "phi_t"
+      ],
+      "expected_as_specified": {
+        "phi_t": "22.7959 deg"
+      },
+      "expected_SI": {
+        "phi_t": 0.39786351095537537
+      },
+      "actual_SI": {
+        "phi_t": {
+          "value": 0.39786311404758007,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc gears.helical_angles (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "phi_t": {
+          "absolute_error": 3.969077952969968e-07,
+          "relative_error": 9.975978805995965e-07,
+          "allowed_absolute_error": 0.0007957270219107508,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "tan(phi_t) = tan20/cos30 = 0.363970/0.866025 = 0.420276 -> phi_t = atan(0.420276) = 22.7959 deg"
+      }
+    },
+    {
+      "id": "gears-015",
+      "calculator": "gears.helical_tooth_forces",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T": "200 N*m",
+        "d": "80 mm",
+        "phi_n": "20 deg",
+        "psi": "30 deg"
+      },
+      "solve_for": [
+        "W_t",
+        "W_r",
+        "W_a"
+      ],
+      "expected_as_specified": {
+        "W_t": "5 kN",
+        "W_r": "2101.38 N",
+        "W_a": "2886.75 N"
+      },
+      "expected_SI": {
+        "W_t": 5000.0,
+        "W_r": 2101.38,
+        "W_a": 2886.75
+      },
+      "actual_SI": {
+        "W_t": {
+          "value": 5000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc gears.helical_tooth_forces (symbolic)"
+        },
+        "W_r": {
+          "value": 2101.383127306031,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc gears.helical_tooth_forces (symbolic)"
+        },
+        "W_a": {
+          "value": 2886.751345948129,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc gears.helical_tooth_forces (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "W_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 10.0,
+          "passed": true
+        },
+        "W_r": {
+          "absolute_error": 0.0031273060308194545,
+          "relative_error": 1.4882153779037843e-06,
+          "allowed_absolute_error": 4.2027600000000005,
+          "passed": true
+        },
+        "W_a": {
+          "absolute_error": 0.0013459481288009556,
+          "relative_error": 4.662503260763681e-07,
+          "allowed_absolute_error": 5.7735,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "W_t = 5000 N; W_r = 5000*tan20/cos30 = 5000*0.363970/0.866025 = 2101.38 N; W_a = 5000*tan30 = 5000*0.577350 = 2886.75 N"
+      }
+    },
+    {
+      "id": "gears-016",
+      "calculator": "gears.bevel_angles",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "N1": 20,
+        "N2": 40,
+        "Sigma": "90 deg"
+      },
+      "solve_for": [
+        "gamma1",
+        "gamma2"
+      ],
+      "expected_as_specified": {
+        "gamma1": "26.5651 deg",
+        "gamma2": "63.4349 deg"
+      },
+      "expected_SI": {
+        "gamma1": 0.4636484611215457,
+        "gamma2": 1.1071478656733509
+      },
+      "actual_SI": {
+        "gamma1": {
+          "value": 0.4636476090008061,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc gears.bevel_angles (symbolic)"
+        },
+        "gamma2": {
+          "value": 1.1071487177940904,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc gears.bevel_angles (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "gamma1": {
+          "absolute_error": 8.521207395806307e-07,
+          "relative_error": 1.8378595229657128e-06,
+          "allowed_absolute_error": 0.0009272969222430913,
+          "passed": true
+        },
+        "gamma2": {
+          "absolute_error": 8.521207395251196e-07,
+          "relative_error": 7.696539603649711e-07,
+          "allowed_absolute_error": 0.0022142957313467018,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Right angle: tan(gamma1) = N1/N2 = 0.5 -> gamma1 = 26.565 deg; gamma2 = 90 - 26.565 = 63.435 deg"
+      }
+    },
+    {
+      "id": "gears-017",
+      "calculator": "gears.bevel_forces",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T": "200 N*m",
+        "d_m": "80 mm",
+        "phi": "20 deg",
+        "gamma": "26.5651 deg"
+      },
+      "solve_for": [
+        "W_t",
+        "W_r",
+        "W_a"
+      ],
+      "expected_as_specified": {
+        "W_t": "5 kN",
+        "W_r": "1627.72 N",
+        "W_a": "813.86 N"
+      },
+      "expected_SI": {
+        "W_t": 5000.0,
+        "W_r": 1627.72,
+        "W_a": 813.86
+      },
+      "actual_SI": {
+        "W_t": {
+          "value": 5000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc gears.bevel_forces (symbolic)"
+        },
+        "W_r": {
+          "value": 1627.723677702065,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc gears.bevel_forces (symbolic)"
+        },
+        "W_a": {
+          "value": 813.8635726231513,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc gears.bevel_forces (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "W_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 10.0,
+          "passed": true
+        },
+        "W_r": {
+          "absolute_error": 0.0036777020650333725,
+          "relative_error": 2.259419350400175e-06,
+          "allowed_absolute_error": 3.25544,
+          "passed": true
+        },
+        "W_a": {
+          "absolute_error": 0.00357262315128537,
+          "relative_error": 4.389726920214005e-06,
+          "allowed_absolute_error": 1.62772,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "W_t = 5000 N; cos(gamma) = 0.894427, sin(gamma) = 0.447214; W_r = 5000*tan20*0.894427 = 1627.72 N; W_a = 5000*tan20*0.447214 = 813.86 N"
+      }
+    },
+    {
+      "id": "gears-018",
+      "calculator": "gears.worm_geometry",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p_x": "10 mm",
+        "N_w": 2,
+        "d_w": "40 mm"
+      },
+      "solve_for": [
+        "L_w",
+        "lam"
+      ],
+      "expected_as_specified": {
+        "L_w": "20 mm",
+        "lam": "9.0431 deg"
+      },
+      "expected_SI": {
+        "L_w": 0.02,
+        "lam": 0.15783186958709922
+      },
+      "actual_SI": {
+        "L_w": {
+          "value": 0.02,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.worm_geometry (symbolic)"
+        },
+        "lam": {
+          "value": 0.15783119028815884,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc gears.worm_geometry (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "L_w": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4e-05,
+          "passed": true
+        },
+        "lam": {
+          "absolute_error": 6.792989403758831e-07,
+          "relative_error": 4.303940276149446e-06,
+          "allowed_absolute_error": 0.00031566373917419846,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L_w = 10*2 = 20 mm; lam = atan(0.02/(pi*0.04)) = atan(0.159155) = 9.0431 deg"
+      }
+    },
+    {
+      "id": "gears-019",
+      "calculator": "gears.worm_geometry",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p_x": "10 mm",
+        "N_w": 2,
+        "lam": "9.0431 deg"
+      },
+      "solve_for": [
+        "d_w",
+        "L_w"
+      ],
+      "expected_as_specified": {
+        "d_w": "40 mm",
+        "L_w": "20 mm"
+      },
+      "expected_SI": {
+        "d_w": 0.04,
+        "L_w": 0.02
+      },
+      "actual_SI": {
+        "d_w": {
+          "value": 0.03999982494975093,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.worm_geometry (symbolic)"
+        },
+        "L_w": {
+          "value": 0.02,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc gears.worm_geometry (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "d_w": {
+          "absolute_error": 1.7505024907382705e-07,
+          "relative_error": 4.376256226845676e-06,
+          "allowed_absolute_error": 8e-05,
+          "passed": true
+        },
+        "L_w": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L_w = 10*2 = 20 mm; d_w = L_w/(pi*tan(lam)) = 0.02/(pi*0.159155) = 0.04 m"
+      }
+    },
+    {
+      "id": "gears-020",
+      "calculator": "gears.worm_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "phi_n": "20 deg",
+        "f": 0.05,
+        "lam": "9.0431 deg"
+      },
+      "solve_for": [
+        "eta"
+      ],
+      "expected_as_specified": {
+        "eta": 0.7431
+      },
+      "expected_SI": {
+        "eta": 0.7431
+      },
+      "actual_SI": {
+        "eta": {
+          "value": 0.7430988227116734,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.worm_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "eta": {
+          "absolute_error": 1.177288326603687e-06,
+          "relative_error": 1.5842932668600285e-06,
+          "allowed_absolute_error": 0.00037155,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "cos20 = 0.939693, tan(lam) = 0.159155, 1/tan = 6.28319; eta = (0.939693 - 0.05*0.159155)/(0.939693 + 0.05*6.28319) = (0.939693 - 0.007958)/(0.939693 + 0.314160) = 0.931735/1.253853 = 0.74310"
+      }
+    },
+    {
+      "id": "gears-021",
+      "calculator": "gears.worm_heat",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P_in": "2 kW",
+        "eta": 0.74,
+        "h": "15 W/(m^2*K)",
+        "A": "0.3 m^2",
+        "dT": "40 K"
+      },
+      "solve_for": [
+        "H_loss",
+        "H_diss"
+      ],
+      "expected_as_specified": {
+        "H_loss": "520 W",
+        "H_diss": "180 W"
+      },
+      "expected_SI": {
+        "H_loss": 520.0,
+        "H_diss": 180.0
+      },
+      "actual_SI": {
+        "H_loss": {
+          "value": 520.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc gears.worm_heat (symbolic)"
+        },
+        "H_diss": {
+          "value": 180.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc gears.worm_heat (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "H_loss": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.04,
+          "passed": true
+        },
+        "H_diss": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.36,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "H_loss = (1 - 0.74)*2000 = 520 W; H_diss = 15*0.3*40 = 180 W"
+      }
+    },
+    {
+      "id": "gears-022",
+      "calculator": "gears.planetary_torques",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Z_S": 20,
+        "Z_R": 60,
+        "T_S": "10 N*m"
+      },
+      "solve_for": [
+        "R",
+        "T_R",
+        "T_C"
+      ],
+      "expected_as_specified": {
+        "R": 3,
+        "T_R": "30 N*m",
+        "T_C": "-40 N*m"
+      },
+      "expected_SI": {
+        "R": 3.0,
+        "T_R": 30.0,
+        "T_C": -40.0
+      },
+      "actual_SI": {
+        "R": {
+          "value": 3.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.planetary_torques (symbolic)"
+        },
+        "T_R": {
+          "value": 30.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc gears.planetary_torques (symbolic)"
+        },
+        "T_C": {
+          "value": -40.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc gears.planetary_torques (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.006,
+          "passed": true
+        },
+        "T_R": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.06,
+          "passed": true
+        },
+        "T_C": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = 60/20 = 3; T_R = 3*10 = 30 N.m; T_C = -(1 + 3)*10 = -40 N.m (sum of torques = 0)"
+      }
+    },
+    {
+      "id": "gears-023",
+      "calculator": "gears.lewis_bending",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W_t": "5 kN",
+        "F": "40 mm",
+        "m": "4 mm",
+        "Y": 0.3
+      },
+      "solve_for": [
+        "sigma"
+      ],
+      "expected_as_specified": {
+        "sigma": "104.167 MPa"
+      },
+      "expected_SI": {
+        "sigma": 104167000.0
+      },
+      "actual_SI": {
+        "sigma": {
+          "value": 104166666.66666666,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc gears.lewis_bending (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma": {
+          "absolute_error": 333.33333334326744,
+          "relative_error": 3.199989760128135e-06,
+          "allowed_absolute_error": 208334.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma = 5000/(0.04*0.004*0.30) = 5000/4.8e-5 = 1.04167e8 Pa"
+      }
+    },
+    {
+      "id": "gears-024",
+      "calculator": "gears.barth_velocity_factor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V": "5 m/s"
+      },
+      "solve_for": [
+        "Kv_cast",
+        "Kv_cut",
+        "Kv_hobbed",
+        "Kv_shaved"
+      ],
+      "expected_as_specified": {
+        "Kv_cast": 2.63934,
+        "Kv_cut": 1.81967,
+        "Kv_hobbed": 1.62811,
+        "Kv_shaved": 1.40217
+      },
+      "expected_SI": {
+        "Kv_cast": 2.63934,
+        "Kv_cut": 1.81967,
+        "Kv_hobbed": 1.62811,
+        "Kv_shaved": 1.40217
+      },
+      "actual_SI": {
+        "Kv_cast": {
+          "value": 2.6393442622950825,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.barth_velocity_factor (procedure)"
+        },
+        "Kv_cut": {
+          "value": 1.819672131147541,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.barth_velocity_factor (procedure)"
+        },
+        "Kv_hobbed": {
+          "value": 1.6281089824437613,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.barth_velocity_factor (procedure)"
+        },
+        "Kv_shaved": {
+          "value": 1.402170499550322,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.barth_velocity_factor (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Kv_cast": {
+          "absolute_error": 4.26229508265763e-06,
+          "relative_error": 1.6149094404880122e-06,
+          "allowed_absolute_error": 0.00131967,
+          "passed": true
+        },
+        "Kv_cut": {
+          "absolute_error": 2.1311475411067704e-06,
+          "relative_error": 1.1711725428823746e-06,
+          "allowed_absolute_error": 0.000909835,
+          "passed": true
+        },
+        "Kv_hobbed": {
+          "absolute_error": 1.0175562386027792e-06,
+          "relative_error": 6.249923153858027e-07,
+          "allowed_absolute_error": 0.0008140549999999999,
+          "passed": true
+        },
+        "Kv_shaved": {
+          "absolute_error": 4.99550321997333e-07,
+          "relative_error": 3.5626944093607266e-07,
+          "allowed_absolute_error": 0.000701085,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Multiplying Barth forms at V = 5 m/s (arithmetic in a plain-Python scratch script): Kv_cast = (3.05+5)/3.05 = 8.05/3.05 = 2.63934; Kv_cut = (6.1+5)/6.1 = 11.1/6.1 = 1.81967; Kv_hobbed = (3.56+sqrt(5))/3.56 = 5.79607/3.56 = 1.62811; Kv_shaved = (5.56+sqrt(5))/5.56 = 7.79607/5.56 = 1.40217. All >= 1 and decrease toward 1 as V -> 0."
+      }
+    },
+    {
+      "id": "gears-025",
+      "calculator": "gears.agma_bending",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W_t": "5 kN",
+        "Ko": 1.25,
+        "Kv": 1.1,
+        "Ks": 1.0,
+        "Km": 1.3,
+        "KB": 1.0,
+        "F": "40 mm",
+        "m": "4 mm",
+        "J": 0.3
+      },
+      "solve_for": [
+        "sigma_b"
+      ],
+      "expected_as_specified": {
+        "sigma_b": "186.20 MPa"
+      },
+      "expected_SI": {
+        "sigma_b": 186200000.0
+      },
+      "actual_SI": {
+        "sigma_b": {
+          "value": 186197916.66666666,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc gears.agma_bending (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_b": {
+          "absolute_error": 2083.3333333432674,
+          "relative_error": 1.1188686000769428e-05,
+          "allowed_absolute_error": 372400.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "product = 1.25*1.1*1.3 = 1.7875; sigma_b = 5000*1.7875/(0.04*0.004*0.30) = 8937.5/4.8e-5 = 1.86198e8 Pa"
+      }
+    },
+    {
+      "id": "gears-026",
+      "calculator": "gears.agma_contact",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W_t": "4 kN",
+        "Ko": 1.25,
+        "Kv": 1.1,
+        "Ks": 1.0,
+        "Km": 1.3,
+        "Cf": 1.0,
+        "Cp": "191 MPa^0.5",
+        "d_p": "80 mm",
+        "F": "40 mm",
+        "I": 0.1
+      },
+      "solve_for": [
+        "sigma_c"
+      ],
+      "expected_as_specified": {
+        "sigma_c": "902.84 MPa"
+      },
+      "expected_SI": {
+        "sigma_c": 902840000.0
+      },
+      "actual_SI": {
+        "sigma_c": {
+          "value": 902841261.6567765,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc gears.agma_contact (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_c": {
+          "absolute_error": 1261.656776547432,
+          "relative_error": 1.397431191071986e-06,
+          "allowed_absolute_error": 1805680.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "ratio = 4000*1.25*1.1*1.3/(0.08*0.04*0.10) = 7150/0.00032 = 2.23438e7; sqrt = 4726.9; sigma_c = 191000*4726.9 = 9.0284e8 Pa"
+      }
+    },
+    {
+      "id": "gears-027",
+      "calculator": "gears.gear_safety_factors",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_b": "186.2 MPa",
+        "sigma_c": "902.8 MPa",
+        "S_t": "300 MPa",
+        "S_c": "1.2 GPa",
+        "YN": 1.0,
+        "ZN": 1.0,
+        "CH": 1.0,
+        "KT": 1.0,
+        "KR": 1.0
+      },
+      "solve_for": [
+        "n_b",
+        "n_c"
+      ],
+      "expected_as_specified": {
+        "n_b": 1.61117,
+        "n_c": 1.3292
+      },
+      "expected_SI": {
+        "n_b": 1.61117,
+        "n_c": 1.3292
+      },
+      "actual_SI": {
+        "n_b": {
+          "value": 1.6111707841031149,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.gear_safety_factors (symbolic)"
+        },
+        "n_c": {
+          "value": 1.329198050509526,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.gear_safety_factors (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_b": {
+          "absolute_error": 7.841031148814182e-07,
+          "relative_error": 4.866669034809599e-07,
+          "allowed_absolute_error": 0.00322234,
+          "passed": true
+        },
+        "n_c": {
+          "absolute_error": 1.9494904739403296e-06,
+          "relative_error": 1.466664515453152e-06,
+          "allowed_absolute_error": 0.0026584,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "n_b = 300/186.2 = 1.61117; n_c = 1200/902.8 = 1.32920"
+      }
+    },
+    {
+      "id": "gears-028",
+      "calculator": "gears.gear_life_cycles",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L_h": "5000 h",
+        "n": "1800 1/min"
+      },
+      "solve_for": [
+        "N"
+      ],
+      "expected_as_specified": {
+        "N": 540000000
+      },
+      "expected_SI": {
+        "N": 540000000.0
+      },
+      "actual_SI": {
+        "N": {
+          "value": 540000000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc gears.gear_life_cycles (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "N": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1080000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "n = 1800/60 = 30 rev/s; N = 5000*3600*30 = 5.4e8 cycles"
+      }
+    }
+  ],
+  "passed": 28,
+  "failed": 0
+}

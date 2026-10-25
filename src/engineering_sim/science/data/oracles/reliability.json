@@ -1,0 +1,246 @@
+{
+  "section": "reliability",
+  "cases": [
+    {
+      "calc": "reliability.exp_reliability",
+      "inputs": {
+        "lam": "0.0001 1/s",
+        "t": "10000 s"
+      },
+      "expect": {
+        "R": 0.3678794,
+        "MTTF": "10000 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = exp(-λt) = exp(-0.0001·10000) = exp(-1) = 0.367879; MTTF = 1/λ = 10000 s"
+      }
+    },
+    {
+      "calc": "reliability.exp_reliability",
+      "inputs": {
+        "R": 0.5,
+        "lam": "0.36 1/h"
+      },
+      "solve_for": [
+        "t",
+        "MTTF"
+      ],
+      "expect": {
+        "t": "6931.4718 s",
+        "MTTF": "10000 s"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "t = -ln(R)/λ = -ln(0.5)/(0.36/3600) = 0.693147/0.0001 = 6931.47 s (0.36 1/h = 0.0001 1/s; median life ln2/λ)"
+      }
+    },
+    {
+      "calc": "reliability.weibull_reliability",
+      "inputs": {
+        "beta": 2.0,
+        "eta": "1000 s",
+        "t": "1000 s"
+      },
+      "expect": {
+        "R": 0.3678794,
+        "F": 0.6321206
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "t/η = 1; R = exp(-1²) = 0.367879; F = 1 - R = 0.632121 (at t = η, R = e⁻¹ for any β)"
+      }
+    },
+    {
+      "calc": "reliability.weibull_reliability",
+      "inputs": {
+        "R": 0.9,
+        "beta": 2.0,
+        "t": "1000 s"
+      },
+      "solve_for": [
+        "eta",
+        "F"
+      ],
+      "expect": {
+        "eta": "3080.782 s",
+        "F": 0.1
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "η = t/(-ln R)^(1/β) = 1000/√(−ln 0.9) = 1000/√(0.1053605) = 1000/0.3245929 = 3080.78 s"
+      }
+    },
+    {
+      "calc": "reliability.weibull_hazard",
+      "inputs": {
+        "beta": 2.0,
+        "eta": "1000 s",
+        "t": "1000 s"
+      },
+      "expect": {
+        "h": "0.002 1/s",
+        "f": "0.0007357589 1/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "h = (β/η)(t/η)^(β-1) = (2/1000)(1)^1 = 0.002 1/s; f = h·R = 0.002·exp(-1) = 7.3576e-4 1/s"
+      }
+    },
+    {
+      "calc": "reliability.availability",
+      "inputs": {
+        "MTTF": "950 h",
+        "MTTR": "50 h"
+      },
+      "expect": {
+        "A": 0.95,
+        "MTBF": "1000 h"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "MTBF = MTTF + MTTR = 950 + 50 = 1000 h; A = MTTF/MTBF = 950/1000 = 0.95"
+      }
+    },
+    {
+      "calc": "reliability.availability",
+      "inputs": {
+        "A": 0.99,
+        "MTBF": "100000 s"
+      },
+      "solve_for": [
+        "MTTF",
+        "MTTR"
+      ],
+      "expect": {
+        "MTTF": "99000 s",
+        "MTTR": "1000 s"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "MTTF = A·MTBF = 0.99·100000 = 99000 s; MTTR = MTBF - MTTF = 1000 s"
+      }
+    },
+    {
+      "calc": "reliability.availability_datasheet",
+      "inputs": {
+        "MTBF_up": "1000 h",
+        "MTTR": "10 h"
+      },
+      "expect": {
+        "A": 0.990099
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "datasheet form A = MTBF_up/(MTBF_up + MTTR) = 1000/(1000 + 10) = 1000/1010 = 0.990099"
+      }
+    },
+    {
+      "calc": "reliability.weibull_fit",
+      "inputs": {
+        "data": [
+          500,
+          900,
+          1400,
+          2200,
+          3600,
+          6000
+        ]
+      },
+      "expect": {
+        "beta_MR": 1.152552,
+        "eta_MR": "2720.566 s",
+        "beta_MLE": 1.3379086,
+        "eta_MLE": "2663.027 s"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Median-rank regression: Bernard ranks F_i = (i−0.3)/(n+0.4) for i=1..6 (n=6) give y_i = ln(ln(1/(1−F_i))) against x_i = ln t_i; OLS slope β_MR = 1.152552, intercept −β ln η gives η_MR = 2720.566 s (plain-Python scratch script). MLE: bisection on the fixed-point equation 1/β = Σ(tᵢᵝ ln tᵢ)/Σ tᵢᵝ − (1/n)Σ ln tᵢ gives β_MLE = 1.3379086, then η_MLE = (Σ tᵢᵝ/n)^(1/β) = 2663.027 s (matches scipy.stats.weibull_min.fit to ~5e-8)."
+      }
+    },
+    {
+      "calc": "reliability.weibull_mttf",
+      "inputs": {
+        "beta": 2.0,
+        "eta": "1000 s"
+      },
+      "expect": {
+        "MTTF": "886.2269 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "MTTF = η·Γ(1 + 1/β) = 1000·Γ(1.5) = 1000·√π/2 = 1000·0.8862269 = 886.2269 s (Γ(1.5) = √π/2 landmark)"
+      }
+    },
+    {
+      "calc": "reliability.weibull_mttf",
+      "inputs": {
+        "beta": 1.0,
+        "eta": "1000 s"
+      },
+      "expect": {
+        "MTTF": "1000 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "β = 1 is the exponential case: MTTF = η·Γ(2) = η·1 = 1000 s (Γ(2) = 1)"
+      }
+    },
+    {
+      "calc": "reliability.series_reliability",
+      "inputs": {
+        "R_list": [
+          0.95,
+          0.9,
+          0.98
+        ]
+      },
+      "expect": {
+        "R_s": 0.8379
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R_s = 0.95·0.9·0.98 = 0.8379"
+      }
+    },
+    {
+      "calc": "reliability.parallel_reliability",
+      "inputs": {
+        "R_list": [
+          0.9,
+          0.9
+        ]
+      },
+      "expect": {
+        "R_p": 0.99
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R_p = 1 − (1−0.9)(1−0.9) = 1 − 0.01 = 0.99"
+      }
+    },
+    {
+      "calc": "reliability.reliability_index",
+      "inputs": {
+        "mu_S": "400 MPa",
+        "sigma_S": "40 MPa",
+        "mu_L": "250 MPa",
+        "sigma_L": "30 MPa"
+      },
+      "expect": {
+        "beta": 3.0,
+        "p_f": 0.0013499,
+        "n_c": 1.6
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "β = (μ_S−μ_L)/√(σ_S²+σ_L²) = (400−250)/√(40²+30²) = 150/50 = 3.0; p_f = Φ(−3) = 0.0013499 (3-sigma landmark); n_c = 400/250 = 1.6"
+      }
+    }
+  ]
+}

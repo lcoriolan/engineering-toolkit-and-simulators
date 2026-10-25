@@ -1,0 +1,1577 @@
+{
+  "section": "reliability",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k reliability",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "reliability.exp_reliability": {
+      "title": "Exponential reliability and constant failure rate",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "",
+          "desc": "reliability (probability of surviving to time t)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam",
+          "unit": "1/s",
+          "desc": "constant failure rate (enter e.g. 0.36 1/h)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "mission time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "MTTF",
+          "unit": "s",
+          "desc": "mean time to failure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "R = exp(-lam*t)",
+        "MTTF = 1/lam"
+      ],
+      "procedure": null,
+      "outputs": [
+        "R",
+        "MTTF"
+      ],
+      "assumptions": [
+        "Constant (random) failure rate over the mission \u2014 the exponential law holds in the useful life of a bathtub curve. h(t) = \u03bb (constant hazard)."
+      ],
+      "method_references": [
+        "R(t) = exp(\u2212\u03bbt); MTTF = 1/\u03bb for the exponential distribution"
+      ],
+      "synthetic_example": {
+        "lam": 0.0001,
+        "t": 10000.0
+      }
+    },
+    "reliability.weibull_reliability": {
+      "title": "Weibull reliability and cumulative failure probability",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "",
+          "desc": "reliability R(t)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "",
+          "desc": "cumulative failure probability F(t) = 1 \u2212 R(t)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta",
+          "unit": "",
+          "desc": "Weibull shape parameter (\u03b2 < 1 wear-in, \u03b2 = 1 exponential, \u03b2 > 1 wear-out)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "s",
+          "desc": "Weibull scale parameter (characteristic life, R(\u03b7) = 36.8 %)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "R = exp(-(t/eta)**beta)",
+        "F = 1 - exp(-(t/eta)**beta)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "R",
+        "F"
+      ],
+      "assumptions": [
+        "Two-parameter Weibull, t \u2265 0, \u03b2 > 0, \u03b7 > 0. At t = \u03b7 the reliability is e\u207b\u00b9 \u2248 0.368 for any \u03b2. \u03b2 = 1 recovers the exponential law."
+      ],
+      "method_references": [
+        "Weibull distribution R(t) = exp(\u2212(t/\u03b7)^\u03b2); F(t) = 1 \u2212 R(t)"
+      ],
+      "synthetic_example": {
+        "beta": 2.0,
+        "eta": 1000.0,
+        "t": 500.0
+      }
+    },
+    "reliability.weibull_hazard": {
+      "title": "Weibull hazard rate and failure probability density",
+      "variables": [
+        {
+          "name": "h",
+          "unit": "1/s",
+          "desc": "hazard (instantaneous failure) rate h(t) = f(t)/R(t)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "1/s",
+          "desc": "failure probability density f(t)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta",
+          "unit": "",
+          "desc": "Weibull shape parameter",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "s",
+          "desc": "Weibull scale parameter (characteristic life)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _weibull_hazard(v):\n    \"\"\"Weibull hazard rate and pdf at time t: h(t) = (\u03b2/\u03b7)(t/\u03b7)^(\u03b2\u22121), f(t) = h(t)\u00b7R(t).\"\"\"\n    beta, eta, t = v['beta'], v['eta'], v['t']\n    if beta <= 0 or eta <= 0 or t < 0:\n        raise MechError('Weibull needs \u03b2 > 0, \u03b7 > 0 and t \u2265 0')\n    if t == 0.0:\n        # h(0) = 0 for \u03b2 > 1, = 1/\u03b7 for \u03b2 = 1, and is unbounded for \u03b2 < 1 (wear-in).\n        if beta < 1.0:\n            raise MechError('hazard rate is unbounded at t = 0 for \u03b2 < 1')\n        h = 0.0 if beta > 1.0 else 1.0 / eta\n        return {'h': h, 'f': h}\n    ratio = t / eta\n    h = (beta / eta) * ratio ** (beta - 1.0)\n    f = h * math.exp(-(ratio ** beta))\n    return {'h': h, 'f': f}\n",
+        "source": "reliability.py",
+        "line": 62
+      },
+      "outputs": [
+        "h",
+        "f"
+      ],
+      "assumptions": [
+        "Two-parameter Weibull, t \u2265 0, \u03b2 > 0, \u03b7 > 0. h(t) is the instantaneous failure rate (increasing for \u03b2 > 1 wear-out, decreasing for \u03b2 < 1 wear-in, constant \u03b2 = 1)."
+      ],
+      "method_references": [
+        "Weibull h(t) = (\u03b2/\u03b7)(t/\u03b7)^(\u03b2\u22121); f(t) = h(t)\u00b7R(t)"
+      ],
+      "synthetic_example": {
+        "beta": 2.0,
+        "eta": 1000.0,
+        "t": 1000.0
+      }
+    },
+    "reliability.availability": {
+      "title": "MTBF, MTTF, MTTR and steady-state availability",
+      "variables": [
+        {
+          "name": "A",
+          "unit": "",
+          "desc": "availability (fraction of time the system is up)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "MTBF",
+          "unit": "s",
+          "desc": "mean time between failures = MTTF + MTTR (strict convention: includes repair time)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "MTTF",
+          "unit": "s",
+          "desc": "mean time to failure = mean UP time between failures",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "MTTR",
+          "unit": "s",
+          "desc": "mean time to repair (downtime per failure)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "A = MTTF/MTBF",
+        "MTBF = MTTF + MTTR"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A",
+        "MTBF"
+      ],
+      "assumptions": [
+        "Steady-state (inherent) availability of a repairable item, one failure/repair cycle at a time: A = MTTF/(MTTF + MTTR) = MTTF/MTBF, where MTBF = MTTF + MTTR (mean time BETWEEN failures includes repair time). Some datasheets call the mean up time \"MTBF\"; that datasheet form is the availability_datasheet calculator. For a non-repairable item MTBF = MTTF."
+      ],
+      "method_references": [
+        "A = MTTF/MTBF; MTBF = MTTF + MTTR"
+      ],
+      "synthetic_example": {
+        "MTTF": 3420000.0,
+        "MTTR": 180000.0
+      }
+    },
+    "reliability.availability_datasheet": {
+      "title": "Datasheet-form availability (MTBF as mean up time)",
+      "variables": [
+        {
+          "name": "A",
+          "unit": "",
+          "desc": "availability (fraction of time up)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "MTBF_up",
+          "unit": "s",
+          "desc": "mean up time between failures (the datasheet \"MTBF\" convention)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "MTTR",
+          "unit": "s",
+          "desc": "mean time to repair (downtime per failure)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "A = MTBF_up/(MTBF_up + MTTR)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A"
+      ],
+      "assumptions": [
+        "Datasheet convention: \"MTBF\" is quoted as the mean UP time between failures, so MTBF_up \u2261 MTTF and A = MTBF_up/(MTBF_up + MTTR). Equivalent to the inherent availability of the availability calculator (which keeps the strict MTBF = MTTF + MTTR convention)."
+      ],
+      "method_references": [
+        "A = MTBF_up/(MTBF_up + MTTR) (datasheet MTBF convention)"
+      ],
+      "synthetic_example": {
+        "MTBF_up": 3600000.0,
+        "MTTR": 36000.0
+      }
+    },
+    "reliability.weibull_fit": {
+      "title": "Weibull parameter estimation (median-rank regression and MLE)",
+      "variables": [
+        {
+          "name": "data",
+          "unit": "",
+          "desc": "complete (uncensored) failure-time sample, seconds, e.g. [1000, 2000, 3100]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "beta_MR",
+          "unit": "",
+          "desc": "shape \u03b2 from median-rank regression (Bernard)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b2MR",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta_MR",
+          "unit": "s",
+          "desc": "scale \u03b7 from median-rank regression (Bernard)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b7MR",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta_MLE",
+          "unit": "",
+          "desc": "shape \u03b2 from maximum likelihood (scipy)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b2MLE",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta_MLE",
+          "unit": "s",
+          "desc": "scale \u03b7 from maximum likelihood (scipy)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b7MLE",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu_MR",
+          "unit": "s",
+          "desc": "mean life \u03bc = \u03b7\u00b7\u0393(1 + 1/\u03b2) (median-rank fit)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu_MLE",
+          "unit": "s",
+          "desc": "mean life \u03bc = \u03b7\u00b7\u0393(1 + 1/\u03b2) (MLE fit)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _weibull_fit(v):\n    \"\"\"Weibull \u03b2, \u03b7 from a complete (uncensored) failure-time sample, two ways:\n\n    - Median-rank regression (Bernard median ranks F_i = (i \u2212 0.3)/(n + 0.4)) on the linearised CDF\n      ln(ln(1/(1\u2212F))) = \u03b2 ln t \u2212 \u03b2 ln \u03b7: ordinary least squares, slope = \u03b2, \u03b7 = exp(\u2212intercept/\u03b2).\n    - Maximum likelihood via scipy.stats.weibull_min.fit with location fixed at 0 (2-parameter Weibull).\n    \"\"\"\n    from scipy import stats\n    data = v['data']\n    if not isinstance(data, (list, tuple)) or len(data) < 3:\n        raise MechError('data: give at least three failure times (a JSON list)')\n    x = sorted(float(d) for d in data)\n    n = len(x)\n    if any(d <= 0 for d in x) or not all(math.isfinite(d) for d in x):\n        raise MechError('data: failure times must be positive and finite')\n    lx = [math.log(d) for d in x]\n    y = [math.log(-math.log(1.0 - (i - 0.3) / (n + 0.4))) for i in range(1, n + 1)]\n    mx = sum(lx) / n\n    my = sum(y) / n\n    sxx = sum((xi - mx) ** 2 for xi in lx)\n    if sxx == 0:\n        raise MechError('data: all failure times are equal; cannot fit a Weibull slope')\n    sxy = sum((xi - mx) * (yi - my) for xi, yi in zip(lx, y))\n    beta_mr = sxy / sxx\n    if beta_mr <= 0 or not math.isfinite(beta_mr):\n        raise MechError('data: median-rank fit gives a non-positive shape (data not Weibull-like)')\n    eta_mr = math.exp(-(my - beta_mr * mx) / beta_mr)\n    c, _loc, scale = stats.weibull_min.fit(x, floc=0.0)\n    beta_mle = float(c)\n    eta_mle = float(scale)\n    return {'beta_MR': beta_mr, 'eta_MR': eta_mr, 'beta_MLE': beta_mle, 'eta_MLE': eta_mle,\n            'mu_MR': eta_mr * math.gamma(1.0 + 1.0 / beta_mr),\n            'mu_MLE': eta_mle * math.gamma(1.0 + 1.0 / beta_mle)}\n",
+        "source": "reliability.py",
+        "line": 27
+      },
+      "outputs": [
+        "beta_MR",
+        "eta_MR",
+        "beta_MLE",
+        "eta_MLE",
+        "mu_MR",
+        "mu_MLE"
+      ],
+      "assumptions": [
+        "Complete (no censoring), two-parameter Weibull. Median-rank regression is a probability-plot least-squares fit using Bernard ranks F_i = (i \u2212 0.3)/(n + 0.4); MLE uses scipy.stats.weibull_min.fit with location 0. Report which estimate you used."
+      ],
+      "method_references": [
+        "Bernard's median rank F_i = (i \u2212 0.3)/(n + 0.4); Weibull MLE (scipy.stats.weibull_min.fit)"
+      ],
+      "synthetic_example": {
+        "data": [
+          500.0,
+          900.0,
+          1400.0,
+          2200.0,
+          3600.0,
+          6000.0
+        ]
+      }
+    },
+    "reliability.weibull_mttf": {
+      "title": "Weibull mean time to failure (MTTF)",
+      "variables": [
+        {
+          "name": "MTTF",
+          "unit": "s",
+          "desc": "mean time to failure = \u03b7\u00b7\u0393(1 + 1/\u03b2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta",
+          "unit": "",
+          "desc": "Weibull shape parameter",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "s",
+          "desc": "Weibull scale parameter (characteristic life)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _weibull_mttf(v):\n    \"\"\"Weibull mean time to failure: MTTF = \u03b7\u00b7\u0393(1 + 1/\u03b2).\"\"\"\n    beta, eta = v['beta'], v['eta']\n    if beta <= 0 or eta <= 0:\n        raise MechError('Weibull MTTF needs \u03b2 > 0 and \u03b7 > 0')\n    return {'MTTF': eta * math.gamma(1.0 + 1.0 / beta)}\n",
+        "source": "reliability.py",
+        "line": 79
+      },
+      "outputs": [
+        "MTTF"
+      ],
+      "assumptions": [
+        "Two-parameter Weibull mean life MTTF = \u03b7\u00b7\u0393(1 + 1/\u03b2). \u03b2 = 1 (exponential) gives MTTF = \u03b7; \u03b2 = 2 (Rayleigh) gives MTTF = \u03b7\u00b7\u221a\u03c0/2."
+      ],
+      "method_references": [
+        "Weibull MTTF = \u03b7 \u0393(1 + 1/\u03b2)"
+      ],
+      "synthetic_example": {
+        "beta": 2.0,
+        "eta": 1000.0
+      }
+    },
+    "reliability.series_reliability": {
+      "title": "Series system reliability (n independent components)",
+      "variables": [
+        {
+          "name": "R_list",
+          "unit": "",
+          "desc": "component reliabilities, e.g. [0.9, 0.95, 0.99]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "R_s",
+          "unit": "",
+          "desc": "system reliability (product of the component reliabilities)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _series(v):\n    \"\"\"Reliability of n independent components in series (system survives only if every component does).\"\"\"\n    rs = v['R_list']\n    if not isinstance(rs, (list, tuple)) or not rs:\n        raise MechError('R_list: give a JSON list of component reliabilities (each in [0, 1])')\n    rs = [float(r) for r in rs]\n    if any(not 0 <= r <= 1 for r in rs):\n        raise MechError('R_list: reliabilities must be in [0, 1]')\n    R = 1.0\n    for r in rs:\n        R *= r\n    return {'R_s': R}\n",
+        "source": "reliability.py",
+        "line": 87
+      },
+      "outputs": [
+        "R_s"
+      ],
+      "assumptions": [
+        "Independent components; the system survives only if every component survives, so R_s = R1\u00b7R2\u00b7\u2026\u00b7Rn. Series systems are only as good as their weakest link."
+      ],
+      "method_references": [
+        "R_s = \u03a0 R_i for independent series components"
+      ],
+      "synthetic_example": {
+        "R_list": [
+          0.95,
+          0.9,
+          0.98
+        ]
+      }
+    },
+    "reliability.parallel_reliability": {
+      "title": "Parallel (redundant) system reliability",
+      "variables": [
+        {
+          "name": "R_list",
+          "unit": "",
+          "desc": "component reliabilities, e.g. [0.9, 0.9]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "R_p",
+          "unit": "",
+          "desc": "system reliability (one minus the product of failure probabilities)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _parallel(v):\n    \"\"\"Reliability of n independent components in parallel (system fails only if every component fails).\"\"\"\n    rs = v['R_list']\n    if not isinstance(rs, (list, tuple)) or not rs:\n        raise MechError('R_list: give a JSON list of component reliabilities (each in [0, 1])')\n    rs = [float(r) for r in rs]\n    if any(not 0 <= r <= 1 for r in rs):\n        raise MechError('R_list: reliabilities must be in [0, 1]')\n    Q = 1.0\n    for r in rs:\n        Q *= (1.0 - r)\n    return {'R_p': 1.0 - Q}\n",
+        "source": "reliability.py",
+        "line": 101
+      },
+      "outputs": [
+        "R_p"
+      ],
+      "assumptions": [
+        "Independent components in active parallel (redundancy); the system fails only if every component fails, so R_p = 1 \u2212 (1\u2212R1)(1\u2212R2)\u22ef(1\u2212Rn)."
+      ],
+      "method_references": [
+        "R_p = 1 \u2212 \u03a0 (1 \u2212 R_i) for independent parallel components"
+      ],
+      "synthetic_example": {
+        "R_list": [
+          0.9,
+          0.9
+        ]
+      }
+    },
+    "reliability.reliability_index": {
+      "title": "Reliability index \u03b2 and probability of failure (normal stress/strength)",
+      "variables": [
+        {
+          "name": "beta",
+          "unit": "",
+          "desc": "reliability index (number of combined standard deviations of margin)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b2",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_f",
+          "unit": "",
+          "desc": "probability of failure P(strength < load)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_c",
+          "unit": "",
+          "desc": "central factor of safety \u03bc_S/\u03bc_L",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu_S",
+          "unit": "Pa",
+          "desc": "mean strength",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bcS",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_S",
+          "unit": "Pa",
+          "desc": "standard deviation of strength",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3S",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu_L",
+          "unit": "Pa",
+          "desc": "mean load (stress)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bcL",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_L",
+          "unit": "Pa",
+          "desc": "standard deviation of load",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3L",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _reliability_index(v):\n    \"\"\"Reliability index \u03b2 and probability of failure for normally distributed load and strength.\n\n    Strength S ~ N(\u03bc_S, \u03c3_S) and load L ~ N(\u03bc_L, \u03c3_L) are independent, so the margin M = S \u2212 L is\n    N(\u03bc_S \u2212 \u03bc_L, sqrt(\u03c3_S\u00b2 + \u03c3_L\u00b2)). \u03b2 = (\u03bc_S \u2212 \u03bc_L)/sqrt(\u03c3_S\u00b2 + \u03c3_L\u00b2); p_f = P(M < 0) = \u03a6(\u2212\u03b2).\n    \"\"\"\n    muS, sS, muL, sL = v['mu_S'], v['sigma_S'], v['mu_L'], v['sigma_L']\n    if sS <= 0 or sL <= 0:\n        raise MechError('sigma_S and sigma_L must be positive')\n    if muL <= 0:\n        raise MechError('mu_L (mean load) must be positive')\n    denom = math.sqrt(sS * sS + sL * sL)\n    beta = (muS - muL) / denom\n    p_f = 0.5 * math.erfc(beta / math.sqrt(2.0))\n    return {'beta': beta, 'p_f': p_f, 'n_c': muS / muL}\n",
+        "source": "reliability.py",
+        "line": 115
+      },
+      "outputs": [
+        "beta",
+        "p_f",
+        "n_c"
+      ],
+      "assumptions": [
+        "Independent normal strength and load; the margin M = S \u2212 L is normal, so \u03b2 = (\u03bc_S \u2212 \u03bc_L)/sqrt(\u03c3_S\u00b2 + \u03c3_L\u00b2) and p_f = \u03a6(\u2212\u03b2). Assumes a linear (stress) limit state; for load multipliers use the reliability-index form with the limit-state function."
+      ],
+      "method_references": [
+        "Load\u2013strength interference; reliability index \u03b2; p_f = \u03a6(\u2212\u03b2)"
+      ],
+      "synthetic_example": {
+        "mu_S": 400000000.0,
+        "sigma_S": 40000000.0,
+        "mu_L": 250000000.0,
+        "sigma_L": 30000000.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "reliability-001",
+      "calculator": "reliability.exp_reliability",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "lam": "0.0001 1/s",
+        "t": "10000 s"
+      },
+      "solve_for": [
+        "R",
+        "MTTF"
+      ],
+      "expected_as_specified": {
+        "R": 0.3678794,
+        "MTTF": "10000 s"
+      },
+      "expected_SI": {
+        "R": 0.3678794,
+        "MTTF": 10000.0
+      },
+      "actual_SI": {
+        "R": {
+          "value": 0.36787944117144233,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.exp_reliability (symbolic)"
+        },
+        "MTTF": {
+          "value": 10000.0,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc reliability.exp_reliability (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R": {
+          "absolute_error": 4.117144231097214e-08,
+          "relative_error": 1.1191559601046467e-07,
+          "allowed_absolute_error": 0.0007357588,
+          "passed": true
+        },
+        "MTTF": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 20.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = exp(-\u03bbt) = exp(-0.0001\u00b710000) = exp(-1) = 0.367879; MTTF = 1/\u03bb = 10000 s"
+      }
+    },
+    {
+      "id": "reliability-002",
+      "calculator": "reliability.exp_reliability",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R": 0.5,
+        "lam": "0.36 1/h"
+      },
+      "solve_for": [
+        "t",
+        "MTTF"
+      ],
+      "expected_as_specified": {
+        "t": "6931.4718 s",
+        "MTTF": "10000 s"
+      },
+      "expected_SI": {
+        "t": 6931.4718,
+        "MTTF": 10000.0
+      },
+      "actual_SI": {
+        "t": {
+          "value": 6931.471805599454,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc reliability.exp_reliability (symbolic)"
+        },
+        "MTTF": {
+          "value": 10000.0,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc reliability.exp_reliability (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "t": {
+          "absolute_error": 5.5994532885961235e-06,
+          "relative_error": 8.078303497672923e-10,
+          "allowed_absolute_error": 0.6931471800000001,
+          "passed": true
+        },
+        "MTTF": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "t = -ln(R)/\u03bb = -ln(0.5)/(0.36/3600) = 0.693147/0.0001 = 6931.47 s (0.36 1/h = 0.0001 1/s; median life ln2/\u03bb)"
+      }
+    },
+    {
+      "id": "reliability-003",
+      "calculator": "reliability.weibull_reliability",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "beta": 2.0,
+        "eta": "1000 s",
+        "t": "1000 s"
+      },
+      "solve_for": [
+        "R",
+        "F"
+      ],
+      "expected_as_specified": {
+        "R": 0.3678794,
+        "F": 0.6321206
+      },
+      "expected_SI": {
+        "R": 0.3678794,
+        "F": 0.6321206
+      },
+      "actual_SI": {
+        "R": {
+          "value": 0.36787944117144233,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_reliability (symbolic)"
+        },
+        "F": {
+          "value": 0.6321205588285577,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_reliability (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R": {
+          "absolute_error": 4.117144231097214e-08,
+          "relative_error": 1.1191559601046467e-07,
+          "allowed_absolute_error": 0.0007357588,
+          "passed": true
+        },
+        "F": {
+          "absolute_error": 4.117144236648329e-08,
+          "relative_error": 6.513225856977813e-08,
+          "allowed_absolute_error": 0.0012642412,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "t/\u03b7 = 1; R = exp(-1\u00b2) = 0.367879; F = 1 - R = 0.632121 (at t = \u03b7, R = e\u207b\u00b9 for any \u03b2)"
+      }
+    },
+    {
+      "id": "reliability-004",
+      "calculator": "reliability.weibull_reliability",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R": 0.9,
+        "beta": 2.0,
+        "t": "1000 s"
+      },
+      "solve_for": [
+        "eta",
+        "F"
+      ],
+      "expected_as_specified": {
+        "eta": "3080.782 s",
+        "F": 0.1
+      },
+      "expected_SI": {
+        "eta": 3080.782,
+        "F": 0.1
+      },
+      "actual_SI": {
+        "eta": {
+          "value": 3080.782624761102,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_reliability (symbolic)"
+        },
+        "F": {
+          "value": 0.09999999999999998,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_reliability (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "eta": {
+          "absolute_error": 0.0006247611017897725,
+          "relative_error": 2.0279302520911006e-07,
+          "allowed_absolute_error": 0.3080782,
+          "passed": true
+        },
+        "F": {
+          "absolute_error": 2.7755575615628914e-17,
+          "relative_error": 2.7755575615628914e-16,
+          "allowed_absolute_error": 1e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b7 = t/(-ln R)^(1/\u03b2) = 1000/\u221a(\u2212ln 0.9) = 1000/\u221a(0.1053605) = 1000/0.3245929 = 3080.78 s"
+      }
+    },
+    {
+      "id": "reliability-005",
+      "calculator": "reliability.weibull_hazard",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "beta": 2.0,
+        "eta": "1000 s",
+        "t": "1000 s"
+      },
+      "solve_for": [
+        "h",
+        "f"
+      ],
+      "expected_as_specified": {
+        "h": "0.002 1/s",
+        "f": "0.0007357589 1/s"
+      },
+      "expected_SI": {
+        "h": 0.002,
+        "f": 0.0007357589
+      },
+      "actual_SI": {
+        "h": {
+          "value": 0.002,
+          "unit": "1/s",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_hazard (procedure)"
+        },
+        "f": {
+          "value": 0.0007357588823428847,
+          "unit": "1/s",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_hazard (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "h": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4e-06,
+          "passed": true
+        },
+        "f": {
+          "absolute_error": 1.7657115244755495e-11,
+          "relative_error": 2.399850718048466e-08,
+          "allowed_absolute_error": 1.4715178e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "h = (\u03b2/\u03b7)(t/\u03b7)^(\u03b2-1) = (2/1000)(1)^1 = 0.002 1/s; f = h\u00b7R = 0.002\u00b7exp(-1) = 7.3576e-4 1/s"
+      }
+    },
+    {
+      "id": "reliability-006",
+      "calculator": "reliability.availability",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "MTTF": "950 h",
+        "MTTR": "50 h"
+      },
+      "solve_for": [
+        "A",
+        "MTBF"
+      ],
+      "expected_as_specified": {
+        "A": 0.95,
+        "MTBF": "1000 h"
+      },
+      "expected_SI": {
+        "A": 0.95,
+        "MTBF": 3600000.0
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.95,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.availability (symbolic)"
+        },
+        "MTBF": {
+          "value": 3600000.0,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc reliability.availability (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0019,
+          "passed": true
+        },
+        "MTBF": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 7200.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "MTBF = MTTF + MTTR = 950 + 50 = 1000 h; A = MTTF/MTBF = 950/1000 = 0.95"
+      }
+    },
+    {
+      "id": "reliability-007",
+      "calculator": "reliability.availability",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A": 0.99,
+        "MTBF": "100000 s"
+      },
+      "solve_for": [
+        "MTTF",
+        "MTTR"
+      ],
+      "expected_as_specified": {
+        "MTTF": "99000 s",
+        "MTTR": "1000 s"
+      },
+      "expected_SI": {
+        "MTTF": 99000.0,
+        "MTTR": 1000.0
+      },
+      "actual_SI": {
+        "MTTF": {
+          "value": 99000.0,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc reliability.availability (symbolic)"
+        },
+        "MTTR": {
+          "value": 1000.0,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc reliability.availability (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "MTTF": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 9.9,
+          "passed": true
+        },
+        "MTTR": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.1,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "MTTF = A\u00b7MTBF = 0.99\u00b7100000 = 99000 s; MTTR = MTBF - MTTF = 1000 s"
+      }
+    },
+    {
+      "id": "reliability-008",
+      "calculator": "reliability.availability_datasheet",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "MTBF_up": "1000 h",
+        "MTTR": "10 h"
+      },
+      "solve_for": [
+        "A"
+      ],
+      "expected_as_specified": {
+        "A": 0.990099
+      },
+      "expected_SI": {
+        "A": 0.990099
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.9900990099009901,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.availability_datasheet (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 9.900990138866916e-09,
+          "relative_error": 1.0000000140255587e-08,
+          "allowed_absolute_error": 0.001980198,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "datasheet form A = MTBF_up/(MTBF_up + MTTR) = 1000/(1000 + 10) = 1000/1010 = 0.990099"
+      }
+    },
+    {
+      "id": "reliability-009",
+      "calculator": "reliability.weibull_fit",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "data": [
+          500,
+          900,
+          1400,
+          2200,
+          3600,
+          6000
+        ]
+      },
+      "solve_for": [
+        "beta_MR",
+        "eta_MR",
+        "beta_MLE",
+        "eta_MLE",
+        "mu_MR",
+        "mu_MLE"
+      ],
+      "expected_as_specified": {
+        "beta_MR": 1.152552,
+        "eta_MR": "2720.566 s",
+        "beta_MLE": 1.3379086,
+        "eta_MLE": "2663.027 s"
+      },
+      "expected_SI": {
+        "beta_MR": 1.152552,
+        "eta_MR": 2720.566,
+        "beta_MLE": 1.3379086,
+        "eta_MLE": 2663.027
+      },
+      "actual_SI": {
+        "beta_MR": {
+          "value": 1.1525519303199503,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_fit (procedure)"
+        },
+        "eta_MR": {
+          "value": 2720.56564905301,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_fit (procedure)"
+        },
+        "beta_MLE": {
+          "value": 1.3379086235201918,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_fit (procedure)"
+        },
+        "eta_MLE": {
+          "value": 2663.026831286147,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_fit (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "beta_MR": {
+          "absolute_error": 6.968004973018083e-08,
+          "relative_error": 6.045718521175689e-08,
+          "allowed_absolute_error": 0.00011525520000000001,
+          "passed": true
+        },
+        "eta_MR": {
+          "absolute_error": 0.00035094698978355154,
+          "relative_error": 1.2899778567531593e-07,
+          "allowed_absolute_error": 0.2720566,
+          "passed": true
+        },
+        "beta_MLE": {
+          "absolute_error": 2.3520191794190737e-08,
+          "relative_error": 1.757981957376665e-08,
+          "allowed_absolute_error": 0.00013379086,
+          "passed": true
+        },
+        "eta_MLE": {
+          "absolute_error": 0.00016871385287231533,
+          "relative_error": 6.335416534354152e-08,
+          "allowed_absolute_error": 0.2663027,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Median-rank regression: Bernard ranks F_i = (i\u22120.3)/(n+0.4) for i=1..6 (n=6) give y_i = ln(ln(1/(1\u2212F_i))) against x_i = ln t_i; OLS slope \u03b2_MR = 1.152552, intercept \u2212\u03b2 ln \u03b7 gives \u03b7_MR = 2720.566 s (plain-Python scratch script). MLE: bisection on the fixed-point equation 1/\u03b2 = \u03a3(t\u1d62\u1d5d ln t\u1d62)/\u03a3 t\u1d62\u1d5d \u2212 (1/n)\u03a3 ln t\u1d62 gives \u03b2_MLE = 1.3379086, then \u03b7_MLE = (\u03a3 t\u1d62\u1d5d/n)^(1/\u03b2) = 2663.027 s (matches scipy.stats.weibull_min.fit to ~5e-8)."
+      }
+    },
+    {
+      "id": "reliability-010",
+      "calculator": "reliability.weibull_mttf",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "beta": 2.0,
+        "eta": "1000 s"
+      },
+      "solve_for": [
+        "MTTF"
+      ],
+      "expected_as_specified": {
+        "MTTF": "886.2269 s"
+      },
+      "expected_SI": {
+        "MTTF": 886.2269
+      },
+      "actual_SI": {
+        "MTTF": {
+          "value": 886.226925452758,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_mttf (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "MTTF": {
+          "absolute_error": 2.545275799548108e-05,
+          "relative_error": 2.87203626920838e-08,
+          "allowed_absolute_error": 1.7724538,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "MTTF = \u03b7\u00b7\u0393(1 + 1/\u03b2) = 1000\u00b7\u0393(1.5) = 1000\u00b7\u221a\u03c0/2 = 1000\u00b70.8862269 = 886.2269 s (\u0393(1.5) = \u221a\u03c0/2 landmark)"
+      }
+    },
+    {
+      "id": "reliability-011",
+      "calculator": "reliability.weibull_mttf",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "beta": 1.0,
+        "eta": "1000 s"
+      },
+      "solve_for": [
+        "MTTF"
+      ],
+      "expected_as_specified": {
+        "MTTF": "1000 s"
+      },
+      "expected_SI": {
+        "MTTF": 1000.0
+      },
+      "actual_SI": {
+        "MTTF": {
+          "value": 1000.0,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc reliability.weibull_mttf (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "MTTF": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b2 = 1 is the exponential case: MTTF = \u03b7\u00b7\u0393(2) = \u03b7\u00b71 = 1000 s (\u0393(2) = 1)"
+      }
+    },
+    {
+      "id": "reliability-012",
+      "calculator": "reliability.series_reliability",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R_list": [
+          0.95,
+          0.9,
+          0.98
+        ]
+      },
+      "solve_for": [
+        "R_s"
+      ],
+      "expected_as_specified": {
+        "R_s": 0.8379
+      },
+      "expected_SI": {
+        "R_s": 0.8379
+      },
+      "actual_SI": {
+        "R_s": {
+          "value": 0.8379,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.series_reliability (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R_s": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0016758,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R_s = 0.95\u00b70.9\u00b70.98 = 0.8379"
+      }
+    },
+    {
+      "id": "reliability-013",
+      "calculator": "reliability.parallel_reliability",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R_list": [
+          0.9,
+          0.9
+        ]
+      },
+      "solve_for": [
+        "R_p"
+      ],
+      "expected_as_specified": {
+        "R_p": 0.99
+      },
+      "expected_SI": {
+        "R_p": 0.99
+      },
+      "actual_SI": {
+        "R_p": {
+          "value": 0.99,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.parallel_reliability (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R_p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00198,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R_p = 1 \u2212 (1\u22120.9)(1\u22120.9) = 1 \u2212 0.01 = 0.99"
+      }
+    },
+    {
+      "id": "reliability-014",
+      "calculator": "reliability.reliability_index",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu_S": "400 MPa",
+        "sigma_S": "40 MPa",
+        "mu_L": "250 MPa",
+        "sigma_L": "30 MPa"
+      },
+      "solve_for": [
+        "beta",
+        "p_f",
+        "n_c"
+      ],
+      "expected_as_specified": {
+        "beta": 3.0,
+        "p_f": 0.0013499,
+        "n_c": 1.6
+      },
+      "expected_SI": {
+        "beta": 3.0,
+        "p_f": 0.0013499,
+        "n_c": 1.6
+      },
+      "actual_SI": {
+        "beta": {
+          "value": 3.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.reliability_index (procedure)"
+        },
+        "p_f": {
+          "value": 0.0013498980316300957,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.reliability_index (procedure)"
+        },
+        "n_c": {
+          "value": 1.6,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc reliability.reliability_index (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "beta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0015,
+          "passed": true
+        },
+        "p_f": {
+          "absolute_error": 1.968369904353437e-09,
+          "relative_error": 1.4581597928390525e-06,
+          "allowed_absolute_error": 6.7495e-07,
+          "passed": true
+        },
+        "n_c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0008,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b2 = (\u03bc_S\u2212\u03bc_L)/\u221a(\u03c3_S\u00b2+\u03c3_L\u00b2) = (400\u2212250)/\u221a(40\u00b2+30\u00b2) = 150/50 = 3.0; p_f = \u03a6(\u22123) = 0.0013499 (3-sigma landmark); n_c = 400/250 = 1.6"
+      }
+    }
+  ],
+  "passed": 14,
+  "failed": 0
+}

@@ -1,0 +1,292 @@
+{
+  "section": "ergonomics",
+  "cases": [
+    {
+      "calc": "ergonomics.niosh_lifting",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "50 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "expect": {
+        "li": 1.528906,
+        "rwl": 13.08125,
+        "hm": 0.625,
+        "vm": 1.0,
+        "dm": 0.91,
+        "am": 1.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "HM = 25/40 = 0.625; VM = 1 − 0.003|75−75| = 1; DM = 0.82 + 4.5/50 = 0.91; AM = 1; RWL = 23·0.625·1·0.91·1·1·1 = 13.08125 kg; LI = 20/13.08125 = 1.5289"
+      }
+    },
+    {
+      "calc": "ergonomics.niosh_lifting",
+      "inputs": {
+        "H": "0.5 m",
+        "V": "0.9 m",
+        "D": "0.8 m",
+        "A": "45 deg",
+        "FM": 0.85,
+        "CM": 0.95,
+        "Load": 15.0
+      },
+      "expect": {
+        "li": 2.254996,
+        "rwl": 6.651897,
+        "hm": 0.5,
+        "vm": 0.955,
+        "dm": 0.87625,
+        "am": 0.856
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "HM = 25/50 = 0.5; VM = 1 − 0.003·15 = 0.955; DM = 0.82 + 4.5/80 = 0.87625; AM = 1 − 0.0032·45 = 0.856; RWL = 23·0.5·0.955·0.87625·0.856·0.85·0.95 = 6.6519 kg; LI = 15/6.6519 = 2.2550"
+      }
+    },
+    {
+      "calc": "ergonomics.niosh_lifting",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "50 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "li": 1.528906
+      },
+      "solve_for": [
+        "Load"
+      ],
+      "expect": {
+        "Load": 20.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Load = LI·RWL = 1.528906·13.08125 = 20 kg"
+      }
+    },
+    {
+      "calc": "ergonomics.safety_distance",
+      "inputs": {
+        "K": "2 m/s",
+        "T": "200 ms",
+        "C": "50 mm"
+      },
+      "expect": {
+        "S": "0.45 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "S = 2·0.2 + 0.05 = 0.45 m"
+      }
+    },
+    {
+      "calc": "ergonomics.safety_distance",
+      "inputs": {
+        "S": "450 mm",
+        "T": "0.2 s",
+        "C": "50 mm"
+      },
+      "solve_for": [
+        "K"
+      ],
+      "expect": {
+        "K": "2 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "K = (S − C)/T = (0.45 − 0.05)/0.2 = 2 m/s (permissible approach speed)"
+      }
+    },
+    {
+      "calc": "ergonomics.stored_pressure_energy",
+      "inputs": {
+        "P1": "1 MPa",
+        "P2": "101.325 kPa",
+        "V": "100 L",
+        "gamma": 1.4
+      },
+      "expect": {
+        "E": 120025.2
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "E = 1e6·0.1/0.4·(1 − (101325/1e6)^0.285714) = 250000·(1 − 0.519899) = 250000·0.480101 = 120025 J"
+      }
+    },
+    {
+      "calc": "ergonomics.lifting_safety",
+      "inputs": {
+        "n": 5.0,
+        "F_ult": "50 kN"
+      },
+      "expect": {
+        "F_wll": "10 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F_wll = 50000/5 = 10000 N = 10 kN"
+      }
+    },
+    {
+      "calc": "ergonomics.niosh_lifting",
+      "inputs": {
+        "H": "20 cm",
+        "V": "75 cm",
+        "D": "50 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "expect": {
+        "li": 0.955566,
+        "rwl": 20.93,
+        "hm": 1.0,
+        "vm": 1.0,
+        "dm": 0.91,
+        "am": 1.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "H = 20 cm < 25 cm → HM capped at 1 (not 25/20 = 1.25). VM = 1, DM = 0.82 + 4.5/50 = 0.91, AM = 1. RWL = 23·1·1·0.91·1·1·1 = 20.93 kg; LI = 20/20.93 = 0.95557"
+      }
+    },
+    {
+      "calc": "ergonomics.niosh_lifting",
+      "inputs": {
+        "H": "70 cm",
+        "V": "75 cm",
+        "D": "50 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "expect": {
+        "rwl": 0.0,
+        "hm": 0.0,
+        "vm": 1.0,
+        "dm": 0.91,
+        "am": 1.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "H = 70 cm > 63 cm → HM = 0 (beyond reach), so RWL = 0 and the lifting index is unbounded"
+      }
+    },
+    {
+      "calc": "ergonomics.niosh_lifting",
+      "inputs": {
+        "H": "40 cm",
+        "V": "180 cm",
+        "D": "50 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "expect": {
+        "rwl": 0.0,
+        "vm": 0.0,
+        "hm": 0.625
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V = 180 cm > 175 cm → VM = 0 (beyond reach overhead), so RWL = 0"
+      }
+    },
+    {
+      "calc": "ergonomics.niosh_lifting",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "20 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "expect": {
+        "li": 1.391304,
+        "rwl": 14.375,
+        "hm": 0.625,
+        "dm": 1.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 20 cm < 25 cm → DM capped at 1 (not 0.82 + 4.5/20 = 1.045). HM = 0.625, VM = 1, AM = 1. RWL = 23·0.625·1·1·1·1·1 = 14.375 kg; LI = 20/14.375 = 1.39130"
+      }
+    },
+    {
+      "calc": "ergonomics.niosh_lifting",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "0 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "expect": {
+        "rwl": 14.375,
+        "dm": 1.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 0 is allowed (no vertical travel) → DM capped at 1; RWL = 23·0.625·1·1·1 = 14.375 kg"
+      }
+    },
+    {
+      "calc": "ergonomics.niosh_lifting",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "200 cm",
+        "A": "0 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "expect": {
+        "rwl": 0.0,
+        "dm": 0.0,
+        "hm": 0.625
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 200 cm > 175 cm → DM = 0, so RWL = 0"
+      }
+    },
+    {
+      "calc": "ergonomics.niosh_lifting",
+      "inputs": {
+        "H": "40 cm",
+        "V": "75 cm",
+        "D": "50 cm",
+        "A": "150 deg",
+        "FM": 1.0,
+        "CM": 1.0,
+        "Load": 20.0
+      },
+      "expect": {
+        "rwl": 0.0,
+        "am": 0.0,
+        "hm": 0.625,
+        "dm": 0.91
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 150° > 135° → AM = 0, so RWL = 0"
+      }
+    }
+  ]
+}

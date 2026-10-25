@@ -1,0 +1,506 @@
+{
+  "section": "springs",
+  "cases": [
+    {
+      "calc": "springs.helical_spring_rate",
+      "inputs": {
+        "G": "79.3 GPa",
+        "d": "4 mm",
+        "D": "32 mm",
+        "n_a": 10
+      },
+      "expect": {
+        "k": "7744.14 N/m",
+        "C": 8
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "k = Gd⁴/(8D³n) = 79.3e9·(0.004)⁴/(8·(0.032)³·10) = 79.3e9·2.56e-10/0.00262144 = 20.3008/0.00262144 = 7744.14 N/m; C = D/d = 32/4 = 8"
+      }
+    },
+    {
+      "calc": "springs.helical_spring_rate",
+      "inputs": {
+        "k": "7744.14 N/m",
+        "D": "32 mm",
+        "n_a": 10,
+        "G": "79.3 GPa"
+      },
+      "solve_for": [
+        "d",
+        "C"
+      ],
+      "expect": {
+        "d": "4 mm",
+        "C": 8
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "d = (8kD³n/G)^(1/4) = (8·7744.14·(0.032)³·10/79.3e9)^(1/4) = (2.56e-10)^(1/4) = 0.004 m; C = D/d = 8"
+      }
+    },
+    {
+      "calc": "springs.spring_stress",
+      "inputs": {
+        "F": "500 N",
+        "D": "32 mm",
+        "d": "4 mm"
+      },
+      "expect": {
+        "C": 8,
+        "K_w": 1.18402,
+        "K_b": 1.17241,
+        "tau_w": "753.769 MPa",
+        "tau_b": "746.382 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "C = 8. Wahl K_w = (4C−1)/(4C−4) + 0.615/C = 31/28 + 0.076875 = 1.10714 + 0.076875 = 1.18402. Bergsträsser K_b = (4C+2)/(4C−3) = 34/29 = 1.17241. τ_nom = 8FD/(πd³) = 8·500·0.032/(π·6.4e-8) = 128/2.01062e-7 = 636.62 MPa. τ_w = 1.18402·636.62 = 753.77 MPa; τ_b = 1.17241·636.62 = 746.38 MPa"
+      }
+    },
+    {
+      "calc": "springs.spring_stress",
+      "inputs": {
+        "F": "300 N",
+        "D": "30 mm",
+        "d": "5 mm"
+      },
+      "expect": {
+        "C": 6,
+        "K_w": 1.2525,
+        "K_b": 1.2381,
+        "tau_w": "229.641 MPa",
+        "tau_b": "227.000 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "C = 30/5 = 6. K_w = (4·6−1)/(4·6−4) + 0.615/6 = 23/20 + 0.1025 = 1.2525. K_b = (4·6+2)/(4·6−3) = 26/21 = 1.23810. τ_nom = 8·300·0.030/(π·(0.005)³) = 72/3.92699e-7 = 183.346 MPa. τ_w = 1.2525·183.346 = 229.641 MPa; τ_b = 1.23810·183.346 = 227.000 MPa"
+      }
+    },
+    {
+      "calc": "springs.spring_deflection",
+      "inputs": {
+        "F": "500 N",
+        "D": "32 mm",
+        "d": "4 mm",
+        "n_a": 10,
+        "G": "79.3 GPa"
+      },
+      "expect": {
+        "delta": "64.5649 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "δ = 8FD³n/(Gd⁴) = 8·500·(0.032)³·10/(79.3e9·(0.004)⁴) = 1.31072/20.3008 = 0.0645649 m (= F/k = 500/7744.14)"
+      }
+    },
+    {
+      "calc": "springs.spring_geometry",
+      "inputs": {
+        "d": "4 mm",
+        "n_a": 10,
+        "end": "squared_ground",
+        "delta_max": "60 mm"
+      },
+      "expect": {
+        "n_t": 12,
+        "L_s": "48 mm",
+        "L_f": "108 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Squared-and-ground: n_t = n_a + 2 = 12; L_s = d·n_t = 0.004·12 = 0.048 m; L_f = L_s + δ_max = 48 + 60 = 108 mm"
+      }
+    },
+    {
+      "calc": "springs.spring_geometry",
+      "inputs": {
+        "d": "5 mm",
+        "n_a": 8,
+        "end": "plain_ground",
+        "delta_max": "40 mm"
+      },
+      "expect": {
+        "n_t": 9,
+        "L_s": "45 mm",
+        "L_f": "85 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Plain-and-ground: n_t = n_a + 1 = 9; L_s = d·n_t = 0.005·9 = 0.045 m; L_f = L_s + δ_max = 45 + 40 = 85 mm"
+      }
+    },
+    {
+      "calc": "springs.spring_buckling",
+      "inputs": {
+        "L0": "300 mm",
+        "D": "32 mm",
+        "E": "207 GPa",
+        "G": "79.3 GPa",
+        "alpha": 0.5
+      },
+      "expect": {
+        "delta_cr": "41.7288 mm",
+        "L0_crit": "168.049 mm",
+        "stable": 0
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "C₁′ = E/(2(E−G)) = 207/(2·127.7) = 0.810493; C₂′ = 2π²(E−G)/(2G+E) = 2π²·127.7e9/365.6e9 = 6.89469; λ = αL0/D = 0.5·0.3/0.032 = 4.6875, λ² = 21.9727. δ_cr = C₁′·L0·(1−√(1−C₂′/λ²)) = 0.810493·0.3·(1−√(1−6.89469/21.9727)) = 0.243148·(1−√0.686216) = 0.243148·0.171487 = 0.0417288 m. L0_crit = (πD/α)·√(2(E−G)/(2G+E)) = (π·0.032/0.5)·√(255.4/365.6) = 0.201062·0.835814 = 0.168049 m. L0 > L0_crit so stable = 0"
+      }
+    },
+    {
+      "calc": "springs.spring_buckling",
+      "inputs": {
+        "L0": "100 mm",
+        "D": "32 mm",
+        "E": "207 GPa",
+        "G": "79.3 GPa",
+        "alpha": 0.5
+      },
+      "expect": {
+        "delta_cr": null,
+        "L0_crit": "168.049 mm",
+        "stable": 1
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "L0_crit = (πD/α)·√(2(E−G)/(2G+E)) = (π·0.032/0.5)·√(255.4/365.6) = 0.168049 m. L0 = 0.100 m < L0_crit, so the spring is absolutely stable: stable = 1 and δ_cr has no real value (null)"
+      }
+    },
+    {
+      "calc": "springs.spring_buckling",
+      "inputs": {
+        "L0": "500 mm",
+        "D": "50 mm",
+        "E": "207 GPa",
+        "G": "79.3 GPa",
+        "alpha": 2.0
+      },
+      "expect": {
+        "delta_cr": "3.50774 mm",
+        "L0_crit": "65.6443 mm",
+        "stable": 0
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "C₁′ = 0.810493, C₂′ = 6.89469 (steel, as above). λ = 2·0.5/0.05 = 20, λ² = 400. δ_cr = 0.810493·0.5·(1−√(1−6.89469/400)) = 0.405247·(1−√0.982763) = 0.405247·(1−0.991344) = 0.405247·0.00865595 = 0.00350774 m. L0_crit = (π·0.05/2)·0.835814 = 0.0656443 m"
+      }
+    },
+    {
+      "calc": "springs.spring_surge",
+      "inputs": {
+        "d": "4 mm",
+        "D": "32 mm",
+        "n_a": 10,
+        "G": "79.3 GPa",
+        "rho": "7850 kg/m^3"
+      },
+      "expect": {
+        "f": "139.723 Hz",
+        "f_free": "69.8613 Hz"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "f = d√(G/(2ρ))/(2πD²n) = 0.004·√(79.3e9/(2·7850))/(2π·(0.032)²·10) = 0.004·2247.43/0.0643393 = 8.98972/0.0643393 = 139.723 Hz (both ends fixed). Fixed–free is half: f_free = 139.723/2 = 69.8613 Hz"
+      }
+    },
+    {
+      "calc": "springs.extension_hook_stress",
+      "inputs": {
+        "F": "50 N",
+        "D": "20 mm",
+        "d": "3 mm",
+        "r1": "6 mm",
+        "r2": "8 mm"
+      },
+      "expect": {
+        "sigma_A": "238.929 MPa",
+        "tau_B": "110.638 MPa",
+        "C1": 4,
+        "K_A": 1.22917,
+        "C2": 5.33333,
+        "K_B": 1.17308
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "C₁ = 2r₁/d = 12/3 = 4; K_A = (4C₁²−C₁−1)/(4C₁(C₁−1)) = (64−4−1)/(16·3) = 59/48 = 1.22917. σ_A = F·(K_A·16D/(πd³) + 4/(πd²)) = 50·(1.22917·16·0.02/(π·2.7e-8) + 4/(π·9e-6)) = 50·(4.63708e6 + 141471) = 2.38929e8 Pa = 238.929 MPa. C₂ = 2r₂/d = 16/3 = 5.33333; K_B = (4C₂−1)/(4C₂−4) = 20.3333/17.3333 = 1.17308. τ_B = K_B·8FD/(πd³) = 1.17308·8·50·0.02/(π·2.7e-8) = 1.10638e8 Pa = 110.638 MPa"
+      }
+    },
+    {
+      "calc": "springs.extension_hook_stress",
+      "inputs": {
+        "F": "80 N",
+        "D": "25 mm",
+        "d": "3.5 mm",
+        "r1": "6 mm",
+        "r2": "9 mm"
+      },
+      "expect": {
+        "sigma_A": "312.122 MPa",
+        "tau_B": "140.291 MPa",
+        "C1": 3.42857,
+        "K_A": 1.2788,
+        "C2": 5.14286,
+        "K_B": 1.18103
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "C₁ = 12/3.5 = 3.42857; K_A = (4·3.42857²−3.42857−1)/(4·3.42857·2.42857) = 42.5918/33.3061 = 1.27880. σ_A = 80·(1.27880·16·0.025/(π·(0.0035)³) + 4/(π·(0.0035)²)) = 80·(3.79759e6 + 103938) = 3.12122e8 Pa = 312.122 MPa. C₂ = 18/3.5 = 5.14286; K_B = (4·5.14286−1)/(4·5.14286−4) = 19.5714/16.5714 = 1.18103. τ_B = 1.18103·8·80·0.025/(π·(0.0035)³) = 1.40291e8 Pa = 140.291 MPa"
+      }
+    },
+    {
+      "calc": "springs.torsion_spring",
+      "inputs": {
+        "M": "2 N*m",
+        "d": "4 mm",
+        "D": "30 mm",
+        "N_b": 5,
+        "l1": "40 mm",
+        "l2": "25 mm",
+        "E": "207 GPa"
+      },
+      "expect": {
+        "N_a": 5.22989,
+        "C": 7.5,
+        "K_i": 1.11026,
+        "k_t": "5.27736 N*m/rad",
+        "k_turn": "33.1586 N*m/turn",
+        "k_prime": "31.2732 N*m/turn",
+        "theta": "0.378978 rad",
+        "sigma": "353.406 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "N_a = N_b + (l₁+l₂)/(3πD) = 5 + 0.065/(3π·0.03) = 5 + 0.229890 = 5.22989. C = 30/4 = 7.5. K_i = (4C²−C−1)/(4C(C−1)) = 216.5/195 = 1.11026. k_t = Ed⁴/(64DN_a) = 207e9·(0.004)⁴/(64·0.03·5.22989) = 52.992/10.0414 = 5.27736 N·m/rad. k_turn = 2π·k_t = 33.1586 N·m/turn. k_prime = Ed⁴/(10.8DN_a) = 52.992/(10.8·0.03·5.22989) = 52.992/1.69448 = 31.2732 N·m/turn. θ = M/k_t = 2/5.27736 = 0.378978 rad. σ = K_i·32M/(πd³) = 1.11026·64/(π·6.4e-8) = 3.53406e8 Pa = 353.406 MPa"
+      }
+    },
+    {
+      "calc": "springs.torsion_spring",
+      "inputs": {
+        "M": "-2 N*m",
+        "d": "4 mm",
+        "D": "30 mm",
+        "N_b": 5,
+        "l1": "40 mm",
+        "l2": "25 mm",
+        "E": "207 GPa"
+      },
+      "expect": {
+        "theta": "-0.378978 rad",
+        "sigma": "-353.406 MPa",
+        "k_t": "5.27736 N*m/rad"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Reversing the moment sign flips θ and σ (signed) but leaves the rate: θ = M/k_t = −2/5.27736 = −0.378978 rad; σ = K_i·32M/(πd³) = −353.406 MPa; k_t unchanged at 5.27736 N·m/rad"
+      }
+    },
+    {
+      "calc": "springs.leaf_spring",
+      "inputs": {
+        "F": "3 kN",
+        "L": "1 m",
+        "N": 6,
+        "b": "50 mm",
+        "t": "8 mm",
+        "E": "207 GPa"
+      },
+      "expect": {
+        "sigma": "234.375 MPa",
+        "delta": "35.3827 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ = 3FL/(2Nbt²) = 3·3000·1/(2·6·0.05·(0.008)²) = 9000/3.84e-5 = 2.34375e8 Pa; δ = 3FL³/(8ENbt³) = 3·3000·1/(8·207e9·6·0.05·(0.008)³) = 9000/254361.6 = 0.0353827 m"
+      }
+    },
+    {
+      "calc": "springs.belleville",
+      "inputs": {
+        "E": "206 GPa",
+        "nu": 0.3,
+        "D_o": "100 mm",
+        "D_i": "50 mm",
+        "t": "4 mm",
+        "h": "6 mm",
+        "delta": "3 mm",
+        "form": "din_2092"
+      },
+      "expect": {
+        "C": 2,
+        "K": 0.694333,
+        "F": "46165.9 N"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "C = D_o/D_i = 2. K1 (DIN 2092) = (1/π)·((C−1)/C)²/((C+1)/(C−1) − 2/ln C) = 0.31831·0.25/(3 − 2.88539) = 0.0795775/0.114609 = 0.694333. F = 4Eδ/((1−ν²)·K·D_o²)·[(h−δ)(h−δ/2)t + t³] = 4·206e9·0.003/(0.91·0.694333·0.01)·[0.003·0.0045·0.004 + 6.4e-8] = 2.472e9/0.00631843·(5.4e-8+6.4e-8) = 3.91236e11·1.18e-7 = 46165.9 N"
+      }
+    },
+    {
+      "calc": "springs.belleville",
+      "inputs": {
+        "E": "206 GPa",
+        "nu": 0.3,
+        "D_o": "100 mm",
+        "D_i": "50 mm",
+        "t": "4 mm",
+        "h": "6 mm",
+        "delta": "3 mm",
+        "form": "almen_laszlo"
+      },
+      "expect": {
+        "C": 2,
+        "K": 0.688836,
+        "F": "46534.3 N"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Original Almen–László M = (6/(π·ln C))·((C−1)/C)² = 6/(π·0.693147)·0.25 = 0.688836. F = 4Eδ/((1−ν²)·M·D_o²)·[(h−δ)(h−δ/2)t + t³] = 4·206e9·0.003/(0.91·0.688836·0.01)·1.18e-7 = 2.472e9/0.00626841·1.18e-7 = 3.94359e11·1.18e-7 = 46534.3 N"
+      }
+    },
+    {
+      "calc": "springs.belleville",
+      "inputs": {
+        "E": "206 GPa",
+        "nu": 0.3,
+        "D_o": "100 mm",
+        "D_i": "50 mm",
+        "t": "4 mm",
+        "h": "6 mm",
+        "form": "din_2092",
+        "F": "46165.9 N"
+      },
+      "solve_for": [
+        "delta"
+      ],
+      "expect": {
+        "delta": "3 mm"
+      },
+      "rel_tol": 0.002,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: solve the Almen–László load for δ at the known load F = 46165.9 N (the DIN 2092 branch). The forward point δ = 3 mm reproduces this load, so the recovered deflection is 3 mm"
+      }
+    },
+    {
+      "calc": "springs.spring_energy",
+      "inputs": {
+        "F": "500 N",
+        "delta": "64.56 mm"
+      },
+      "expect": {
+        "U": "16.14 J"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "U = Fδ/2 = 500·0.06456/2 = 16.14 J"
+      }
+    },
+    {
+      "calc": "springs.spring_fatigue",
+      "inputs": {
+        "d": "2 mm",
+        "A": "2211 MPa",
+        "m": 0.145,
+        "S_sa": "241 MPa",
+        "S_sm": "379 MPa",
+        "tau_a": "100 MPa",
+        "tau_m": "150 MPa"
+      },
+      "expect": {
+        "S_ut": "1999.58 MPa",
+        "S_su": "1339.72 MPa",
+        "S_se": "336.073 MPa",
+        "S_se_gerber": "261.965 MPa",
+        "n_goodman": 2.4419,
+        "n_gerber": 2.42632
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "S_ut = A·(1 mm/d)^m = 2211e6·(1/2)^0.145 = 2211e6·0.904396 = 1999.58 MPa. S_su = 0.67·S_ut = 1339.72 MPa. S_se = S_sa/(1−S_sm/S_su) = 241e6/(1−379e6/1339.72e6) = 241e6/0.71710 = 336.073 MPa. Goodman 1/n = τ_a/S_se + τ_m/S_su = 100/336.073 + 150/1339.72 = 0.297549 + 0.111966 = 0.409515, n = 2.44190. Gerber: a = (τ_m/S_su)² = 0.111966² = 0.0125364, Gerber-converted S_se,G = 241/(1 − 0.282894²) = 241/0.919971 = 261.965 MPa; b = τ_a/S_se,G = 0.381730; n = (√(b²+4a)−b)/(2a) = (√(0.145718 + 0.0501456)−0.381730)/0.0250728 = 2.42632"
+      }
+    },
+    {
+      "calc": "springs.spring_fatigue",
+      "inputs": {
+        "d": "2 mm",
+        "A": "2211 MPa",
+        "m": 0.145,
+        "S_sa": "241 MPa",
+        "S_sm": "379 MPa",
+        "tau_a": "100 MPa",
+        "tau_m": 0
+      },
+      "expect": {
+        "n_goodman": 3.36073,
+        "n_gerber": 2.61965
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Same S_se = 336.073 MPa. With τ_m = 0 the criteria reduce to n = S_se/τ_a: Goodman 336.073/100 = 3.36073; Gerber uses its own conversion S_se,G = 261.965 MPa → n = 2.61965 (the two differ only through the Zimmerli conversion)"
+      }
+    },
+    {
+      "calc": "springs.spring_fatigue",
+      "inputs": {
+        "d": "5 mm",
+        "A": "1855 MPa",
+        "m": 0.187,
+        "S_sa": "398 MPa",
+        "S_sm": "534 MPa",
+        "tau_a": "120 MPa",
+        "tau_m": "200 MPa"
+      },
+      "expect": {
+        "S_ut": "1372.89 MPa",
+        "S_su": "919.838 MPa",
+        "S_se": "948.832 MPa",
+        "S_se_gerber": "600.323 MPa",
+        "n_goodman": 2.90782,
+        "n_gerber": 2.9477
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "S_ut = 1855e6·(1/5)^0.187 = 1855e6·0.740124 = 1372.89 MPa. S_su = 0.67·1372.89 = 919.838 MPa. S_se = 398e6/(1−534e6/919.838e6) = 398e6/0.419460 = 948.832 MPa. Goodman 1/n = 120/948.832 + 200/919.838 = 0.126472 + 0.217429 = 0.343901, n = 2.90782. Gerber: S_se,G = 398/(1 − (534/919.838)²) = 398/0.662974 = 600.323 MPa; a = 0.217429² = 0.0472754, b = 120/600.323 = 0.199892, n = (√(0.0399568+0.189102)−0.199892)/0.0945508 = 2.94770"
+      }
+    },
+    {
+      "calc": "springs.spring_fatigue",
+      "inputs": {
+        "A": "2211 MPa",
+        "m": 0.145,
+        "S_sa": "241 MPa",
+        "S_sm": "379 MPa",
+        "tau_a": "100 MPa",
+        "tau_m": "150 MPa",
+        "S_ut": "1999.58 MPa"
+      },
+      "solve_for": [
+        "d"
+      ],
+      "expect": {
+        "d": "2 mm"
+      },
+      "rel_tol": 0.002,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: S_ut = A·(1 mm/d)^m, so d = 1 mm·(S_ut/A)^(1/m) = 0.001·(1999.58e6/2211e6)^(1/0.145) = 0.001·0.904396^6.89655 = 0.001·0.5 = 0.002 m = 2 mm"
+      }
+    }
+  ]
+}

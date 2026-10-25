@@ -1,0 +1,451 @@
+{
+  "section": "shafts",
+  "cases": [
+    {
+      "calc": "shafts.shaft_diameter_de",
+      "inputs": {
+        "Ma": "200 N*m",
+        "Mm": "100 N*m",
+        "Ta": "150 N*m",
+        "Tm": "100 N*m",
+        "Kf": 1.5,
+        "Kfs": 1.5,
+        "Se": "180 MPa",
+        "Sut": "600 MPa",
+        "Sy": "400 MPa",
+        "n": 2.0
+      },
+      "expect": {
+        "A": "715.454 N*m",
+        "B": "396.863 N*m",
+        "d_goodman": "36.145 mm",
+        "d_gerber": "34.643 mm",
+        "d_elliptic": "34.685 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "A = sqrt(4(1.5·200)² + 3(1.5·150)²) = sqrt(360000 + 151875) = sqrt(511875) = 715.454 N·m; B = sqrt(4(1.5·100)² + 3(1.5·100)²) = sqrt(90000 + 67500) = sqrt(157500) = 396.863 N·m; d_goodman = (16·2/π·(715.454/180e6 + 396.863/600e6))^(1/3) = (10.1859·(3.97475e-6 + 6.61438e-7))^(1/3) = (4.72220e-5)^(1/3) = 0.036145 m; d_gerber = (8·2/π/180e6·(715.454 + sqrt(715.454² + (2·396.863·180e6/600e6)²)))^(1/3) = (2.82942e-8·(715.454 + 754.033))^(1/3) = (4.15777e-5)^(1/3) = 0.034643 m; d_elliptic = (16·2/π·sqrt((715.454/180e6)² + (396.863/400e6)²))^(1/3) = 0.0346853 m"
+      }
+    },
+    {
+      "calc": "shafts.shaft_diameter_de",
+      "inputs": {
+        "Ma": "0 N*m",
+        "Mm": "100 N*m",
+        "Ta": "0 N*m",
+        "Tm": "100 N*m",
+        "Kf": 1.0,
+        "Kfs": 1.0,
+        "Se": "200 MPa",
+        "Sut": "800 MPa",
+        "Sy": "600 MPa",
+        "n": 2.0
+      },
+      "expect": {
+        "A": "0 N*m",
+        "B": "264.575 N*m",
+        "d_goodman": "14.9906 mm",
+        "d_gerber": "14.9906 mm",
+        "d_elliptic": "16.4993 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Steady-only loading (Ma = Ta = 0): A = 0; B = sqrt(4·100² + 3·100²) = sqrt(70000) = 264.575 N·m. The Gerber form must not divide by zero — its limit is d = (16 n B/(π Sut))^(1/3) = (16·2·264.575/(π·800e6))^(1/3) = (3.36866e-6)^(1/3) = 14.9906 mm (equal to Goodman here). d_elliptic = (16·2·264.575/(π·600e6))^(1/3) = (4.49154e-6)^(1/3) = 16.4993 mm"
+      }
+    },
+    {
+      "calc": "shafts.shaft_deflection_slope",
+      "inputs": {
+        "case": "simply_supported",
+        "segments": [
+          [
+            1.0,
+            0.04
+          ]
+        ],
+        "loads": [
+          [
+            0.5,
+            1000.0
+          ]
+        ],
+        "supports": [
+          0.0,
+          1.0
+        ],
+        "E": "200 GPa"
+      },
+      "expect": {
+        "reactions": [
+          [
+            0.0,
+            500.0
+          ],
+          [
+            1.0,
+            500.0
+          ]
+        ],
+        "deflections": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.5,
+            -0.000828932
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "slopes": [
+          [
+            0.0,
+            -0.002486796
+          ],
+          [
+            0.5,
+            0.0
+          ],
+          [
+            1.0,
+            0.002486796
+          ]
+        ],
+        "max_deflection": "0.828932 mm",
+        "max_deflection_x": 0.5,
+        "max_slope": "0.002486796 rad"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Landmark: simply supported uniform shaft (I = π·0.04⁴/64 = 1.25664e-7 m⁴), centre point load. y_max = FL³/48EI = 1000/(48·200e9·1.25664e-7) = 8.28932e-4 m at x = 0.5; support slope FL²/16EI = 1000/(16·200e9·1.25664e-7) = 2.48680e-3 rad (left −, right +); reactions 500 N each."
+      }
+    },
+    {
+      "calc": "shafts.shaft_deflection_slope",
+      "inputs": {
+        "case": "simply_supported",
+        "segments": [
+          [
+            0.5,
+            0.04
+          ],
+          [
+            0.5,
+            0.03
+          ]
+        ],
+        "loads": [
+          [
+            0.25,
+            1000.0
+          ]
+        ],
+        "supports": [
+          0.0,
+          1.0
+        ],
+        "E": "207 GPa"
+      },
+      "expect": {
+        "reactions": [
+          [
+            0.0,
+            750.0
+          ],
+          [
+            1.0,
+            250.0
+          ]
+        ],
+        "deflections": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.25,
+            -0.000666799
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "slopes": [
+          [
+            0.0,
+            -0.002967534
+          ],
+          [
+            0.25,
+            -0.002066521
+          ],
+          [
+            1.0,
+            0.003232029
+          ]
+        ],
+        "max_deflection": "0.993984 mm",
+        "max_deflection_x": 0.538687,
+        "max_slope": "0.003232029 rad",
+        "max_slope_x": 1.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Stepped shaft (Ø40 on 0–0.5 m, Ø30 on 0.5–1 m), simply supported at 0 and 1 m, 1 kN at 0.25 m, E = 207 GPa. Reactions: Rb = 1000·0.25/1 = 250 N, Ra = 750 N. Deflection at the load by unit-load integration y(0.25) = ∫ M·m/(EI) dx over [0,0.25]/EI1 + [0.25,0.5]/EI1 + [0.5,1]/EI2 = (562.5·0.25³/3 + 62.5·(0.75³−0.5³)/3)/EI1 + (62.5·0.5³/3)/EI2 with EI1 = 207e9·π·0.04⁴/64 = 26012.4, EI2 = 207e9·π·0.03⁴/64 = 8230.5 → −6.6680e-4 m. Max |y| = 0.993984 mm at x = 0.538687 m (slope zero, per-interval EI). Note: the review's quoted −0.6901 mm / 1.0288 mm match E = 200 GPa (a factor 207/200 = 1.035); this oracle uses the stated E = 207 GPa."
+      }
+    },
+    {
+      "calc": "shafts.shaft_deflection_slope",
+      "inputs": {
+        "case": "cantilever",
+        "segments": [
+          [
+            1.0,
+            0.04
+          ]
+        ],
+        "loads": [
+          [
+            1.0,
+            1000.0
+          ]
+        ],
+        "supports": [],
+        "E": "200 GPa"
+      },
+      "expect": {
+        "reactions": [
+          [
+            0.0,
+            1000.0
+          ]
+        ],
+        "deflections": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            -0.0132629
+          ]
+        ],
+        "slopes": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            -0.0198944
+          ]
+        ],
+        "max_deflection": "13.2629 mm",
+        "max_deflection_x": 1.0,
+        "max_slope": "0.0198944 rad",
+        "max_slope_x": 1.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Landmark: cantilever tip load (supports ignored). y_tip = FL³/3EI = 1000/(3·200e9·1.25664e-7) = 1.32629e-2 m; tip slope FL²/2EI = 1000/(2·200e9·1.25664e-7) = 1.98944e-2 rad (downward = negative); fixed-end reaction 1000 N."
+      }
+    },
+    {
+      "calc": "shafts.shaft_critical_speed",
+      "inputs": {
+        "case": "simply_supported",
+        "segments": [
+          [
+            1.0,
+            0.04
+          ]
+        ],
+        "masses": [
+          [
+            0.5,
+            20.0
+          ]
+        ],
+        "supports": [
+          0.0,
+          1.0
+        ],
+        "E": "200 GPa"
+      },
+      "expect": {
+        "omega_cr": "245.598 rad/s",
+        "deflections": [
+          [
+            0.5,
+            -0.000162581
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Rayleigh with one central mass: δ = W·L³/48EI = (20·9.80665)/(48·200e9·1.25664e-7) = 196.133/1.20637e6 = 1.62581e-4 m; ω = sqrt(g·m·δ/(m·δ²)) = sqrt(g/δ) = sqrt(9.80665/1.62581e-4) = sqrt(60317.9) = 245.60 rad/s."
+      }
+    },
+    {
+      "calc": "shafts.key_shear_crush",
+      "inputs": {
+        "T": "200 N*m",
+        "d": "40 mm",
+        "w": "12 mm",
+        "h": "8 mm",
+        "L": "50 mm"
+      },
+      "expect": {
+        "tau": "16.6667 MPa",
+        "sigma_c": "50 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "τ = 2T/(d·w·L) = 400/(0.04·0.012·0.05) = 400/2.4e-5 = 16.667 MPa; σc = 4T/(d·h·L) = 800/(0.04·0.008·0.05) = 800/1.6e-5 = 50 MPa"
+      }
+    },
+    {
+      "calc": "shafts.key_shear_crush",
+      "inputs": {
+        "T": "200 N*m",
+        "d": "40 mm",
+        "w": "12 mm",
+        "h": "8 mm",
+        "tau": "16.6667 MPa"
+      },
+      "solve_for": [
+        "L",
+        "sigma_c"
+      ],
+      "expect": {
+        "L": "50 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L = 2T/(d·w·τ) = 400/(0.04·0.012·16.6667e6) = 400/8000 = 0.05 m"
+      }
+    },
+    {
+      "calc": "shafts.key_length",
+      "inputs": {
+        "T": "200 N*m",
+        "d": "40 mm",
+        "w": "12 mm",
+        "h": "8 mm",
+        "tau_allow": "40 MPa",
+        "sigma_allow": "100 MPa"
+      },
+      "expect": {
+        "L_shear": "20.8333 mm",
+        "L_crush": "25 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L_shear = 2T/(d·w·τ_allow) = 400/(0.04·0.012·40e6) = 400/19200 = 0.020833 m; L_crush = 4T/(d·h·σ_allow) = 800/(0.04·0.008·100e6) = 800/32000 = 0.025 m"
+      }
+    },
+    {
+      "calc": "shafts.spline_torque",
+      "inputs": {
+        "p": "20 MPa",
+        "n": 6,
+        "L": "30 mm",
+        "D": "50 mm",
+        "d": "44 mm"
+      },
+      "expect": {
+        "T": "253.8 N*m",
+        "h": "3 mm",
+        "r_m": "23.5 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "h = (50−44)/2 = 3 mm; r_m = (50+44)/4 = 23.5 mm; T = p·n·L·h·r_m = 20e6·6·0.03·0.003·0.0235 = 253.8 N·m"
+      }
+    },
+    {
+      "calc": "shafts.flange_coupling",
+      "inputs": {
+        "n_b": 6,
+        "R": "60 mm",
+        "tau_b": "60 MPa",
+        "d_b": "12 mm"
+      },
+      "expect": {
+        "A_b": "113.097 mm^2",
+        "F_b": "6785.84 N",
+        "T": "2442.90 N*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "A_b = π·0.012²/4 = 1.13097e-4 m²; F_b = 60e6·1.13097e-4 = 6785.84 N; T = 6·6785.84·0.06 = 2442.90 N·m"
+      }
+    },
+    {
+      "calc": "shafts.flange_coupling",
+      "inputs": {
+        "n_b": 6,
+        "R": "60 mm",
+        "tau_b": "60 MPa",
+        "T": "2442.90 N*m"
+      },
+      "solve_for": [
+        "F_b",
+        "A_b",
+        "d_b"
+      ],
+      "expect": {
+        "d_b": "12 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F_b = T/(n_b·R) = 2442.90/0.36 = 6785.84 N; A_b = F_b/τ_b = 1.13097e-4 m²; d_b = sqrt(4·A_b/π) = sqrt(1.44e-4) = 0.012 m"
+      }
+    },
+    {
+      "calc": "shafts.set_screw",
+      "inputs": {
+        "T_set": "2 N*m",
+        "K": 0.2,
+        "d_set": "6 mm",
+        "mu": 0.3,
+        "d_shaft": "20 mm"
+      },
+      "expect": {
+        "N": "1666.67 N",
+        "F_hold": "500 N",
+        "T_hold": "5 N*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "N = T/(K·d) = 2/(0.2·0.006) = 1666.67 N; F_hold = μ·N = 0.3·1666.67 = 500 N; T_hold = F_hold·d_shaft/2 = 500·0.01 = 5 N·m"
+      }
+    },
+    {
+      "calc": "shafts.set_screw",
+      "inputs": {
+        "T_set": "2 N*m",
+        "K": 0.2,
+        "d_set": "6 mm",
+        "F_hold": "500 N",
+        "d_shaft": "20 mm"
+      },
+      "solve_for": [
+        "N",
+        "mu",
+        "T_hold"
+      ],
+      "expect": {
+        "mu": 0.3
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "N = T/(K·d) = 1666.67 N; μ = F_hold/N = 500/1666.67 = 0.30"
+      }
+    }
+  ]
+}

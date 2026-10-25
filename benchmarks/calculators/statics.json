@@ -1,0 +1,3142 @@
+{
+  "section": "statics",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k statics",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "statics.moment": {
+      "title": "Moment of a force (M = F\u00b7d)",
+      "variables": [
+        {
+          "name": "M",
+          "unit": "N*m",
+          "desc": "moment about the point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "force magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "perpendicular distance from point to line of action",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "M = F*d"
+      ],
+      "procedure": null,
+      "outputs": [
+        "M"
+      ],
+      "assumptions": [
+        "d is the perpendicular (moment-arm) distance; for a couple, d is the spacing of the two equal, opposite, parallel forces and M is the same about every point."
+      ],
+      "method_references": [
+        "Moment of a force, M = F d (standard statics relation)"
+      ],
+      "synthetic_example": {
+        "F": 250.0,
+        "d": 0.4
+      }
+    },
+    "statics.force_components": {
+      "title": "Force components (rectangular)",
+      "variables": [
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "force magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "direction from +x, CCW positive",
+          "lo": -6.283185307179586,
+          "hi": 6.283185307179586,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Fx",
+          "unit": "N",
+          "desc": "x component",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Fy",
+          "unit": "N",
+          "desc": "y component",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Fx = F*cos(theta)",
+        "Fy = F*sin(theta)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Fx",
+        "Fy"
+      ],
+      "assumptions": [
+        "Inverse solves for \u03b8 return the root closest to the example; check the quadrant."
+      ],
+      "method_references": [
+        "Rectangular components of a planar force"
+      ],
+      "synthetic_example": {
+        "F": 500.0,
+        "theta": 0.5235987755982988
+      }
+    },
+    "statics.resultant_two": {
+      "title": "Resultant of two concurrent forces (law of cosines)",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "N",
+          "desc": "resultant magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F1",
+          "unit": "N",
+          "desc": "first force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F2",
+          "unit": "N",
+          "desc": "second force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "rad",
+          "desc": "angle between the two forces",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "R = sqrt(F1**2 + F2**2 + 2*F1*F2*cos(gamma))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "R"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Parallelogram law / law of cosines"
+      ],
+      "synthetic_example": {
+        "F1": 300.0,
+        "F2": 400.0,
+        "gamma": 1.0471975511965976
+      }
+    },
+    "statics.resultant_coplanar": {
+      "title": "Resultant of a coplanar force system",
+      "variables": [
+        {
+          "name": "forces",
+          "unit": "",
+          "desc": "rows [F (N), angle from +x (deg), x (m), y (m)] of each force application",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "Rx",
+          "unit": "N",
+          "desc": "resultant x component",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ry",
+          "unit": "N",
+          "desc": "resultant y component",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "N",
+          "desc": "resultant magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_R",
+          "unit": "rad",
+          "desc": "resultant direction",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8R",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M_O",
+          "unit": "N*m",
+          "desc": "moment about the origin (CCW +)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_int",
+          "unit": "m",
+          "desc": "x-axis intercept of the resultant line of action",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _resultant(values):\n    \"\"\"Resultant of coplanar forces [[F (N), angle (deg from +x), x (m), y (m)], ...] about the origin.\"\"\"\n    forces = values['forces']\n    if not isinstance(forces, list) or not forces:\n        raise MechError('forces: give a list of [F_N, angle_deg, x_m, y_m] rows')\n    Rx = Ry = Mo = 0.0\n    for row in forces:\n        if len(row) != 4:\n            raise MechError('forces: each row must be [F_N, angle_deg, x_m, y_m]')\n        F, ang, x, y = map(float, row)\n        fx, fy = F * math.cos(math.radians(ang)), F * math.sin(math.radians(ang))\n        Rx += fx\n        Ry += fy\n        Mo += x * fy - y * fx  # 2-D cross product r x F (CCW +)\n    R = math.hypot(Rx, Ry)\n    out = {'Rx': Rx, 'Ry': Ry, 'R': R, 'theta_R': math.atan2(Ry, Rx), 'M_O': Mo}\n    # Where the single resultant force crosses the x axis (M_O = x_int * Ry); undefined for Ry = 0.\n    out['x_int'] = Mo / Ry if abs(Ry) > 1e-12 * max(R, 1.0) else float('nan')\n    return out\n",
+        "source": "statics.py",
+        "line": 28
+      },
+      "outputs": [
+        "Rx",
+        "Ry",
+        "R",
+        "theta_R",
+        "M_O",
+        "x_int"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Equivalent force-couple system; resultant line of action"
+      ],
+      "synthetic_example": {
+        "forces": [
+          [
+            100,
+            0,
+            0,
+            1
+          ],
+          [
+            200,
+            90,
+            2,
+            0
+          ],
+          [
+            150,
+            225,
+            1,
+            1
+          ]
+        ]
+      }
+    },
+    "statics.simple_beam_reactions": {
+      "title": "Simply supported beam reactions (single point load)",
+      "variables": [
+        {
+          "name": "R_A",
+          "unit": "N",
+          "desc": "left support reaction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_B",
+          "unit": "N",
+          "desc": "right support reaction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "N",
+          "desc": "point load (downward +)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "load position from left support",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "span",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "R_A = P*(L - a)/L",
+        "R_B = P*a/L"
+      ],
+      "procedure": null,
+      "outputs": [
+        "R_A",
+        "R_B"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Sum of moments about each support"
+      ],
+      "synthetic_example": {
+        "P": 10000.0,
+        "a": 1.5,
+        "L": 4.0
+      }
+    },
+    "statics.rigid_body_3": {
+      "title": "Planar rigid-body equilibrium: three unknown reactions (frames and machines)",
+      "variables": [
+        {
+          "name": "loads",
+          "unit": "",
+          "desc": "known forces [[Fx (N), Fy (N), x (m), y (m)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "couples",
+          "unit": "",
+          "desc": "known couples [[M (N\u00b7m, CCW +)], ...]; [] if none",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "unknowns",
+          "unit": "",
+          "desc": "three reaction lines [[angle (deg), x (m), y (m)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "reactions",
+          "unit": "",
+          "desc": "three reaction magnitudes in N (negative = opposite to stated angle)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _rigid_body(values):\n    \"\"\"Three unknown reaction components on one planar rigid body (frame/machine member).\n\n    loads     [[Fx_N, Fy_N, x_m, y_m], ...] and optional couples [[M_Nm], ...] in 'couples'\n    unknowns  exactly 3 rows [[angle_deg, x_m, y_m], ...]: line of action direction and point\n    Solves sum Fx = 0, sum Fy = 0, sum M_origin = 0 for the three magnitudes (negative = opposite sense).\n    \"\"\"\n    loads = values.get('loads') or []\n    couples = values.get('couples') or []\n    unk = values['unknowns']\n    if len(unk) != 3:\n        raise MechError('unknowns: exactly three reaction lines are solvable by planar equilibrium')\n    A = np.zeros((3, 3))\n    b = np.zeros(3)\n    for k, (ang, x, y) in enumerate(unk):\n        c, s = math.cos(math.radians(ang)), math.sin(math.radians(ang))\n        A[:, k] = [c, s, x * s - y * c]\n    for fx, fy, x, y in loads:\n        b -= [fx, fy, x * fy - y * fx]\n    for row in couples:\n        b[2] -= float(row[0] if isinstance(row, list) else row)\n    if abs(np.linalg.det(A)) < 1e-12:\n        raise MechError('reaction lines are concurrent or parallel: improperly constrained body')\n    sol = np.linalg.solve(A, b)\n    return {'reactions': [float(v) for v in sol]}\n",
+        "source": "statics.py",
+        "line": 98
+      },
+      "outputs": [
+        "reactions"
+      ],
+      "assumptions": [
+        "Analyse a frame member by member: apply equal-and-opposite pin forces between members (Newton III) and keep each free body to three unknowns."
+      ],
+      "method_references": [
+        "\u03a3Fx = 0, \u03a3Fy = 0, \u03a3M = 0 for a planar rigid body"
+      ],
+      "synthetic_example": {
+        "loads": [
+          [
+            0,
+            -1000,
+            2,
+            0
+          ]
+        ],
+        "couples": [],
+        "unknowns": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            90,
+            0,
+            0
+          ],
+          [
+            90,
+            3,
+            0
+          ]
+        ]
+      }
+    },
+    "statics.truss": {
+      "title": "Plane truss member forces (method of joints / sections)",
+      "variables": [
+        {
+          "name": "nodes",
+          "unit": "",
+          "desc": "joint coordinates [[x (m), y (m)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "members",
+          "unit": "",
+          "desc": "member end joints [[i, j], ...] (0-based)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "supports",
+          "unit": "",
+          "desc": "reaction components [[joint, 'x' or 'y'], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "loads",
+          "unit": "",
+          "desc": "joint loads [[joint, Fx (N), Fy (N)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "member_forces",
+          "unit": "",
+          "desc": "member axial forces in N, tension positive",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "reactions",
+          "unit": "",
+          "desc": "[[joint, component, force (N)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "max_tension",
+          "unit": "N",
+          "desc": "largest tensile member force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "max_compression",
+          "unit": "N",
+          "desc": "largest compressive member force (magnitude)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _truss(values):\n    \"\"\"Pin-jointed plane truss by the method of joints (all joints at once as a linear system).\n\n    nodes    [[x_m, y_m], ...]\n    members  [[i, j], ...]            node indices (0-based)\n    supports [[node, 'x'|'y'], ...]   one reaction component per entry (pin = x and y, roller = one)\n    loads    [[node, Fx_N, Fy_N], ...]\n    Statically determinate only: members + reactions must equal 2 x nodes and the matrix full rank.\n    The method of sections gives identical forces for a determinate truss, so one solver serves both.\n    \"\"\"\n    nodes = np.asarray(values['nodes'], dtype=float)\n    members = [tuple(map(int, m)) for m in values['members']]\n    supports = [(int(s[0]), str(s[1])) for s in values['supports']]\n    loads = values.get('loads') or []\n    n = len(nodes)\n    m, r = len(members), len(supports)\n    if nodes.ndim != 2 or nodes.shape[1] != 2:\n        raise MechError('nodes: give [[x, y], ...] in m')\n    if m + r != 2 * n:\n        raise MechError(f'not statically determinate: members + reactions = {m + r}, 2 x joints = {2 * n}')\n    A = np.zeros((2 * n, m + r))\n    b = np.zeros(2 * n)\n    for k, (i, j) in enumerate(members):\n        d = nodes[j] - nodes[i]\n        L = float(np.hypot(*d))\n        if L == 0:\n            raise MechError(f'member {k} has zero length')\n        c, s = d / L\n        # Tension pulls joint i toward j (+c,+s) and joint j toward i.\n        A[2 * i, k] += c\n        A[2 * i + 1, k] += s\n        A[2 * j, k] -= c\n        A[2 * j + 1, k] -= s\n    for k, (node, comp) in enumerate(supports):\n        if comp not in ('x', 'y'):\n            raise MechError(\"supports: component must be 'x' or 'y'\")\n        A[2 * node + (0 if comp == 'x' else 1), m + k] = 1.0\n    for node, fx, fy in loads:\n        b[2 * int(node)] -= float(fx)\n        b[2 * int(node) + 1] -= float(fy)\n    if np.linalg.matrix_rank(A) < 2 * n:\n        raise MechError('truss is a mechanism or has redundant supports (singular equilibrium matrix)')\n    x = np.linalg.solve(A, b)\n    forces = [float(v) for v in x[:m]]\n    return {'member_forces': forces,\n            'reactions': [[supports[k][0], supports[k][1], float(x[m + k])] for k in range(r)],\n            'max_tension': max(max(forces), 0.0), 'max_compression': max(-min(forces), 0.0)}\n",
+        "source": "statics.py",
+        "line": 49
+      },
+      "outputs": [
+        "member_forces",
+        "reactions",
+        "max_tension",
+        "max_compression"
+      ],
+      "assumptions": [
+        "Ideal truss: pinned joints, loads only at joints, straight two-force members.",
+        "Statically determinate (m + r = 2j) and stable; otherwise an error is raised."
+      ],
+      "method_references": [
+        "Method of joints; method of sections (identical results for determinate trusses)"
+      ],
+      "synthetic_example": {
+        "nodes": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "members": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "x"
+          ],
+          [
+            0,
+            "y"
+          ],
+          [
+            1,
+            "y"
+          ]
+        ],
+        "loads": [
+          [
+            2,
+            0,
+            -12000
+          ]
+        ]
+      }
+    },
+    "statics.distributed_load": {
+      "title": "Resultant of a linearly varying distributed load",
+      "variables": [
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "resultant force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_bar",
+          "unit": "m",
+          "desc": "resultant location from the w1 end",
+          "lo": null,
+          "hi": null,
+          "label": "x\u0304",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w1",
+          "unit": "N/m",
+          "desc": "intensity at start",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w2",
+          "unit": "N/m",
+          "desc": "intensity at end",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "loaded length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "W = (w1 + w2)*L/2",
+        "x_bar = L*(w1 + 2*w2)/(3*(w1 + w2))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "W",
+        "x_bar"
+      ],
+      "assumptions": [
+        "w1 = w2 gives a uniform load (x\u0304 = L/2); w1 = 0 a triangle (x\u0304 = 2L/3)."
+      ],
+      "method_references": [
+        "Resultant = area under the load curve, acting through its centroid"
+      ],
+      "synthetic_example": {
+        "w1": 2000.0,
+        "w2": 5000.0,
+        "L": 3.0
+      }
+    },
+    "statics.friction": {
+      "title": "Dry (Coulomb) friction and angle of friction",
+      "variables": [
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "friction force (limiting, at impending motion)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "coefficient of friction",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "N",
+          "desc": "normal force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "angle of friction",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F = mu*N",
+        "phi = atan(mu)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F",
+        "phi"
+      ],
+      "assumptions": [
+        "F = \u03bcN is the limiting value; below impending motion the friction force is whatever equilibrium requires, up to \u03bcsN. Use \u03bck once sliding."
+      ],
+      "method_references": [
+        "Coulomb friction law; tan \u03c6 = \u03bc"
+      ],
+      "synthetic_example": {
+        "mu": 0.35,
+        "N": 800.0
+      }
+    },
+    "statics.incline_push": {
+      "title": "Force to push a block up / hold it on an incline (impending motion)",
+      "variables": [
+        {
+          "name": "P_up",
+          "unit": "N",
+          "desc": "force parallel to the slope for impending motion up",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_hold",
+          "unit": "N",
+          "desc": "force parallel to the slope to prevent sliding down (0 if self-holding)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "block weight",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "rad",
+          "desc": "slope angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "static friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P_up = W*(sin(alpha) + mu*cos(alpha))",
+        "P_hold = W*(sin(alpha) - mu*cos(alpha))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P_up",
+        "P_hold"
+      ],
+      "assumptions": [
+        "Force applied parallel to the incline. P_hold < 0 means the block does not slide (tan \u03b1 < \u03bc)."
+      ],
+      "method_references": [
+        "Equilibrium of a block on an inclined plane with Coulomb friction"
+      ],
+      "synthetic_example": {
+        "W": 500.0,
+        "alpha": 0.4363323129985824,
+        "mu": 0.3
+      }
+    },
+    "statics.belt_friction": {
+      "title": "Flat belt / capstan friction (T\u2081/T\u2082 = e^{\u03bc\u03b8})",
+      "variables": [
+        {
+          "name": "T1",
+          "unit": "N",
+          "desc": "tight-side tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2",
+          "unit": "N",
+          "desc": "slack-side tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "wrap angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T1 = T2*exp(mu*theta)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T1"
+      ],
+      "assumptions": [
+        "Impending slip, massless flat belt, centrifugal tension neglected (see belts section)."
+      ],
+      "method_references": [
+        "Capstan (Euler\u2013Eytelwein) equation"
+      ],
+      "synthetic_example": {
+        "T2": 100.0,
+        "mu": 0.3,
+        "theta": 3.141592653589793
+      }
+    },
+    "statics.vbelt_friction": {
+      "title": "V-belt friction (T\u2081/T\u2082 = e^{\u03bc\u03b8/sin(\u03b2/2)})",
+      "variables": [
+        {
+          "name": "T1",
+          "unit": "N",
+          "desc": "tight-side tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2",
+          "unit": "N",
+          "desc": "slack-side tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "wrap angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta",
+          "unit": "rad",
+          "desc": "groove included angle",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T1 = T2*exp(mu*theta/sin(beta/2))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T1"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Capstan equation with wedge action of a V groove"
+      ],
+      "synthetic_example": {
+        "T2": 100.0,
+        "mu": 0.3,
+        "theta": 3.141592653589793,
+        "beta": 0.6283185307179586
+      }
+    },
+    "statics.wedge": {
+      "title": "Wedge driven under a guided load",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "N",
+          "desc": "horizontal driving force for impending motion",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "vertical load on the wedge",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "rad",
+          "desc": "wedge angle (upper face)",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "friction angle on both wedge faces (\u03c6 = atan \u03bc)",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P = W*(tan(phi) + tan(alpha + phi))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P"
+      ],
+      "assumptions": [
+        "Wedge slides on a horizontal floor under a block that is guided vertically by a frictionless wall; same friction angle on the floor and the inclined face.",
+        "Derivation: block \u03a3Fy: R cos(\u03b1+\u03c6) = W; wedge \u03a3Fy: N1 = W; wedge \u03a3Fx: P = N1 tan \u03c6 + R sin(\u03b1+\u03c6)."
+      ],
+      "method_references": [
+        "Wedge equilibrium with friction on both faces"
+      ],
+      "synthetic_example": {
+        "W": 5000.0,
+        "alpha": 0.17453292519943295,
+        "phi": 0.24497866312686414
+      }
+    },
+    "statics.screw_jack": {
+      "title": "Square-thread screw jack: raising and lowering torque",
+      "variables": [
+        {
+          "name": "T_raise",
+          "unit": "N*m",
+          "desc": "torque to raise the load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_lower",
+          "unit": "N*m",
+          "desc": "torque to lower (negative = overhauls)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam",
+          "unit": "rad",
+          "desc": "lead angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "friction angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "axial load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_m",
+          "unit": "m",
+          "desc": "mean thread radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l",
+          "unit": "m",
+          "desc": "lead (advance per revolution)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "thread friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T_raise = W*r_m*tan(lam + phi)",
+        "T_lower = W*r_m*tan(phi - lam)",
+        "lam = atan(l/(2*pi*r_m))",
+        "phi = atan(mu)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T_raise",
+        "T_lower",
+        "lam",
+        "phi"
+      ],
+      "assumptions": [
+        "Square thread, collar friction excluded (see power screws section for Acme/collar).",
+        "T_lower > 0 means self-locking (\u03c6 > \u03bb)."
+      ],
+      "method_references": [
+        "Screw as an inclined plane wrapped on a cylinder"
+      ],
+      "synthetic_example": {
+        "W": 20000.0,
+        "r_m": 0.015,
+        "l": 0.006,
+        "mu": 0.15
+      }
+    },
+    "statics.cable_parabolic": {
+      "title": "Cable under uniform load per horizontal length (parabolic)",
+      "variables": [
+        {
+          "name": "T0",
+          "unit": "N",
+          "desc": "horizontal tension (at lowest point)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_max",
+          "unit": "N",
+          "desc": "maximum tension (at supports)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "cable length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w",
+          "unit": "N/m",
+          "desc": "load per horizontal metre",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "span between level supports",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "sag at mid-span",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T0 = w*L**2/(8*h)",
+        "T_max = sqrt(T0**2 + (w*L/2)**2)",
+        "s = L*(1 + (8/3)*(h/L)**2 - (32/5)*(h/L)**4)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T0",
+        "T_max",
+        "s"
+      ],
+      "assumptions": [
+        "Level supports; load uniform per horizontal length (suspension bridge deck).",
+        "Length uses the series expansion, accurate for h/L \u2272 0.2."
+      ],
+      "method_references": [
+        "Parabolic cable; series expansion of arc length"
+      ],
+      "synthetic_example": {
+        "w": 2000.0,
+        "L": 100.0,
+        "h": 8.0
+      }
+    },
+    "statics.cable_catenary": {
+      "title": "Cable under its own weight (catenary)",
+      "variables": [
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "catenary parameter T0/w",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T0",
+          "unit": "N",
+          "desc": "horizontal tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_max",
+          "unit": "N",
+          "desc": "maximum tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "cable length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w",
+          "unit": "N/m",
+          "desc": "weight per unit cable length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "span between level supports",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "sag",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "h = c*(cosh(L/(2*c)) - 1)",
+        "T0 = w*c",
+        "T_max = w*(c + h)",
+        "s = 2*c*sinh(L/(2*c))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "c",
+        "T0",
+        "T_max",
+        "s"
+      ],
+      "assumptions": [
+        "Level supports, perfectly flexible inextensible cable."
+      ],
+      "method_references": [
+        "Catenary: y = c cosh(x/c)"
+      ],
+      "synthetic_example": {
+        "w": 50.0,
+        "L": 100.0,
+        "h": 10.0
+      }
+    },
+    "statics.composite_centroid": {
+      "title": "Centroid / centre of gravity of a composite body",
+      "variables": [
+        {
+          "name": "parts",
+          "unit": "",
+          "desc": "rows [w, x, y, z]: w = area, volume, mass or weight (one kind; negative for holes); coordinates of each part centroid in m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "W_total",
+          "unit": "",
+          "desc": "sum of w (same unit as the part w column)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_bar",
+          "unit": "m",
+          "desc": "x\u0304",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_bar",
+          "unit": "m",
+          "desc": "\u0233",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "z_bar",
+          "unit": "m",
+          "desc": "z\u0304",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _composite(values):\n    \"\"\"Composite centroid / centre of gravity: parts [[w, x, y, z], ...], w = area, volume, mass or weight\n    (consistent in one list; negative w for holes/cut-outs).\"\"\"\n    parts = values['parts']\n    W = sum(float(p[0]) for p in parts)\n    if abs(W) < 1e-300:\n        raise MechError('parts: total weight/area is zero')\n    xs = [sum(float(p[0]) * float(p[k]) for p in parts) / W for k in (1, 2, 3)]\n    return {'W_total': W, 'x_bar': xs[0], 'y_bar': xs[1], 'z_bar': xs[2]}\n",
+        "source": "statics.py",
+        "line": 125
+      },
+      "outputs": [
+        "W_total",
+        "x_bar",
+        "y_bar",
+        "z_bar"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "x\u0304 = \u03a3 w x / \u03a3 w"
+      ],
+      "synthetic_example": {
+        "parts": [
+          [
+            0.02,
+            0.1,
+            0.05,
+            0
+          ],
+          [
+            0.01,
+            0.25,
+            0.1,
+            0
+          ],
+          [
+            -0.002,
+            0.1,
+            0.05,
+            0
+          ]
+        ]
+      }
+    },
+    "statics.mechanical_advantage": {
+      "title": "Mechanical advantage, velocity ratio and efficiency (virtual work)",
+      "variables": [
+        {
+          "name": "MA",
+          "unit": "",
+          "desc": "mechanical advantage F_out/F_in",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "VR",
+          "unit": "",
+          "desc": "velocity ratio d_in/d_out",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_out",
+          "unit": "N",
+          "desc": "output force (load)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_in",
+          "unit": "N",
+          "desc": "input force (effort)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_in",
+          "unit": "m",
+          "desc": "input displacement",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_out",
+          "unit": "m",
+          "desc": "output displacement",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "MA = F_out/F_in",
+        "VR = d_in/d_out",
+        "eta = MA/VR"
+      ],
+      "procedure": null,
+      "outputs": [
+        "MA",
+        "VR",
+        "eta"
+      ],
+      "assumptions": [
+        "Ideal machine (virtual work, no friction): F_in\u00b7\u03b4_in = F_out\u00b7\u03b4_out, so \u03b7 = 1 and MA = VR."
+      ],
+      "method_references": [
+        "Principle of virtual work; machine efficiency"
+      ],
+      "synthetic_example": {
+        "F_out": 1000.0,
+        "F_in": 120.0,
+        "d_in": 1.0,
+        "d_out": 0.1
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "statics-001",
+      "calculator": "statics.moment",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "2.5 kN",
+        "d": "120 mm"
+      },
+      "solve_for": [
+        "M"
+      ],
+      "expected_as_specified": {
+        "M": "300 N*m"
+      },
+      "expected_SI": {
+        "M": 300.0
+      },
+      "actual_SI": {
+        "M": {
+          "value": 300.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc statics.moment (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "M": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.6,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "M = F d = 2500 N x 0.120 m = 300 N\u00b7m"
+      }
+    },
+    {
+      "id": "statics-002",
+      "calculator": "statics.moment",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "M": "300 N*m",
+        "d": "0.12 m"
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expected_as_specified": {
+        "F": "2500 N"
+      },
+      "expected_SI": {
+        "F": 2500.0
+      },
+      "actual_SI": {
+        "F": {
+          "value": 2500.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.moment (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = M/d = 300/0.12 = 2500 N"
+      }
+    },
+    {
+      "id": "statics-003",
+      "calculator": "statics.force_components",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "500 N",
+        "theta": "30 deg"
+      },
+      "solve_for": [
+        "Fx",
+        "Fy"
+      ],
+      "expected_as_specified": {
+        "Fx": "433.0127 N",
+        "Fy": "250 N"
+      },
+      "expected_SI": {
+        "Fx": 433.0127,
+        "Fy": 250.0
+      },
+      "actual_SI": {
+        "Fx": {
+          "value": 433.01270189221935,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.force_components (symbolic)"
+        },
+        "Fy": {
+          "value": 249.99999999999997,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.force_components (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Fx": {
+          "absolute_error": 1.892219358978764e-06,
+          "relative_error": 4.36989344418481e-09,
+          "allowed_absolute_error": 0.8660254000000001,
+          "passed": true
+        },
+        "Fy": {
+          "absolute_error": 2.842170943040401e-14,
+          "relative_error": 1.1368683772161603e-16,
+          "allowed_absolute_error": 0.5,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Fx = 500 cos30\u00b0 = 500(0.866025) = 433.013 N; Fy = 500 sin30\u00b0 = 250 N"
+      }
+    },
+    {
+      "id": "statics-004",
+      "calculator": "statics.resultant_two",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F1": "300 N",
+        "F2": "400 N",
+        "gamma": "60 deg"
+      },
+      "solve_for": [
+        "R"
+      ],
+      "expected_as_specified": {
+        "R": "608.2763 N"
+      },
+      "expected_SI": {
+        "R": 608.2763
+      },
+      "actual_SI": {
+        "R": {
+          "value": 608.276253029822,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.resultant_two (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R": {
+          "absolute_error": 4.6970178004812624e-05,
+          "relative_error": 7.72184910127398e-08,
+          "allowed_absolute_error": 1.2165526,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = sqrt(300\u00b2 + 400\u00b2 + 2\u00b7300\u00b7400\u00b7cos60\u00b0) = sqrt(90000+160000+120000) = sqrt(370000) = 608.276 N"
+      }
+    },
+    {
+      "id": "statics-005",
+      "calculator": "statics.resultant_coplanar",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "forces": [
+          [
+            100,
+            0,
+            0,
+            1
+          ],
+          [
+            200,
+            90,
+            2,
+            0
+          ],
+          [
+            150,
+            225,
+            1,
+            1
+          ]
+        ]
+      },
+      "solve_for": [
+        "Rx",
+        "Ry",
+        "R",
+        "theta_R",
+        "M_O",
+        "x_int"
+      ],
+      "expected_as_specified": {
+        "Rx": "-6.0660 N",
+        "Ry": "93.9340 N",
+        "M_O": "300 N*m"
+      },
+      "expected_SI": {
+        "Rx": -6.066,
+        "Ry": 93.934,
+        "M_O": 300.0
+      },
+      "actual_SI": {
+        "Rx": {
+          "value": -6.066017177982133,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.resultant_coplanar (procedure)"
+        },
+        "Ry": {
+          "value": 93.93398282201788,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.resultant_coplanar (procedure)"
+        },
+        "M_O": {
+          "value": 300.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc statics.resultant_coplanar (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "Rx": {
+          "absolute_error": 1.7177982132743352e-05,
+          "relative_error": 2.8318467083322374e-06,
+          "allowed_absolute_error": 0.006066,
+          "passed": true
+        },
+        "Ry": {
+          "absolute_error": 1.7177982115867962e-05,
+          "relative_error": 1.8287289070909323e-07,
+          "allowed_absolute_error": 0.093934,
+          "passed": true
+        },
+        "M_O": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.3,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "150 N at 225\u00b0: (-106.066, -106.066). Rx = 100 - 106.066 = -6.066; Ry = 200 - 106.066 = 93.934. M_O = \u03a3(x Fy - y Fx) = (0-1\u00b7100) + (2\u00b7200) + (1\u00b7(-106.066) - 1\u00b7(-106.066)) = -100 + 400 + 0 = 300 N\u00b7m"
+      }
+    },
+    {
+      "id": "statics-006",
+      "calculator": "statics.simple_beam_reactions",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": "10 kN",
+        "a": "1.5 m",
+        "L": "4 m"
+      },
+      "solve_for": [
+        "R_A",
+        "R_B"
+      ],
+      "expected_as_specified": {
+        "R_A": "6.25 kN",
+        "R_B": "3.75 kN"
+      },
+      "expected_SI": {
+        "R_A": 6250.0,
+        "R_B": 3750.0
+      },
+      "actual_SI": {
+        "R_A": {
+          "value": 6250.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.simple_beam_reactions (symbolic)"
+        },
+        "R_B": {
+          "value": 3750.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.simple_beam_reactions (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R_A": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 12.5,
+          "passed": true
+        },
+        "R_B": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 7.5,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03a3M_B: R_A\u00b74 = 10\u00b72.5 \u2192 R_A = 6.25 kN; R_B = 10 - 6.25 = 3.75 kN"
+      }
+    },
+    {
+      "id": "statics-007",
+      "calculator": "statics.rigid_body_3",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "loads": [
+          [
+            0,
+            -1000,
+            2,
+            0
+          ]
+        ],
+        "couples": [],
+        "unknowns": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            90,
+            0,
+            0
+          ],
+          [
+            90,
+            3,
+            0
+          ]
+        ]
+      },
+      "solve_for": [
+        "reactions"
+      ],
+      "expected_as_specified": {
+        "reactions": [
+          0.0,
+          333.3333,
+          666.6667
+        ]
+      },
+      "expected_SI": {
+        "reactions": [
+          0.0,
+          333.3333,
+          666.6667
+        ]
+      },
+      "actual_SI": {
+        "reactions": {
+          "value": [
+            -6.123233995736766e-14,
+            333.33333333333337,
+            666.6666666666666
+          ],
+          "kind": "derived",
+          "method": "mechcalc statics.rigid_body_3 (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "reactions": [
+          {
+            "absolute_error": 6.123233995736766e-14,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          {
+            "absolute_error": 3.3333333362861595e-05,
+            "relative_error": 1.000000100885858e-07,
+            "allowed_absolute_error": 0.03333333,
+            "passed": true
+          },
+          {
+            "absolute_error": 3.3333333362861595e-05,
+            "relative_error": 4.999999754429251e-08,
+            "allowed_absolute_error": 0.06666667,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Beam pinned at x=0, roller at x=3, 1000 N down at x=2. \u03a3M_0: 3 R_B = 2000 \u2192 666.667 N; \u03a3Fy: R_A = 1000 - 666.667 = 333.333 N; \u03a3Fx: 0"
+      }
+    },
+    {
+      "id": "statics-008",
+      "calculator": "statics.truss",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "nodes": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "members": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "x"
+          ],
+          [
+            0,
+            "y"
+          ],
+          [
+            1,
+            "y"
+          ]
+        ],
+        "loads": [
+          [
+            2,
+            0,
+            -12000
+          ]
+        ]
+      },
+      "solve_for": [
+        "member_forces",
+        "reactions",
+        "max_tension",
+        "max_compression"
+      ],
+      "expected_as_specified": {
+        "member_forces": [
+          4000.0,
+          -7211.1026,
+          -7211.1026
+        ],
+        "max_compression": "7211.1026 N"
+      },
+      "expected_SI": {
+        "member_forces": [
+          4000.0,
+          -7211.1026,
+          -7211.1026
+        ],
+        "max_compression": 7211.1026
+      },
+      "actual_SI": {
+        "member_forces": {
+          "value": [
+            4000.0,
+            -7211.102550927978,
+            -7211.102550927978
+          ],
+          "kind": "derived",
+          "method": "mechcalc statics.truss (procedure)",
+          "unit": ""
+        },
+        "max_compression": {
+          "value": 7211.102550927978,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.truss (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "member_forces": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.4,
+            "passed": true
+          },
+          {
+            "absolute_error": 4.90720221932861e-05,
+            "relative_error": 6.8050650386372396e-09,
+            "allowed_absolute_error": 0.72111026,
+            "passed": true
+          },
+          {
+            "absolute_error": 4.90720221932861e-05,
+            "relative_error": 6.8050650386372396e-09,
+            "allowed_absolute_error": 0.72111026,
+            "passed": true
+          }
+        ],
+        "max_compression": {
+          "absolute_error": 4.90720221932861e-05,
+          "relative_error": 6.8050650386372396e-09,
+          "allowed_absolute_error": 0.72111026,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Symmetric: R = 6000 N each. Apex: 2 F (3/\u221a13) = 12000 \u2192 F = 2000\u221a13 = 7211.10 N compression in each rafter. Joint 0: chord T = F (2/\u221a13) = 4000 N tension"
+      }
+    },
+    {
+      "id": "statics-009",
+      "calculator": "statics.distributed_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "w1": "2 kN/m",
+        "w2": "5 kN/m",
+        "L": "3 m"
+      },
+      "solve_for": [
+        "W",
+        "x_bar"
+      ],
+      "expected_as_specified": {
+        "W": "10.5 kN",
+        "x_bar": "1.7142857 m"
+      },
+      "expected_SI": {
+        "W": 10500.0,
+        "x_bar": 1.7142857
+      },
+      "actual_SI": {
+        "W": {
+          "value": 10500.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.distributed_load (symbolic)"
+        },
+        "x_bar": {
+          "value": 1.7142857142857142,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc statics.distributed_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "W": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 21.0,
+          "passed": true
+        },
+        "x_bar": {
+          "absolute_error": 1.4285714167172614e-08,
+          "relative_error": 8.33333333362847e-09,
+          "allowed_absolute_error": 0.0034285714,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "W = (2+5)\u00b73/2 = 10.5 kN; x\u0304 = 3(2 + 10)/(3\u00b77) = 36/21 = 1.71429 m"
+      }
+    },
+    {
+      "id": "statics-010",
+      "calculator": "statics.friction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.35,
+        "N": "800 N"
+      },
+      "solve_for": [
+        "F",
+        "phi"
+      ],
+      "expected_as_specified": {
+        "F": "280 N",
+        "phi": "0.3366748 rad"
+      },
+      "expected_SI": {
+        "F": 280.0,
+        "phi": 0.3366748
+      },
+      "actual_SI": {
+        "F": {
+          "value": 280.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.friction (symbolic)"
+        },
+        "phi": {
+          "value": 0.33667481938672716,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc statics.friction (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.56,
+          "passed": true
+        },
+        "phi": {
+          "absolute_error": 1.9386727168058115e-08,
+          "relative_error": 5.758294701016564e-08,
+          "allowed_absolute_error": 0.0006733496,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 0.35\u00b7800 = 280 N; \u03c6 = atan(0.35) = 19.29\u00b0 = 0.33667 rad"
+      }
+    },
+    {
+      "id": "statics-011",
+      "calculator": "statics.friction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "280 N",
+        "N": "800 N"
+      },
+      "solve_for": [
+        "mu",
+        "phi"
+      ],
+      "expected_as_specified": {
+        "mu": 0.35
+      },
+      "expected_SI": {
+        "mu": 0.35
+      },
+      "actual_SI": {
+        "mu": {
+          "value": 0.35,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc statics.friction (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "mu": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0007,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03bc = F/N = 280/800 = 0.35"
+      }
+    },
+    {
+      "id": "statics-012",
+      "calculator": "statics.incline_push",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "500 N",
+        "alpha": "25 deg",
+        "mu": 0.3
+      },
+      "solve_for": [
+        "P_up",
+        "P_hold"
+      ],
+      "expected_as_specified": {
+        "P_up": "347.2553 N",
+        "P_hold": "75.3630 N"
+      },
+      "expected_SI": {
+        "P_up": 347.2553,
+        "P_hold": 75.363
+      },
+      "actual_SI": {
+        "P_up": {
+          "value": 347.2552989258472,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.incline_push (symbolic)"
+        },
+        "P_hold": {
+          "value": 75.36296281485224,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.incline_push (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P_up": {
+          "absolute_error": 1.0741527489699365e-06,
+          "relative_error": 3.093265240213574e-09,
+          "allowed_absolute_error": 0.6945106,
+          "passed": true
+        },
+        "P_hold": {
+          "absolute_error": 3.7185147760965265e-05,
+          "relative_error": 4.934138471261131e-07,
+          "allowed_absolute_error": 0.150726,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sin25\u00b0 = 0.422618, cos25\u00b0 = 0.906308. P_up = 500(0.422618 + 0.271892) = 347.255 N; P_hold = 500(0.422618 - 0.271892) = 75.363 N"
+      }
+    },
+    {
+      "id": "statics-013",
+      "calculator": "statics.incline_push",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "500 N",
+        "mu": 0.3,
+        "P_hold": "0 N"
+      },
+      "solve_for": [
+        "alpha",
+        "P_up"
+      ],
+      "expected_as_specified": {
+        "alpha": "16.69924 deg"
+      },
+      "expected_SI": {
+        "alpha": 0.29145672058073785
+      },
+      "actual_SI": {
+        "alpha": {
+          "value": 0.29145679447786704,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc statics.incline_push (numeric)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "alpha": {
+          "absolute_error": 7.38971291935897e-08,
+          "relative_error": 2.5354409068470633e-07,
+          "allowed_absolute_error": 0.0005829134411614757,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Onset of sliding: tan \u03b1 = \u03bc \u2192 \u03b1 = atan(0.3) = 16.699\u00b0"
+      }
+    },
+    {
+      "id": "statics-014",
+      "calculator": "statics.belt_friction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T2": "100 N",
+        "mu": 0.3,
+        "theta": "180 deg"
+      },
+      "solve_for": [
+        "T1"
+      ],
+      "expected_as_specified": {
+        "T1": "256.6332 N"
+      },
+      "expected_SI": {
+        "T1": 256.6332
+      },
+      "actual_SI": {
+        "T1": {
+          "value": 256.6332395208135,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.belt_friction (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T1": {
+          "absolute_error": 3.9520813515991904e-05,
+          "relative_error": 1.5399727516156096e-07,
+          "allowed_absolute_error": 0.5132664,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T1 = 100 e^(0.3\u03c0) = 100 e^0.942478 = 100\u00b72.566332 = 256.633 N"
+      }
+    },
+    {
+      "id": "statics-015",
+      "calculator": "statics.belt_friction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T1": "256.6332 N",
+        "T2": "100 N",
+        "theta": "3.14159265 rad"
+      },
+      "solve_for": [
+        "mu"
+      ],
+      "expected_as_specified": {
+        "mu": 0.3
+      },
+      "expected_SI": {
+        "mu": 0.3
+      },
+      "actual_SI": {
+        "mu": {
+          "value": 0.2999999513239484,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc statics.belt_friction (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "mu": {
+          "absolute_error": 4.8676051578322443e-08,
+          "relative_error": 1.6225350526107482e-07,
+          "allowed_absolute_error": 3e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03bc = ln(T1/T2)/\u03b8 = ln(2.566332)/\u03c0 = 0.942478/3.141593 = 0.3000"
+      }
+    },
+    {
+      "id": "statics-016",
+      "calculator": "statics.vbelt_friction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T2": "100 N",
+        "mu": 0.3,
+        "theta": "180 deg",
+        "beta": "36 deg"
+      },
+      "solve_for": [
+        "T1"
+      ],
+      "expected_as_specified": {
+        "T1": "2111.370 N"
+      },
+      "expected_SI": {
+        "T1": 2111.37
+      },
+      "actual_SI": {
+        "T1": {
+          "value": 2111.3702037568833,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.vbelt_friction (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T1": {
+          "absolute_error": 0.0002037568833657133,
+          "relative_error": 9.65045839268879e-08,
+          "allowed_absolute_error": 4.22274,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sin18\u00b0 = 0.309017; exponent = 0.3\u03c0/0.309017 = 3.049935; e^3.049935 = 21.1137 \u2192 T1 = 2111.37 N"
+      }
+    },
+    {
+      "id": "statics-017",
+      "calculator": "statics.wedge",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "5 kN",
+        "alpha": "10 deg",
+        "phi": "14.036243 deg"
+      },
+      "solve_for": [
+        "P"
+      ],
+      "expected_as_specified": {
+        "P": "3479.934 N"
+      },
+      "expected_SI": {
+        "P": 3479.934
+      },
+      "actual_SI": {
+        "P": {
+          "value": 3479.9342067330654,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.wedge (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P": {
+          "absolute_error": 0.00020673306516982848,
+          "relative_error": 5.940717989761544e-08,
+          "allowed_absolute_error": 6.959868,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c6 = atan 0.25 = 14.0362\u00b0; tan \u03c6 = 0.25; tan(24.0362\u00b0) = 0.445987; P = 5000(0.25 + 0.445987) = 3479.93 N"
+      }
+    },
+    {
+      "id": "statics-018",
+      "calculator": "statics.screw_jack",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "20 kN",
+        "r_m": "15 mm",
+        "l": "6 mm",
+        "mu": 0.15
+      },
+      "solve_for": [
+        "T_raise",
+        "T_lower",
+        "lam",
+        "phi"
+      ],
+      "expected_as_specified": {
+        "T_raise": "64.7166 N*m",
+        "T_lower": "25.6564 N*m",
+        "lam": "3.64265 deg"
+      },
+      "expected_SI": {
+        "T_raise": 64.7166,
+        "T_lower": 25.6564,
+        "lam": 0.06357623599777144
+      },
+      "actual_SI": {
+        "T_raise": {
+          "value": 64.71659109338155,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc statics.screw_jack (symbolic)"
+        },
+        "T_lower": {
+          "value": 25.65640619688014,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc statics.screw_jack (symbolic)"
+        },
+        "lam": {
+          "value": 0.06357618167828312,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc statics.screw_jack (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T_raise": {
+          "absolute_error": 8.906618447213077e-06,
+          "relative_error": 1.376249439434871e-07,
+          "allowed_absolute_error": 0.0323583,
+          "passed": true
+        },
+        "T_lower": {
+          "absolute_error": 6.196880139697214e-06,
+          "relative_error": 2.415335019604159e-07,
+          "allowed_absolute_error": 0.012828200000000001,
+          "passed": true
+        },
+        "lam": {
+          "absolute_error": 5.431948832401723e-08,
+          "relative_error": 8.543992495233801e-07,
+          "allowed_absolute_error": 3.178811799888572e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03bb = atan(6/(2\u03c0\u00b715)) = atan(0.063662) = 3.6426\u00b0; \u03c6 = atan 0.15 = 8.5308\u00b0; T_r = 20000\u00b70.015\u00b7tan(12.1734\u00b0) = 300\u00b70.215722 = 64.717 N\u00b7m; T_l = 300\u00b7tan(4.8882\u00b0) = 300\u00b70.085521 = 25.656 N\u00b7m"
+      }
+    },
+    {
+      "id": "statics-019",
+      "calculator": "statics.cable_parabolic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "w": "2 kN/m",
+        "L": "100 m",
+        "h": "8 m"
+      },
+      "solve_for": [
+        "T0",
+        "T_max",
+        "s"
+      ],
+      "expected_as_specified": {
+        "T0": "312.5 kN",
+        "T_max": "328.1101 kN",
+        "s": "101.68045 m"
+      },
+      "expected_SI": {
+        "T0": 312500.0,
+        "T_max": 328110.1,
+        "s": 101.68045
+      },
+      "actual_SI": {
+        "T0": {
+          "value": 312500.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.cable_parabolic (symbolic)"
+        },
+        "T_max": {
+          "value": 328110.1187101672,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.cable_parabolic (symbolic)"
+        },
+        "s": {
+          "value": 101.68045226666666,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc statics.cable_parabolic (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T0": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 625.0,
+          "passed": true
+        },
+        "T_max": {
+          "absolute_error": 0.018710167205426842,
+          "relative_error": 5.7024051394415606e-08,
+          "allowed_absolute_error": 656.2202,
+          "passed": true
+        },
+        "s": {
+          "absolute_error": 2.2666666694703963e-06,
+          "relative_error": 2.2292059776194898e-08,
+          "allowed_absolute_error": 0.20336089999999998,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T0 = 2000\u00b7100\u00b2/(8\u00b78) = 312500 N; Tmax = sqrt(312500\u00b2 + 100000\u00b2) = 328110 N; s = 100(1 + (8/3)(0.0064) - 6.4(0.00004096)) = 100(1 + 0.0170667 - 0.00026214) = 101.6805 m"
+      }
+    },
+    {
+      "id": "statics-020",
+      "calculator": "statics.cable_catenary",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "w": "50 N/m",
+        "L": "100 m",
+        "h": "10 m"
+      },
+      "solve_for": [
+        "c",
+        "T0",
+        "T_max",
+        "s"
+      ],
+      "expected_as_specified": {
+        "c": "126.632 m",
+        "T0": "6331.6 N",
+        "T_max": "6831.6 N"
+      },
+      "expected_SI": {
+        "c": 126.632,
+        "T0": 6331.6,
+        "T_max": 6831.6
+      },
+      "actual_SI": {
+        "c": {
+          "value": 126.63243603998897,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc statics.cable_catenary (numeric)"
+        },
+        "T0": {
+          "value": 6331.6218019994485,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.cable_catenary (numeric)"
+        },
+        "T_max": {
+          "value": 6831.621801999449,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc statics.cable_catenary (numeric)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "c": {
+          "absolute_error": 0.000436039988969128,
+          "relative_error": 3.4433633597284095e-06,
+          "allowed_absolute_error": 0.126632,
+          "passed": true
+        },
+        "T0": {
+          "absolute_error": 0.02180199944814376,
+          "relative_error": 3.443363359679032e-06,
+          "allowed_absolute_error": 6.331600000000001,
+          "passed": true
+        },
+        "T_max": {
+          "absolute_error": 0.021801999449053255,
+          "relative_error": 3.191346016899885e-06,
+          "allowed_absolute_error": 6.831600000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Solve 10 = c(cosh(50/c) - 1) by iteration: c = 126.63 m (check: 50/126.63 = 0.39485, cosh = 1.07897 \u2192 126.63\u00b70.07897 = 10.00). T0 = 50\u00b7126.63 = 6331.6 N; Tmax = 50(126.63 + 10) = 6831.6 N"
+      }
+    },
+    {
+      "id": "statics-021",
+      "calculator": "statics.composite_centroid",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "parts": [
+          [
+            0.02,
+            0.1,
+            0.05,
+            0
+          ],
+          [
+            0.01,
+            0.25,
+            0.1,
+            0
+          ],
+          [
+            -0.002,
+            0.1,
+            0.05,
+            0
+          ]
+        ]
+      },
+      "solve_for": [
+        "W_total",
+        "x_bar",
+        "y_bar",
+        "z_bar"
+      ],
+      "expected_as_specified": {
+        "W_total": 0.028,
+        "x_bar": "0.1535714 m",
+        "y_bar": "0.0678571 m"
+      },
+      "expected_SI": {
+        "W_total": 0.028,
+        "x_bar": 0.1535714,
+        "y_bar": 0.0678571
+      },
+      "actual_SI": {
+        "W_total": {
+          "value": 0.028,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc statics.composite_centroid (procedure)"
+        },
+        "x_bar": {
+          "value": 0.15357142857142858,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc statics.composite_centroid (procedure)"
+        },
+        "y_bar": {
+          "value": 0.06785714285714285,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc statics.composite_centroid (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "W_total": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5.6e-05,
+          "passed": true
+        },
+        "x_bar": {
+          "absolute_error": 2.857142858414541e-08,
+          "relative_error": 1.8604654632402525e-07,
+          "allowed_absolute_error": 0.0003071428,
+          "passed": true
+        },
+        "y_bar": {
+          "absolute_error": 4.285714284846254e-08,
+          "relative_error": 6.315793461327191e-07,
+          "allowed_absolute_error": 0.0001357142,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03a3A = 0.028; \u03a3Ax = 0.002 + 0.0025 - 0.0002 = 0.0043 \u2192 x\u0304 = 0.153571; \u03a3Ay = 0.001 + 0.001 - 0.0001 = 0.0019 \u2192 \u0233 = 0.067857"
+      }
+    },
+    {
+      "id": "statics-022",
+      "calculator": "statics.mechanical_advantage",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F_out": "1 kN",
+        "F_in": "120 N",
+        "d_in": "1 m",
+        "d_out": "100 mm"
+      },
+      "solve_for": [
+        "MA",
+        "VR",
+        "eta"
+      ],
+      "expected_as_specified": {
+        "MA": 8.333333,
+        "VR": 10,
+        "eta": 0.8333333
+      },
+      "expected_SI": {
+        "MA": 8.333333,
+        "VR": 10.0,
+        "eta": 0.8333333
+      },
+      "actual_SI": {
+        "MA": {
+          "value": 8.333333333333334,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc statics.mechanical_advantage (symbolic)"
+        },
+        "VR": {
+          "value": 10.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc statics.mechanical_advantage (symbolic)"
+        },
+        "eta": {
+          "value": 0.8333333333333334,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc statics.mechanical_advantage (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "MA": {
+          "absolute_error": 3.333333342681044e-07,
+          "relative_error": 4.00000017121726e-08,
+          "allowed_absolute_error": 0.016666666,
+          "passed": true
+        },
+        "VR": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02,
+          "passed": true
+        },
+        "eta": {
+          "absolute_error": 3.333333331578814e-08,
+          "relative_error": 4.0000001578945826e-08,
+          "allowed_absolute_error": 0.0016666666000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "MA = 1000/120 = 8.3333; VR = 1/0.1 = 10; \u03b7 = 8.3333/10 = 0.83333"
+      }
+    }
+  ],
+  "passed": 22,
+  "failed": 0
+}

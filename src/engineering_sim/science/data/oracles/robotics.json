@@ -1,0 +1,610 @@
+{
+  "section": "robotics",
+  "cases": [
+    {
+      "calc": "robotics.serial_dof",
+      "inputs": {
+        "joints": [
+          "R",
+          "R",
+          "P",
+          "S"
+        ]
+      },
+      "expect": {
+        "dof": 6,
+        "n_joints": 4
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R=1, R=1, P=1, S=3 freedoms -> total 6; four joints"
+      }
+    },
+    {
+      "calc": "robotics.planar_2r_workspace",
+      "inputs": {
+        "L1": "0.6 m",
+        "L2": "0.2 m"
+      },
+      "expect": {
+        "R_max": "0.8 m",
+        "R_min": "0.4 m",
+        "A": "1.5079645 m^2"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "R_max = 0.6 + 0.2 = 0.8 m; R_min = |0.6 - 0.2| = 0.4 m; A = 4 pi L1 L2 = 4 pi x 0.6 x 0.2 = 1.50796 m^2"
+      }
+    },
+    {
+      "calc": "robotics.planar_2r_workspace",
+      "inputs": {
+        "L1": "0.6 m",
+        "A": "1.5079645 m^2"
+      },
+      "solve_for": [
+        "L2"
+      ],
+      "expect": {
+        "L2": "0.2 m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 4 pi L1 L2 -> L2 = 1.5079645/(4 pi x 0.6) = 1.5079645/7.539822 = 0.2 m"
+      }
+    },
+    {
+      "calc": "robotics.dh_forward",
+      "inputs": {
+        "dh": [
+          [
+            0.5,
+            0,
+            0,
+            30
+          ],
+          [
+            0.3,
+            0,
+            0,
+            60
+          ]
+        ],
+        "convention": "standard"
+      },
+      "expect": {
+        "pos": [
+          0.4330127,
+          0.55,
+          0
+        ],
+        "dof": 2
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Standard DH with alpha=0 is a planar arm: x = 0.5 cos30 + 0.3 cos90 = 0.433013; y = 0.5 sin30 + 0.3 sin90 = 0.25 + 0.3 = 0.55; z = 0; two joints"
+      }
+    },
+    {
+      "calc": "robotics.dh_forward",
+      "inputs": {
+        "dh": [
+          [
+            0.5,
+            30,
+            0.3,
+            45
+          ]
+        ],
+        "convention": "modified"
+      },
+      "expect": {
+        "pos": [
+          0.5,
+          -0.15,
+          0.2598076
+        ],
+        "dof": 1
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Modified (Craig) DH T = Rot_x(30)Trans_x(0.5)Rot_z(45)Trans_z(0.3): translation is [a, -d sin(alpha), d cos(alpha)] = [0.5, -0.3 x 0.5, 0.3 x 0.866025] = [0.5, -0.15, 0.259808]"
+      }
+    },
+    {
+      "calc": "robotics.homogeneous_transform",
+      "inputs": {
+        "translation": [
+          1,
+          2,
+          3
+        ],
+        "rotation": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            -1
+          ],
+          [
+            0,
+            1,
+            0
+          ]
+        ]
+      },
+      "expect": {
+        "T": [
+          [
+            1,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            -1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            3
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "T_inv": [
+          [
+            1,
+            0,
+            0,
+            -1
+          ],
+          [
+            0,
+            0,
+            1,
+            -3
+          ],
+          [
+            0,
+            -1,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = Rot_x(90). T = [R p; 0 1]. R^T = [[1,0,0],[0,0,1],[0,-1,0]]; -R^T p = -[1,3,-2] = [-1,-3,2]; T_inv = [R^T, -R^T p; 0, 1]"
+      }
+    },
+    {
+      "calc": "robotics.planar_2r_ik",
+      "inputs": {
+        "x": "0.5 m",
+        "y": "0.4 m",
+        "L1": "0.5 m",
+        "L2": "0.4 m"
+      },
+      "expect": {
+        "theta1": 0.0,
+        "theta2": "1.5707963 rad",
+        "theta1_b": "1.3494819 rad",
+        "theta2_b": "-1.5707963 rad"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "c2 = (0.25+0.16-0.25-0.16)/(2x0.5x0.4) = 0 -> theta2 = acos(0) = 90 deg (elbow-DOWN branch, theta2 > 0). Link 1 lies along +x so theta1 = atan2(0.4,0.5) - atan2(0.4, 0.5) = 0. Elbow-up branch: theta2_b = -90 deg; theta1_b = atan2(0.4,0.5) - atan2(-0.4,0.5) = 0.67474 + 0.67474 = 1.34948 rad"
+      }
+    },
+    {
+      "calc": "robotics.planar_2r_ik",
+      "inputs": {
+        "x": "0.5 m",
+        "y": "0.5 m",
+        "L1": "0.5 m",
+        "L2": "0.5 m"
+      },
+      "expect": {
+        "theta1": 0.0,
+        "theta2": "1.5707963 rad",
+        "elbow_a": [
+          0.5,
+          0.0
+        ],
+        "theta1_b": "1.5707963 rad",
+        "theta2_b": "-1.5707963 rad",
+        "elbow_b": [
+          0.0,
+          0.5
+        ]
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "c2 = 0 -> theta2 = +/-90 deg. Elbow-down branch theta2=+90: theta1 = atan2(0.5,0.5) - atan2(0.5, 0.5) = 0, elbow at (L1 cos0, L1 sin0) = (0.5, 0) BELOW the base-tip line y=x. Elbow-up branch theta2=-90: theta1 = 45 - atan2(-0.5,0.5) = 45 - (-45) = 90 deg, elbow at (0.5 cos90, 0.5 sin90) = (0, 0.5) ABOVE the line"
+      }
+    },
+    {
+      "calc": "robotics.planar_2r_ik",
+      "inputs": {
+        "x": "0.9 m",
+        "y": "0 m",
+        "L1": "0.5 m",
+        "L2": "0.4 m"
+      },
+      "expect": {
+        "theta1": 0.0,
+        "theta2": 0.0,
+        "theta1_b": 0.0,
+        "theta2_b": 0.0
+      },
+      "abs_tol": 1e-09,
+      "source": {
+        "kind": "hand",
+        "derivation": "Target at the outer workspace boundary (r = L1 + L2 = 0.9): c2 = 1 -> acos(1) = 0, both branches coincide at the straight pose theta1 = theta2 = 0"
+      }
+    },
+    {
+      "calc": "robotics.planar_3r_ik",
+      "inputs": {
+        "x": "0.5 m",
+        "y": "0.5 m",
+        "phi": "90 deg",
+        "L1": "0.5 m",
+        "L2": "0.5 m",
+        "L3": "0.5 m"
+      },
+      "expect": {
+        "theta1": "-1.0471976 rad",
+        "theta2": "2.0943951 rad",
+        "theta3": "0.5235988 rad",
+        "theta1_b": "1.0471976 rad",
+        "theta2_b": "-2.0943951 rad",
+        "theta3_b": "2.6179939 rad"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "phi = 90 deg so the wrist point is (0.5 - 0.5 cos90, 0.5 - 0.5 sin90) = (0.5, 0). 2R solve of (0.5,0) with L1=L2=0.5: c2 = (0.25 - 0.25 - 0.25)/0.5 = -0.5 -> theta2 = 120 deg; theta1 = 0 - atan2(0.4330, 0.25) = -60 deg; theta3 = 90 - (-60) - 120 = 30 deg. Branch b mirrors theta1=60, theta2=-120, theta3=150 deg"
+      }
+    },
+    {
+      "calc": "robotics.numeric_ik",
+      "inputs": {
+        "links": [
+          0.5,
+          0.4
+        ],
+        "guess": [
+          0.0,
+          0.0
+        ],
+        "target": [
+          0.3,
+          0.3
+        ]
+      },
+      "expect": {
+        "position": [
+          0.3,
+          0.3
+        ],
+        "error": 0.0
+      },
+      "rel_tol": 0.001,
+      "abs_tol": 1e-06,
+      "source": {
+        "kind": "hand",
+        "derivation": "A converged IK must put the tip on the target: position = [0.3, 0.3] and tip-to-target error < 1e-6. Independent check of the solver, not the angles"
+      }
+    },
+    {
+      "calc": "robotics.planar_jacobian",
+      "inputs": {
+        "links": [
+          0.5,
+          0.4
+        ],
+        "angles": [
+          0.5235988,
+          1.0471976
+        ],
+        "vel": [
+          0,
+          1
+        ]
+      },
+      "expect": {
+        "position": [
+          0.4330127,
+          0.65
+        ],
+        "joint_vel": [
+          2.3094011,
+          -3.7527767
+        ],
+        "det": 0.1732051,
+        "residual": 0.0
+      },
+      "rel_tol": 0.0005,
+      "abs_tol": 1e-09,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta = [30, 60] deg so theta1+theta2 = 90 deg. J = [[-L1 s1 - L2 s12, -L2 s12],[L1 c1 + L2 c12, L2 c12]] = [[-0.65, -0.4],[0.433013, 0]]; det = 0.4 x 0.433013 = 0.173205; J^-1 [0,1] = [0.4, -0.65]/det = [2.30940, -3.75278] rad/s; position = [0.433013, 0.65]. J is full rank so the min-norm solution is exact: residual ||J qd - v|| = 0"
+      }
+    },
+    {
+      "calc": "robotics.planar_jacobian",
+      "inputs": {
+        "links": [
+          0.5,
+          0.4
+        ],
+        "angles": [
+          0.5235988,
+          0.0
+        ],
+        "vel": [
+          0,
+          1
+        ]
+      },
+      "expect": {
+        "det": 0.0,
+        "residual": "0.5 m/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta2 = 0 puts the arm at a singularity (fully extended): the two Jacobian columns are both perpendicular to the arm (ratio 0.4/0.9), so det = 0 and the tip can only move perpendicular to the arm (direction 120 deg). The requested velocity [0, 1] = up has a component along the arm (30 deg) of |v| sin(30 deg) = 0.5 that cannot be produced at full extension; that radial component is the residual ||J qd - v|| = 0.5 m/s"
+      }
+    },
+    {
+      "calc": "robotics.planar_2r_dynamics",
+      "inputs": {
+        "L1": 1.0,
+        "m1": 1.0,
+        "m2": 1.0,
+        "lc1": 0.5,
+        "lc2": 0.5,
+        "I1": 0.1,
+        "I2": 0.1,
+        "theta1": 0.0,
+        "theta2": 0.0,
+        "qd1": 0.0,
+        "qd2": 0.0,
+        "qdd1": 0.0,
+        "qdd2": 0.0,
+        "g": 9.80665
+      },
+      "expect": {
+        "tau1": "19.6133 N*m",
+        "tau2": "4.903325 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Static horizontal pose (theta1=theta2=0, no motion, relative angles): gravity torque about each joint = g x (sum of mass x horizontal moment arm). tau1 = 9.80665(1x0.5 + 1x1.5) = 19.6133 N m; tau2 = 9.80665 x 1 x 0.5 = 4.90333 N m"
+      }
+    },
+    {
+      "calc": "robotics.planar_2r_dynamics",
+      "inputs": {
+        "L1": 1.0,
+        "m1": 1.0,
+        "m2": 1.0,
+        "lc1": 0.5,
+        "lc2": 0.5,
+        "I1": 0.1,
+        "I2": 0.1,
+        "theta1": 0.5235988,
+        "theta2": 0.5235988,
+        "qd1": 0.0,
+        "qd2": 0.0,
+        "qdd1": 0.0,
+        "qdd2": 0.0,
+        "g": 9.80665
+      },
+      "expect": {
+        "tau1": "15.190875 N*m",
+        "tau2": "2.4516625 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Static torques with RELATIVE theta2=30 deg (link 2 absolute = 60 deg): link-1 CoM at x = lc1 cos30 = 0.433013, link-2 CoM at x = L1 cos30 + lc2 cos60 = 0.866025 + 0.25 = 1.116025. tau1 = g(m1 lc1 cos30 + m2 (L1 cos30 + lc2 cos60)) = 9.80665(0.433013 + 1.116025) = 9.80665 x 1.549038 = 15.1909; tau2 = g m2 lc2 cos60 = 9.80665 x 0.25 = 2.45166 (an absolute-angle theta2 would give a different value, so this pins the relative convention)"
+      }
+    },
+    {
+      "calc": "robotics.payload_capacity",
+      "inputs": {
+        "L1": 1.0,
+        "L2": 1.0,
+        "theta1": 0.0,
+        "theta2": 0.0,
+        "m1": 1.0,
+        "m2": 1.0,
+        "tau1_max": 50.0,
+        "tau2_max": 12.0,
+        "g": 9.80665
+      },
+      "expect": {
+        "m_payload_max": "0.7236595 kg",
+        "m_cap_1": "1.5492905 kg",
+        "m_cap_2": "0.7236595 kg",
+        "tau1_link": "19.6133 N*m",
+        "tau2_link": "4.903325 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Horizontal pose: tau1_link = 9.80665(0.5 + 1.5) = 19.6133; tau2_link = 9.80665 x 0.5 = 4.90333. m_cap_1 = (50 - 19.6133)/(9.80665 x 2) = 1.54929; m_cap_2 = (12 - 4.90333)/9.80665 = 0.723659; max = min = 0.723659 kg"
+      }
+    },
+    {
+      "calc": "robotics.payload_capacity",
+      "inputs": {
+        "L1": 1.0,
+        "L2": 1.0,
+        "theta1": "30 deg",
+        "theta2": "30 deg",
+        "m1": 1.0,
+        "m2": 1.0,
+        "tau1_max": 50.0,
+        "tau2_max": 20.0,
+        "g": 9.80665
+      },
+      "expect": {
+        "m_payload_max": "2.5984458 kg",
+        "m_cap_1": "2.5984458 kg",
+        "m_cap_2": "3.5788649 kg",
+        "tau1_link": "15.190875 N*m",
+        "tau2_link": "2.4516625 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta1=30, theta12=60 deg: c1=0.866025, c12=0.5. tau1_link = 9.80665(0.5x0.866025 + 0.866025 + 0.5x0.5) = 9.80665 x 1.549038 = 15.1909; tau2_link = 9.80665 x 0.25 = 2.45166. arm1 = 0.866025 + 0.5 = 1.36603, arm2 = 0.5. m_cap_1 = (50-15.1909)/(9.80665x1.36603) = 2.59845; m_cap_2 = (20-2.45166)/(9.80665x0.5) = 3.57886"
+      }
+    },
+    {
+      "calc": "robotics.trajectory_cubic",
+      "inputs": {
+        "q0": 0.0,
+        "v0": 0.0,
+        "q1": 1.0,
+        "v1": 0.0,
+        "T": 1.0,
+        "t": 0.5
+      },
+      "expect": {
+        "q_t": 0.5,
+        "qd_t": 1.5,
+        "qdd_t": 0.0
+      },
+      "rel_tol": 0.0005,
+      "abs_tol": 1e-12,
+      "source": {
+        "kind": "hand",
+        "derivation": "Rest-to-rest cubic q = 3t^2 - 2t^3 over T=1: q(0.5) = 0.75 - 0.25 = 0.5; qd = 6t - 6t^2 = 3 - 1.5 = 1.5; qdd = 6 - 12t = 0 (coordinate is unit-agnostic, so plain numbers)"
+      }
+    },
+    {
+      "calc": "robotics.trajectory_cubic",
+      "inputs": {
+        "q0": 0.0,
+        "v0": 0.0,
+        "q1": 2.0,
+        "v1": 1.0,
+        "T": 2.0,
+        "t": 1.0
+      },
+      "expect": {
+        "q_t": 0.75,
+        "qd_t": 1.25,
+        "qdd_t": 0.5
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Boundary q(2)=2, qd(2)=1 with q0=v0=0 gives q = t^2 - 0.25 t^3 (solve 4a2+8a3=2, 4a2+12a3=1 -> a2=1, a3=-0.25). q(1)=0.75; qd(1)=2-0.75=1.25; qdd(1)=2-1.5=0.5"
+      }
+    },
+    {
+      "calc": "robotics.trajectory_quintic",
+      "inputs": {
+        "q0": 0.0,
+        "v0": 0.0,
+        "a0": 0.0,
+        "q1": 1.0,
+        "v1": 0.0,
+        "a1": 0.0,
+        "T": 1.0,
+        "t": 0.5
+      },
+      "expect": {
+        "q_t": 0.5,
+        "qd_t": 1.875,
+        "qdd_t": 0.0
+      },
+      "rel_tol": 0.0005,
+      "abs_tol": 1e-12,
+      "source": {
+        "kind": "hand",
+        "derivation": "Rest-to-rest quintic q = 10t^3 - 15t^4 + 6t^5: q(0.5) = 1.25 - 0.9375 + 0.1875 = 0.5; qd = 30t^2 - 60t^3 + 30t^4 = 7.5 - 7.5 + 1.875 = 1.875; qdd = 60t - 180t^2 + 120t^3 = 30 - 45 + 15 = 0"
+      }
+    },
+    {
+      "calc": "robotics.trajectory_quintic",
+      "inputs": {
+        "q0": 0.0,
+        "v0": 0.0,
+        "a0": 0.0,
+        "q1": 1.0,
+        "v1": 0.0,
+        "a1": 0.0,
+        "T": 2.0,
+        "t": 1.0
+      },
+      "expect": {
+        "q_t": 0.5,
+        "qd_t": 0.9375,
+        "qdd_t": 0.0
+      },
+      "rel_tol": 0.0005,
+      "abs_tol": 1e-12,
+      "source": {
+        "kind": "hand",
+        "derivation": "Same rest-to-rest quintic scaled to T=2: q(t) = f(t/2) with f(u) = 10u^3 - 15u^4 + 6u^5. At t=1 (u=0.5): q = 0.5; qd = f'(0.5)/2 = 1.875/2 = 0.9375; qdd = f''(0.5)/4 = 0"
+      }
+    },
+    {
+      "calc": "robotics.payload_capacity",
+      "inputs": {
+        "L1": "1 m",
+        "L2": "1 m",
+        "theta1": "100 deg",
+        "theta2": "-150 deg",
+        "m1": "5 kg",
+        "m2": "1 kg",
+        "tau1_max": "30 N*m",
+        "tau2_max": "400 N*m",
+        "g": "9.80665 m/s^2"
+      },
+      "expect": {
+        "m_payload_max": "7.13119 kg",
+        "tau1_link": "-2.80838 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Opposite-sign joint-1 pose: c1 = cos100° = −0.173648, c12 = cos(−50°) = 0.642788; arm1 = c1 + c12 = 0.469140 m; τ1_link = g[5·0.5·c1 + 1·(c1 + 0.5·c12)] = 9.80665·(−0.286374) = −2.80838 N·m. |τ_link + m g arm| ≤ 30 → m ≤ (30 + 2.80838)/(9.80665·0.469140) = 7.13119 kg (the other bound is negative). Joint 2 (arm 0.642788, τ_link +3.15180, limit 400) allows 62.96 kg, so joint 1 governs."
+      }
+    }
+  ]
+}

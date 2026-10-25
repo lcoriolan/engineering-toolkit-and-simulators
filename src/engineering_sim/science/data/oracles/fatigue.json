@@ -1,0 +1,391 @@
+{
+  "section": "fatigue",
+  "cases": [
+    {
+      "calc": "fatigue.endurance_prime",
+      "inputs": {
+        "Sut": "600 MPa"
+      },
+      "expect": {
+        "Se_prime": "300 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Se′ = 0.5·Sut = 0.5·600 = 300 MPa (steel, below the 1400 MPa cap)"
+      }
+    },
+    {
+      "calc": "fatigue.endurance_prime",
+      "inputs": {
+        "Sut": "1600 MPa"
+      },
+      "expect": {
+        "Se_prime": "700 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Steel above 1400 MPa: the endurance limit is capped at Se′ = 700 MPa (0.5·1600 = 800 would exceed the cap)"
+      }
+    },
+    {
+      "calc": "fatigue.marin_surface",
+      "inputs": {
+        "a": 4.51,
+        "b": -0.265,
+        "Sut": "600 MPa"
+      },
+      "expect": {
+        "ka": 0.827878
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "machined finish a=4.51, b=−0.265: ka = 4.51·(600)^−0.265 = 4.51·exp(−0.265·ln600) = 4.51·exp(−1.69515) = 4.51·0.183575 = 0.82788"
+      }
+    },
+    {
+      "calc": "fatigue.marin_size",
+      "inputs": {
+        "d": "20 mm"
+      },
+      "expect": {
+        "kb": 0.899936
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "20 mm in the 2.79–51 mm range: kb = 1.24·20^−0.107 = 1.24·exp(−0.107·ln20) = 1.24·exp(−0.320543) = 1.24·0.725755 = 0.89994"
+      }
+    },
+    {
+      "calc": "fatigue.marin_size",
+      "inputs": {
+        "d": "100 mm"
+      },
+      "expect": {
+        "kb": 0.732786
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "100 mm in the 51–254 mm range: kb = 1.51·100^−0.157 = 1.51·exp(−0.157·ln100) = 1.51·exp(−0.723032) = 1.51·0.485289 = 0.73279"
+      }
+    },
+    {
+      "calc": "fatigue.endurance_limit_corrected",
+      "inputs": {
+        "ka": 0.828,
+        "kb": 0.9,
+        "kc": 0.85,
+        "kd": 1.0,
+        "ke": 0.868,
+        "kf": 1.0,
+        "Se_prime": "300 MPa"
+      },
+      "expect": {
+        "Se": "164.942568 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Se = 0.828·0.9·0.85·1.0·0.868·1.0·300 = 0.828·0.9 = 0.7452; ·0.85 = 0.633420; ·0.868 = 0.549809; ·300 = 164.943 MPa"
+      }
+    },
+    {
+      "calc": "fatigue.endurance_limit_corrected",
+      "inputs": {
+        "ka": 0.828,
+        "kb": 0.9,
+        "kc": 0.85,
+        "kd": 1.0,
+        "ke": 0.868,
+        "kf": 1.0,
+        "Se": "164.942568 MPa"
+      },
+      "solve_for": [
+        "Se_prime"
+      ],
+      "expect": {
+        "Se_prime": "300 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Se′ = Se/(ka·kb·kc·kd·ke·kf) = 164.942568/0.549809 = 300 MPa"
+      }
+    },
+    {
+      "calc": "fatigue.sn_power",
+      "inputs": {
+        "a": "1.25 GPa",
+        "b": -0.13265,
+        "N": 100000
+      },
+      "expect": {
+        "S": "271.431354 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "S = a·N^b = 1.25e9·(1e5)^−0.13265 = 1.25e9·exp(−0.13265·ln1e5) = 1.25e9·exp(−1.527182) = 1.25e9·0.217145 = 271.43 MPa"
+      }
+    },
+    {
+      "calc": "fatigue.sn_power",
+      "inputs": {
+        "a": "1.25 GPa",
+        "b": -0.13265,
+        "N": 10000000
+      },
+      "expect": {
+        "S": "147.353350 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "S = a·N^b = 1.25e9·(1e7)^−0.13265 = 1.25e9·exp(−0.13265·ln1e7) = 1.25e9·0.117883 = 147.35 MPa (N outside 10³–10⁶: the calculator warns)"
+      }
+    },
+    {
+      "calc": "fatigue.sn_power",
+      "inputs": {
+        "a": "1.25 GPa",
+        "b": -0.13265,
+        "S": "271.431354 MPa"
+      },
+      "solve_for": [
+        "N"
+      ],
+      "expect": {
+        "N": 100000
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "N = (S/a)^(1/b) = (271.431354e6/1.25e9)^(−1/0.13265) = (0.217145)^(−7.53864) = 100000"
+      }
+    },
+    {
+      "calc": "fatigue.sn_constants",
+      "inputs": {
+        "S1": "500 MPa",
+        "N1": 1000,
+        "S2": "200 MPa",
+        "N2": 1000000
+      },
+      "expect": {
+        "a": "1.25 GPa",
+        "b": -0.132647
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "b = ln(500/200)/ln(1000/1e6) = ln2.5/ln0.001 = 0.916291/−6.907755 = −0.132647; a = 500e6/1000^−0.132647 = 500e6·exp(0.132647·ln1000) = 500e6·exp(0.916291) = 500e6·2.5 = 1.25 GPa"
+      }
+    },
+    {
+      "calc": "fatigue.mean_alternating",
+      "inputs": {
+        "sigma_max": "200 MPa",
+        "sigma_min": "-100 MPa"
+      },
+      "expect": {
+        "sigma_m": "50 MPa",
+        "sigma_a": "150 MPa",
+        "R": -0.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σm = (200−100)/2 = 50 MPa; σa = (200+100)/2 = 150 MPa; R = −100/200 = −0.5"
+      }
+    },
+    {
+      "calc": "fatigue.mean_alternating",
+      "inputs": {
+        "sigma_max": "200 MPa",
+        "R": -0.5
+      },
+      "solve_for": [
+        "sigma_min",
+        "sigma_m",
+        "sigma_a"
+      ],
+      "expect": {
+        "sigma_min": "-100 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σmin = R·σmax = −0.5·200 = −100 MPa"
+      }
+    },
+    {
+      "calc": "fatigue.fatigue_criteria",
+      "inputs": {
+        "sigma_a": "100 MPa",
+        "sigma_m": "150 MPa",
+        "Se": "180 MPa",
+        "Sut": "600 MPa",
+        "Sy": "400 MPa"
+      },
+      "expect": {
+        "n_goodman": 1.241379,
+        "n_gerber": 1.534944,
+        "n_soderberg": 1.074627,
+        "n_asme": 1.491928,
+        "n_langer": 1.6
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Goodman 1/(100/180 + 150/600) = 1/0.805556 = 1.24138; Gerber: 0.0625·n² + 0.55556·n − 1 = 0 → n = (−0.55556 + sqrt(0.308642 + 0.25))/0.125 = (−0.55556 + 0.747425)/0.125 = 1.53494; Soderberg 1/(100/180 + 150/400) = 1/0.930556 = 1.07463; ASME 1/sqrt((100/180)² + (150/400)²) = 1/sqrt(0.308642 + 0.140625) = 1/0.670264 = 1.49193; Langer 400/250 = 1.6"
+      }
+    },
+    {
+      "calc": "fatigue.fatigue_criteria",
+      "inputs": {
+        "sigma_a": "100 MPa",
+        "sigma_m": "-50 MPa",
+        "Se": "180 MPa",
+        "Sut": "600 MPa",
+        "Sy": "400 MPa"
+      },
+      "expect": {
+        "n_goodman": 1.8,
+        "n_gerber": 1.8,
+        "n_soderberg": 1.8,
+        "n_asme": 1.8,
+        "n_langer": 2.666667
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Compressive mean stress: Goodman/Gerber/Soderberg/ASME reduce to Se/σa = 180/100 = 1.8; Langer first-cycle yield n_y = Sy/(σa + |σm|) = 400/(100+50) = 2.6667"
+      }
+    },
+    {
+      "calc": "fatigue.fatigue_criteria",
+      "inputs": {
+        "sigma_a": "100 MPa",
+        "sigma_m": "-150 MPa",
+        "Se": "180 MPa",
+        "Sut": "600 MPa",
+        "Sy": "400 MPa"
+      },
+      "expect": {
+        "n_goodman": 1.8,
+        "n_gerber": 1.8,
+        "n_soderberg": 1.8,
+        "n_asme": 1.8,
+        "n_langer": 1.6
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Compressive mean stress: the four fatigue criteria give Se/σa = 180/100 = 1.8; Langer n_y = Sy/(σa + |σm|) = 400/(100+150) = 1.6 (returns a value, not 'no admissible solution')"
+      }
+    },
+    {
+      "calc": "fatigue.fatigue_criteria",
+      "inputs": {
+        "sigma_a": "100 MPa",
+        "sigma_m": "150 MPa",
+        "Sut": "600 MPa",
+        "Sy": "400 MPa",
+        "n_goodman": 1.241379
+      },
+      "solve_for": [
+        "Se"
+      ],
+      "expect": {
+        "Se": "180 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "From n_goodman = 1/(σa/Se + σm/Sut): Se = σa/(1/n − σm/Sut) = 100/(1/1.241379 − 150/600) = 100/(0.805556 − 0.25) = 180 MPa"
+      }
+    },
+    {
+      "calc": "fatigue.miner_rule",
+      "inputs": {
+        "blocks": [
+          [
+            5000,
+            100000
+          ],
+          [
+            20000,
+            200000
+          ]
+        ]
+      },
+      "expect": {
+        "D": 0.15,
+        "life": 6.666667
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 5000/100000 + 20000/200000 = 0.05 + 0.10 = 0.15; life = 1/0.15 = 6.6667"
+      }
+    },
+    {
+      "calc": "fatigue.coffin_manson",
+      "inputs": {
+        "sigma_fp": "1000 MPa",
+        "b": -0.09,
+        "eps_fp": 0.6,
+        "c": -0.6,
+        "E": "200 GPa",
+        "Nf": 1000
+      },
+      "expect": {
+        "eps_a": 0.0087966
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "2Nf = 2000: εa = (1000e6/200e9)·2000^−0.09 + 0.6·2000^−0.6 = 0.005·exp(−0.09·ln2000) + 0.6·exp(−0.6·ln2000) = 0.005·0.504636 + 0.6·0.010454 = 0.0025232 + 0.0062724 = 0.0087966"
+      }
+    },
+    {
+      "calc": "fatigue.neuber",
+      "inputs": {
+        "Kf": 2.0,
+        "S": "300 MPa",
+        "E": "200 GPa",
+        "Kp": "1200 MPa",
+        "np": 0.15
+      },
+      "expect": {
+        "sigma": "458.368017 MPa",
+        "eps": 0.00392698,
+        "K_sigma": 1.527893,
+        "K_eps": 2.617984,
+        "e_nom": 0.0015
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Solve σ(σ/E + (σ/K′)⁽¹/ⁿ′⁾) = (Kf·S)²/E = (600e6)²/200e9 = 1.8e6 by bisection (plain Python math, 200 steps): σ = 458.368017 MPa. Then ε = σ/E + (σ/K′)⁽¹/ⁿ′⁾ = 0.0022918 + (0.381973)^6.6667 = 0.0022918 + 0.0016351 = 0.0039270; Kσ = 458.368/300 = 1.527893; e = 300/200000 = 0.0015; Kε = 0.0039270/0.0015 = 2.61798"
+      }
+    },
+    {
+      "calc": "fatigue.welded_fatigue",
+      "inputs": {
+        "FAT": "80 MPa",
+        "Delta_sigma": "100 MPa",
+        "m": 3.0
+      },
+      "expect": {
+        "N": 1024000
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "N = 2e6·(FAT/Δσ)^m = 2e6·(80/100)³ = 2e6·0.512 = 1.024e6 cycles"
+      }
+    },
+    {
+      "calc": "fatigue.welded_fatigue",
+      "inputs": {
+        "FAT": "80 MPa",
+        "Delta_sigma": "100 MPa",
+        "N": 1024000
+      },
+      "solve_for": [
+        "m"
+      ],
+      "expect": {
+        "m": 3.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "m = ln(N/2e6)/ln(FAT/Δσ) = ln0.512/ln0.8 = −0.669431/−0.223144 = 3.0"
+      }
+    }
+  ]
+}

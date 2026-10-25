@@ -1,0 +1,679 @@
+{
+  "section": "materials_sci",
+  "cases": [
+    {
+      "calc": "materials_sci.atomic_packing_factor",
+      "inputs": {
+        "n": 4,
+        "r": "0.127809 nm",
+        "a": "0.3615 nm"
+      },
+      "expect": {
+        "APF": 0.74048
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "FCC: r = a/(2 sqrt 2) = 0.3615/2.828427 = 0.127809 nm. APF = n (4/3) pi r^3 / a^3 = 4 (4/3) pi (1/(2 sqrt 2))^3 = (16 pi/3)/(16 sqrt 2) = pi/(3 sqrt 2) = 0.74048."
+      }
+    },
+    {
+      "calc": "materials_sci.atomic_packing_factor",
+      "inputs": {
+        "n": 2,
+        "r": "0.12412 nm",
+        "a": "0.28665 nm"
+      },
+      "expect": {
+        "APF": 0.68017
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "cited",
+        "ref": "BCC landmark: APF = sqrt(3) pi/8 = 0.68017 (universal textbook result; recalled). Input r = a sqrt(3)/4 for BCC."
+      }
+    },
+    {
+      "calc": "materials_sci.crystal_density",
+      "inputs": {
+        "n": 4,
+        "A_am": "63.55 g/mol",
+        "a": "0.3615 nm"
+      },
+      "expect": {
+        "rho": "8.9351 g/cm^3"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Copper FCC: rho = n A/(N_A a^3) = 4 x 0.06355/(6.02214076e23 x (0.3615e-9)^3) = 0.2542/(6.02214076e23 x 4.7241e-29) = 0.2542/2.8451e-5 = 8935.1 kg/m^3 = 8.9351 g/cm^3"
+      }
+    },
+    {
+      "calc": "materials_sci.miller_indices",
+      "inputs": {
+        "intercepts": [
+          0.5,
+          0.25,
+          1
+        ]
+      },
+      "expect": {
+        "miller_indices": [
+          2,
+          4,
+          1
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Reciprocal intercepts: 1/0.5 : 1/0.25 : 1/1 = 2 : 4 : 1 (already smallest integers)"
+      }
+    },
+    {
+      "calc": "materials_sci.miller_indices",
+      "inputs": {
+        "intercepts": [
+          1,
+          1,
+          1
+        ]
+      },
+      "expect": {
+        "miller_indices": [
+          1,
+          1,
+          1
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Reciprocals 1:1:1 -> (111)"
+      }
+    },
+    {
+      "calc": "materials_sci.interplanar_spacing_cubic",
+      "inputs": {
+        "a": "0.3615 nm",
+        "h": 1,
+        "k": 1,
+        "l": 1
+      },
+      "expect": {
+        "d": "0.208712 nm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "d = a/sqrt(h^2+k^2+l^2) = 0.3615e-9/sqrt(3) = 0.3615e-9/1.73205 = 2.08712e-10 m"
+      }
+    },
+    {
+      "calc": "materials_sci.bragg_law",
+      "inputs": {
+        "n": 1,
+        "lam": "0.154 nm",
+        "theta": "20 deg"
+      },
+      "expect": {
+        "d": "0.225133 nm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "d = n lambda/(2 sin theta) = 1 x 0.154e-9/(2 x sin 20°) = 0.154e-9/(2 x 0.342020) = 0.154e-9/0.684040 = 2.25133e-10 m"
+      }
+    },
+    {
+      "calc": "materials_sci.bragg_law",
+      "inputs": {
+        "n": 1,
+        "lam": "0.154 nm",
+        "d": "0.225133 nm"
+      },
+      "solve_for": [
+        "theta"
+      ],
+      "expect": {
+        "theta": "20 deg"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "sin theta = n lambda/(2d) = 0.154e-9/(2 x 0.225133e-9) = 0.342020 -> theta = 20°"
+      }
+    },
+    {
+      "calc": "materials_sci.diffusion_arrhenius",
+      "inputs": {
+        "D0": "2.8e-5 m^2/s",
+        "Q": "251 kJ/mol",
+        "T": "1200 K"
+      },
+      "expect": {
+        "D": "3.3237e-16 m^2/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "D = D0 exp(-Q/RT) = 2.8e-5 exp(-251000/(8.314462618 x 1200)) = 2.8e-5 exp(-25.1570) = 2.8e-5 x 1.18705e-11 = 3.3237e-16 m^2/s"
+      }
+    },
+    {
+      "calc": "materials_sci.fick_first_law",
+      "inputs": {
+        "D": "2e-9 m^2/s",
+        "C1": "5 kg/m^3",
+        "C2": "1 kg/m^3",
+        "x": "2 mm"
+      },
+      "expect": {
+        "J": "4e-6 kg/(m^2*s)"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "J = D(C1 - C2)/x = 2e-9 x (5 - 1)/0.002 = 2e-9 x 4/0.002 = 4e-6 kg/(m^2 s)"
+      }
+    },
+    {
+      "calc": "materials_sci.fick_second_law",
+      "inputs": {
+        "C0": "0.2 kg/m^3",
+        "Cs": "1 kg/m^3",
+        "D": "3e-11 m^2/s",
+        "x": "0.5 mm",
+        "t": "1 h"
+      },
+      "expect": {
+        "C": "0.42560 kg/m^3",
+        "diffusion_length": "0.32863 mm"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "sqrt(D t) = sqrt(3e-11 x 3600) = sqrt(1.08e-7) = 3.28633e-4 m; C = Cs - (Cs - C0) erf(x/(2 sqrt(D t))) = 1 - 0.8 erf(0.0005/(2 x 3.28633e-4)) = 1 - 0.8 erf(0.76073) = 1 - 0.8 x 0.71800 = 0.42560 kg/m^3"
+      }
+    },
+    {
+      "calc": "materials_sci.lever_rule",
+      "inputs": {
+        "C_0": 0.35,
+        "C_alpha": 0.1,
+        "C_beta": 0.9
+      },
+      "expect": {
+        "W_alpha": 0.6875,
+        "W_beta": 0.3125
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "W_alpha = (C_beta - C_0)/(C_beta - C_alpha) = (0.9 - 0.35)/(0.9 - 0.1) = 0.55/0.8 = 0.6875; W_beta = (0.35 - 0.1)/0.8 = 0.3125"
+      }
+    },
+    {
+      "calc": "materials_sci.lever_rule",
+      "inputs": {
+        "W_alpha": 0.6875,
+        "C_alpha": 0.1,
+        "C_beta": 0.9
+      },
+      "solve_for": [
+        "C_0",
+        "W_beta"
+      ],
+      "expect": {
+        "C_0": 0.35
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "C_0 = C_beta - W_alpha(C_beta - C_alpha) = 0.9 - 0.6875 x 0.8 = 0.9 - 0.55 = 0.35; W_beta = 1 - W_alpha = 0.3125"
+      }
+    },
+    {
+      "calc": "materials_sci.hall_petch",
+      "inputs": {
+        "sigma0": "50 MPa",
+        "k": "0.74 MPa*m^0.5",
+        "d": "100 um"
+      },
+      "expect": {
+        "sigma_y": "124 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma_y = sigma0 + k/sqrt(d) = 50e6 + 0.74e6/sqrt(100e-6) = 50e6 + 0.74e6/0.01 = 50e6 + 74e6 = 124 MPa"
+      }
+    },
+    {
+      "calc": "materials_sci.hall_petch",
+      "inputs": {
+        "sigma_y": "124 MPa",
+        "sigma0": "50 MPa",
+        "k": "0.74 MPa*m^0.5"
+      },
+      "solve_for": [
+        "d"
+      ],
+      "expect": {
+        "d": "100 um"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "sqrt(d) = k/(sigma_y - sigma0) = 0.74e6/(124e6 - 50e6) = 0.74e6/74e6 = 0.01 -> d = 1e-4 m = 100 um"
+      }
+    },
+    {
+      "calc": "materials_sci.true_stress_strain",
+      "inputs": {
+        "sigma_eng": "300 MPa",
+        "eps_eng": 0.1
+      },
+      "expect": {
+        "sigma_true": "330 MPa",
+        "eps_true": 0.09531
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma_true = sigma_eng(1 + eps) = 300 x 1.1 = 330 MPa; eps_true = ln(1.1) = 0.095310"
+      }
+    },
+    {
+      "calc": "materials_sci.strain_hardening",
+      "inputs": {
+        "sigma1": "250 MPa",
+        "eps1": 0.05,
+        "sigma2": "350 MPa",
+        "eps2": 0.2
+      },
+      "expect": {
+        "n": 0.242713,
+        "K": "517.27 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "n = ln(sigma2/sigma1)/ln(eps2/eps1) = ln(350/250)/ln(0.2/0.05) = ln(1.4)/ln(4) = 0.336472/1.386294 = 0.242713; K = sigma1/eps1^n = 250e6/0.05^0.242713 = 250e6/0.483297 = 5.1727e8 Pa"
+      }
+    },
+    {
+      "calc": "materials_sci.ductility",
+      "inputs": {
+        "L_0": "50 mm",
+        "L_f": "60 mm",
+        "A_0": "100 mm^2",
+        "A_f": "60 mm^2"
+      },
+      "expect": {
+        "EL": 0.2,
+        "RA": 0.4
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "EL = (60 - 50)/50 = 0.2; RA = (100 - 60)/100 = 0.4"
+      }
+    },
+    {
+      "calc": "materials_sci.brinell_hardness",
+      "inputs": {
+        "P": "30 kN",
+        "D": "10 mm",
+        "d": "5 mm"
+      },
+      "expect": {
+        "HB": "1.4255 GPa"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "HB = 2P/(pi D (D - sqrt(D^2 - d^2))) = 2 x 30000/(pi x 0.01 x (0.01 - sqrt(1e-4 - 2.5e-5))) = 60000/(pi x 0.01 x (0.01 - 0.008660254)) = 60000/(pi x 0.01 x 0.001339746) = 60000/4.2090e-5 = 1.4255e9 Pa (conventional HB number = 145.4 kgf/mm^2)"
+      }
+    },
+    {
+      "calc": "materials_sci.hardness_uts",
+      "inputs": {
+        "HB": 200
+      },
+      "expect": {
+        "UTS": "690 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "UTS = 3.45 MPa x HB = 3.45 x 200 = 690 MPa (approximate, steels)"
+      }
+    },
+    {
+      "calc": "materials_sci.charpy_impact",
+      "inputs": {
+        "E": "50 J",
+        "A": "80 mm^2"
+      },
+      "expect": {
+        "toughness": "625 kJ/m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "toughness = E/A = 50/(80e-6) = 6.25e5 J/m^2 = 625 kJ/m^2"
+      }
+    },
+    {
+      "calc": "materials_sci.creep_rate",
+      "inputs": {
+        "A": 1e-15,
+        "sigma": "100 MPa",
+        "n": 3,
+        "Q": "280 kJ/mol",
+        "T": "1000 K"
+      },
+      "expect": {
+        "edot": "2.3691e-6 1/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "edot = A sigma^n exp(-Q/RT) = 1e-15 x (100e6)^3 x exp(-280000/(8.314462618 x 1000)) = 1e-15 x 1e24 x exp(-33.6763) = 1e9 x 2.36912e-15 = 2.3691e-6 1/s"
+      }
+    },
+    {
+      "calc": "materials_sci.larson_miller",
+      "inputs": {
+        "T": "900 K",
+        "C": 20,
+        "t_r": 1000
+      },
+      "expect": {
+        "LMP": "20700 K"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "LMP = T(C + log10 t_r) = 900 x (20 + 3) = 900 x 23 = 20700 K"
+      }
+    },
+    {
+      "calc": "materials_sci.larson_miller",
+      "inputs": {
+        "LMP": "20700 K",
+        "T": "900 K",
+        "C": 20
+      },
+      "solve_for": [
+        "t_r"
+      ],
+      "expect": {
+        "t_r": 1000
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "t_r = 10^(LMP/T - C) = 10^(23 - 20) = 1000 hours"
+      }
+    },
+    {
+      "calc": "materials_sci.corrosion_rate",
+      "inputs": {
+        "W": "1 g",
+        "rho": "7.8 g/cm^3",
+        "A": "100 cm^2",
+        "t": "365 day"
+      },
+      "expect": {
+        "CR": "4.0654e-13 m/s"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "CR = W/(rho A t) = 1e-3/(7800 x 0.01 x 3.1536e7) = 1e-3/2.45981e9 = 4.0654e-13 m/s (about 0.0128 mm/yr)"
+      }
+    },
+    {
+      "calc": "materials_sci.galvanic_potential",
+      "inputs": {
+        "E_cathode": "-0.13 V",
+        "E_anode": "-0.76 V"
+      },
+      "expect": {
+        "E_cell": "0.63 V"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "E_cell = E_cathode - E_anode = -0.13 - (-0.76) = 0.63 V"
+      }
+    },
+    {
+      "calc": "materials_sci.composite_modulus",
+      "inputs": {
+        "V_f": 0.4,
+        "E_f": "230 GPa",
+        "E_m": "3.5 GPa"
+      },
+      "expect": {
+        "E_L": "94.1 GPa",
+        "E_T": "5.7747 GPa",
+        "V_m": 0.6
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V_m = 1 - 0.4 = 0.6; E_L = 0.4 x 230e9 + 0.6 x 3.5e9 = 92e9 + 2.1e9 = 94.1 GPa; E_T = 1/(0.4/230e9 + 0.6/3.5e9) = 1/(1.73913e-12 + 1.71429e-10) = 1/1.73168e-10 = 5.7747e9 Pa"
+      }
+    },
+    {
+      "calc": "materials_sci.composite_strength",
+      "inputs": {
+        "V_f": 0.4,
+        "sigma_f": "3.5 GPa",
+        "sigma_m": "30 MPa"
+      },
+      "expect": {
+        "sigma_L": "1.418 GPa",
+        "V_m": 0.6
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma_L = V_f sigma_f + V_m sigma_m = 0.4 x 3.5e9 + 0.6 x 30e6 = 1.4e9 + 1.8e7 = 1.418e9 Pa"
+      }
+    },
+    {
+      "calc": "materials_sci.elastic_bounds",
+      "inputs": {
+        "K1": "165 GPa",
+        "G1": "80 GPa",
+        "K2": "2.5 GPa",
+        "G2": "1 GPa",
+        "f1": 0.4
+      },
+      "expect": {
+        "E_voigt": "84.239 GPa",
+        "E_reuss": "4.3744 GPa",
+        "K_voigt": "67.5 GPa",
+        "K_reuss": "4.125 GPa",
+        "K_hs_upper": "36.835 GPa",
+        "K_hs_lower": "4.9589 GPa",
+        "G_voigt": "32.6 GPa",
+        "G_reuss": "1.6529 GPa",
+        "G_hs_upper": "21.552 GPa",
+        "G_hs_lower": "2.3587 GPa"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Stiffer phase 1 (K1=165, G1=80 GPa), softer phase 2, f1=0.4, f2=0.6. Voigt: K = 0.4x165 + 0.6x2.5 = 67.5 GPa, G = 0.4x80 + 0.6x1 = 32.6 GPa. Reuss: K = 1/(0.4/165 + 0.6/2.5) = 1/2.42424e-10 = 4.125 GPa, G = 1/(0.4/80 + 0.6/1) = 1/6.05e-10 = 1.6529 GPa. Hashin-Shtrikman (phase 2 stiffer convention): K_up = 165 + 0.6/(1/(2.5-165) + 3x0.4/(3x165+4x80)) = 165 + 0.6/(-4.68146e-12) = 165 - 128.16 = 36.835 GPa; K_lo = 2.5 + 0.4/(1/(165-2.5) + 3x0.6/(3x2.5+4x1)) = 2.5 + 0.4/1.62676e-10 = 2.5 + 2.4589 = 4.9589 GPa; G_up = 80 + 0.6/(1/(1-80) + 6x0.4x(165+160)/(5x80x(495+320))) = 80 + 0.6/(-1.02656e-11) = 80 - 58.448 = 21.552 GPa; G_lo = 1 + 0.4/(1/(80-1) + 6x0.6x(2.5+2)/(5x1x(7.5+4))) = 1 + 0.4/2.94297e-10 = 1 + 1.3592 = 2.3587 GPa. E = 9KG/(3K+G) for each pair."
+      }
+    },
+    {
+      "calc": "materials_sci.laminate_clt",
+      "inputs": {
+        "plies": [
+          [
+            0.001,
+            0
+          ]
+        ],
+        "E1": "100 GPa",
+        "E2": "10 GPa",
+        "nu12": 0.3,
+        "G12": "5 GPa"
+      },
+      "expect": {
+        "E_x": "100 GPa",
+        "E_y": "10 GPa",
+        "nu_xy": 0.3,
+        "G_xy": "5 GPa",
+        "h": "1 mm",
+        "A": [
+          [
+            100908173.56,
+            3027245.21,
+            0.0
+          ],
+          [
+            3027245.21,
+            10090817.36,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            5000000.0
+          ]
+        ],
+        "B": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "D": [
+          [
+            8.4090145,
+            0.2522704,
+            0.0
+          ],
+          [
+            0.2522704,
+            0.8409014,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.4166667
+          ]
+        ]
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Single 0-deg ply: Qbar = Q. nu21 = 0.3x10/100 = 0.03; denom = 1 - 0.3x0.03 = 0.991. Q11 = 100e9/0.991 = 100.908e9, Q22 = 10e9/0.991 = 10.0908e9, Q12 = 3e9/0.991 = 3.0272e9, Q66 = 5e9. A = Q t (t=1 mm), B = 0 (single ply at mid-plane), D = Q t^3/12. In-plane constants: E_x = Q11 - Q12^2/Q22 = E1 exactly = 100 GPa, E_y = E2 = 10 GPa, nu_xy = Q12/Q22 = 0.3, G_xy = Q66 = 5 GPa."
+      }
+    },
+    {
+      "calc": "materials_sci.laminate_clt",
+      "inputs": {
+        "plies": [
+          [
+            0.001,
+            45
+          ]
+        ],
+        "E1": "100 GPa",
+        "E2": "10 GPa",
+        "nu12": 0.3,
+        "G12": "5 GPa"
+      },
+      "expect": {
+        "A": [
+          [
+            34263370.33,
+            24263370.33,
+            22704339.05
+          ],
+          [
+            24263370.33,
+            34263370.33,
+            22704339.05
+          ],
+          [
+            22704339.05,
+            22704339.05,
+            26236125.13
+          ]
+        ]
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "45-deg ply: m = n = 0.707107, m^2 = n^2 = 0.5, m^4 = n^4 = 0.25, m^3 n = m n^3 = 0.25. With Q11 = 100.908e9, Q22 = 10.0908e9, Q12 = 3.0272e9, Q66 = 5e9: Qbar11 = Qbar22 = 0.25(Q11 + Q22 + 2Q12 + 4Q66) = 34.2634e9; Qbar12 = 0.25(Q11 + Q22 - 4Q66) + 0.5 Q12 = 24.2634e9; Qbar16 = Qbar26 = 0.25(Q11 - Q22) = 22.7043e9; Qbar66 = 0.25(Q11 + Q22 - 2Q12) = 26.2361e9. A = Qbar x 0.001 m."
+      }
+    },
+    {
+      "calc": "materials_sci.laminate_clt",
+      "inputs": {
+        "plies": [
+          [
+            0.001,
+            30
+          ]
+        ],
+        "E1": "100 GPa",
+        "E2": "10 GPa",
+        "nu12": 0.3,
+        "G12": "5 GPa"
+      },
+      "expect": {
+        "E_x": "20.725 GPa",
+        "E_y": "10.724 GPa",
+        "nu_xy": 0.3886,
+        "G_xy": "7.2993 GPa",
+        "h": "1 mm"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Single off-axis ply (30 deg) has shear-extension coupling A16, A26 != 0, so the membrane constants need the full compliance a = A^-1 (E_x = 1/(h a11), G_xy = 1/(h a66), nu_xy = -a12/a11). Reference computed with a numpy 3x3 inverse of A = Qbar(30 deg) x 1 mm (independent of mechcalc): E_x = 20.725 GPa, E_y = 10.724 GPa, G_xy = 7.2993 GPa, nu_xy = 0.38860."
+      }
+    },
+    {
+      "calc": "materials_sci.laminate_clt",
+      "inputs": {
+        "plies": [
+          [
+            0.001,
+            0
+          ],
+          [
+            0.001,
+            45
+          ],
+          [
+            0.001,
+            0
+          ]
+        ],
+        "E1": "100 GPa",
+        "E2": "10 GPa",
+        "nu12": 0.3,
+        "G12": "5 GPa"
+      },
+      "expect": {
+        "E_x": "71.805 GPa",
+        "E_y": "13.017 GPa",
+        "nu_xy": 0.40011,
+        "G_xy": "8.7688 GPa",
+        "h": "3 mm"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Symmetric [0/45/0] layup (3 plies x 1 mm): A = Qbar(0) t + Qbar(45) t + Qbar(0) t, B = 0 by symmetry. Membrane constants from a = A^-1 (numpy 3x3 inverse, independent of mechcalc): E_x = 71.805 GPa, E_y = 13.017 GPa, G_xy = 8.7688 GPa, nu_xy = 0.40011."
+      }
+    }
+  ]
+}

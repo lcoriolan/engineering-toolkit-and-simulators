@@ -1,0 +1,2157 @@
+{
+  "section": "fluid_statics",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k fluid_statics",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "fluid_statics.density_relations": {
+      "title": "Specific weight and specific gravity from density",
+      "variables": [
+        {
+          "name": "gamma",
+          "unit": "N/m^3",
+          "desc": "specific weight",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "SG",
+          "unit": "",
+          "desc": "specific gravity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho_ref",
+          "unit": "kg/m^3",
+          "desc": "reference density (water at 4 \u00b0C = 1000)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "gamma = rho*g",
+        "SG = rho/rho_ref"
+      ],
+      "procedure": null,
+      "outputs": [
+        "gamma",
+        "SG"
+      ],
+      "assumptions": [
+        "Specific gravity is relative to the stated reference density (usually water, 1000 kg/m\u00b3)."
+      ],
+      "method_references": [
+        "\u03b3 = \u03c1g; SG = \u03c1/\u03c1_ref"
+      ],
+      "synthetic_example": {
+        "rho": 1000.0,
+        "rho_ref": 1000.0,
+        "g": 9.80665
+      }
+    },
+    "fluid_statics.viscosity_relations": {
+      "title": "Kinematic and dynamic viscosity (\u03bd = \u03bc/\u03c1)",
+      "variables": [
+        {
+          "name": "nu",
+          "unit": "m^2/s",
+          "desc": "kinematic viscosity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bd",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "Pa*s",
+          "desc": "dynamic (absolute) viscosity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "nu = mu/rho"
+      ],
+      "procedure": null,
+      "outputs": [
+        "nu"
+      ],
+      "assumptions": [
+        "Newtonian fluid at the state point; 1 mm\u00b2/s = 1 cSt."
+      ],
+      "method_references": [
+        "\u03bd = \u03bc/\u03c1"
+      ],
+      "synthetic_example": {
+        "mu": 0.001002,
+        "rho": 998.2
+      }
+    },
+    "fluid_statics.capillary_rise": {
+      "title": "Capillary rise in a tube (h = 2\u03c3 cos\u03b8/(\u03c1gr))",
+      "variables": [
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "capillary rise (negative for a non-wetting liquid)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "N/m",
+          "desc": "surface tension",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "contact angle (wetting \u03b8 < 90\u00b0)",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "liquid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "tube radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "h = 2*sigma*cos(theta)/(rho*g*r)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "h"
+      ],
+      "assumptions": [
+        "Circular tube, contact angle \u03b8 measured through the liquid; \u03b8 > 90\u00b0 (non-wetting, e.g. mercury in glass) gives a depression (h < 0). \u03b8 = 0 is perfect wetting."
+      ],
+      "method_references": [
+        "Capillary rise from the Young\u2013Laplace balance"
+      ],
+      "synthetic_example": {
+        "sigma": 0.0728,
+        "theta": 0.0,
+        "rho": 1000.0,
+        "g": 9.80665,
+        "r": 0.0005
+      }
+    },
+    "fluid_statics.bulk_modulus_sound": {
+      "title": "Bulk modulus, compressibility and speed of sound (c = \u221a(E_v/\u03c1))",
+      "variables": [
+        {
+          "name": "c",
+          "unit": "m/s",
+          "desc": "speed of sound (isentropic)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta",
+          "unit": "1/Pa",
+          "desc": "compressibility \u03b2 = 1/E_v",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_v",
+          "unit": "Pa",
+          "desc": "bulk modulus",
+          "lo": null,
+          "hi": null,
+          "label": "Ev",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "c = sqrt(E_v/rho)",
+        "beta = 1/E_v"
+      ],
+      "procedure": null,
+      "outputs": [
+        "c",
+        "beta"
+      ],
+      "assumptions": [
+        "Small pressure perturbation (acoustic/sonic approximation). \u03b2 = 1/E_v is the compressibility at the entered modulus. The speed of sound c = \u221a(E_v/\u03c1) uses the isentropic (adiabatic) bulk modulus: liquids have E_s \u2248 E_T so one value serves both, while for gases E_s = \u03b3p (\u03b3 = specific-heat ratio) and E_s must be entered for sonic work."
+      ],
+      "method_references": [
+        "c = \u221a(E_v/\u03c1); \u03b2 = 1/E_v"
+      ],
+      "synthetic_example": {
+        "E_v": 2200000000.0,
+        "rho": 1000.0
+      }
+    },
+    "fluid_statics.hydrostatic_pressure": {
+      "title": "Hydrostatic pressure: gauge and absolute",
+      "variables": [
+        {
+          "name": "p_gauge",
+          "unit": "Pa",
+          "desc": "gauge pressure at depth h",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_abs",
+          "unit": "Pa",
+          "desc": "absolute pressure at depth h",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_atm",
+          "unit": "Pa",
+          "desc": "atmospheric pressure at the free surface",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "depth below the free surface",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "p_gauge = rho*g*h",
+        "p_abs = p_gauge + p_atm"
+      ],
+      "procedure": null,
+      "outputs": [
+        "p_gauge",
+        "p_abs"
+      ],
+      "assumptions": [
+        "Incompressible fluid at rest; h measured down from the free surface; constant density."
+      ],
+      "method_references": [
+        "p = p\u2080 + \u03c1gh"
+      ],
+      "synthetic_example": {
+        "p_atm": 101325.0,
+        "h": 10.0,
+        "rho": 1000.0,
+        "g": 9.80665
+      }
+    },
+    "fluid_statics.manometer": {
+      "title": "Manometer pressure difference (\u0394p = (\u03c1_m \u2212 \u03c1_f) g h)",
+      "variables": [
+        {
+          "name": "dp",
+          "unit": "Pa",
+          "desc": "pressure difference p_high \u2212 p_low",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho_m",
+          "unit": "kg/m^3",
+          "desc": "manometer (gauge) fluid density",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho_f",
+          "unit": "kg/m^3",
+          "desc": "line fluid density (0 for a gas)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "manometer column height difference",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "dp = (rho_m - rho_f)*g*h"
+      ],
+      "procedure": null,
+      "outputs": [
+        "dp"
+      ],
+      "assumptions": [
+        "U-tube manometer with a heavier gauge fluid; the line fluid (\u03c1_f) fills the connecting legs above the gauge fluid (\u03c1_f \u2248 0 for a gas). dp is the difference across the column."
+      ],
+      "method_references": [
+        "Manometer relation \u0394p = (\u03c1_m \u2212 \u03c1_f) g h"
+      ],
+      "synthetic_example": {
+        "rho_m": 13600.0,
+        "rho_f": 1000.0,
+        "g": 9.80665,
+        "h": 0.1
+      }
+    },
+    "fluid_statics.hydrostatic_force_plane": {
+      "title": "Hydrostatic force and centre of pressure on an inclined plane surface",
+      "variables": [
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "resultant hydrostatic force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_cp",
+          "unit": "m",
+          "desc": "centre of pressure, measured from the surface along the plane",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_c",
+          "unit": "m",
+          "desc": "centroid distance from the free surface along the plane",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_c",
+          "unit": "m",
+          "desc": "vertical depth of the centroid below the free surface",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "surface area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I_c",
+          "unit": "m^4",
+          "desc": "centroidal second moment of area about the horizontal centroidal axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "angle of the plane with the horizontal",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F = rho*g*h_c*A",
+        "y_c = h_c/sin(theta)",
+        "y_cp = y_c + I_c/(A*y_c)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F",
+        "y_cp",
+        "y_c"
+      ],
+      "assumptions": [
+        "Resultant acts normal to the plane at y_cp (always below the centroid, since I_c > 0).",
+        "The centroidal second moment I_c about the axis parallel to the free surface is a user input (the section-properties section owns the shape formulas).",
+        "\u03b8 > 0 is required: a horizontal plate (\u03b8 = 0) has uniform pressure acting at the centroid, and y_c = h_c/sin \u03b8 is undefined there, so a horizontal plate must be handled separately."
+      ],
+      "method_references": [
+        "F = \u03c1g h_c A; y_cp = y_c + I_c/(A y_c)"
+      ],
+      "synthetic_example": {
+        "h_c": 2.0,
+        "A": 1.5,
+        "I_c": 0.28125,
+        "theta": 1.5707963267948966,
+        "rho": 1000.0,
+        "g": 9.80665
+      }
+    },
+    "fluid_statics.buoyancy": {
+      "title": "Buoyant force (Archimedes)",
+      "variables": [
+        {
+          "name": "F_B",
+          "unit": "N",
+          "desc": "buoyant force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m^3",
+          "desc": "displaced volume",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F_B = rho*g*V"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F_B"
+      ],
+      "assumptions": [
+        "Fluid at rest; V is the volume of displaced fluid (submerged volume for a floating body)."
+      ],
+      "method_references": [
+        "Archimedes principle, F_B = \u03c1gV"
+      ],
+      "synthetic_example": {
+        "rho": 1000.0,
+        "g": 9.80665,
+        "V": 0.01
+      }
+    },
+    "fluid_statics.metacentric_height": {
+      "title": "Metacentric height of a floating body (GM = KB + BM \u2212 KG)",
+      "variables": [
+        {
+          "name": "GM",
+          "unit": "m",
+          "desc": "metacentric height (stable if > 0)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "BM",
+          "unit": "m",
+          "desc": "metacentric radius I/V_sub",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "m^4",
+          "desc": "second moment of the waterplane area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_sub",
+          "unit": "m^3",
+          "desc": "displaced (submerged) volume",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "KB",
+          "unit": "m",
+          "desc": "height of the centre of buoyancy above the keel",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "KG",
+          "unit": "m",
+          "desc": "height of the centre of gravity above the keel",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "BM = I/V_sub",
+        "GM = KB + BM - KG"
+      ],
+      "procedure": null,
+      "outputs": [
+        "BM",
+        "GM"
+      ],
+      "assumptions": [
+        "Small-angle stability of a floating body; I is the second moment of the waterplane area about the axis of tilt (section-properties section owns the shape formula). KB and KG are measured up from the keel, so GM = KM \u2212 KG = (KB + BM) \u2212 KG; GM > 0 is stable."
+      ],
+      "method_references": [
+        "BM = I/V_sub; GM = KB + BM \u2212 KG"
+      ],
+      "synthetic_example": {
+        "I": 60.0,
+        "V_sub": 40.0,
+        "KB": 0.5,
+        "KG": 1.1
+      }
+    },
+    "fluid_statics.rigid_body_accel": {
+      "title": "Rigid-body motion: uniformly accelerating fluid tank",
+      "variables": [
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "angle of the free-surface normal from vertical, toward +x",
+          "lo": -1.5707963267948966,
+          "hi": 1.5707963267948966,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "pressure at the point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_ref",
+          "unit": "Pa",
+          "desc": "pressure at the reference point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_x",
+          "unit": "m/s^2",
+          "desc": "horizontal acceleration (+x)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_z",
+          "unit": "m/s^2",
+          "desc": "vertical acceleration (up positive)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x",
+          "unit": "m",
+          "desc": "horizontal position of the point relative to the reference",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "z",
+          "unit": "m",
+          "desc": "vertical position of the point relative to the reference (up positive)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _rigid_body_accel(values):\n    \"\"\"Uniformly accelerating fluid tank: free-surface tilt and pressure at a point.\n\n    theta = atan(a_x/(g + a_z)) is the angle of the free-surface normal from vertical toward +x;\n    p = p_ref \u2212 \u03c1(a_x\u00b7x + (g + a_z)\u00b7z) with z positive upward and (x, z) measured from the reference point.\n    Requires g + a_z > 0 \u2014 in free fall the free surface does not exist, so that case is rejected.\n    \"\"\"\n    g, a_x, a_z = values['g'], values['a_x'], values['a_z']\n    if g + a_z <= 0:\n        raise MechError('rigid-body acceleration needs g + a_z > 0 (free fall has no free surface)')\n    theta = math.atan(a_x / (g + a_z))\n    p = values['p_ref'] - values['rho'] * (a_x * values['x'] + (g + a_z) * values['z'])\n    return {'theta': theta, 'p': p}\n",
+        "source": "fluid_statics.py",
+        "line": 42
+      },
+      "outputs": [
+        "p",
+        "theta"
+      ],
+      "assumptions": [
+        "Fluid moves as a rigid body under constant acceleration (no relative motion). The free surface is a plane normal to the pressure gradient; it rises toward \u2212x when a_x > 0. Requires g + a_z > 0; g + a_z \u2264 0 (free fall) raises an error."
+      ],
+      "method_references": [
+        "Rigid-body linear acceleration: \u2207p = \u03c1(g \u2212 a)"
+      ],
+      "synthetic_example": {
+        "a_x": 3.0,
+        "a_z": 0.0,
+        "g": 9.80665,
+        "p_ref": 101325.0,
+        "rho": 1000.0,
+        "x": 1.0,
+        "z": -1.0
+      }
+    },
+    "fluid_statics.rigid_body_rotation": {
+      "title": "Rigid-body motion: rotating fluid container (forced vortex)",
+      "variables": [
+        {
+          "name": "dh",
+          "unit": "m",
+          "desc": "free-surface rise at radius R above the centre (paraboloid)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "pressure at radius r, height z",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p0",
+          "unit": "Pa",
+          "desc": "pressure at the free-surface apex (r = 0, z = 0)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "m",
+          "desc": "container radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radial position of the point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "z",
+          "unit": "m",
+          "desc": "vertical position of the point (up positive, apex z = 0)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "dh = omega**2*R**2/(2*g)",
+        "p = p0 + rho*omega**2*r**2/2 - rho*g*z"
+      ],
+      "procedure": null,
+      "outputs": [
+        "dh",
+        "p"
+      ],
+      "assumptions": [
+        "Steady solid-body rotation about the vertical axis; the free surface is a paraboloid z = \u03c9\u00b2r\u00b2/(2g). \u03c9 is angular (enter rad/s, rpm or rps)."
+      ],
+      "method_references": [
+        "Solid-body rotation: p = p\u2080 + \u03c1\u03c9\u00b2r\u00b2/2 \u2212 \u03c1gz"
+      ],
+      "synthetic_example": {
+        "omega": 10.0,
+        "g": 9.80665,
+        "R": 0.2,
+        "p0": 101325.0,
+        "rho": 1000.0,
+        "r": 0.2,
+        "z": 0.0
+      }
+    },
+    "fluid_statics.fluid_state_lookup": {
+      "title": "Fluid properties at a state point (CoolProp via common.fluid_state)",
+      "variables": [
+        {
+          "name": "fluid",
+          "unit": "",
+          "desc": "{\"name\": \"Water\"} \u2014 CoolProp fluid name",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "temperature",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "Pa",
+          "desc": "pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "Pa*s",
+          "desc": "dynamic viscosity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "W/(m*K)",
+          "desc": "thermal conductivity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cp",
+          "unit": "J/(kg*K)",
+          "desc": "specific heat at constant pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "J/kg",
+          "desc": "specific enthalpy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "J/(kg*K)",
+          "desc": "specific entropy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _fluid_state_lookup(values):\n    \"\"\"State of a CoolProp fluid from T and P via common.fluid_state (the shared adapter).\"\"\"\n    fluid = values['fluid']\n    if not isinstance(fluid, dict) or 'name' not in fluid:\n        raise MechError('fluid: pass {\"name\": \"Water\"} with a CoolProp fluid name')\n    st = common.fluid_state(str(fluid['name']), T=values['T'], P=values['P'])\n    out = {}\n    for key in ('rho', 'mu', 'k', 'cp', 'h', 's'):\n        if st.get(key) is None:\n            raise MechError(f'{key} is unavailable for this fluid/state')\n        out[key] = float(st[key])\n    return out\n",
+        "source": "fluid_statics.py",
+        "line": 28
+      },
+      "outputs": [
+        "rho",
+        "mu",
+        "k",
+        "cp",
+        "h",
+        "s"
+      ],
+      "assumptions": [
+        "State defined by temperature and pressure through the shared common.fluid_state adapter (CoolProp real-fluid model). Two-phase states where transport properties are undefined raise an error; give T and P for a single-phase state."
+      ],
+      "method_references": [
+        "CoolProp property database via common.fluid_state"
+      ],
+      "synthetic_example": {
+        "fluid": {
+          "name": "Water"
+        },
+        "T": 293.15,
+        "P": 101325.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "fluid_statics-001",
+      "calculator": "fluid_statics.density_relations",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "rho_ref": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "solve_for": [
+        "gamma",
+        "SG"
+      ],
+      "expected_as_specified": {
+        "gamma": "9806.65 N/m^3",
+        "SG": 1.0
+      },
+      "expected_SI": {
+        "gamma": 9806.65,
+        "SG": 1.0
+      },
+      "actual_SI": {
+        "gamma": {
+          "value": 9806.65,
+          "unit": "N/m^3",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.density_relations (symbolic)"
+        },
+        "SG": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.density_relations (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "gamma": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 19.6133,
+          "passed": true
+        },
+        "SG": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b3 = \u03c1g = 1000\u00b79.80665 = 9806.65 N/m\u00b3; SG = 1000/1000 = 1.0"
+      }
+    },
+    {
+      "id": "fluid_statics-002",
+      "calculator": "fluid_statics.density_relations",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "gamma": "9806.65 N/m^3",
+        "rho_ref": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "solve_for": [
+        "rho",
+        "SG"
+      ],
+      "expected_as_specified": {
+        "rho": "1000 kg/m^3"
+      },
+      "expected_SI": {
+        "rho": 1000.0
+      },
+      "actual_SI": {
+        "rho": {
+          "value": 1000.0,
+          "unit": "kg/m^3",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.density_relations (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "rho": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c1 = \u03b3/g = 9806.65/9.80665 = 1000 kg/m\u00b3 (and SG = \u03c1/\u03c1_ref = 1.0)"
+      }
+    },
+    {
+      "id": "fluid_statics-003",
+      "calculator": "fluid_statics.viscosity_relations",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": "1.002 mPa*s",
+        "rho": "998.2 kg/m^3"
+      },
+      "solve_for": [
+        "nu"
+      ],
+      "expected_as_specified": {
+        "nu": "1.00381e-6 m^2/s"
+      },
+      "expected_SI": {
+        "nu": 1.00381e-06
+      },
+      "actual_SI": {
+        "nu": {
+          "value": 1.0038068523342016e-06,
+          "unit": "m^2/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.viscosity_relations (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "nu": {
+          "absolute_error": 3.147665798476385e-12,
+          "relative_error": 3.135718710190559e-06,
+          "allowed_absolute_error": 2.00762e-09,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03bd = \u03bc/\u03c1 = 1.002e-3/998.2 = 1.00381e-6 m\u00b2/s"
+      }
+    },
+    {
+      "id": "fluid_statics-004",
+      "calculator": "fluid_statics.capillary_rise",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma": "0.0728 N/m",
+        "theta": "0 deg",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665,
+        "r": "0.5 mm"
+      },
+      "solve_for": [
+        "h"
+      ],
+      "expected_as_specified": {
+        "h": "0.0296941 m"
+      },
+      "expected_SI": {
+        "h": 0.0296941
+      },
+      "actual_SI": {
+        "h": {
+          "value": 0.029694136121917274,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.capillary_rise (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "h": {
+          "absolute_error": 3.6121917273285176e-08,
+          "relative_error": 1.2164678260423846e-06,
+          "allowed_absolute_error": 5.93882e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "h = 2\u03c3cos\u03b8/(\u03c1gr) = 2\u00b70.0728\u00b71/(1000\u00b79.80665\u00b75e-4) = 0.1456/4.90333 = 0.029694 m (water in a 1 mm glass tube rises ~29.7 mm)"
+      }
+    },
+    {
+      "id": "fluid_statics-005",
+      "calculator": "fluid_statics.bulk_modulus_sound",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E_v": "2.2 GPa",
+        "rho": "1000 kg/m^3"
+      },
+      "solve_for": [
+        "c",
+        "beta"
+      ],
+      "expected_as_specified": {
+        "c": "1483.24 m/s",
+        "beta": "4.54545e-10 1/Pa"
+      },
+      "expected_SI": {
+        "c": 1483.24,
+        "beta": 4.54545e-10
+      },
+      "actual_SI": {
+        "c": {
+          "value": 1483.2396974191327,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.bulk_modulus_sound (symbolic)"
+        },
+        "beta": {
+          "value": 4.5454545454545455e-10,
+          "unit": "1/Pa",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.bulk_modulus_sound (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "c": {
+          "absolute_error": 0.000302580867355573,
+          "relative_error": 2.0399993753915279e-07,
+          "allowed_absolute_error": 2.9664800000000002,
+          "passed": true
+        },
+        "beta": {
+          "absolute_error": 4.54545454544654e-16,
+          "relative_error": 1.0000009999992387e-06,
+          "allowed_absolute_error": 9.0909e-13,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "c = \u221a(E_v/\u03c1) = \u221a(2.2e9/1000) = \u221a(2.2e6) = 1483.24 m/s; \u03b2 = 1/E_v = 1/2.2e9 = 4.54545e-10 1/Pa"
+      }
+    },
+    {
+      "id": "fluid_statics-006",
+      "calculator": "fluid_statics.hydrostatic_pressure",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p_atm": "101.325 kPa",
+        "h": "10 m",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "solve_for": [
+        "p_gauge",
+        "p_abs"
+      ],
+      "expected_as_specified": {
+        "p_gauge": "98066.5 Pa",
+        "p_abs": "199391.5 Pa"
+      },
+      "expected_SI": {
+        "p_gauge": 98066.5,
+        "p_abs": 199391.5
+      },
+      "actual_SI": {
+        "p_gauge": {
+          "value": 98066.49999999999,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.hydrostatic_pressure (symbolic)"
+        },
+        "p_abs": {
+          "value": 199391.5,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.hydrostatic_pressure (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "p_gauge": {
+          "absolute_error": 1.4551915228366852e-11,
+          "relative_error": 1.483882388824609e-16,
+          "allowed_absolute_error": 196.133,
+          "passed": true
+        },
+        "p_abs": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 398.783,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "p_gauge = \u03c1gh = 1000\u00b79.80665\u00b710 = 98066.5 Pa; p_abs = 98066.5 + 101325 = 199391.5 Pa"
+      }
+    },
+    {
+      "id": "fluid_statics-007",
+      "calculator": "fluid_statics.manometer",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho_m": "13600 kg/m^3",
+        "rho_f": "1000 kg/m^3",
+        "g": 9.80665,
+        "h": "100 mm"
+      },
+      "solve_for": [
+        "dp"
+      ],
+      "expected_as_specified": {
+        "dp": "12356.4 Pa"
+      },
+      "expected_SI": {
+        "dp": 12356.4
+      },
+      "actual_SI": {
+        "dp": {
+          "value": 12356.379,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.manometer (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dp": {
+          "absolute_error": 0.020999999998821295,
+          "relative_error": 1.6995241331472998e-06,
+          "allowed_absolute_error": 24.7128,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u0394p = (\u03c1_m \u2212 \u03c1_f)gh = (13600 \u2212 1000)\u00b79.80665\u00b70.1 = 12600\u00b70.980665 = 12356.4 Pa (mercury over water, 100 mm column)"
+      }
+    },
+    {
+      "id": "fluid_statics-008",
+      "calculator": "fluid_statics.hydrostatic_force_plane",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h_c": "2 m",
+        "A": "1.5 m^2",
+        "I_c": "0.28125 m^4",
+        "theta": "90 deg",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "solve_for": [
+        "F",
+        "y_cp",
+        "y_c"
+      ],
+      "expected_as_specified": {
+        "F": "29419.95 N",
+        "y_cp": "2.09375 m",
+        "y_c": "2 m"
+      },
+      "expected_SI": {
+        "F": 29419.95,
+        "y_cp": 2.09375,
+        "y_c": 2.0
+      },
+      "actual_SI": {
+        "F": {
+          "value": 29419.95,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.hydrostatic_force_plane (symbolic)"
+        },
+        "y_cp": {
+          "value": 2.09375,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.hydrostatic_force_plane (symbolic)"
+        },
+        "y_c": {
+          "value": 2.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.hydrostatic_force_plane (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 58.8399,
+          "passed": true
+        },
+        "y_cp": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0041875,
+          "passed": true
+        },
+        "y_c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = \u03c1g h_c A = 1000\u00b79.80665\u00b72\u00b71.5 = 29419.95 N; y_c = h_c/sin90\u00b0 = 2 m; y_cp = y_c + I_c/(A\u00b7y_c) = 2 + 0.28125/(1.5\u00b72) = 2.09375 m"
+      }
+    },
+    {
+      "id": "fluid_statics-009",
+      "calculator": "fluid_statics.hydrostatic_force_plane",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "y_cp": "2.09375 m",
+        "h_c": "2 m",
+        "A": "1.5 m^2",
+        "theta": "90 deg",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "solve_for": [
+        "I_c",
+        "y_c",
+        "F"
+      ],
+      "expected_as_specified": {
+        "I_c": "0.28125 m^4"
+      },
+      "expected_SI": {
+        "I_c": 0.28125
+      },
+      "actual_SI": {
+        "I_c": {
+          "value": 0.28125,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.hydrostatic_force_plane (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "I_c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005625000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "y_c = h_c/sin90\u00b0 = 2 m; I_c = A\u00b7y_c\u00b7(y_cp \u2212 y_c) = 1.5\u00b72\u00b7(2.09375 \u2212 2) = 0.28125 m\u2074"
+      }
+    },
+    {
+      "id": "fluid_statics-010",
+      "calculator": "fluid_statics.hydrostatic_force_plane",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h_c": "3 m",
+        "A": "6 m^2",
+        "I_c": "4.5 m^4",
+        "theta": "30 deg",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "solve_for": [
+        "F",
+        "y_cp",
+        "y_c"
+      ],
+      "expected_as_specified": {
+        "F": "176519.7 N",
+        "y_c": "6 m",
+        "y_cp": "6.125 m"
+      },
+      "expected_SI": {
+        "F": 176519.7,
+        "y_c": 6.0,
+        "y_cp": 6.125
+      },
+      "actual_SI": {
+        "F": {
+          "value": 176519.7,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.hydrostatic_force_plane (symbolic)"
+        },
+        "y_c": {
+          "value": 6.000000000000001,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.hydrostatic_force_plane (symbolic)"
+        },
+        "y_cp": {
+          "value": 6.125000000000001,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.hydrostatic_force_plane (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 353.03940000000006,
+          "passed": true
+        },
+        "y_c": {
+          "absolute_error": 8.881784197001252e-16,
+          "relative_error": 1.4802973661668753e-16,
+          "allowed_absolute_error": 0.012,
+          "passed": true
+        },
+        "y_cp": {
+          "absolute_error": 8.881784197001252e-16,
+          "relative_error": 1.450087215836939e-16,
+          "allowed_absolute_error": 0.01225,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inclined rectangular gate 2 m wide \u00d7 3 m tall along the plane (A = 6 m\u00b2, centroidal I_c = b\u00b7a\u00b3/12 = 2\u00b73\u00b3/12 = 4.5 m\u2074) with centroid depth h_c = 3 m at \u03b8 = 30\u00b0. F = \u03c1g h_c A = 1000\u00b79.80665\u00b73\u00b76 = 176519.7 N; y_c = h_c/sin30\u00b0 = 3/0.5 = 6 m; y_cp = y_c + I_c/(A\u00b7y_c) = 6 + 4.5/(6\u00b76) = 6 + 0.125 = 6.125 m"
+      }
+    },
+    {
+      "id": "fluid_statics-011",
+      "calculator": "fluid_statics.buoyancy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "g": 9.80665,
+        "V": "0.01 m^3"
+      },
+      "solve_for": [
+        "F_B"
+      ],
+      "expected_as_specified": {
+        "F_B": "98.0665 N"
+      },
+      "expected_SI": {
+        "F_B": 98.0665
+      },
+      "actual_SI": {
+        "F_B": {
+          "value": 98.0665,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.buoyancy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_B": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.196133,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F_B = \u03c1gV = 1000\u00b79.80665\u00b70.01 = 98.0665 N (10 L of water displaced)"
+      }
+    },
+    {
+      "id": "fluid_statics-012",
+      "calculator": "fluid_statics.metacentric_height",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "60 m^4",
+        "V_sub": "40 m^3",
+        "KB": "0.5 m",
+        "KG": "1.1 m"
+      },
+      "solve_for": [
+        "BM",
+        "GM"
+      ],
+      "expected_as_specified": {
+        "BM": "1.5 m",
+        "GM": "0.9 m"
+      },
+      "expected_SI": {
+        "BM": 1.5,
+        "GM": 0.9
+      },
+      "actual_SI": {
+        "BM": {
+          "value": 1.5,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.metacentric_height (symbolic)"
+        },
+        "GM": {
+          "value": 0.9,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.metacentric_height (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "BM": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.003,
+          "passed": true
+        },
+        "GM": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0018000000000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "BM = I/V_sub = 60/40 = 1.5 m; GM = KB + BM \u2212 KG = 0.5 + 1.5 \u2212 1.1 = 0.9 m (stable)"
+      }
+    },
+    {
+      "id": "fluid_statics-013",
+      "calculator": "fluid_statics.metacentric_height",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "GM": "0.9 m",
+        "I": "60 m^4",
+        "V_sub": "40 m^3",
+        "KB": "0.5 m"
+      },
+      "solve_for": [
+        "KG",
+        "BM"
+      ],
+      "expected_as_specified": {
+        "KG": "1.1 m"
+      },
+      "expected_SI": {
+        "KG": 1.1
+      },
+      "actual_SI": {
+        "KG": {
+          "value": 1.1,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.metacentric_height (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "KG": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0022,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "BM = 1.5 m; KG = KB + BM \u2212 GM = 0.5 + 1.5 \u2212 0.9 = 1.1 m"
+      }
+    },
+    {
+      "id": "fluid_statics-014",
+      "calculator": "fluid_statics.rigid_body_accel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a_x": "3 m/s^2",
+        "a_z": "0 m/s^2",
+        "g": 9.80665,
+        "p_ref": "101.325 kPa",
+        "rho": "1000 kg/m^3",
+        "x": "1 m",
+        "z": "-1 m"
+      },
+      "solve_for": [
+        "p",
+        "theta"
+      ],
+      "expected_as_specified": {
+        "theta": "0.296874 rad",
+        "p": "108131.65 Pa"
+      },
+      "expected_SI": {
+        "theta": 0.296874,
+        "p": 108131.65
+      },
+      "actual_SI": {
+        "theta": {
+          "value": 0.2968744024605163,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.rigid_body_accel (procedure)"
+        },
+        "p": {
+          "value": 108131.65,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.rigid_body_accel (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "theta": {
+          "absolute_error": 4.024605162467054e-07,
+          "relative_error": 1.3556610422155709e-06,
+          "allowed_absolute_error": 0.0005937480000000001,
+          "passed": true
+        },
+        "p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 216.2633,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b8 = atan(a_x/(g+a_z)) = atan(3/9.80665) = 0.296874 rad (17.01\u00b0); p = p_ref \u2212 \u03c1(a_x\u00b7x + (g+a_z)\u00b7z) = 101325 \u2212 1000(3\u00b71 + 9.80665\u00b7(\u22121)) = 101325 \u2212 1000(\u22126.80665) = 108131.65 Pa"
+      }
+    },
+    {
+      "id": "fluid_statics-015",
+      "calculator": "fluid_statics.rigid_body_rotation",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega": "10 rad/s",
+        "R": "0.2 m",
+        "g": 9.80665,
+        "p0": "101.325 kPa",
+        "rho": "1000 kg/m^3",
+        "r": "0.2 m",
+        "z": "0 m"
+      },
+      "solve_for": [
+        "dh",
+        "p"
+      ],
+      "expected_as_specified": {
+        "dh": "0.203943 m",
+        "p": "103325 Pa"
+      },
+      "expected_SI": {
+        "dh": 0.203943,
+        "p": 103325.0
+      },
+      "actual_SI": {
+        "dh": {
+          "value": 0.20394324259558572,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.rigid_body_rotation (symbolic)"
+        },
+        "p": {
+          "value": 103325.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.rigid_body_rotation (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dh": {
+          "absolute_error": 2.4259558570327577e-07,
+          "relative_error": 1.1895264152399238e-06,
+          "allowed_absolute_error": 0.00040788600000000004,
+          "passed": true
+        },
+        "p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 206.65,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "dh = \u03c9\u00b2R\u00b2/(2g) = 100\u00b70.04/(2\u00b79.80665) = 4/19.6133 = 0.203943 m; p = p0 + \u03c1\u03c9\u00b2r\u00b2/2 \u2212 \u03c1gz = 101325 + 1000\u00b7100\u00b70.04/2 \u2212 0 = 103325 Pa"
+      }
+    },
+    {
+      "id": "fluid_statics-016",
+      "calculator": "fluid_statics.fluid_state_lookup",
+      "classification": "backend regression; not independent physical validation",
+      "inputs": {
+        "fluid": {
+          "name": "Water"
+        },
+        "T": "20 degC",
+        "P": "101.325 kPa"
+      },
+      "solve_for": [
+        "rho",
+        "mu",
+        "k",
+        "cp",
+        "h",
+        "s"
+      ],
+      "expected_as_specified": {
+        "rho": "998.2 kg/m^3",
+        "mu": "1.002 mPa*s"
+      },
+      "expected_SI": {
+        "rho": 998.2,
+        "mu": 0.001002
+      },
+      "actual_SI": {
+        "rho": {
+          "value": 998.2071504679437,
+          "unit": "kg/m^3",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.fluid_state_lookup (procedure)"
+        },
+        "mu": {
+          "value": 0.001001596143120583,
+          "unit": "Pa*s",
+          "kind": "derived",
+          "method": "mechcalc fluid_statics.fluid_state_lookup (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "rho": {
+          "absolute_error": 0.007150467943688454,
+          "relative_error": 7.163361995279958e-06,
+          "allowed_absolute_error": 1.9964000000000002,
+          "passed": true
+        },
+        "mu": {
+          "absolute_error": 4.038568794169795e-07,
+          "relative_error": 0.00040305077786125697,
+          "allowed_absolute_error": 2.004e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Water at 20 \u00b0C / 1 atm: density 998.2 kg/m\u00b3 and dynamic viscosity 1.002 mPa\u00b7s (standard textbook values; recalled, not re-read). CoolProp returns 998.21 kg/m\u00b3 and 1.0016 mPa\u00b7s, within the stated tolerance."
+      }
+    }
+  ],
+  "passed": 16,
+  "failed": 0
+}

@@ -1,0 +1,1 @@
+{"nodes":[{"name":"block","kind":"box","parameters":{"length_mm":10,"width_mm":20,"height_mm":30}},{"name":"bore","kind":"cylinder","parameters":{"radius_mm":2,"height_mm":30},"translation_mm":[5,10,0]},{"name":"result","kind":"cut","left":"block","right":"bore"}],"result":"result"}

@@ -1,0 +1,5206 @@
+{
+  "section": "thermo",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k thermo",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "thermo.ideal_gas_law": {
+      "title": "Ideal gas law (P v = R T)",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "Pa",
+          "desc": "pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m^3/kg",
+          "desc": "specific volume",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "J/(kg*K)",
+          "desc": "specific gas constant",
+          "lo": 1.0,
+          "hi": 10000.0,
+          "label": "R",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "absolute temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P*v = R*T"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P"
+      ],
+      "assumptions": [
+        "Ideal gas. Density rho = 1/v."
+      ],
+      "method_references": [
+        "Ideal gas law P v = R T"
+      ],
+      "synthetic_example": {
+        "v": 0.847,
+        "R": 287.0,
+        "T": 288.15
+      }
+    },
+    "thermo.compressibility_factor": {
+      "title": "Compressibility factor (Z = P v / (R T))",
+      "variables": [
+        {
+          "name": "Z",
+          "unit": "",
+          "desc": "compressibility factor",
+          "lo": 0.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "Pa",
+          "desc": "pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m^3/kg",
+          "desc": "specific volume",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "J/(kg*K)",
+          "desc": "specific gas constant",
+          "lo": 1.0,
+          "hi": 10000.0,
+          "label": "R",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "absolute temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Z = P*v/(R*T)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Z"
+      ],
+      "assumptions": [
+        "Z = 1 for an ideal gas; departures measure real-gas behaviour."
+      ],
+      "method_references": [
+        "Z = P v / (R T)"
+      ],
+      "synthetic_example": {
+        "P": 10000000.0,
+        "v": 0.005,
+        "R": 287.0,
+        "T": 300.0
+      }
+    },
+    "thermo.specific_heats": {
+      "title": "Specific heats from R and gamma",
+      "variables": [
+        {
+          "name": "cp",
+          "unit": "J/(kg*K)",
+          "desc": "specific heat at constant pressure",
+          "lo": 1.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cv",
+          "unit": "J/(kg*K)",
+          "desc": "specific heat at constant volume",
+          "lo": 1.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "J/(kg*K)",
+          "desc": "specific gas constant",
+          "lo": 1.0,
+          "hi": 10000.0,
+          "label": "R",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "cp = gamma*R/(gamma - 1)",
+        "cv = R/(gamma - 1)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "cp",
+        "cv"
+      ],
+      "assumptions": [
+        "Ideal gas, constant specific heats: cp - cv = R and gamma = cp/cv."
+      ],
+      "method_references": [
+        "cp = gamma R/(gamma-1); cv = R/(gamma-1)"
+      ],
+      "synthetic_example": {
+        "R": 287.0,
+        "gamma": 1.4
+      }
+    },
+    "thermo.ideal_gas_energy": {
+      "title": "Ideal-gas internal energy and enthalpy changes",
+      "variables": [
+        {
+          "name": "delta_u",
+          "unit": "J/kg",
+          "desc": "change in specific internal energy",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394u",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_h",
+          "unit": "J/kg",
+          "desc": "change in specific enthalpy",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394h",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cv",
+          "unit": "J/(kg*K)",
+          "desc": "specific heat at constant volume",
+          "lo": 1.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cp",
+          "unit": "J/(kg*K)",
+          "desc": "specific heat at constant pressure",
+          "lo": 1.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_T",
+          "unit": "K",
+          "desc": "temperature change",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394T",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "delta_u = cv*delta_T",
+        "delta_h = cp*delta_T"
+      ],
+      "procedure": null,
+      "outputs": [
+        "delta_u",
+        "delta_h"
+      ],
+      "assumptions": [
+        "Ideal gas, constant specific heats. Enter delta_T in K or delta_degC."
+      ],
+      "method_references": [
+        "du = cv dT; dh = cp dT (ideal gas)"
+      ],
+      "synthetic_example": {
+        "cv": 718.0,
+        "cp": 1005.0,
+        "delta_T": 100.0
+      }
+    },
+    "thermo.ideal_gas_entropy": {
+      "title": "Ideal-gas entropy change (constant specific heats)",
+      "variables": [
+        {
+          "name": "delta_s",
+          "unit": "J/(kg*K)",
+          "desc": "change in specific entropy",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394s",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cp",
+          "unit": "J/(kg*K)",
+          "desc": "specific heat at constant pressure",
+          "lo": 1.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "J/(kg*K)",
+          "desc": "specific gas constant",
+          "lo": 1.0,
+          "hi": 10000.0,
+          "label": "R",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T1",
+          "unit": "K",
+          "desc": "initial temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2",
+          "unit": "K",
+          "desc": "final temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P1",
+          "unit": "Pa",
+          "desc": "initial pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P2",
+          "unit": "Pa",
+          "desc": "final pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "delta_s = cp*log(T2/T1) - R*log(P2/P1)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "delta_s"
+      ],
+      "assumptions": [
+        "Ideal gas, constant specific heats (second T-ds / Maxwell relation, integrated)."
+      ],
+      "method_references": [
+        "ds = cp dT/T - R dP/P (ideal gas)"
+      ],
+      "synthetic_example": {
+        "cp": 1005.0,
+        "R": 287.0,
+        "T1": 300.0,
+        "T2": 600.0,
+        "P1": 100000.0,
+        "P2": 200000.0
+      }
+    },
+    "thermo.fluid_state_TP": {
+      "title": "Real-fluid state at given T and P",
+      "variables": [
+        {
+          "name": "fluid",
+          "unit": "",
+          "desc": "CoolProp fluid name, e.g. Water, R134a, Air",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "temperature",
+          "lo": 50.0,
+          "hi": 1500.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "Pa",
+          "desc": "pressure",
+          "lo": 10000.0,
+          "hi": 10000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "J/kg",
+          "desc": "specific enthalpy (signed: negative at low T)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "J/(kg*K)",
+          "desc": "specific entropy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u",
+          "unit": "J/kg",
+          "desc": "specific internal energy (signed: negative at low T)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cp",
+          "unit": "J/(kg*K)",
+          "desc": "cp",
+          "lo": 1.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cv",
+          "unit": "J/(kg*K)",
+          "desc": "cv",
+          "lo": 1.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _fluid_state_TP(values):\n    \"\"\"Real-fluid state at (T, P): density, enthalpy, entropy, internal energy, cp, cv.\"\"\"\n    fluid = _fluid_name(values['fluid'])\n    st = common.fluid_state(fluid, T=values['T'], P=values['P'])\n    P = st['P']\n    return {'rho': st['rho'], 'h': st['h'], 's': st['s'], 'u': st['h'] - P / st['rho'],\n            'cp': st['cp'], 'cv': st['cv']}\n",
+        "source": "thermo.py",
+        "line": 45
+      },
+      "outputs": [
+        "rho",
+        "h",
+        "s",
+        "u",
+        "cp",
+        "cv"
+      ],
+      "assumptions": [
+        "Full CoolProp state from T and P (u = h - P/rho). For a liquid the density varies only weakly with T; a gas example is used so every input is invertible."
+      ],
+      "method_references": [
+        "CoolProp reference equation of state (via common.fluid_state)"
+      ],
+      "synthetic_example": {
+        "fluid": "Air",
+        "T": 300.0,
+        "P": 101325.0
+      }
+    },
+    "thermo.fluid_state_TQ": {
+      "title": "Real-fluid two-phase state at given T and quality",
+      "variables": [
+        {
+          "name": "fluid",
+          "unit": "",
+          "desc": "CoolProp fluid name, e.g. Water, R134a, Air",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "saturation temperature (inside the fluid saturation range)",
+          "lo": 50.0,
+          "hi": 700.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "",
+          "desc": "quality (vapour mass fraction, 0..1)",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "J/kg",
+          "desc": "mixture specific enthalpy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "Pa",
+          "desc": "saturation pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "mixture density",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "J/(kg*K)",
+          "desc": "mixture specific entropy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u",
+          "unit": "J/kg",
+          "desc": "mixture specific internal energy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _fluid_state_TQ(values):\n    \"\"\"Real-fluid two-phase state at (T, quality Q): saturated pressure and mixture properties.\"\"\"\n    fluid = _fluid_name(values['fluid'])\n    st = common.fluid_state(fluid, T=values['T'], Q=values['Q'])\n    P, rho = st['P'], st['rho']\n    return {'h': st['h'], 'P': P, 'rho': rho, 's': st['s'], 'u': st['h'] - P / rho}\n",
+        "source": "thermo.py",
+        "line": 54
+      },
+      "outputs": [
+        "h",
+        "P",
+        "rho",
+        "s",
+        "u"
+      ],
+      "assumptions": [
+        "Two-phase state from saturation temperature T and quality Q via common.fluid_state (CoolProp). h = h_f + Q h_fg."
+      ],
+      "method_references": [
+        "Lever rule h = h_f + Q (h_g - h_f) via common.fluid_state"
+      ],
+      "synthetic_example": {
+        "fluid": "Water",
+        "T": 373.15,
+        "Q": 0.5
+      }
+    },
+    "thermo.mixture_quality": {
+      "title": "Two-phase quality from a specific-volume lever rule",
+      "variables": [
+        {
+          "name": "x",
+          "unit": "",
+          "desc": "quality",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m^3/kg",
+          "desc": "mixture specific volume",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_f",
+          "unit": "m^3/kg",
+          "desc": "saturated-liquid specific volume",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_g",
+          "unit": "m^3/kg",
+          "desc": "saturated-vapour specific volume",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "x = (v - v_f)/(v_g - v_f)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "x"
+      ],
+      "assumptions": [
+        "v_f and v_g are the saturated liquid and vapour values at the mixture pressure or temperature (from tables or fluid_state_TQ). The same lever rule applies to h, s and u."
+      ],
+      "method_references": [
+        "x = (v - v_f)/(v_g - v_f)"
+      ],
+      "synthetic_example": {
+        "v": 0.5,
+        "v_f": 0.001044,
+        "v_g": 1.694
+      }
+    },
+    "thermo.boundary_work_isobaric": {
+      "title": "Boundary work of a constant-pressure process",
+      "variables": [
+        {
+          "name": "W",
+          "unit": "J",
+          "desc": "boundary work (positive = expansion)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "Pa",
+          "desc": "constant pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V1",
+          "unit": "m^3",
+          "desc": "initial volume",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V2",
+          "unit": "m^3",
+          "desc": "final volume",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "W = P*(V2 - V1)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "W"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "W = P (V2 - V1)"
+      ],
+      "synthetic_example": {
+        "P": 200000.0,
+        "V1": 0.1,
+        "V2": 0.3
+      }
+    },
+    "thermo.boundary_work_isothermal": {
+      "title": "Boundary work of an isothermal ideal-gas process",
+      "variables": [
+        {
+          "name": "W",
+          "unit": "J",
+          "desc": "boundary work (positive = expansion)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P1",
+          "unit": "Pa",
+          "desc": "initial pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V1",
+          "unit": "m^3",
+          "desc": "initial volume",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V2",
+          "unit": "m^3",
+          "desc": "final volume",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _boundary_work_isothermal(values):\n    \"\"\"Boundary work of an isothermal ideal-gas process W = P1 V1 ln(V2/V1) (procedure: numeric inversion).\"\"\"\n    P1, V1, V2 = values['P1'], values['V1'], values['V2']\n    return {'W': P1 * V1 * math.log(V2 / V1)}\n",
+        "source": "thermo.py",
+        "line": 110
+      },
+      "outputs": [
+        "W"
+      ],
+      "assumptions": [
+        "Ideal gas, constant temperature (W = P1 V1 ln(V2/V1) = m R T ln(V2/V1)). Inverting for V1 has two roots (the other is on the compression side); the root nearest the example is returned."
+      ],
+      "method_references": [
+        "W = P1 V1 ln(V2/V1)"
+      ],
+      "synthetic_example": {
+        "P1": 100000.0,
+        "V1": 0.5,
+        "V2": 1.0
+      }
+    },
+    "thermo.boundary_work_polytropic": {
+      "title": "Boundary work of a polytropic process (P V^n = const)",
+      "variables": [
+        {
+          "name": "W",
+          "unit": "J",
+          "desc": "boundary work",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P1",
+          "unit": "Pa",
+          "desc": "initial pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V1",
+          "unit": "m^3",
+          "desc": "initial volume",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P2",
+          "unit": "Pa",
+          "desc": "final pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V2",
+          "unit": "m^3",
+          "desc": "final volume",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "polytropic index (n != 1)",
+          "lo": 0.0,
+          "hi": 5.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "W = (P2*V2 - P1*V1)/(1 - n)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "W"
+      ],
+      "assumptions": [
+        "P V^n = constant. n = 1 is the isothermal case (use boundary_work_isothermal); n = 0 isobaric; n = gamma isentropic (ideal gas)."
+      ],
+      "method_references": [
+        "W = (P2 V2 - P1 V1)/(1 - n)"
+      ],
+      "synthetic_example": {
+        "P1": 100000.0,
+        "V1": 0.1,
+        "P2": 400000.0,
+        "V2": 0.035,
+        "n": 1.3
+      }
+    },
+    "thermo.first_law_closed": {
+      "title": "First law for a closed system (Q - W = dU)",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "J",
+          "desc": "heat into the system",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "J",
+          "desc": "work out of the system",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_U",
+          "unit": "J",
+          "desc": "change in internal energy",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394U",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q = W + delta_U"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q"
+      ],
+      "assumptions": [
+        "Q in and W out are positive."
+      ],
+      "method_references": [
+        "Q - W = dU"
+      ],
+      "synthetic_example": {
+        "W": 50000.0,
+        "delta_U": 25000.0
+      }
+    },
+    "thermo.cv_energy_balance": {
+      "title": "Steady-flow energy balance per unit mass (control volume)",
+      "variables": [
+        {
+          "name": "q",
+          "unit": "J/kg",
+          "desc": "heat transfer per unit mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w",
+          "unit": "J/kg",
+          "desc": "shaft work per unit mass (positive = out)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h1",
+          "unit": "J/kg",
+          "desc": "inlet enthalpy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2",
+          "unit": "J/kg",
+          "desc": "outlet enthalpy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V1",
+          "unit": "m/s",
+          "desc": "inlet velocity",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V2",
+          "unit": "m/s",
+          "desc": "outlet velocity",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration (9.80665 m/s^2)",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "z1",
+          "unit": "m",
+          "desc": "inlet elevation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "z2",
+          "unit": "m",
+          "desc": "outlet elevation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "q = w + (h2 - h1) + (V2**2 - V1**2)/2 + g*(z2 - z1)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "q"
+      ],
+      "assumptions": [
+        "Steady flow, one inlet and one outlet, per unit mass. Neglect a term by setting its pair equal (V1 = V2 or z1 = z2)."
+      ],
+      "method_references": [
+        "q - w = (h2 - h1) + (V2^2 - V1^2)/2 + g (z2 - z1)"
+      ],
+      "synthetic_example": {
+        "w": 100000.0,
+        "h1": 3000000.0,
+        "h2": 2900000.0,
+        "V1": 10.0,
+        "V2": 50.0,
+        "g": 9.80665,
+        "z1": 2.0,
+        "z2": 7.0
+      }
+    },
+    "thermo.nozzle_diffuser": {
+      "title": "Nozzle/diffuser exit velocity (adiabatic, no work)",
+      "variables": [
+        {
+          "name": "V2",
+          "unit": "m/s",
+          "desc": "exit velocity",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V1",
+          "unit": "m/s",
+          "desc": "inlet velocity",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h1",
+          "unit": "J/kg",
+          "desc": "inlet enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2",
+          "unit": "J/kg",
+          "desc": "exit enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "V2 = sqrt(V1**2 + 2*(h1 - h2))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "V2"
+      ],
+      "assumptions": [
+        "Adiabatic, no shaft work, no elevation change: V2 = sqrt(V1^2 + 2(h1 - h2)). A nozzle lowers h to raise V; a diffuser raises h to lower V."
+      ],
+      "method_references": [
+        "h1 + V1^2/2 = h2 + V2^2/2"
+      ],
+      "synthetic_example": {
+        "V1": 30.0,
+        "h1": 3000000.0,
+        "h2": 2800000.0
+      }
+    },
+    "thermo.turbine_work": {
+      "title": "Turbine work output (first law)",
+      "variables": [
+        {
+          "name": "w_out",
+          "unit": "J/kg",
+          "desc": "turbine work output per unit mass",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h1",
+          "unit": "J/kg",
+          "desc": "inlet enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2",
+          "unit": "J/kg",
+          "desc": "exit enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "w_out = h1 - h2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "w_out"
+      ],
+      "assumptions": [
+        "Adiabatic turbine, kinetic and potential changes neglected."
+      ],
+      "method_references": [
+        "w_out = h1 - h2 (turbine)"
+      ],
+      "synthetic_example": {
+        "h1": 3200000.0,
+        "h2": 2400000.0
+      }
+    },
+    "thermo.compressor_work": {
+      "title": "Compressor/pump work input (first law)",
+      "variables": [
+        {
+          "name": "w_in",
+          "unit": "J/kg",
+          "desc": "work input per unit mass",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h1",
+          "unit": "J/kg",
+          "desc": "inlet enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2",
+          "unit": "J/kg",
+          "desc": "exit enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "w_in = h2 - h1"
+      ],
+      "procedure": null,
+      "outputs": [
+        "w_in"
+      ],
+      "assumptions": [
+        "Adiabatic compressor/pump, kinetic and potential changes neglected."
+      ],
+      "method_references": [
+        "w_in = h2 - h1 (compressor/pump)"
+      ],
+      "synthetic_example": {
+        "h1": 300000.0,
+        "h2": 500000.0
+      }
+    },
+    "thermo.throttle": {
+      "title": "Throttling (adiabatic) valve: enthalpy is constant",
+      "variables": [
+        {
+          "name": "h1",
+          "unit": "J/kg",
+          "desc": "upstream enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2",
+          "unit": "J/kg",
+          "desc": "downstream enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "h2 = h1"
+      ],
+      "procedure": null,
+      "outputs": [
+        "h2"
+      ],
+      "assumptions": [
+        "Adiabatic throttle, no work, kinetic and potential changes neglected: h2 = h1."
+      ],
+      "method_references": [
+        "h2 = h1 (throttling)"
+      ],
+      "synthetic_example": {
+        "h1": 2800000.0
+      }
+    },
+    "thermo.mixing_chamber": {
+      "title": "Adiabatic mixing chamber outlet enthalpy",
+      "variables": [
+        {
+          "name": "h_mix",
+          "unit": "J/kg",
+          "desc": "outlet mixture enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mdot1",
+          "unit": "kg/s",
+          "desc": "mass flow of stream 1",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h1",
+          "unit": "J/kg",
+          "desc": "enthalpy of stream 1",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mdot2",
+          "unit": "kg/s",
+          "desc": "mass flow of stream 2",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2",
+          "unit": "J/kg",
+          "desc": "enthalpy of stream 2",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "h_mix = (mdot1*h1 + mdot2*h2)/(mdot1 + mdot2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "h_mix"
+      ],
+      "assumptions": [
+        "Adiabatic mixing, no work, kinetic and potential changes neglected; mass balance m3 = mdot1 + mdot2."
+      ],
+      "method_references": [
+        "mdot1 h1 + mdot2 h2 = (mdot1 + mdot2) h_mix"
+      ],
+      "synthetic_example": {
+        "mdot1": 1.0,
+        "h1": 500000.0,
+        "mdot2": 2.0,
+        "h2": 200000.0
+      }
+    },
+    "thermo.transient_filling": {
+      "title": "Adiabatic charging of an evacuated rigid tank from a line",
+      "variables": [
+        {
+          "name": "T2",
+          "unit": "K",
+          "desc": "final tank temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_line",
+          "unit": "K",
+          "desc": "supply-line temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T2 = gamma*T_line"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T2"
+      ],
+      "assumptions": [
+        "Initially evacuated rigid tank filled adiabatically from an ideal-gas line at constant T_line, cp/cv constant: the inflowing enthalpy shows up as internal energy, so u2 = h_line and T2 = gamma T_line."
+      ],
+      "method_references": [
+        "Adiabatic charging of an evacuated tank: T2 = gamma T_line (landmark)"
+      ],
+      "synthetic_example": {
+        "gamma": 1.4,
+        "T_line": 300.0
+      }
+    },
+    "thermo.transient_discharge": {
+      "title": "Reversible adiabatic blowdown of a rigid tank",
+      "variables": [
+        {
+          "name": "T2",
+          "unit": "K",
+          "desc": "final temperature of the gas remaining in the tank",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T1",
+          "unit": "K",
+          "desc": "initial temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P1",
+          "unit": "Pa",
+          "desc": "initial pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P2",
+          "unit": "Pa",
+          "desc": "final pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T2 = T1*(P2/P1)**((gamma - 1)/gamma)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T2"
+      ],
+      "assumptions": [
+        "Slow (reversible, adiabatic) discharge: the gas remaining in the rigid tank expands isentropically, T2 = T1 (P2/P1)^((gamma-1)/gamma)."
+      ],
+      "method_references": [
+        "Isentropic expansion of the gas remaining in the tank"
+      ],
+      "synthetic_example": {
+        "T1": 300.0,
+        "P1": 800000.0,
+        "P2": 100000.0,
+        "gamma": 1.4
+      }
+    },
+    "thermo.thermal_efficiency": {
+      "title": "Thermal efficiency",
+      "variables": [
+        {
+          "name": "eta_th",
+          "unit": "",
+          "desc": "thermal efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7th",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_net",
+          "unit": "J",
+          "desc": "net work output",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q_in",
+          "unit": "J",
+          "desc": "heat input",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eta_th = W_net/Q_in"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eta_th"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "eta_th = W_net/Q_in"
+      ],
+      "synthetic_example": {
+        "W_net": 400000.0,
+        "Q_in": 1000000.0
+      }
+    },
+    "thermo.carnot_efficiency": {
+      "title": "Carnot efficiency",
+      "variables": [
+        {
+          "name": "eta_carnot",
+          "unit": "",
+          "desc": "Carnot efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7c",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_L",
+          "unit": "K",
+          "desc": "low (sink) temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_H",
+          "unit": "K",
+          "desc": "high (source) temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eta_carnot = 1 - T_L/T_H"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eta_carnot"
+      ],
+      "assumptions": [
+        "Reversible cycle between T_H and T_L."
+      ],
+      "method_references": [
+        "Carnot efficiency eta = 1 - T_L/T_H"
+      ],
+      "synthetic_example": {
+        "T_L": 300.0,
+        "T_H": 600.0
+      }
+    },
+    "thermo.cop": {
+      "title": "Coefficient of performance (refrigerator and heat pump)",
+      "variables": [
+        {
+          "name": "COP_ref",
+          "unit": "",
+          "desc": "refrigerator COP (Q_L/W_in)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "COP_hp",
+          "unit": "",
+          "desc": "heat-pump COP (Q_H/W_in)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q_L",
+          "unit": "J",
+          "desc": "heat removed from the cold space",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q_H",
+          "unit": "J",
+          "desc": "heat delivered to the hot space",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_in",
+          "unit": "J",
+          "desc": "work input",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "COP_ref = Q_L/W_in",
+        "COP_hp = Q_H/W_in"
+      ],
+      "procedure": null,
+      "outputs": [
+        "COP_ref",
+        "COP_hp"
+      ],
+      "assumptions": [
+        "COP_ref = Q_L/W_in; COP_hp = Q_H/W_in. The first law gives Q_H = Q_L + W_in for any cycle (not only a reversible one), so COP_hp = COP_ref + 1 holds generally."
+      ],
+      "method_references": [
+        "COP_ref = Q_L/W_in; COP_hp = Q_H/W_in"
+      ],
+      "synthetic_example": {
+        "Q_L": 2000000.0,
+        "Q_H": 2500000.0,
+        "W_in": 500000.0
+      }
+    },
+    "thermo.cop_carnot": {
+      "title": "Carnot COPs of a refrigerator and heat pump",
+      "variables": [
+        {
+          "name": "COP_ref_max",
+          "unit": "",
+          "desc": "Carnot refrigerator COP T_L/(T_H - T_L)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "COP_hp_max",
+          "unit": "",
+          "desc": "Carnot heat-pump COP T_H/(T_H - T_L)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_L",
+          "unit": "K",
+          "desc": "low (cold) temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_H",
+          "unit": "K",
+          "desc": "high (hot) temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "COP_ref_max = T_L/(T_H - T_L)",
+        "COP_hp_max = T_H/(T_H - T_L)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "COP_ref_max",
+        "COP_hp_max"
+      ],
+      "assumptions": [
+        "Reversible cycle."
+      ],
+      "method_references": [
+        "Carnot COPs: T_L/(T_H - T_L) and T_H/(T_H - T_L)"
+      ],
+      "synthetic_example": {
+        "T_L": 268.15,
+        "T_H": 308.15
+      }
+    },
+    "thermo.entropy_generation": {
+      "title": "Entropy generation (per unit mass)",
+      "variables": [
+        {
+          "name": "s_gen",
+          "unit": "J/(kg*K)",
+          "desc": "entropy generation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s1",
+          "unit": "J/(kg*K)",
+          "desc": "initial specific entropy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s2",
+          "unit": "J/(kg*K)",
+          "desc": "final specific entropy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "q",
+          "unit": "J/kg",
+          "desc": "heat transfer into the system per unit mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_b",
+          "unit": "K",
+          "desc": "boundary temperature at which q is transferred",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "s_gen = (s2 - s1) - q/T_b"
+      ],
+      "procedure": null,
+      "outputs": [
+        "s_gen"
+      ],
+      "assumptions": [
+        "Closed system: s_gen = (s2 - s1) - q/T_b >= 0 for a real process (negative means the process is impossible)."
+      ],
+      "method_references": [
+        "Entropy balance: s_gen = (s2 - s1) - q/T_b"
+      ],
+      "synthetic_example": {
+        "s1": 1000.0,
+        "s2": 1500.0,
+        "q": 100000.0,
+        "T_b": 400.0
+      }
+    },
+    "thermo.isentropic_efficiency_turbine": {
+      "title": "Turbine isentropic efficiency",
+      "variables": [
+        {
+          "name": "eta_t",
+          "unit": "",
+          "desc": "turbine isentropic efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7t",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h1",
+          "unit": "J/kg",
+          "desc": "inlet enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2a",
+          "unit": "J/kg",
+          "desc": "actual exit enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2s",
+          "unit": "J/kg",
+          "desc": "isentropic exit enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eta_t = (h1 - h2a)/(h1 - h2s)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eta_t"
+      ],
+      "assumptions": [
+        "Expansion (h1 > h2a > h2s): eta_t = actual work / isentropic work."
+      ],
+      "method_references": [
+        "Turbine isentropic efficiency eta_t = (h1 - h2a)/(h1 - h2s)"
+      ],
+      "synthetic_example": {
+        "h1": 3200000.0,
+        "h2a": 2400000.0,
+        "h2s": 2200000.0
+      }
+    },
+    "thermo.isentropic_efficiency_compressor": {
+      "title": "Compressor isentropic efficiency",
+      "variables": [
+        {
+          "name": "eta_c",
+          "unit": "",
+          "desc": "compressor isentropic efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7c",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h1",
+          "unit": "J/kg",
+          "desc": "inlet enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2s",
+          "unit": "J/kg",
+          "desc": "isentropic exit enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2a",
+          "unit": "J/kg",
+          "desc": "actual exit enthalpy",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eta_c = (h2s - h1)/(h2a - h1)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eta_c"
+      ],
+      "assumptions": [
+        "Compression (h1 < h2s < h2a): eta_c = isentropic work / actual work."
+      ],
+      "method_references": [
+        "Compressor isentropic efficiency eta_c = (h2s - h1)/(h2a - h1)"
+      ],
+      "synthetic_example": {
+        "h1": 300000.0,
+        "h2s": 500000.0,
+        "h2a": 550000.0
+      }
+    },
+    "thermo.exergy": {
+      "title": "Specific flow exergy (with kinetic and potential terms)",
+      "variables": [
+        {
+          "name": "psi",
+          "unit": "J/kg",
+          "desc": "specific flow exergy",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c8",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "J/kg",
+          "desc": "specific enthalpy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h0",
+          "unit": "J/kg",
+          "desc": "dead-state enthalpy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T0",
+          "unit": "K",
+          "desc": "dead-state temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "J/(kg*K)",
+          "desc": "specific entropy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s0",
+          "unit": "J/(kg*K)",
+          "desc": "dead-state entropy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m/s",
+          "desc": "velocity (0 if negligible)",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "z",
+          "unit": "m",
+          "desc": "elevation above the dead state (0 if negligible)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _exergy(values):\n    \"\"\"Specific flow exergy psi = (h - h0) - T0 (s - s0) + V^2/2 + g z, with g = common.g0().\"\"\"\n    h, h0, T0, s, s0, V, z = (values[k] for k in ('h', 'h0', 'T0', 's', 's0', 'V', 'z'))\n    return {'psi': (h - h0) - T0 * (s - s0) + 0.5 * V * V + common.g0() * z}\n",
+        "source": "thermo.py",
+        "line": 116
+      },
+      "outputs": [
+        "psi"
+      ],
+      "assumptions": [
+        "Specific flow exergy psi = (h - h0) - T0 (s - s0) + V^2/2 + g z, with the potential term using standard gravity g = 9.80665 m/s^2 (common.g0()). Set V = 0 and z = 0 to drop the kinetic/potential terms."
+      ],
+      "method_references": [
+        "psi = (h - h0) - T0 (s - s0) + V^2/2 + g z"
+      ],
+      "synthetic_example": {
+        "h": 3000000.0,
+        "h0": 100000.0,
+        "T0": 298.15,
+        "s": 7000.0,
+        "s0": 360.0,
+        "V": 0.0,
+        "z": 0.0
+      }
+    },
+    "thermo.exergy_destruction": {
+      "title": "Exergy destruction (Gouy-Stodola)",
+      "variables": [
+        {
+          "name": "x_destroyed",
+          "unit": "J/kg",
+          "desc": "exergy destroyed per unit mass",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T0",
+          "unit": "K",
+          "desc": "dead-state temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s_gen",
+          "unit": "J/(kg*K)",
+          "desc": "entropy generation",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "x_destroyed = T0*s_gen"
+      ],
+      "procedure": null,
+      "outputs": [
+        "x_destroyed"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Exergy destroyed = T0 s_gen (Gouy-Stodola)"
+      ],
+      "synthetic_example": {
+        "T0": 298.15,
+        "s_gen": 200.0
+      }
+    },
+    "thermo.second_law_efficiency": {
+      "title": "Second-law efficiency",
+      "variables": [
+        {
+          "name": "eta_II",
+          "unit": "",
+          "desc": "second-law efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7II",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_destroyed",
+          "unit": "J/kg",
+          "desc": "exergy destroyed",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x_supplied",
+          "unit": "J/kg",
+          "desc": "exergy supplied",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eta_II = 1 - x_destroyed/x_supplied"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eta_II"
+      ],
+      "assumptions": [
+        "eta_II = 1 - (exergy destroyed)/(exergy supplied)."
+      ],
+      "method_references": [
+        "Second-law efficiency eta_II = 1 - x_destroyed/x_supplied"
+      ],
+      "synthetic_example": {
+        "x_destroyed": 30000.0,
+        "x_supplied": 100000.0
+      }
+    },
+    "thermo.partial_pressure": {
+      "title": "Partial pressure of a component (Dalton)",
+      "variables": [
+        {
+          "name": "p_i",
+          "unit": "Pa",
+          "desc": "partial pressure of component i",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y_i",
+          "unit": "",
+          "desc": "mole fraction of component i",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "Pa",
+          "desc": "total mixture pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "p_i = y_i*P"
+      ],
+      "procedure": null,
+      "outputs": [
+        "p_i"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Dalton's law: p_i = y_i P"
+      ],
+      "synthetic_example": {
+        "y_i": 0.21,
+        "P": 101325.0
+      }
+    },
+    "thermo.gas_mixture": {
+      "title": "Gas-mixture mole/mass fractions and molar mass",
+      "variables": [
+        {
+          "name": "mf1",
+          "unit": "",
+          "desc": "mass fraction of component 1",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M_mix",
+          "unit": "kg/kmol",
+          "desc": "mixture molar mass",
+          "lo": 1.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y1",
+          "unit": "",
+          "desc": "mole fraction of component 1",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "y2",
+          "unit": "",
+          "desc": "mole fraction of component 2",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M1",
+          "unit": "kg/kmol",
+          "desc": "molar mass of component 1",
+          "lo": 1.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M2",
+          "unit": "kg/kmol",
+          "desc": "molar mass of component 2",
+          "lo": 1.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "mf1 = y1*M1/(y1*M1 + y2*M2)",
+        "M_mix = y1*M1 + y2*M2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "mf1",
+        "M_mix"
+      ],
+      "assumptions": [
+        "Binary mixture. mf1 = (y1 M1)/(y1 M1 + y2 M2); M_mix = y1 M1 + y2 M2. The mixture gas constant is R_mix = 8314.5/M_mix [J/(kg K)]."
+      ],
+      "method_references": [
+        "Mole/mass fraction conversion and mixture molar mass"
+      ],
+      "synthetic_example": {
+        "y1": 0.21,
+        "y2": 0.79,
+        "M1": 32.0,
+        "M2": 28.0
+      }
+    },
+    "thermo.clapeyron": {
+      "title": "Clapeyron equation (saturation pressure slope)",
+      "variables": [
+        {
+          "name": "dPdT",
+          "unit": "Pa/K",
+          "desc": "saturation pressure-temperature slope",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s_g",
+          "unit": "J/(kg*K)",
+          "desc": "saturated-vapour entropy",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s_f",
+          "unit": "J/(kg*K)",
+          "desc": "saturated-liquid entropy",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_g",
+          "unit": "m^3/kg",
+          "desc": "saturated-vapour specific volume",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_f",
+          "unit": "m^3/kg",
+          "desc": "saturated-liquid specific volume",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "dPdT = (s_g - s_f)/(v_g - v_f)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "dPdT"
+      ],
+      "assumptions": [
+        "This is the Maxwell relation (dP/dT)_v = (ds/dv)_T evaluated along the saturation curve, equal to h_fg/(T v_fg). The four Maxwell relations are (dT/dv)_s = -(dP/ds)_v, (dT/dP)_s = (dv/ds)_P, (dP/dT)_v = (ds/dv)_T, (dv/dT)_P = -(ds/dP)_T."
+      ],
+      "method_references": [
+        "Clapeyron equation / Maxwell relation along saturation"
+      ],
+      "synthetic_example": {
+        "s_g": 7354.1,
+        "s_f": 1307.2,
+        "v_g": 1.694,
+        "v_f": 0.001044
+      }
+    },
+    "thermo.clausius_clapeyron": {
+      "title": "Clausius-Clapeyron equation (ideal-gas vapour)",
+      "variables": [
+        {
+          "name": "P2",
+          "unit": "Pa",
+          "desc": "vapour pressure at T2",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P1",
+          "unit": "Pa",
+          "desc": "vapour pressure at T1",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_fg",
+          "unit": "J/kg",
+          "desc": "latent heat of vaporisation",
+          "lo": -10000000.0,
+          "hi": 10000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "J/(kg*K)",
+          "desc": "specific gas constant",
+          "lo": 1.0,
+          "hi": 10000.0,
+          "label": "R",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T1",
+          "unit": "K",
+          "desc": "temperature at state 1",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2",
+          "unit": "K",
+          "desc": "temperature at state 2",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P2 = P1*exp((h_fg/R)*(1/T1 - 1/T2))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P2"
+      ],
+      "assumptions": [
+        "Ideal-gas vapour with v_g >> v_f and constant h_fg."
+      ],
+      "method_references": [
+        "Clausius-Clapeyron: ln(P2/P1) = (h_fg/R)(1/T1 - 1/T2)"
+      ],
+      "synthetic_example": {
+        "P1": 101325.0,
+        "h_fg": 2256000.0,
+        "R": 461.5,
+        "T1": 373.15,
+        "T2": 383.15
+      }
+    },
+    "thermo.joule_thomson": {
+      "title": "Joule-Thomson coefficient (finite difference on enthalpy)",
+      "variables": [
+        {
+          "name": "fluid",
+          "unit": "",
+          "desc": "CoolProp fluid name, e.g. Water, R134a, Air",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "temperature",
+          "lo": 250.0,
+          "hi": 500.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "Pa",
+          "desc": "pressure",
+          "lo": 10000.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "K/Pa",
+          "desc": "Joule-Thomson coefficient (dT/dP)_h",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cp",
+          "unit": "J/(kg*K)",
+          "desc": "cp from the enthalpy finite difference",
+          "lo": 1.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _joule_thomson(values):\n    \"\"\"Joule-Thomson coefficient mu = (dT/dP)_h by central finite difference on h (CoolProp states).\n\n    mu = -(dh/dP)_T / (dh/dT)_P, with (dh/dP)_T and (dh/dT)_P evaluated by central differences on\n    common.fluid_state; the denominator is approximately cp. Stated as a numerical finite difference.\n    The four stencil states must share one single phase, otherwise a phase boundary is being straddled\n    and the finite difference is meaningless (raises MechError).\n    \"\"\"\n    fluid = _fluid_name(values['fluid'])\n    T, P = values['T'], values['P']\n    dT, dP = 0.5, 1000.0\n    s_pp = common.fluid_state(fluid, T=T, P=P + dP)\n    s_pm = common.fluid_state(fluid, T=T, P=P - dP)\n    s_tp = common.fluid_state(fluid, T=T + dT, P=P)\n    s_tm = common.fluid_state(fluid, T=T - dT, P=P)\n    phases = {s_pp['phase'], s_pm['phase'], s_tp['phase'], s_tm['phase']}\n    if len(phases) != 1 or next(iter(phases)) in ('twophase', 'unknown', None):\n        raise MechError('Joule-Thomson coefficient needs a single-phase state; the +/-dT/dP stencil at '\n                        f'(T = {T:g} K, P = {P:g} Pa) crosses a phase boundary '\n                        f'({sorted(map(str, phases))}). Move the state away from the saturation curve.')\n    dh_dP = (s_pp['h'] - s_pm['h']) / (2.0 * dP)\n    dh_dT = (s_tp['h'] - s_tm['h']) / (2.0 * dT)\n    return {'mu': -dh_dP / dh_dT, 'cp': dh_dT}\n",
+        "source": "thermo.py",
+        "line": 62
+      },
+      "outputs": [
+        "mu",
+        "cp"
+      ],
+      "assumptions": [
+        "mu = (dT/dP)_h = -(dh/dP)_T/(dh/dT)_P, evaluated by central finite difference on common.fluid_state (CoolProp) with dT = 0.5 K and dP = 1000 Pa, so it is a numerical derivative, stated as such. mu > 0 cools on throttling; mu < 0 heats."
+      ],
+      "method_references": [
+        "Joule-Thomson coefficient by finite difference on h (CoolProp states)"
+      ],
+      "synthetic_example": {
+        "fluid": "Air",
+        "T": 300.0,
+        "P": 101325.0
+      }
+    },
+    "thermo.fluid_saturation_dome": {
+      "title": "Saturation curve (T-s / P-h dome) from common.saturation",
+      "variables": [
+        {
+          "name": "fluid",
+          "unit": "",
+          "desc": "CoolProp fluid name, e.g. Water, R134a, Air",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": null
+        },
+        {
+          "name": "T_range",
+          "unit": "",
+          "desc": "saturation temperature range [T_min (K), T_max (K)]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "P_min",
+          "unit": "Pa",
+          "desc": "saturation pressure at T_min",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_max",
+          "unit": "Pa",
+          "desc": "saturation pressure at T_max",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dome",
+          "unit": "",
+          "desc": "arrays T, P, s_f, s_g, h_f, h_g (all SI) along the saturation curve",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _saturation_dome(values):\n    \"\"\"Saturation curve points from common.saturation, for a T-s / P-h chart.\"\"\"\n    fluid = _fluid_name(values['fluid'])\n    rng = values['T_range']\n    if not isinstance(rng, list) or len(rng) != 2:\n        raise MechError('T_range: give [T_min (K), T_max (K)]')\n    T_min, T_max = float(rng[0]), float(rng[1])\n    if T_min >= T_max:\n        raise MechError('T_range needs T_min < T_max, inside the fluid saturation range')\n    N = 40\n    Ts = [T_min + (T_max - T_min) * i / (N - 1) for i in range(N)]\n    Ps, sfs, sgs, hfs, hgs = [], [], [], [], []\n    for T in Ts:\n        sat = common.saturation(fluid, T=T)\n        Ps.append(sat['P'])\n        sfs.append(sat['liquid']['s'])\n        sgs.append(sat['vapour']['s'])\n        hfs.append(sat['liquid']['h'])\n        hgs.append(sat['vapour']['h'])\n    return {'P_min': Ps[0], 'P_max': Ps[-1],\n            'dome': {'T': Ts, 'P': Ps, 's_f': sfs, 's_g': sgs, 'h_f': hfs, 'h_g': hgs}}\n",
+        "source": "thermo.py",
+        "line": 87
+      },
+      "outputs": [
+        "P_min",
+        "P_max",
+        "dome"
+      ],
+      "assumptions": [
+        "Saturated liquid and vapour states from common.saturation (CoolProp) at 40 evenly spaced temperatures in [T_min, T_max]; T_max must be below the critical temperature."
+      ],
+      "method_references": [
+        "CoolProp saturation curve (via common.saturation)"
+      ],
+      "synthetic_example": {
+        "fluid": "Water",
+        "T_range": [
+          300.0,
+          600.0
+        ]
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "thermo-001",
+      "calculator": "thermo.ideal_gas_law",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v": "0.847 m^3/kg",
+        "R": "287 J/(kg*K)",
+        "T": "15 degC"
+      },
+      "solve_for": [
+        "P"
+      ],
+      "expected_as_specified": {
+        "P": "97637.6 Pa"
+      },
+      "expected_SI": {
+        "P": 97637.6
+      },
+      "actual_SI": {
+        "P": {
+          "value": 97637.60330578512,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc thermo.ideal_gas_law (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "P": {
+          "absolute_error": 0.003305785110569559,
+          "relative_error": 3.385770554140576e-08,
+          "allowed_absolute_error": 48.8188,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = R T / v = 287 x 288.15 / 0.847 = 97637.6 Pa"
+      }
+    },
+    {
+      "id": "thermo-002",
+      "calculator": "thermo.compressibility_factor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": "10 MPa",
+        "v": "0.005 m^3/kg",
+        "R": "287 J/(kg*K)",
+        "T": "300 K"
+      },
+      "solve_for": [
+        "Z"
+      ],
+      "expected_as_specified": {
+        "Z": 0.58072
+      },
+      "expected_SI": {
+        "Z": 0.58072
+      },
+      "actual_SI": {
+        "Z": {
+          "value": 0.5807200929152149,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.compressibility_factor (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Z": {
+          "absolute_error": 9.291521485543797e-08,
+          "relative_error": 1.6000002558106827e-07,
+          "allowed_absolute_error": 0.00029036000000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Z = P v/(R T) = 1e7 x 0.005/(287 x 300) = 50000/86100 = 0.58072"
+      }
+    },
+    {
+      "id": "thermo-003",
+      "calculator": "thermo.specific_heats",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R": "287 J/(kg*K)",
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "cp",
+        "cv"
+      ],
+      "expected_as_specified": {
+        "cp": "1004.5 J/(kg*K)",
+        "cv": "717.5 J/(kg*K)"
+      },
+      "expected_SI": {
+        "cp": 1004.5,
+        "cv": 717.5
+      },
+      "actual_SI": {
+        "cp": {
+          "value": 1004.5000000000001,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.specific_heats (symbolic)"
+        },
+        "cv": {
+          "value": 717.5000000000001,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.specific_heats (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "cp": {
+          "absolute_error": 1.1368683772161603e-13,
+          "relative_error": 1.131775387970294e-16,
+          "allowed_absolute_error": 2.009,
+          "passed": true
+        },
+        "cv": {
+          "absolute_error": 1.1368683772161603e-13,
+          "relative_error": 1.5844855431584116e-16,
+          "allowed_absolute_error": 1.435,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "cp = 1.4 x 287/0.4 = 1004.5; cv = 287/0.4 = 717.5"
+      }
+    },
+    {
+      "id": "thermo-004",
+      "calculator": "thermo.specific_heats",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cp": "1004.5 J/(kg*K)",
+        "R": "287 J/(kg*K)"
+      },
+      "solve_for": [
+        "gamma",
+        "cv"
+      ],
+      "expected_as_specified": {
+        "gamma": 1.4
+      },
+      "expected_SI": {
+        "gamma": 1.4
+      },
+      "actual_SI": {
+        "gamma": {
+          "value": 1.4,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.specific_heats (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "gamma": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0007,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "gamma = cp/(cp - R) = 1004.5/717.5 = 1.4; cv = cp - R = 717.5"
+      }
+    },
+    {
+      "id": "thermo-005",
+      "calculator": "thermo.ideal_gas_energy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cv": "718 J/(kg*K)",
+        "cp": "1005 J/(kg*K)",
+        "delta_T": "100 delta_degC"
+      },
+      "solve_for": [
+        "delta_u",
+        "delta_h"
+      ],
+      "expected_as_specified": {
+        "delta_u": "71.8 kJ/kg",
+        "delta_h": "100.5 kJ/kg"
+      },
+      "expected_SI": {
+        "delta_u": 71800.0,
+        "delta_h": 100500.0
+      },
+      "actual_SI": {
+        "delta_u": {
+          "value": 71800.0,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.ideal_gas_energy (symbolic)"
+        },
+        "delta_h": {
+          "value": 100500.0,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.ideal_gas_energy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "delta_u": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 143.6,
+          "passed": true
+        },
+        "delta_h": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 201.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "du = 718 x 100 = 71800; dh = 1005 x 100 = 100500"
+      }
+    },
+    {
+      "id": "thermo-006",
+      "calculator": "thermo.ideal_gas_entropy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cp": "1005 J/(kg*K)",
+        "R": "287 J/(kg*K)",
+        "T1": "300 K",
+        "T2": "600 K",
+        "P1": "100 kPa",
+        "P2": "200 kPa"
+      },
+      "solve_for": [
+        "delta_s"
+      ],
+      "expected_as_specified": {
+        "delta_s": "497.680 J/(kg*K)"
+      },
+      "expected_SI": {
+        "delta_s": 497.68
+      },
+      "actual_SI": {
+        "delta_s": {
+          "value": 497.6796756420408,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.ideal_gas_entropy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "delta_s": {
+          "absolute_error": 0.0003243579591867274,
+          "relative_error": 6.51739991936038e-07,
+          "allowed_absolute_error": 0.24884,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "ds = (1005 - 287) ln(2) = 718 x 0.693147 = 497.680 J/(kg K)"
+      }
+    },
+    {
+      "id": "thermo-007",
+      "calculator": "thermo.fluid_state_TP",
+      "classification": "backend regression; not independent physical validation",
+      "inputs": {
+        "fluid": "Air",
+        "T": "300 K",
+        "P": "101.325 kPa"
+      },
+      "solve_for": [
+        "rho",
+        "h",
+        "s",
+        "u",
+        "cp",
+        "cv"
+      ],
+      "expected_as_specified": {
+        "rho": "1.176996 kg/m^3",
+        "h": "426.298 kJ/kg",
+        "s": "3886.71 J/(kg*K)",
+        "u": "340.210 kJ/kg",
+        "cp": "1006.37 J/(kg*K)",
+        "cv": "717.972 J/(kg*K)"
+      },
+      "expected_SI": {
+        "rho": 1.176996,
+        "h": 426298.0,
+        "s": 3886.71,
+        "u": 340210.0,
+        "cp": 1006.37,
+        "cv": 717.972
+      },
+      "actual_SI": {
+        "rho": {
+          "value": 1.1769955883877592,
+          "unit": "kg/m^3",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        },
+        "h": {
+          "value": 426297.7743916913,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        },
+        "s": {
+          "value": 3886.714146286904,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        },
+        "u": {
+          "value": 340209.941098455,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        },
+        "cp": {
+          "value": 1006.3739076641027,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        },
+        "cv": {
+          "value": 717.9715594754342,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "rho": {
+          "absolute_error": 4.1161224073604785e-07,
+          "relative_error": 3.497142222539821e-07,
+          "allowed_absolute_error": 0.000588498,
+          "passed": true
+        },
+        "h": {
+          "absolute_error": 0.22560830868314952,
+          "relative_error": 5.29226758472124e-07,
+          "allowed_absolute_error": 213.149,
+          "passed": true
+        },
+        "s": {
+          "absolute_error": 0.004146286903960572,
+          "relative_error": 1.066785765843238e-06,
+          "allowed_absolute_error": 1.9433550000000002,
+          "passed": true
+        },
+        "u": {
+          "absolute_error": 0.058901545009575784,
+          "relative_error": 1.7313290323498953e-07,
+          "allowed_absolute_error": 170.105,
+          "passed": true
+        },
+        "cp": {
+          "absolute_error": 0.0039076641027122605,
+          "relative_error": 3.882929839633793e-06,
+          "allowed_absolute_error": 0.503185,
+          "passed": true
+        },
+        "cv": {
+          "absolute_error": 0.00044052456576082477,
+          "relative_error": 6.135678908938299e-07,
+          "allowed_absolute_error": 0.35898599999999997,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "CoolProp Air @ (300 K, 101325 Pa): rho = 1.176996, h = 426297.8, s = 3886.71; u = h - P/rho = 426297.8 - 101325/1.176996 = 340209.9; cp = 1006.37, cv = 717.972"
+      }
+    },
+    {
+      "id": "thermo-008",
+      "calculator": "thermo.fluid_state_TP",
+      "classification": "backend regression; not independent physical validation",
+      "inputs": {
+        "fluid": "Nitrogen",
+        "T": "100 K",
+        "P": "10 bar"
+      },
+      "solve_for": [
+        "rho",
+        "h",
+        "s",
+        "u",
+        "cp",
+        "cv"
+      ],
+      "expected_as_specified": {
+        "rho": "690.766 kg/m^3",
+        "h": "-73.1834 kJ/kg",
+        "s": "3373.12 J/(kg*K)",
+        "u": "-74.6311 kJ/kg",
+        "cp": "2304.75 J/(kg*K)",
+        "cv": "983.309 J/(kg*K)"
+      },
+      "expected_SI": {
+        "rho": 690.766,
+        "h": -73183.40000000001,
+        "s": 3373.12,
+        "u": -74631.1,
+        "cp": 2304.75,
+        "cv": 983.309
+      },
+      "actual_SI": {
+        "rho": {
+          "value": 690.765694391924,
+          "unit": "kg/m^3",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        },
+        "h": {
+          "value": -73183.43309051401,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        },
+        "s": {
+          "value": 3373.11923584519,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        },
+        "u": {
+          "value": -74631.10197175498,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        },
+        "cp": {
+          "value": 2304.75240784394,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        },
+        "cv": {
+          "value": 983.3092837891211,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TP (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "rho": {
+          "absolute_error": 0.00030560807601887063,
+          "relative_error": 4.4241910577369275e-07,
+          "allowed_absolute_error": 0.345383,
+          "passed": true
+        },
+        "h": {
+          "absolute_error": 0.03309051399992313,
+          "relative_error": 4.521587409156056e-07,
+          "allowed_absolute_error": 36.5917,
+          "passed": true
+        },
+        "s": {
+          "absolute_error": 0.0007641548099854845,
+          "relative_error": 2.265424325210738e-07,
+          "allowed_absolute_error": 1.68656,
+          "passed": true
+        },
+        "u": {
+          "absolute_error": 0.001971754973055795,
+          "relative_error": 2.6420017567150888e-08,
+          "allowed_absolute_error": 37.31555,
+          "passed": true
+        },
+        "cp": {
+          "absolute_error": 0.00240784394009097,
+          "relative_error": 1.0447310728239375e-06,
+          "allowed_absolute_error": 1.152375,
+          "passed": true
+        },
+        "cv": {
+          "absolute_error": 0.00028378912111293175,
+          "relative_error": 2.886062479982709e-07,
+          "allowed_absolute_error": 0.4916545,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "CoolProp Nitrogen @ (100 K, 1 MPa), subcooled liquid: rho = 690.766, h = -73183.43, s = 3373.12; u = h - P/rho = -73183.43 - 1e6/690.766 = -74631.10; cp = 2304.75, cv = 983.309. h and u are negative, exercising the signed declarations"
+      }
+    },
+    {
+      "id": "thermo-009",
+      "calculator": "thermo.fluid_state_TQ",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "fluid": "Water",
+        "T": "373.15 K",
+        "Q": 0.5
+      },
+      "solve_for": [
+        "h",
+        "P",
+        "rho",
+        "s",
+        "u"
+      ],
+      "expected_as_specified": {
+        "h": "1547.37 kJ/kg",
+        "P": "101.418 kPa",
+        "rho": "1.19559 kg/m^3",
+        "s": "4330.67 J/(kg*K)"
+      },
+      "expected_SI": {
+        "h": 1547370.0,
+        "P": 101418.0,
+        "rho": 1.19559,
+        "s": 4330.67
+      },
+      "actual_SI": {
+        "h": {
+          "value": 1547368.023656177,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TQ (procedure)"
+        },
+        "P": {
+          "value": 101417.9966600156,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TQ (procedure)"
+        },
+        "rho": {
+          "value": 1.1955933340229905,
+          "unit": "kg/m^3",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TQ (procedure)"
+        },
+        "s": {
+          "value": 4330.66514392419,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_state_TQ (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "h": {
+          "absolute_error": 1.9763438228983432,
+          "relative_error": 1.2772276978992375e-06,
+          "allowed_absolute_error": 773.6850000000001,
+          "passed": true
+        },
+        "P": {
+          "absolute_error": 0.003339984396006912,
+          "relative_error": 3.29328560611224e-08,
+          "allowed_absolute_error": 50.709,
+          "passed": true
+        },
+        "rho": {
+          "absolute_error": 3.3340229905753915e-06,
+          "relative_error": 2.7886005993487667e-06,
+          "allowed_absolute_error": 0.0005977949999999999,
+          "passed": true
+        },
+        "s": {
+          "absolute_error": 0.004856075810494076,
+          "relative_error": 1.1213220611346688e-06,
+          "allowed_absolute_error": 2.1653350000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Water @ 373.15 K: h_f = 419166.2, h_g = 2675569.9; h = h_f + 0.5 h_fg = 419166.2 + 0.5 x 2256403.7 = 1547368.0; P = 101418 Pa; rho = 1.19559; s = s_f + 0.5 s_fg = 1307.21 + 0.5 x 6046.91 = 4330.67"
+      }
+    },
+    {
+      "id": "thermo-010",
+      "calculator": "thermo.mixture_quality",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v": "0.5 m^3/kg",
+        "v_f": "0.001044 m^3/kg",
+        "v_g": "1.6940 m^3/kg"
+      },
+      "solve_for": [
+        "x"
+      ],
+      "expected_as_specified": {
+        "x": 0.294725
+      },
+      "expected_SI": {
+        "x": 0.294725
+      },
+      "actual_SI": {
+        "x": {
+          "value": 0.29472472999888955,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.mixture_quality (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "x": {
+          "absolute_error": 2.700011104694866e-07,
+          "relative_error": 9.161120043073597e-07,
+          "allowed_absolute_error": 0.0001473625,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "x = (0.5 - 0.001044)/(1.6940 - 0.001044) = 0.498956/1.692956 = 0.294725"
+      }
+    },
+    {
+      "id": "thermo-011",
+      "calculator": "thermo.mixture_quality",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "x": 0.294725,
+        "v_f": "0.001044 m^3/kg",
+        "v_g": "1.6940 m^3/kg"
+      },
+      "solve_for": [
+        "v"
+      ],
+      "expected_as_specified": {
+        "v": "0.5 m^3/kg"
+      },
+      "expected_SI": {
+        "v": 0.5
+      },
+      "actual_SI": {
+        "v": {
+          "value": 0.5000004571000001,
+          "unit": "m^3/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.mixture_quality (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "v": {
+          "absolute_error": 4.5710000007304075e-07,
+          "relative_error": 9.142000001460815e-07,
+          "allowed_absolute_error": 0.00025,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v = v_f + x(v_g - v_f) = 0.001044 + 0.294725 x 1.692956 = 0.5 m^3/kg"
+      }
+    },
+    {
+      "id": "thermo-012",
+      "calculator": "thermo.boundary_work_isobaric",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": "200 kPa",
+        "V1": "100 L",
+        "V2": "300 L"
+      },
+      "solve_for": [
+        "W"
+      ],
+      "expected_as_specified": {
+        "W": "40 kJ"
+      },
+      "expected_SI": {
+        "W": 40000.0
+      },
+      "actual_SI": {
+        "W": {
+          "value": 40000.0,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc thermo.boundary_work_isobaric (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "W": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 80.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "W = 200000 x (0.3 - 0.1) = 40000 J"
+      }
+    },
+    {
+      "id": "thermo-013",
+      "calculator": "thermo.boundary_work_isothermal",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P1": "100 kPa",
+        "V1": "0.5 m^3",
+        "V2": "1.0 m^3"
+      },
+      "solve_for": [
+        "W"
+      ],
+      "expected_as_specified": {
+        "W": "34.6574 kJ"
+      },
+      "expected_SI": {
+        "W": 34657.4
+      },
+      "actual_SI": {
+        "W": {
+          "value": 34657.35902799726,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc thermo.boundary_work_isothermal (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "W": {
+          "absolute_error": 0.04097200273827184,
+          "relative_error": 1.1822007057157155e-06,
+          "allowed_absolute_error": 17.3287,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "W = 100000 x 0.5 x ln(2) = 50000 x 0.693147 = 34657.4 J"
+      }
+    },
+    {
+      "id": "thermo-014",
+      "calculator": "thermo.boundary_work_polytropic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P1": "100 kPa",
+        "V1": "0.1 m^3",
+        "P2": "400 kPa",
+        "V2": "0.035 m^3",
+        "n": 1.3
+      },
+      "solve_for": [
+        "W"
+      ],
+      "expected_as_specified": {
+        "W": "-13.3333 kJ"
+      },
+      "expected_SI": {
+        "W": -13333.3
+      },
+      "actual_SI": {
+        "W": {
+          "value": -13333.333333333338,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc thermo.boundary_work_polytropic (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "W": {
+          "absolute_error": 0.03333333333830524,
+          "relative_error": 2.500006250388519e-06,
+          "allowed_absolute_error": 6.66665,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "W = (400000 x 0.035 - 100000 x 0.1)/(1 - 1.3) = (14000 - 10000)/(-0.3) = -13333.3 J"
+      }
+    },
+    {
+      "id": "thermo-015",
+      "calculator": "thermo.first_law_closed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "50 kJ",
+        "delta_U": "25 kJ"
+      },
+      "solve_for": [
+        "Q"
+      ],
+      "expected_as_specified": {
+        "Q": "75 kJ"
+      },
+      "expected_SI": {
+        "Q": 75000.0
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 75000.0,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc thermo.first_law_closed (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 150.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = W + dU = 50000 + 25000 = 75000 J"
+      }
+    },
+    {
+      "id": "thermo-016",
+      "calculator": "thermo.cv_energy_balance",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "w": "100 kJ/kg",
+        "h1": "3 MJ/kg",
+        "h2": "2.9 MJ/kg",
+        "V1": "10 m/s",
+        "V2": "50 m/s",
+        "g": "9.80665 m/s^2",
+        "z1": "2 m",
+        "z2": "7 m"
+      },
+      "solve_for": [
+        "q"
+      ],
+      "expected_as_specified": {
+        "q": "1249.03 J/kg"
+      },
+      "expected_SI": {
+        "q": 1249.03
+      },
+      "actual_SI": {
+        "q": {
+          "value": 1249.0332499998622,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.cv_energy_balance (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "q": {
+          "absolute_error": 0.003249999862191544,
+          "relative_error": 2.602019056541111e-06,
+          "allowed_absolute_error": 0.624515,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "q = 100000 + (2.9e6 - 3e6) + (2500 - 100)/2 + 9.80665 x (7 - 2) = 100000 - 100000 + 1200 + 49.03 = 1249.03 J/kg"
+      }
+    },
+    {
+      "id": "thermo-017",
+      "calculator": "thermo.nozzle_diffuser",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V1": "30 m/s",
+        "h1": "3000 kJ/kg",
+        "h2": "2800 kJ/kg"
+      },
+      "solve_for": [
+        "V2"
+      ],
+      "expected_as_specified": {
+        "V2": "633.167 m/s"
+      },
+      "expected_SI": {
+        "V2": 633.167
+      },
+      "actual_SI": {
+        "V2": {
+          "value": 633.1666447310693,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc thermo.nozzle_diffuser (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "V2": {
+          "absolute_error": 0.00035526893077530985,
+          "relative_error": 5.610983054633451e-07,
+          "allowed_absolute_error": 0.3165835,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V2 = sqrt(30^2 + 2 x 200000) = sqrt(400900) = 633.167 m/s"
+      }
+    },
+    {
+      "id": "thermo-018",
+      "calculator": "thermo.turbine_work",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h1": "3.2 MJ/kg",
+        "h2": "2.4 MJ/kg"
+      },
+      "solve_for": [
+        "w_out"
+      ],
+      "expected_as_specified": {
+        "w_out": "800 kJ/kg"
+      },
+      "expected_SI": {
+        "w_out": 800000.0
+      },
+      "actual_SI": {
+        "w_out": {
+          "value": 800000.0,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.turbine_work (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "w_out": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1600.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "w_out = 3.2e6 - 2.4e6 = 800000 J/kg"
+      }
+    },
+    {
+      "id": "thermo-019",
+      "calculator": "thermo.compressor_work",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h1": "300 kJ/kg",
+        "h2": "500 kJ/kg"
+      },
+      "solve_for": [
+        "w_in"
+      ],
+      "expected_as_specified": {
+        "w_in": "200 kJ/kg"
+      },
+      "expected_SI": {
+        "w_in": 200000.0
+      },
+      "actual_SI": {
+        "w_in": {
+          "value": 200000.0,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.compressor_work (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "w_in": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 400.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "w_in = 500000 - 300000 = 200000 J/kg"
+      }
+    },
+    {
+      "id": "thermo-020",
+      "calculator": "thermo.throttle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h1": "2.8 MJ/kg"
+      },
+      "solve_for": [
+        "h2"
+      ],
+      "expected_as_specified": {
+        "h2": "2.8 MJ/kg"
+      },
+      "expected_SI": {
+        "h2": 2800000.0
+      },
+      "actual_SI": {
+        "h2": {
+          "value": 2800000.0,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.throttle (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "h2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5600.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "h2 = h1 = 2.8 MJ/kg (isenthalpic)"
+      }
+    },
+    {
+      "id": "thermo-021",
+      "calculator": "thermo.mixing_chamber",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mdot1": "1 kg/s",
+        "h1": "500 kJ/kg",
+        "mdot2": "2 kg/s",
+        "h2": "200 kJ/kg"
+      },
+      "solve_for": [
+        "h_mix"
+      ],
+      "expected_as_specified": {
+        "h_mix": "300 kJ/kg"
+      },
+      "expected_SI": {
+        "h_mix": 300000.0
+      },
+      "actual_SI": {
+        "h_mix": {
+          "value": 300000.0,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.mixing_chamber (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "h_mix": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 600.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "h_mix = (1 x 500000 + 2 x 200000)/3 = 900000/3 = 300000 J/kg"
+      }
+    },
+    {
+      "id": "thermo-022",
+      "calculator": "thermo.transient_filling",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "gamma": 1.4,
+        "T_line": "300 K"
+      },
+      "solve_for": [
+        "T2"
+      ],
+      "expected_as_specified": {
+        "T2": "420 K"
+      },
+      "expected_SI": {
+        "T2": 420.0
+      },
+      "actual_SI": {
+        "T2": {
+          "value": 420.0,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc thermo.transient_filling (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.84,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: adiabatic charging of an initially evacuated rigid tank from an ideal-gas line gives u2 = h_line, so T2 = gamma T_line = 1.4 x 300 = 420 K (recalled; not re-read)"
+      }
+    },
+    {
+      "id": "thermo-023",
+      "calculator": "thermo.transient_discharge",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T1": "300 K",
+        "P1": "800 kPa",
+        "P2": "100 kPa",
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "T2"
+      ],
+      "expected_as_specified": {
+        "T2": "165.613 K"
+      },
+      "expected_SI": {
+        "T2": 165.613
+      },
+      "actual_SI": {
+        "T2": {
+          "value": 165.61342705107185,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc thermo.transient_discharge (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T2": {
+          "absolute_error": 0.0004270510718527021,
+          "relative_error": 2.5786083933791557e-06,
+          "allowed_absolute_error": 0.0828065,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T2 = 300 x (0.125)^(0.4/1.4) = 300 x 0.552045 = 165.613 K"
+      }
+    },
+    {
+      "id": "thermo-024",
+      "calculator": "thermo.thermal_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W_net": "400 kJ",
+        "Q_in": "1000 kJ"
+      },
+      "solve_for": [
+        "eta_th"
+      ],
+      "expected_as_specified": {
+        "eta_th": 0.4
+      },
+      "expected_SI": {
+        "eta_th": 0.4
+      },
+      "actual_SI": {
+        "eta_th": {
+          "value": 0.4,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.thermal_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta_th": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0008,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "eta_th = 400000/1000000 = 0.4"
+      }
+    },
+    {
+      "id": "thermo-025",
+      "calculator": "thermo.carnot_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T_L": "300 K",
+        "T_H": "600 K"
+      },
+      "solve_for": [
+        "eta_carnot"
+      ],
+      "expected_as_specified": {
+        "eta_carnot": 0.5
+      },
+      "expected_SI": {
+        "eta_carnot": 0.5
+      },
+      "actual_SI": {
+        "eta_carnot": {
+          "value": 0.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.carnot_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta_carnot": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "eta = 1 - 300/600 = 0.5"
+      }
+    },
+    {
+      "id": "thermo-026",
+      "calculator": "thermo.cop",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Q_L": "2 MJ",
+        "Q_H": "2.5 MJ",
+        "W_in": "500 kJ"
+      },
+      "solve_for": [
+        "COP_ref",
+        "COP_hp"
+      ],
+      "expected_as_specified": {
+        "COP_ref": 4.0,
+        "COP_hp": 5.0
+      },
+      "expected_SI": {
+        "COP_ref": 4.0,
+        "COP_hp": 5.0
+      },
+      "actual_SI": {
+        "COP_ref": {
+          "value": 4.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.cop (symbolic)"
+        },
+        "COP_hp": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.cop (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "COP_ref": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.008,
+          "passed": true
+        },
+        "COP_hp": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "COP_ref = 2e6/5e5 = 4; COP_hp = 2.5e6/5e5 = 5"
+      }
+    },
+    {
+      "id": "thermo-027",
+      "calculator": "thermo.cop_carnot",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T_L": "268.15 K",
+        "T_H": "308.15 K"
+      },
+      "solve_for": [
+        "COP_ref_max",
+        "COP_hp_max"
+      ],
+      "expected_as_specified": {
+        "COP_ref_max": 6.70375,
+        "COP_hp_max": 7.70375
+      },
+      "expected_SI": {
+        "COP_ref_max": 6.70375,
+        "COP_hp_max": 7.70375
+      },
+      "actual_SI": {
+        "COP_ref_max": {
+          "value": 6.703749999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.cop_carnot (symbolic)"
+        },
+        "COP_hp_max": {
+          "value": 7.703749999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.cop_carnot (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "COP_ref_max": {
+          "absolute_error": 8.881784197001252e-16,
+          "relative_error": 1.3248978850645164e-16,
+          "allowed_absolute_error": 0.013407500000000001,
+          "passed": true
+        },
+        "COP_hp_max": {
+          "absolute_error": 8.881784197001252e-16,
+          "relative_error": 1.1529169816000327e-16,
+          "allowed_absolute_error": 0.015407500000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "COP_ref_max = 268.15/40 = 6.70375; COP_hp_max = 308.15/40 = 7.70375"
+      }
+    },
+    {
+      "id": "thermo-028",
+      "calculator": "thermo.entropy_generation",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "s1": "1 kJ/(kg*K)",
+        "s2": "1.5 kJ/(kg*K)",
+        "q": "100 kJ/kg",
+        "T_b": "400 K"
+      },
+      "solve_for": [
+        "s_gen"
+      ],
+      "expected_as_specified": {
+        "s_gen": "250 J/(kg*K)"
+      },
+      "expected_SI": {
+        "s_gen": 250.0
+      },
+      "actual_SI": {
+        "s_gen": {
+          "value": 250.0,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.entropy_generation (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "s_gen": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.5,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s_gen = (1500 - 1000) - 100000/400 = 500 - 250 = 250 J/(kg K)"
+      }
+    },
+    {
+      "id": "thermo-029",
+      "calculator": "thermo.isentropic_efficiency_turbine",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h1": "3.2 MJ/kg",
+        "h2a": "2.4 MJ/kg",
+        "h2s": "2.2 MJ/kg"
+      },
+      "solve_for": [
+        "eta_t"
+      ],
+      "expected_as_specified": {
+        "eta_t": 0.8
+      },
+      "expected_SI": {
+        "eta_t": 0.8
+      },
+      "actual_SI": {
+        "eta_t": {
+          "value": 0.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.isentropic_efficiency_turbine (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0016,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "eta_t = (3.2 - 2.4)/(3.2 - 2.2) = 0.8/1.0 = 0.8"
+      }
+    },
+    {
+      "id": "thermo-030",
+      "calculator": "thermo.isentropic_efficiency_compressor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h1": "300 kJ/kg",
+        "h2s": "500 kJ/kg",
+        "h2a": "550 kJ/kg"
+      },
+      "solve_for": [
+        "eta_c"
+      ],
+      "expected_as_specified": {
+        "eta_c": 0.8
+      },
+      "expected_SI": {
+        "eta_c": 0.8
+      },
+      "actual_SI": {
+        "eta_c": {
+          "value": 0.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.isentropic_efficiency_compressor (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta_c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0016,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "eta_c = (500 - 300)/(550 - 300) = 200/250 = 0.8"
+      }
+    },
+    {
+      "id": "thermo-031",
+      "calculator": "thermo.exergy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h": "3 MJ/kg",
+        "h0": "100 kJ/kg",
+        "T0": "298.15 K",
+        "s": "7 kJ/(kg*K)",
+        "s0": "360 J/(kg*K)",
+        "V": "0 m/s",
+        "z": "0 m"
+      },
+      "solve_for": [
+        "psi"
+      ],
+      "expected_as_specified": {
+        "psi": "920.284 kJ/kg"
+      },
+      "expected_SI": {
+        "psi": 920284.0
+      },
+      "actual_SI": {
+        "psi": {
+          "value": 920284.0000000002,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.exergy (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "psi": {
+          "absolute_error": 2.3283064365386963e-10,
+          "relative_error": 2.529986869856149e-16,
+          "allowed_absolute_error": 460.142,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "psi = (3e6 - 1e5) - 298.15 x (7000 - 360) + 0 + 0 = 2.9e6 - 1.979716e6 = 920284 J/kg"
+      }
+    },
+    {
+      "id": "thermo-032",
+      "calculator": "thermo.exergy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h": "3 MJ/kg",
+        "h0": "100 kJ/kg",
+        "T0": "298.15 K",
+        "s": "7 kJ/(kg*K)",
+        "s0": "360 J/(kg*K)",
+        "V": "20 m/s",
+        "z": "5 m"
+      },
+      "solve_for": [
+        "psi"
+      ],
+      "expected_as_specified": {
+        "psi": "920.533 kJ/kg"
+      },
+      "expected_SI": {
+        "psi": 920533.0
+      },
+      "actual_SI": {
+        "psi": {
+          "value": 920533.0332500002,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.exergy (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "psi": {
+          "absolute_error": 0.033250000211410224,
+          "relative_error": 3.61203783149656e-08,
+          "allowed_absolute_error": 460.2665,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "kinetic = 0.5 x 400 = 200 J/kg; potential = 9.80665 x 5 = 49.033 J/kg; psi = 920284 + 200 + 49.033 = 920533.03 J/kg"
+      }
+    },
+    {
+      "id": "thermo-033",
+      "calculator": "thermo.exergy_destruction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T0": "298.15 K",
+        "s_gen": "200 J/(kg*K)"
+      },
+      "solve_for": [
+        "x_destroyed"
+      ],
+      "expected_as_specified": {
+        "x_destroyed": "59.63 kJ/kg"
+      },
+      "expected_SI": {
+        "x_destroyed": 59630.0
+      },
+      "actual_SI": {
+        "x_destroyed": {
+          "value": 59629.99999999999,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.exergy_destruction (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "x_destroyed": {
+          "absolute_error": 7.275957614183426e-12,
+          "relative_error": 1.2201840708005073e-16,
+          "allowed_absolute_error": 119.26,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "x_destroyed = 298.15 x 200 = 59630 J/kg"
+      }
+    },
+    {
+      "id": "thermo-034",
+      "calculator": "thermo.second_law_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "x_destroyed": "30 kJ/kg",
+        "x_supplied": "100 kJ/kg"
+      },
+      "solve_for": [
+        "eta_II"
+      ],
+      "expected_as_specified": {
+        "eta_II": 0.7
+      },
+      "expected_SI": {
+        "eta_II": 0.7
+      },
+      "actual_SI": {
+        "eta_II": {
+          "value": 0.7,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.second_law_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta_II": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0014,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "eta_II = 1 - 30000/100000 = 0.7"
+      }
+    },
+    {
+      "id": "thermo-035",
+      "calculator": "thermo.partial_pressure",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "y_i": 0.21,
+        "P": "101.325 kPa"
+      },
+      "solve_for": [
+        "p_i"
+      ],
+      "expected_as_specified": {
+        "p_i": "21.2783 kPa"
+      },
+      "expected_SI": {
+        "p_i": 21278.300000000003
+      },
+      "actual_SI": {
+        "p_i": {
+          "value": 21278.25,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc thermo.partial_pressure (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "p_i": {
+          "absolute_error": 0.05000000000291038,
+          "relative_error": 2.3498117802131926e-06,
+          "allowed_absolute_error": 10.639150000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "p_i = 0.21 x 101325 = 21278.25 Pa"
+      }
+    },
+    {
+      "id": "thermo-036",
+      "calculator": "thermo.partial_pressure",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p_i": "21.2783 kPa",
+        "y_i": 0.21
+      },
+      "solve_for": [
+        "P"
+      ],
+      "expected_as_specified": {
+        "P": "101.325 kPa"
+      },
+      "expected_SI": {
+        "P": 101325.0
+      },
+      "actual_SI": {
+        "P": {
+          "value": 101325.2380952381,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc thermo.partial_pressure (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "P": {
+          "absolute_error": 0.23809523810632527,
+          "relative_error": 2.349817301814214e-06,
+          "allowed_absolute_error": 50.6625,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = p_i/y_i = 21278.25/0.21 = 101325 Pa"
+      }
+    },
+    {
+      "id": "thermo-037",
+      "calculator": "thermo.gas_mixture",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "y1": 0.21,
+        "y2": 0.79,
+        "M1": "32 kg/kmol",
+        "M2": "28 kg/kmol"
+      },
+      "solve_for": [
+        "mf1",
+        "M_mix"
+      ],
+      "expected_as_specified": {
+        "mf1": 0.23301,
+        "M_mix": "28.84 kg/kmol"
+      },
+      "expected_SI": {
+        "mf1": 0.23301,
+        "M_mix": 28.84
+      },
+      "actual_SI": {
+        "mf1": {
+          "value": 0.23300970873786406,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc thermo.gas_mixture (symbolic)"
+        },
+        "M_mix": {
+          "value": 28.84,
+          "unit": "kg/kmol",
+          "kind": "derived",
+          "method": "mechcalc thermo.gas_mixture (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "mf1": {
+          "absolute_error": 2.912621359374423e-07,
+          "relative_error": 1.2499984375668097e-06,
+          "allowed_absolute_error": 0.000116505,
+          "passed": true
+        },
+        "M_mix": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01442,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "mf1 = 0.21 x 32/(0.21 x 32 + 0.79 x 28) = 6.72/28.84 = 0.233010; M_mix = 6.72 + 22.12 = 28.84"
+      }
+    },
+    {
+      "id": "thermo-038",
+      "calculator": "thermo.clapeyron",
+      "classification": "backend regression; not independent physical validation",
+      "inputs": {
+        "s_g": "7.354119 kJ/(kg*K)",
+        "s_f": "1.307211 kJ/(kg*K)",
+        "v_g": "1.671766 m^3/kg",
+        "v_f": "0.00104346 m^3/kg"
+      },
+      "solve_for": [
+        "dPdT"
+      ],
+      "expected_as_specified": {
+        "dPdT": "3.61934 kPa/K"
+      },
+      "expected_SI": {
+        "dPdT": 3619.3399999999997
+      },
+      "actual_SI": {
+        "dPdT": {
+          "value": 3619.3370564091383,
+          "unit": "Pa/K",
+          "kind": "derived",
+          "method": "mechcalc thermo.clapeyron (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "dPdT": {
+          "absolute_error": 0.002943590861377743,
+          "relative_error": 8.132949270800044e-07,
+          "allowed_absolute_error": 1.80967,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "One consistent CoolProp saturation row for Water at 373.15 K (s_f = 1307.211, s_g = 7354.119 J/(kg K); v_f = 0.00104346, v_g = 1.671766 m^3/kg): dP/dT = (7354.119 - 1307.211)/(1.671766 - 0.001043) = 6046.908/1.670723 = 3619.34 Pa/K. Cross-check h_fg/(T v_fg) = 2256403.7/(373.15 x 1.670723) = 3619.34 Pa/K"
+      }
+    },
+    {
+      "id": "thermo-039",
+      "calculator": "thermo.clausius_clapeyron",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P1": "101.325 kPa",
+        "h_fg": "2.256 MJ/kg",
+        "R": "461.5 J/(kg*K)",
+        "T1": "373.15 K",
+        "T2": "383.15 K"
+      },
+      "solve_for": [
+        "P2"
+      ],
+      "expected_as_specified": {
+        "P2": "142.629 kPa"
+      },
+      "expected_SI": {
+        "P2": 142629.0
+      },
+      "actual_SI": {
+        "P2": {
+          "value": 142628.84680492783,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc thermo.clausius_clapeyron (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "P2": {
+          "absolute_error": 0.15319507216918282,
+          "relative_error": 1.0740808122414292e-06,
+          "allowed_absolute_error": 71.3145,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "ln(P2/P1) = (2.256e6/461.5)(1/373.15 - 1/383.15) = 4888.4 x 7.001e-5 = 0.34224 -> P2 = 101325 x 1.40811 = 142629 Pa"
+      }
+    },
+    {
+      "id": "thermo-040",
+      "calculator": "thermo.joule_thomson",
+      "classification": "backend regression; not independent physical validation",
+      "inputs": {
+        "fluid": "Air",
+        "T": "300 K",
+        "P": "101.325 kPa"
+      },
+      "solve_for": [
+        "mu",
+        "cp"
+      ],
+      "expected_as_specified": {
+        "mu": "2.2503e-6 K/Pa",
+        "cp": "1006.37 J/(kg*K)"
+      },
+      "expected_SI": {
+        "mu": 2.2503e-06,
+        "cp": 1006.37
+      },
+      "actual_SI": {
+        "mu": {
+          "value": 2.2508914475156837e-06,
+          "unit": "K/Pa",
+          "kind": "derived",
+          "method": "mechcalc thermo.joule_thomson (procedure)"
+        },
+        "cp": {
+          "value": 1006.3739409721456,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.joule_thomson (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "mu": {
+          "absolute_error": 5.914475156838644e-10,
+          "relative_error": 0.0002628305184570344,
+          "allowed_absolute_error": 2.2503e-09,
+          "passed": true
+        },
+        "cp": {
+          "absolute_error": 0.003940972145642263,
+          "relative_error": 3.916027053312661e-06,
+          "allowed_absolute_error": 1.00637,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Independent isenthalpic finite difference (CoolProp): h(300 K, 101325 Pa) found again at T = 300.02250 K when P rises 10 kPa, so mu = 0.02250 K / 10 kPa = 2.2503e-6 K/Pa = 0.225 K/bar (cross-checks the textbook ~0.22 K/bar for air at 300 K). cp = 1006.37 J/(kg K)"
+      }
+    },
+    {
+      "id": "thermo-041",
+      "calculator": "thermo.joule_thomson",
+      "classification": "backend regression; not independent physical validation",
+      "inputs": {
+        "fluid": "Nitrogen",
+        "T": "300 K",
+        "P": "100 kPa"
+      },
+      "solve_for": [
+        "mu",
+        "cp"
+      ],
+      "expected_as_specified": {
+        "mu": "2.11967e-6 K/Pa",
+        "cp": "1041.33 J/(kg*K)"
+      },
+      "expected_SI": {
+        "mu": 2.11967e-06,
+        "cp": 1041.33
+      },
+      "actual_SI": {
+        "mu": {
+          "value": 2.119668787582585e-06,
+          "unit": "K/Pa",
+          "kind": "derived",
+          "method": "mechcalc thermo.joule_thomson (procedure)"
+        },
+        "cp": {
+          "value": 1041.3349183096434,
+          "unit": "J/(kg*K)",
+          "kind": "derived",
+          "method": "mechcalc thermo.joule_thomson (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "mu": {
+          "absolute_error": 1.2124174146096328e-12,
+          "relative_error": 5.719840421431793e-07,
+          "allowed_absolute_error": 2.11967e-09,
+          "passed": true
+        },
+        "cp": {
+          "absolute_error": 0.00491830964347173,
+          "relative_error": 4.723103764869667e-06,
+          "allowed_absolute_error": 1.0413299999999999,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Independent central difference on CoolProp h(Nitrogen): mu = -(dh/dP)_T/(dh/dT)_P = 2.11967e-6 K/Pa = 0.212 K/bar, cross-checking the textbook ~0.21 K/bar for nitrogen at 300 K; cp = 1041.33 J/(kg K). All stencil states are single-phase (supercritical_gas)"
+      }
+    },
+    {
+      "id": "thermo-042",
+      "calculator": "thermo.fluid_saturation_dome",
+      "classification": "backend regression; not independent physical validation",
+      "inputs": {
+        "fluid": "Water",
+        "T_range": [
+          300.0,
+          600.0
+        ]
+      },
+      "solve_for": [
+        "P_min",
+        "P_max",
+        "dome"
+      ],
+      "expected_as_specified": {
+        "P_min": "3536.81 Pa",
+        "P_max": "12.3448 MPa"
+      },
+      "expected_SI": {
+        "P_min": 3536.81,
+        "P_max": 12344800.0
+      },
+      "actual_SI": {
+        "P_min": {
+          "value": 3536.8067523441227,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_saturation_dome (procedure)"
+        },
+        "P_max": {
+          "value": 12344824.357185591,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc thermo.fluid_saturation_dome (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "P_min": {
+          "absolute_error": 0.003247655877203215,
+          "relative_error": 9.18244371963214e-07,
+          "allowed_absolute_error": 1.768405,
+          "passed": true
+        },
+        "P_max": {
+          "absolute_error": 24.35718559101224,
+          "relative_error": 1.9730725156351046e-06,
+          "allowed_absolute_error": 6172.400000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "CoolProp saturation: P(300 K) = 3536.81 Pa, P(600 K) = 12.3448 MPa"
+      }
+    },
+    {
+      "id": "thermo-043",
+      "calculator": "thermo.throttle",
+      "classification": "backend regression; not independent physical validation",
+      "inputs": {
+        "h1": "-73.1834 kJ/kg"
+      },
+      "solve_for": [
+        "h2"
+      ],
+      "expected_as_specified": {
+        "h2": "-73.1834 kJ/kg"
+      },
+      "expected_SI": {
+        "h2": -73183.40000000001
+      },
+      "actual_SI": {
+        "h2": {
+          "value": -73183.40000000001,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.throttle (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "h2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 146.3668,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Negative enthalpy landmark: CoolProp reference state for nitrogen gives h(100 K, 10 bar) = -73183.4 J/kg (queried independently in the reviewer scratch script, not via mechcalc); throttling preserves h."
+      }
+    },
+    {
+      "id": "thermo-044",
+      "calculator": "thermo.turbine_work",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h1": "-50 kJ/kg",
+        "h2": "-120 kJ/kg"
+      },
+      "solve_for": [
+        "w_out"
+      ],
+      "expected_as_specified": {
+        "w_out": "70 kJ/kg"
+      },
+      "expected_SI": {
+        "w_out": 70000.0
+      },
+      "actual_SI": {
+        "w_out": {
+          "value": 70000.0,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc thermo.turbine_work (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "w_out": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 140.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "w_out = h1 \u2212 h2 = \u221250 \u2212 (\u2212120) = 70 kJ/kg (both enthalpies below the reference zero)"
+      }
+    }
+  ],
+  "passed": 44,
+  "failed": 0
+}

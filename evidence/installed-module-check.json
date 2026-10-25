@@ -1,0 +1,994 @@
+{
+  "modules": 246,
+  "failed": 0,
+  "results": [
+    {
+      "module": "engineering_sim.__main__",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.api",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.builder",
+      "status": "requires separate FreeCAD interpreter",
+      "dependency": "FreeCAD"
+    },
+    {
+      "module": "engineering_sim.cad.common",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.air_scoop",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.body_tube",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.camera_dome",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.chamfer",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.control_fin",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.edf_duct",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.fillet",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.fin_set",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.flange",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.gusset",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.hole_array",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.import_step",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.inner_duct",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.motor_mount",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.nose_cone",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.pad",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.plate",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.pocket",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.servo_bay",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.features.slot",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.gears",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cad.hydrostatics",
+      "status": "requires separate FreeCAD interpreter",
+      "dependency": "FreeCAD"
+    },
+    {
+      "module": "engineering_sim.cad.importer",
+      "status": "requires separate FreeCAD interpreter",
+      "dependency": "FreeCAD"
+    },
+    {
+      "module": "engineering_sim.checks",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.assembly",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.flexures",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.joints",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.mechanisms",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.mold_geometry",
+      "status": "requires separate FreeCAD interpreter",
+      "dependency": "FreeCAD"
+    },
+    {
+      "module": "engineering_sim.checks.mold_routing",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.mold_routing_study",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.molding",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.mounted_fit",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.rules",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.seals",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.tolerances",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.checks.transforms",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cli",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.cooling",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.aero",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.air_np",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.atmos",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.beam",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.bodies",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.constants",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.contact",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.env",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.rigid6",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.statelog",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.terrain",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.wind",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.core.world",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.correlations",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.demo",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.acoustic_prop",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.acoustic_prop.absorption",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.acoustic_prop.ground",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.acoustic_prop.pe",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.acoustic_prop.propagate",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.acoustic_prop.raytrace",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.acoustic_prop.sound_profile",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.fc_vision",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.fc_vision.camera",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.fc_vision.multirotor",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.land",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.land.contact",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.land.rigid",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.land.scene",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.land.tyre",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.land.vehicles",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.motion_control",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.motion_control.calibration",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.motion_control.core_gimbal",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.aero",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.airframe",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.batch",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.dispersion",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.era5_profile",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.flight",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.loads",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.materials",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.motors",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.optimise",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.plots",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.rules",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.rocket_design.world_domain",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.room_acoustics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.room_acoustics.room",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.space",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.space.ascent",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.space.attitude",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.space.constants",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.space.density",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.space.ephem",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.space.forces",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.space.frames",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.space.propagate",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.space.thermosphere",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.space.tle",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.water",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.water.hull",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.water.props",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.water.savitsky",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.water.stability",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.water.surface",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.water.vessel",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.water.waves",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.wind_tunnel",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.wind_tunnel.air_props",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.domains.wind_tunnel.fin_aero",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.electromagnetics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.electromagnetics.magnetic_bearing",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.electromagnetics.permanent_magnet",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.electromagnetics.reluctance_drive",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.execution",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.fea",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.flight_dynamics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.flow",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.flow.aero",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.flow.manifold_fluids",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.flow.stability",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.flow.su2",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.flow.vlm",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.geometry",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.geometry.airfoil",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.geometry.measure",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.geometry.planform",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.geometry.stl",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.grilles",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.molding_process",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.operating_points",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.portable_bridge",
+      "status": "flat-export-only bridge; exercised by portable dispatcher tests"
+    },
+    {
+      "module": "engineering_sim.science",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.api",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.bench",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.biochem_buffers",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.biochem_enzyme",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.biochem_nucleic",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.chem",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.chem_input",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.chemcalc",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.chemcalc_cli",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.chemeng_balance",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.chemeng_kinetics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.chemeng_props",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.chemphys_qm",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.chemphys_spectra",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.chemphys_statmech",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.cite",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.compound",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.docking",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.documents",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.materials_crystal",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.materials_phase",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.materials_props",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.md",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.acoustics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.aerospace",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.automotive",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.beams",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.bearings",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.belts_chains",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.bolted",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.charts",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.clutches_brakes",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.columns",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.combustion",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.common",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.compressible",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.controls",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.core",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.cycles",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.design_fund",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.economics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.electrical",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.ergonomics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.fatigue",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.fea",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.fluid_dynamics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.fluid_statics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.fracture",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.gears",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.heat_transfer",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.hvac",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.hydraulics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.ic_engines",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.instrumentation",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.kinematics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.kinetics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.manufacturing",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.materials_mech",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.materials_sci",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.math",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.mechanisms",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.metrology",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.oracles",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.power_screws",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.pressure_vessels",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.reliability",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.renewables",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.robotics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.section_props",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.shafts",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.springs",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.statics",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.thermo",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.tribology",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.turbomachinery",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.vibrations",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech.welded",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.mech_cli",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.ops_biochem",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.ops_chemcalc",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.ops_chemeng",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.ops_chemphys",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.ops_concoct",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.ops_materials",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.ops_mech",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.ops_stability",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.paths",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.protein",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.records",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.rpet",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.stability",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.stability_retro",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.thermo",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.thermoset",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.volatility",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.worker",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.science.xtb",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.structures",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.thermal",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.vision",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.vision.dimensions",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.vision.spec",
+      "status": "imported"
+    },
+    {
+      "module": "engineering_sim.web_server",
+      "status": "imported"
+    }
+  ]
+}

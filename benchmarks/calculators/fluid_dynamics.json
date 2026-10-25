@@ -1,0 +1,5510 @@
+{
+  "section": "fluid_dynamics",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k fluid_dynamics",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "fluid_dynamics.continuity": {
+      "title": "Continuity: volumetric and mass flow rate (Q = A\u00b7v)",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "volumetric flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mdot",
+          "unit": "kg/s",
+          "desc": "mass flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "mean velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q = A*v",
+        "mdot = rho*Q"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q",
+        "mdot"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Continuity: Q = A\u00b7v; \u1e41 = \u03c1Q"
+      ],
+      "synthetic_example": {
+        "A": 0.02,
+        "v": 5.0,
+        "rho": 1000.0
+      }
+    },
+    "fluid_dynamics.bernoulli_ideal": {
+      "title": "Bernoulli equation (ideal, along a streamline)",
+      "variables": [
+        {
+          "name": "p1",
+          "unit": "Pa",
+          "desc": "pressure at point 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p2",
+          "unit": "Pa",
+          "desc": "pressure at point 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v1",
+          "unit": "m/s",
+          "desc": "velocity at point 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v2",
+          "unit": "m/s",
+          "desc": "velocity at point 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "z1",
+          "unit": "m",
+          "desc": "elevation of point 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "z2",
+          "unit": "m",
+          "desc": "elevation of point 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "p1 + rho*v1**2/2 + rho*g*z1 = p2 + rho*v2**2/2 + rho*g*z2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "p2"
+      ],
+      "assumptions": [
+        "Steady, incompressible, inviscid flow along a streamline; no shaft work or losses (for those, use the energy equation)."
+      ],
+      "method_references": [
+        "Bernoulli: p + \u00bd\u03c1v\u00b2 + \u03c1gz = const"
+      ],
+      "synthetic_example": {
+        "p1": 101325.0,
+        "v1": 2.0,
+        "v2": 4.0,
+        "z1": 2.0,
+        "z2": 5.0,
+        "rho": 1000.0,
+        "g": 9.80665
+      }
+    },
+    "fluid_dynamics.energy_equation": {
+      "title": "Energy equation in head form (with losses and pump/turbine head)",
+      "variables": [
+        {
+          "name": "H1",
+          "unit": "m",
+          "desc": "total head at section 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H2",
+          "unit": "m",
+          "desc": "total head at section 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_L",
+          "unit": "m",
+          "desc": "head loss between sections (friction + minor)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p1",
+          "unit": "Pa",
+          "desc": "pressure at section 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p2",
+          "unit": "Pa",
+          "desc": "pressure at section 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v1",
+          "unit": "m/s",
+          "desc": "velocity at section 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v2",
+          "unit": "m/s",
+          "desc": "velocity at section 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "z1",
+          "unit": "m",
+          "desc": "elevation of section 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "z2",
+          "unit": "m",
+          "desc": "elevation of section 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_p",
+          "unit": "m",
+          "desc": "head added by a pump",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_t",
+          "unit": "m",
+          "desc": "head extracted by a turbine",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "H1 = p1/(rho*g) + v1**2/(2*g) + z1",
+        "H2 = p2/(rho*g) + v2**2/(2*g) + z2",
+        "H2 = H1 + h_p - h_t - h_L"
+      ],
+      "procedure": null,
+      "outputs": [
+        "H1",
+        "H2",
+        "h_L"
+      ],
+      "assumptions": [
+        "Steady, incompressible flow between two sections with uniform properties; the kinetic-energy correction factor \u03b1 = 1. h_L bundles all friction and minor losses."
+      ],
+      "method_references": [
+        "Extended Bernoulli / energy equation in head form"
+      ],
+      "synthetic_example": {
+        "p1": 200000.0,
+        "p2": 100000.0,
+        "v1": 2.0,
+        "v2": 3.0,
+        "z1": 2.0,
+        "z2": 7.0,
+        "rho": 1000.0,
+        "g": 9.80665,
+        "h_p": 5.0,
+        "h_t": 2.0
+      }
+    },
+    "fluid_dynamics.jet_force": {
+      "title": "Force of a jet on a fixed vane (F = \u03c1Qv(1 \u2212 cos \u03b2))",
+      "variables": [
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "force on the vane in the jet direction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "jet flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "jet velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta",
+          "unit": "rad",
+          "desc": "deflection angle of the jet",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F = rho*Q*v*(1 - cos(beta))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F"
+      ],
+      "assumptions": [
+        "Fixed vane, steady jet deflected through angle \u03b2 from its original direction with no speed loss. \u03b2 = 90\u00b0 (flat plate) gives F = \u03c1Qv; \u03b2 = 180\u00b0 (cup) gives F = 2\u03c1Qv."
+      ],
+      "method_references": [
+        "Momentum of a deflected jet"
+      ],
+      "synthetic_example": {
+        "rho": 1000.0,
+        "Q": 0.05,
+        "v": 20.0,
+        "beta": 3.141592653589793
+      }
+    },
+    "fluid_dynamics.momentum_bend": {
+      "title": "Force of a fluid stream on a pipe bend, nozzle or vane (2-D)",
+      "variables": [
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "inlet",
+          "unit": "",
+          "desc": "[v (m/s), p (Pa, gauge), A (m\u00b2), theta (deg from +x)]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "outlet",
+          "unit": "",
+          "desc": "[v (m/s), p (Pa, gauge), A (m\u00b2), theta (deg from +x)]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "Fx",
+          "unit": "N",
+          "desc": "x component of the force of the fluid on the bend",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Fy",
+          "unit": "N",
+          "desc": "y component of the force of the fluid on the bend",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "resultant force magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_F",
+          "unit": "rad",
+          "desc": "direction of F from +x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mdot",
+          "unit": "kg/s",
+          "desc": "mass flow rate (from the inlet)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _momentum_bend(values):\n    \"\"\"Force of a steady fluid stream on a pipe bend/nozzle/vane (2-D, horizontal plane).\n\n    inlet/outlet are [v (m/s), p (Pa, gauge), A (m\u00b2), theta (deg from +x)]; rho (kg/m\u00b3). The force is\n    that exerted BY the fluid ON the bend: F = p1 A1 e1 \u2212 p2 A2 e2 + mdot (v1 e1 \u2212 v2 e2).\n    \"\"\"\n    rho = values['rho']\n    v1, p1, A1, th1 = map(float, values['inlet'])\n    v2, p2, A2, th2 = map(float, values['outlet'])\n    if A1 <= 0 or A2 <= 0:\n        raise MechError('areas must be positive')\n    # Steady incompressible flow: mass continuity requires A1\u00b7v1 = A2\u00b7v2.\n    if abs(A1 * v1 - A2 * v2) > 0.01 * max(abs(A1 * v1), abs(A2 * v2), 1e-300):\n        raise MechError('steady flow needs A1\u00b7v1 \u2248 A2\u00b7v2 (continuity); these differ by more than 1 %')\n    e1x, e1y = math.cos(math.radians(th1)), math.sin(math.radians(th1))\n    e2x, e2y = math.cos(math.radians(th2)), math.sin(math.radians(th2))\n    mdot = rho * A1 * v1\n    Fx = p1 * A1 * e1x - p2 * A2 * e2x + mdot * (v1 * e1x - v2 * e2x)\n    Fy = p1 * A1 * e1y - p2 * A2 * e2y + mdot * (v1 * e1y - v2 * e2y)\n    return {'Fx': Fx, 'Fy': Fy, 'F': math.hypot(Fx, Fy), 'theta_F': math.atan2(Fy, Fx), 'mdot': mdot}\n",
+        "source": "fluid_dynamics.py",
+        "line": 63
+      },
+      "outputs": [
+        "Fx",
+        "Fy",
+        "F",
+        "theta_F",
+        "mdot"
+      ],
+      "assumptions": [
+        "Steady flow; the force reported is that exerted BY the fluid ON the bend (the anchoring force is equal and opposite). Steady flow requires \u03c1\u00b7A1\u00b7v1 = \u03c1\u00b7A2\u00b7v2; mdot uses the inlet values. Gauge pressures."
+      ],
+      "method_references": [
+        "Control-volume momentum, F = p1A1e1 \u2212 p2A2e2 + \u1e41(v1e1 \u2212 v2e2)"
+      ],
+      "synthetic_example": {
+        "rho": 1000.0,
+        "inlet": [
+          5,
+          150000,
+          0.02,
+          0
+        ],
+        "outlet": [
+          5,
+          130000,
+          0.02,
+          90
+        ]
+      }
+    },
+    "fluid_dynamics.turbine_torque": {
+      "title": "Euler turbomachine torque (T = \u1e41(r\u2082v_t2 \u2212 r\u2081v_t1))",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "torque on the fluid (negative for a turbine)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mdot",
+          "unit": "kg/s",
+          "desc": "mass flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r1",
+          "unit": "m",
+          "desc": "inlet radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r2",
+          "unit": "m",
+          "desc": "outlet radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "vt1",
+          "unit": "m/s",
+          "desc": "tangential velocity component at inlet",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "vt2",
+          "unit": "m/s",
+          "desc": "tangential velocity component at outlet",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = mdot*(r2*vt2 - r1*vt1)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T"
+      ],
+      "assumptions": [
+        "T is the torque the fluid exerts on the rotor (Euler turbomachine equation). For a turbine the fluid loses angular momentum (r\u2082v_t2 < r\u2081v_t1), so T is negative; the shaft delivers the equal-and-opposite torque to the load. For a pump the signs reverse."
+      ],
+      "method_references": [
+        "Euler turbomachine (angular momentum) equation"
+      ],
+      "synthetic_example": {
+        "mdot": 2.0,
+        "r1": 0.1,
+        "r2": 0.3,
+        "vt1": 5.0,
+        "vt2": 15.0
+      }
+    },
+    "fluid_dynamics.sprinkler_torque": {
+      "title": "Rotating sprinkler arm torque (T = \u03c1Qr(v_j \u2212 \u03c9r))",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "resisting torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "arm radius (jet radius)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_j",
+          "unit": "m/s",
+          "desc": "jet velocity relative to the arm",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular speed of the arm",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = rho*Q*r*(v_j - omega*r)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T"
+      ],
+      "assumptions": [
+        "Two opposed jets at radius r; T is the torque needed to hold the rotation speed \u03c9 (T = 0 is the free-running speed \u03c9 = v_j/r)."
+      ],
+      "method_references": [
+        "Angular momentum of a rotating sprinkler"
+      ],
+      "synthetic_example": {
+        "rho": 1000.0,
+        "Q": 0.001,
+        "r": 0.2,
+        "v_j": 10.0,
+        "omega": 20.0
+      }
+    },
+    "fluid_dynamics.reynolds_number": {
+      "title": "Reynolds number (Re = \u03c1vL/\u03bc)",
+      "variables": [
+        {
+          "name": "Re",
+          "unit": "",
+          "desc": "Reynolds number",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "characteristic length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "Pa*s",
+          "desc": "dynamic viscosity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Re = rho*v*L/mu"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Re"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Re = \u03c1vL/\u03bc"
+      ],
+      "synthetic_example": {
+        "rho": 1000.0,
+        "v": 1.0,
+        "L": 0.01,
+        "mu": 0.001
+      }
+    },
+    "fluid_dynamics.froude_number": {
+      "title": "Froude number (Fr = v/\u221a(gL))",
+      "variables": [
+        {
+          "name": "Fr",
+          "unit": "",
+          "desc": "Froude number",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "characteristic length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Fr = v/sqrt(g*L)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Fr"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Fr = v/\u221a(gL)"
+      ],
+      "synthetic_example": {
+        "v": 5.0,
+        "g": 9.80665,
+        "L": 1.0
+      }
+    },
+    "fluid_dynamics.mach_number": {
+      "title": "Mach number (Ma = v/c)",
+      "variables": [
+        {
+          "name": "Ma",
+          "unit": "",
+          "desc": "Mach number",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "flow velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m/s",
+          "desc": "local speed of sound",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Ma = v/c"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Ma"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Ma = v/c"
+      ],
+      "synthetic_example": {
+        "v": 170.0,
+        "c": 340.0
+      }
+    },
+    "fluid_dynamics.weber_number": {
+      "title": "Weber number (We = \u03c1v\u00b2L/\u03c3)",
+      "variables": [
+        {
+          "name": "We",
+          "unit": "",
+          "desc": "Weber number",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "characteristic length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "N/m",
+          "desc": "surface tension",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "We = rho*v**2*L/sigma"
+      ],
+      "procedure": null,
+      "outputs": [
+        "We"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "We = \u03c1v\u00b2L/\u03c3"
+      ],
+      "synthetic_example": {
+        "rho": 1000.0,
+        "v": 2.0,
+        "L": 0.01,
+        "sigma": 0.0728
+      }
+    },
+    "fluid_dynamics.euler_number": {
+      "title": "Euler number (Eu = \u0394p/(\u03c1v\u00b2))",
+      "variables": [
+        {
+          "name": "Eu",
+          "unit": "",
+          "desc": "Euler number",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dp",
+          "unit": "Pa",
+          "desc": "pressure difference",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394p",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Eu = dp/(rho*v**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Eu"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Eu = \u0394p/(\u03c1v\u00b2)"
+      ],
+      "synthetic_example": {
+        "dp": 4000.0,
+        "rho": 1000.0,
+        "v": 2.0
+      }
+    },
+    "fluid_dynamics.strouhal_number": {
+      "title": "Strouhal number (St = fL/v)",
+      "variables": [
+        {
+          "name": "St",
+          "unit": "",
+          "desc": "Strouhal number",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "desc": "shedding (cyclic) frequency",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "characteristic length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "St = f*L/v"
+      ],
+      "procedure": null,
+      "outputs": [
+        "St"
+      ],
+      "assumptions": [
+        "f is a cyclic frequency (Hz); angular frequencies must be converted first."
+      ],
+      "method_references": [
+        "St = fL/v"
+      ],
+      "synthetic_example": {
+        "f": 10.0,
+        "L": 0.05,
+        "v": 2.0
+      }
+    },
+    "fluid_dynamics.hagen_poiseuille": {
+      "title": "Laminar pipe flow (Hagen\u2013Poiseuille) and velocity profile",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "volumetric flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u_avg",
+          "unit": "m/s",
+          "desc": "mean velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u_max",
+          "unit": "m/s",
+          "desc": "centreline velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dp",
+          "unit": "Pa",
+          "desc": "pressure drop over length L",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394p",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "pipe diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "Pa*s",
+          "desc": "dynamic viscosity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "pipe length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q = pi*D**4*dp/(128*mu*L)",
+        "u_avg = Q/(pi*D**2/4)",
+        "u_max = 2*u_avg"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q",
+        "u_avg",
+        "u_max"
+      ],
+      "assumptions": [
+        "Fully developed laminar flow (Re < 2300); parabolic profile u(r) = u_max(1 \u2212 (r/R)\u00b2) with u_max = 2\u00b7u_avg at the centreline."
+      ],
+      "method_references": [
+        "Hagen\u2013Poiseuille: Q = \u03c0\u0394pD\u2074/(128\u03bcL)"
+      ],
+      "synthetic_example": {
+        "dp": 1000.0,
+        "D": 0.01,
+        "mu": 0.001,
+        "L": 1.0
+      }
+    },
+    "fluid_dynamics.friction_factor": {
+      "title": "Darcy friction factor: laminar, Colebrook, Swamee\u2013Jain, Haaland",
+      "variables": [
+        {
+          "name": "Re",
+          "unit": "",
+          "desc": "Reynolds number",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rel_rough",
+          "unit": "",
+          "desc": "relative roughness \u03b5/D",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b5/D",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_colebrook",
+          "unit": "",
+          "desc": "Colebrook friction factor (iterated)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_swamee_jain",
+          "unit": "",
+          "desc": "Swamee\u2013Jain friction factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_haaland",
+          "unit": "",
+          "desc": "Haaland friction factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_laminar",
+          "unit": "",
+          "desc": "laminar friction factor 64/Re",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _friction_factor(values):\n    \"\"\"Darcy friction factor: laminar 64/Re, Colebrook (iterated), Swamee\u2013Jain and Haaland.\"\"\"\n    Re = values['Re']\n    rel = values['rel_rough']\n    if Re <= 0:\n        raise MechError('Re must be positive')\n    if rel < 0:\n        raise MechError('relative roughness must be >= 0')\n    return {'f_colebrook': correlations.darcy_colebrook(Re, rel),\n            'f_swamee_jain': correlations.darcy_swamee_jain(Re, rel),\n            'f_haaland': correlations.darcy_haaland(Re, rel),\n            'f_laminar': correlations.darcy_laminar(Re)}\n",
+        "source": "fluid_dynamics.py",
+        "line": 36
+      },
+      "outputs": [
+        "f_colebrook",
+        "f_swamee_jain",
+        "f_haaland",
+        "f_laminar"
+      ],
+      "assumptions": [
+        "Use f_laminar for Re < 2300 and f_colebrook (or the closed forms) for Re > 4000; 2300 < Re < 4000 is transitional and uncertain. Below Re = 2300 the Colebrook/Swamee\u2013Jain/Haaland correlations are turbulent relations and are misleading \u2014 use f_laminar there. Swamee\u2013Jain is valid for 5000 < Re < 1e8 and 1e-6 < \u03b5/D < 0.01; Haaland is an explicit fit accurate to ~2% of Colebrook."
+      ],
+      "method_references": [
+        "Colebrook\u2013White equation; Swamee\u2013Jain (1976); Haaland (1983) explicit approximation"
+      ],
+      "synthetic_example": {
+        "Re": 100000.0,
+        "rel_rough": 0.001
+      }
+    },
+    "fluid_dynamics.head_loss": {
+      "title": "Major and minor head losses and equivalent length",
+      "variables": [
+        {
+          "name": "h_f",
+          "unit": "m",
+          "desc": "major (friction) head loss",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_m",
+          "unit": "m",
+          "desc": "minor (fitting) head loss",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_total",
+          "unit": "m",
+          "desc": "total head loss",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_eq",
+          "unit": "m",
+          "desc": "equivalent length of the fitting (K\u00b7D/f)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "",
+          "desc": "Darcy friction factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "pipe length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "pipe diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "mean velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "minor-loss coefficient (fitting table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "h_f = f*L*v**2/(2*g*D)",
+        "h_m = K*v**2/(2*g)",
+        "h_total = h_f + h_m",
+        "L_eq = K*D/f"
+      ],
+      "procedure": null,
+      "outputs": [
+        "h_f",
+        "h_m",
+        "h_total",
+        "L_eq"
+      ],
+      "assumptions": [
+        "K is the tabulated minor-loss coefficient for the fitting (user input); equivalent length L_eq gives the same loss as the fitting at the same f."
+      ],
+      "method_references": [
+        "Darcy\u2013Weisbach h_f = f(L/D)v\u00b2/(2g); h_m = Kv\u00b2/(2g)"
+      ],
+      "synthetic_example": {
+        "f": 0.02,
+        "L": 100.0,
+        "D": 0.05,
+        "v": 2.0,
+        "g": 9.80665,
+        "K": 2.0
+      }
+    },
+    "fluid_dynamics.hydraulic_diameter": {
+      "title": "Hydraulic diameter for non-circular ducts (D_h = 4A/P)",
+      "variables": [
+        {
+          "name": "D_h",
+          "unit": "m",
+          "desc": "hydraulic diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "flow cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "m",
+          "desc": "wetted perimeter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "D_h = 4*A/P"
+      ],
+      "procedure": null,
+      "outputs": [
+        "D_h"
+      ],
+      "assumptions": [
+        "D_h substituted into Re and h_f relations approximates non-circular ducts (exact for a full circular pipe: D_h = D)."
+      ],
+      "method_references": [
+        "D_h = 4A/P"
+      ],
+      "synthetic_example": {
+        "A": 0.01,
+        "P": 0.4
+      }
+    },
+    "fluid_dynamics.series_pipes": {
+      "title": "Pipes in series: total head loss",
+      "variables": [
+        {
+          "name": "pipes",
+          "unit": "",
+          "desc": "rows [L (m), D (m), f, K] for each pipe in series",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "common flow rate through all pipes",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_total",
+          "unit": "m",
+          "desc": "total head loss",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_each",
+          "unit": "",
+          "desc": "head loss of each pipe [m]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _series_pipes(values):\n    \"\"\"Total head loss for pipes in series (one flow rate): h = \u03a3 (f L/D + K) V\u00b2/(2g).\"\"\"\n    Q = values['Q']\n    if Q < 0:\n        raise MechError('Q must be >= 0')\n    h_total = 0.0\n    h_each = []\n    for row in values['pipes']:\n        if len(row) != 4:\n            raise MechError('pipes: each row must be [L (m), D (m), f, K]')\n        L, D, f, K = map(float, row)\n        if D <= 0:\n            raise MechError('pipe diameter must be positive')\n        A = PI * D * D / 4.0\n        vel = Q / A\n        h = (f * L / D + K) * vel * vel / (2.0 * G0)\n        h_each.append(h)\n        h_total += h\n    return {'h_total': h_total, 'h_each': h_each}\n",
+        "source": "fluid_dynamics.py",
+        "line": 144
+      },
+      "outputs": [
+        "h_total",
+        "h_each"
+      ],
+      "assumptions": [
+        "Same flow rate through every pipe; losses add. Parallel pipes and general networks use the pipe-network (Hardy Cross) calculator."
+      ],
+      "method_references": [
+        "Series pipe losses: h = \u03a3 (f L/D + K) V\u00b2/(2g)"
+      ],
+      "synthetic_example": {
+        "pipes": [
+          [
+            50,
+            0.05,
+            0.02,
+            0.5
+          ],
+          [
+            30,
+            0.04,
+            0.02,
+            1.0
+          ]
+        ],
+        "Q": 0.002
+      }
+    },
+    "fluid_dynamics.pipe_network": {
+      "title": "Pipe network by the Hardy Cross loop method",
+      "variables": [
+        {
+          "name": "pipes",
+          "unit": "",
+          "desc": "rows [id, L (m), D (m), f, K, Q0 (m\u00b3/s)]; Q0 satisfy junction continuity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "loops",
+          "unit": "",
+          "desc": "[[[id, dir], ...], ...] with dir +1/\u22121 around each loop",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "flows",
+          "unit": "",
+          "desc": "[[id, Q (m\u00b3/s), head loss (m)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "iterations",
+          "unit": "",
+          "desc": "number of Hardy Cross iterations",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "max_correction",
+          "unit": "m^3/s",
+          "desc": "largest loop flow correction of the last iteration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _pipe_network(values):\n    \"\"\"Pipe network by the Hardy Cross loop method.\n\n    pipes: [[id, L (m), D (m), f, K, Q0 (m\u00b3/s)], ...]; initial flows Q0 must satisfy junction\n    continuity. loops: [[[id, dir], ...], ...] with dir +1/\u22121 relative to each pipe's positive flow.\n    Iterates \u0394Q = \u2212\u03a3(dr\u00b7R\u00b7Q|Q|) / \u03a3(2\u00b7R\u00b7|Q|) around each loop until |\u0394Q| < 1e-9 m\u00b3/s.\n    \"\"\"\n    pipes = values['pipes']\n    loops = values['loops']\n    idx, L, D, f, K, Q = {}, [], [], [], [], []\n    for row in pipes:\n        if len(row) != 6:\n            raise MechError('pipes: each row must be [id, L (m), D (m), f, K, Q0 (m\u00b3/s)]')\n        pid = row[0]\n        idx[pid] = len(Q)\n        L.append(float(row[1])); D.append(float(row[2])); f.append(float(row[3]))\n        K.append(float(row[4])); Q.append(float(row[5]))\n    n = len(Q)\n    if n == 0:\n        raise MechError('pipes: at least one pipe is required')\n    A = [PI * d * d / 4.0 for d in D]\n    R = [(f[i] * L[i] / D[i] + K[i]) / (2.0 * G0 * A[i] * A[i]) for i in range(n)]\n\n    def resolve(pid):\n        if pid not in idx:\n            raise MechError(f'unknown pipe id {pid!r} in a loop')\n        return idx[pid]\n\n    it, maxcorr = 0, 0.0\n    for it in range(1, 201):\n        maxcorr = 0.0\n        for loop in loops:\n            num = den = 0.0\n            entries = []\n            for entry in loop:\n                pid, dr = entry[0], (1.0 if float(entry[1]) > 0 else -1.0)\n                i = resolve(pid)\n                entries.append((i, dr))\n                num += dr * R[i] * Q[i] * abs(Q[i])\n                den += 2.0 * R[i] * abs(Q[i])\n            if den == 0:\n                continue\n            dQ = -num / den\n            maxcorr = max(maxcorr, abs(dQ))\n            for i, dr in entries:\n                Q[i] += dr * dQ\n        if maxcorr < 1e-9:\n            break\n    if maxcorr >= 1e-9:\n        raise MechError(f'Hardy Cross did not converge in 200 iterations (last |\u0394Q| = {maxcorr:.3g} m\u00b3/s); '\n                        'check the network definition and the initial flows')\n    flows = [[pipes[i][0], Q[i], R[i] * Q[i] * abs(Q[i])] for i in range(n)]\n    return {'flows': flows, 'iterations': it, 'max_correction': maxcorr}\n",
+        "source": "fluid_dynamics.py",
+        "line": 165
+      },
+      "outputs": [
+        "flows",
+        "iterations",
+        "max_correction"
+      ],
+      "assumptions": [
+        "Hardy Cross loop balancing with fixed friction factors f and minor-loss K; initial flows must satisfy continuity at every junction (the corrections preserve it). Converges to \u03a3h = 0 around each loop. f may be taken from the friction-factor calculator."
+      ],
+      "method_references": [
+        "Hardy Cross method (1936) for pipe networks"
+      ],
+      "synthetic_example": {
+        "pipes": [
+          [
+            "p1",
+            100,
+            0.2,
+            0.02,
+            0,
+            0.3
+          ],
+          [
+            "p2",
+            150,
+            0.15,
+            0.02,
+            0,
+            0.2
+          ]
+        ],
+        "loops": [
+          [
+            [
+              "p1",
+              1
+            ],
+            [
+              "p2",
+              -1
+            ]
+          ]
+        ]
+      }
+    },
+    "fluid_dynamics.boundary_layer": {
+      "title": "Flat-plate boundary layer: thickness, displacement and momentum thickness",
+      "variables": [
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "U",
+          "unit": "m/s",
+          "desc": "freestream velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x",
+          "unit": "m",
+          "desc": "distance from the leading edge",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "Pa*s",
+          "desc": "dynamic viscosity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Re_x",
+          "unit": "",
+          "desc": "local Reynolds number \u03c1Ux/\u03bc",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_lam",
+          "unit": "m",
+          "desc": "laminar boundary-layer thickness (99%)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_star_lam",
+          "unit": "m",
+          "desc": "laminar displacement thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_lam",
+          "unit": "m",
+          "desc": "laminar momentum thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_turb",
+          "unit": "m",
+          "desc": "turbulent boundary-layer thickness (1/7 power law)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_star_turb",
+          "unit": "m",
+          "desc": "turbulent displacement thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_turb",
+          "unit": "m",
+          "desc": "turbulent momentum thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cf_lam",
+          "unit": "",
+          "desc": "laminar local skin-friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cf_turb",
+          "unit": "",
+          "desc": "turbulent local skin-friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cf_lam_mean",
+          "unit": "",
+          "desc": "laminar mean skin-friction coefficient 1.328/\u221aRe_x",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cf_turb_mean",
+          "unit": "",
+          "desc": "turbulent mean skin-friction coefficient 0.074/Re_x^0.2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _boundary_layer(values):\n    \"\"\"Flat-plate boundary layer: laminar (Blasius) and turbulent (1/7 power law) thicknesses and C_f.\"\"\"\n    rho, U, x, mu = values['rho'], values['U'], values['x'], values['mu']\n    if x <= 0 or mu <= 0:\n        raise MechError('x and mu must be positive')\n    Re_x = rho * U * x / mu\n    if Re_x <= 0:\n        raise MechError('Re_x must be positive (check the sign of U)')\n    sx = math.sqrt(Re_x)\n    delta_lam = 5.0 * x / sx\n    dstar_lam = 1.7208 * x / sx\n    theta_lam = 0.664 * x / sx\n    cf_lam = 0.664 / sx\n    cf_lam_mean = 1.328 / sx\n    re15 = Re_x ** 0.2\n    delta_turb = 0.37 * x / re15\n    return {'Re_x': Re_x, 'delta_lam': delta_lam, 'delta_star_lam': dstar_lam, 'theta_lam': theta_lam,\n            'delta_turb': delta_turb, 'delta_star_turb': delta_turb / 8.0, 'theta_turb': 7.0 * delta_turb / 72.0,\n            'cf_lam': cf_lam, 'cf_turb': 0.0592 / re15,\n            'cf_lam_mean': cf_lam_mean, 'cf_turb_mean': 0.074 / re15}\n",
+        "source": "fluid_dynamics.py",
+        "line": 85
+      },
+      "outputs": [
+        "Re_x",
+        "delta_lam",
+        "delta_star_lam",
+        "theta_lam",
+        "delta_turb",
+        "delta_star_turb",
+        "theta_turb",
+        "cf_lam",
+        "cf_turb",
+        "cf_lam_mean",
+        "cf_turb_mean"
+      ],
+      "assumptions": [
+        "Laminar: exact Blasius flat-plate solution (\u03b4 = 5.0x/\u221aRe_x, \u03b4* = 1.7208x/\u221aRe_x, \u03b8 = 0.664x/\u221aRe_x, local C_f = 0.664/\u221aRe_x, mean C_f = 1.328/\u221aRe_x). Turbulent: 1/7-power-law approximation (\u03b4 = 0.37x/Re_x^0.2, \u03b4* = \u03b4/8, \u03b8 = 7\u03b4/72, local C_f = 0.0592/Re_x^0.2, mean C_f = 0.074/Re_x^0.2) for a smooth plate, Re_x up to ~1e7; constants vary slightly between texts. Transition near Re_x \u2248 5e5."
+      ],
+      "method_references": [
+        "Blasius flat-plate solution; 1/7-power-law turbulent boundary layer"
+      ],
+      "synthetic_example": {
+        "rho": 1000.0,
+        "U": 1.0,
+        "x": 0.1,
+        "mu": 0.001
+      }
+    },
+    "fluid_dynamics.drag_lift": {
+      "title": "Dynamic pressure, drag, lift and skin-friction force",
+      "variables": [
+        {
+          "name": "q",
+          "unit": "Pa",
+          "desc": "dynamic pressure \u03c1V\u00b2/2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_D",
+          "unit": "N",
+          "desc": "drag force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_L",
+          "unit": "N",
+          "desc": "lift force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_sf",
+          "unit": "N",
+          "desc": "skin-friction drag force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_D",
+          "unit": "",
+          "desc": "drag coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_L",
+          "unit": "",
+          "desc": "lift coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_f",
+          "unit": "",
+          "desc": "skin-friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m/s",
+          "desc": "freestream velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "reference (frontal/planform) area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_wet",
+          "unit": "m^2",
+          "desc": "wetted area for skin friction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "q = rho*V**2/2",
+        "F_D = C_D*q*A",
+        "F_L = C_L*q*A",
+        "F_sf = C_f*q*A_wet"
+      ],
+      "procedure": null,
+      "outputs": [
+        "q",
+        "F_D",
+        "F_L",
+        "F_sf"
+      ],
+      "assumptions": [
+        "C_D, C_L and C_f are user inputs (from tables/data for the body shape and Re); A is the reference area appropriate to each coefficient. C_f is the mean (integrated) skin-friction coefficient over the wetted area."
+      ],
+      "method_references": [
+        "Drag/lift: F = C\u00b7\u00bd\u03c1V\u00b2A"
+      ],
+      "synthetic_example": {
+        "C_D": 0.3,
+        "C_L": 0.5,
+        "C_f": 0.003,
+        "rho": 1.225,
+        "V": 30.0,
+        "A": 2.0,
+        "A_wet": 10.0
+      }
+    },
+    "fluid_dynamics.terminal_velocity": {
+      "title": "Terminal velocity of a falling body (v_t = \u221a(2mg/(\u03c1C_D A)))",
+      "variables": [
+        {
+          "name": "v_t",
+          "unit": "m/s",
+          "desc": "terminal velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_D",
+          "unit": "",
+          "desc": "drag coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "frontal area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v_t = sqrt(2*m*g/(rho*C_D*A))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v_t"
+      ],
+      "assumptions": [
+        "Drag balances weight (buoyancy neglected); constant C_D."
+      ],
+      "method_references": [
+        "Terminal velocity from force balance mg = \u00bd\u03c1v\u00b2C_D A"
+      ],
+      "synthetic_example": {
+        "m": 70.0,
+        "g": 9.80665,
+        "rho": 1.225,
+        "C_D": 1.0,
+        "A": 0.7
+      }
+    },
+    "fluid_dynamics.pitot_tube": {
+      "title": "Pitot tube velocity (v = \u221a(2\u0394p/\u03c1))",
+      "variables": [
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "flow velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dp",
+          "unit": "Pa",
+          "desc": "dynamic pressure (stagnation \u2212 static)",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394p",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v = sqrt(2*dp/rho)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v"
+      ],
+      "assumptions": [
+        "Incompressible flow; the stagnation point brings the fluid to rest isentropically."
+      ],
+      "method_references": [
+        "Bernoulli: v = \u221a(2\u0394p/\u03c1)"
+      ],
+      "synthetic_example": {
+        "dp": 500.0,
+        "rho": 1.225
+      }
+    },
+    "fluid_dynamics.obstruction_flowmeter": {
+      "title": "Orifice / venturi / nozzle flow rate (Q = C_d A\u2082\u221a(2\u0394p/(\u03c1(1\u2212\u03b2\u2074))))",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_d",
+          "unit": "",
+          "desc": "discharge coefficient (0.6\u20261.0, table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_2",
+          "unit": "m^2",
+          "desc": "throat (minimum) area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dp",
+          "unit": "Pa",
+          "desc": "pressure difference across the meter",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394p",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta",
+          "unit": "",
+          "desc": "diameter ratio d/D",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q = C_d*A_2*sqrt(2*dp/(rho*(1 - beta**4)))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q"
+      ],
+      "assumptions": [
+        "C_d accounts for losses and the vena-contracta (user input from meter tables); \u03b2 = d/D is the diameter ratio."
+      ],
+      "method_references": [
+        "Obstruction-meter flow equation (Bernoulli + continuity)"
+      ],
+      "synthetic_example": {
+        "C_d": 0.98,
+        "A_2": 0.0005,
+        "dp": 20000.0,
+        "rho": 1000.0,
+        "beta": 0.5
+      }
+    },
+    "fluid_dynamics.rotameter": {
+      "title": "Rotameter (variable-area meter) flow rate",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_d",
+          "unit": "",
+          "desc": "float discharge coefficient",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_t",
+          "unit": "m^2",
+          "desc": "tube cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_f",
+          "unit": "m^2",
+          "desc": "float frontal area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_f",
+          "unit": "m^3",
+          "desc": "float volume",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho_f",
+          "unit": "kg/m^3",
+          "desc": "float density",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q = C_d*(A_t - A_f)*sqrt(2*g*V_f*(rho_f - rho)/(rho*A_f))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q"
+      ],
+      "assumptions": [
+        "Float held up by drag against its buoyant weight; C_d is a user input."
+      ],
+      "method_references": [
+        "Rotameter force balance Q = C_d (A_t \u2212 A_f) \u221a(2gV_f(\u03c1_f \u2212 \u03c1)/(\u03c1A_f))"
+      ],
+      "synthetic_example": {
+        "C_d": 0.95,
+        "A_t": 0.0003,
+        "A_f": 0.0002,
+        "g": 9.80665,
+        "V_f": 5e-06,
+        "rho_f": 8000.0,
+        "rho": 1000.0
+      }
+    },
+    "fluid_dynamics.point_vortex": {
+      "title": "Point vortex: stream function and velocity potential",
+      "variables": [
+        {
+          "name": "psi",
+          "unit": "m^2/s",
+          "desc": "stream function",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c8",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "m^2/s",
+          "desc": "velocity potential",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Gamma",
+          "unit": "m^2/s",
+          "desc": "circulation (vortex strength)",
+          "lo": null,
+          "hi": null,
+          "label": "\u0393",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radial distance from the vortex",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r0",
+          "unit": "m",
+          "desc": "reference radius where \u03c8 = 0",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "angle about the vortex",
+          "lo": null,
+          "hi": 6.283185307179586,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "psi = -Gamma/(2*pi)*log(r/r0)",
+        "phi = Gamma/(2*pi)*theta"
+      ],
+      "procedure": null,
+      "outputs": [
+        "psi",
+        "phi"
+      ],
+      "assumptions": [
+        "2-D point vortex at the origin; tangential velocity v_\u03b8 = \u0393/(2\u03c0r) (see the circulation calculator) and vorticity is zero everywhere except at the origin (free vortex). With the stream function defined so that v_\u03b8 = \u2212\u2202\u03c8/\u2202r, \u03c8 = \u2212(\u0393/2\u03c0) ln(r/r0), fixed by \u03c8 = 0 at r = r0; \u03c8 is negative for r > r0 and positive for r < r0 (both signs are physical)."
+      ],
+      "method_references": [
+        "Point-vortex stream function and potential, \u03c8 = \u2212(\u0393/2\u03c0) ln(r/r0)"
+      ],
+      "synthetic_example": {
+        "Gamma": 6.283185307179586,
+        "r": 2.0,
+        "r0": 1.0,
+        "theta": 0.5
+      }
+    },
+    "fluid_dynamics.forced_vortex": {
+      "title": "Forced (solid-body rotation) vortex: velocity and vorticity",
+      "variables": [
+        {
+          "name": "v_theta",
+          "unit": "m/s",
+          "desc": "tangential velocity at radius r",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "rad/s",
+          "desc": "vorticity (2\u03c9)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v_theta = omega*r",
+        "zeta = 2*omega"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v_theta",
+        "zeta"
+      ],
+      "assumptions": [
+        "Solid-body rotation: vorticity \u03b6 = 2\u03c9 is uniform (radian is dimensionless, so 1 rad/s = 1 s\u207b\u00b9)."
+      ],
+      "method_references": [
+        "Vorticity of solid-body rotation, \u03b6 = 2\u03a9"
+      ],
+      "synthetic_example": {
+        "omega": 5.0,
+        "r": 0.2
+      }
+    },
+    "fluid_dynamics.circulation": {
+      "title": "Circulation (\u0393 = 2\u03c0r\u00b7v_\u03b8)",
+      "variables": [
+        {
+          "name": "Gamma",
+          "unit": "m^2/s",
+          "desc": "circulation",
+          "lo": null,
+          "hi": null,
+          "label": "\u0393",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_theta",
+          "unit": "m/s",
+          "desc": "tangential velocity at radius r",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Gamma = 2*pi*r*v_theta"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Gamma"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Circulation \u0393 = 2\u03c0r\u00b7v_\u03b8 for an axisymmetric flow"
+      ],
+      "synthetic_example": {
+        "r": 0.2,
+        "v_theta": 5.0
+      }
+    },
+    "fluid_dynamics.water_hammer": {
+      "title": "Water hammer pressure rise (Joukowsky)",
+      "variables": [
+        {
+          "name": "c",
+          "unit": "m/s",
+          "desc": "wave (pressure) speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dp_wh",
+          "unit": "Pa",
+          "desc": "pressure change (rise positive)",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394p",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "Pa",
+          "desc": "fluid bulk modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "pipe-wall elastic modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "pipe diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "pipe wall thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dV",
+          "unit": "m/s",
+          "desc": "velocity change (sudden closure \u2192 negative)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "c = sqrt(K/(rho*(1 + K*D/(E*t))))",
+        "dp_wh = -rho*c*dV"
+      ],
+      "procedure": null,
+      "outputs": [
+        "c",
+        "dp_wh"
+      ],
+      "assumptions": [
+        "Sudden velocity change dV; elastic pipe (a rigid pipe is the limit E \u2192 \u221e, c = \u221a(K/\u03c1)). Joukowsky \u0394p = \u2212\u03c1 c dV is positive (a rise) for a sudden closure (dV < 0) and negative (a drop) for a sudden opening (dV > 0)."
+      ],
+      "method_references": [
+        "Joukowsky: \u0394p = \u2212\u03c1 c dV; elastic-pipe wave speed"
+      ],
+      "synthetic_example": {
+        "rho": 1000.0,
+        "K": 2200000000.0,
+        "E": 200000000000.0,
+        "D": 0.1,
+        "t": 0.005,
+        "dV": -1.0
+      }
+    },
+    "fluid_dynamics.buckingham_pi": {
+      "title": "Buckingham \u03c0 theorem: dimensionless groups from a dimension matrix",
+      "variables": [
+        {
+          "name": "matrix",
+          "unit": "",
+          "desc": "rows = fundamental dimensions (M, L, T, \u2026), columns = quantities, integer exponents; first `rank` columns are the repeating variables",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "pi_groups",
+          "unit": "",
+          "desc": "list of \u03c0 groups (exponent vectors over the columns)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "n_pi",
+          "unit": "",
+          "desc": "number of \u03c0 groups",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rank",
+          "unit": "",
+          "desc": "rank of the dimension matrix",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _buckingham(values):\n    \"\"\"Buckingham \u03c0 theorem: dimensionless groups from the dimension matrix via sympy nullspace.\n\n    matrix: rows = fundamental dimensions (M, L, T, ...), columns = physical quantities, integer\n    exponents. The first `rank` columns must be the repeating variables (independent). Each \u03c0 group is\n    one non-repeating variable times powers of the repeating variables: solve D_r\u00b7a = \u2212d_j for column j.\n    \"\"\"\n    mat = values['matrix']\n    if not isinstance(mat, list) or not mat or not all(isinstance(r, list) for r in mat):\n        raise MechError('matrix: give a list of rows (dimensions) of integer exponents')\n    try:\n        M = sp.Matrix([[int(x) for x in row] for row in mat])\n    except (TypeError, ValueError):\n        raise MechError('matrix entries must be integers')\n    m, n = M.shape\n    rank = M.rank()\n    if rank == 0:\n        raise MechError('rank 0: the quantities are already dimensionless')\n    if rank != m:\n        raise MechError(f'rank {rank} < {m} dimensions: remove redundant dimension rows')\n    if n - rank < 1:\n        raise MechError('nullity 0: the variables are dimensionally independent')\n    Dr = M[:, :rank]\n    if Dr.det() == 0:\n        raise MechError('the first r columns (repeating variables) must be linearly independent; reorder them')\n    groups = []\n    for j in range(rank, n):\n        a = Dr.solve(-M[:, j])\n        vec = [0] * n\n        for i in range(rank):\n            x = a[i]\n            vec[i] = int(x) if x.is_Integer else float(x)\n        vec[j] = 1\n        groups.append(vec)\n    return {'pi_groups': groups, 'n_pi': len(groups), 'rank': int(rank)}\n",
+        "source": "fluid_dynamics.py",
+        "line": 107
+      },
+      "outputs": [
+        "pi_groups",
+        "n_pi",
+        "rank"
+      ],
+      "assumptions": [
+        "The dimension matrix rows are the fundamental dimensions and columns the quantities; the first r columns must be independent repeating variables. Each \u03c0 group = one non-repeating quantity times powers of the repeating variables (the nullspace of the matrix)."
+      ],
+      "method_references": [
+        "Buckingham \u03c0 theorem (1914); nullspace of the dimension matrix"
+      ],
+      "synthetic_example": {
+        "matrix": [
+          [
+            0,
+            0,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            -3,
+            1,
+            -1
+          ],
+          [
+            -1,
+            0,
+            0,
+            -2,
+            -1
+          ]
+        ]
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "fluid_dynamics-001",
+      "calculator": "fluid_dynamics.continuity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A": "0.02 m^2",
+        "v": "5 m/s",
+        "rho": "1000 kg/m^3"
+      },
+      "solve_for": [
+        "Q",
+        "mdot"
+      ],
+      "expected_as_specified": {
+        "Q": "0.1 m^3/s",
+        "mdot": "100 kg/s"
+      },
+      "expected_SI": {
+        "Q": 0.1,
+        "mdot": 100.0
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 0.1,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.continuity (symbolic)"
+        },
+        "mdot": {
+          "value": 100.0,
+          "unit": "kg/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.continuity (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        },
+        "mdot": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.2,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = A\u00b7v = 0.02\u00b75 = 0.1 m\u00b3/s; \u1e41 = \u03c1Q = 1000\u00b70.1 = 100 kg/s"
+      }
+    },
+    {
+      "id": "fluid_dynamics-002",
+      "calculator": "fluid_dynamics.continuity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Q": "0.1 m^3/s",
+        "A": "0.02 m^2",
+        "rho": "1000 kg/m^3"
+      },
+      "solve_for": [
+        "v",
+        "mdot"
+      ],
+      "expected_as_specified": {
+        "v": "5 m/s"
+      },
+      "expected_SI": {
+        "v": 5.0
+      },
+      "actual_SI": {
+        "v": {
+          "value": 5.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.continuity (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v = Q/A = 0.1/0.02 = 5 m/s"
+      }
+    },
+    {
+      "id": "fluid_dynamics-003",
+      "calculator": "fluid_dynamics.bernoulli_ideal",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p1": "101.325 kPa",
+        "v1": "2 m/s",
+        "v2": "4 m/s",
+        "z1": "0 m",
+        "z2": "3 m",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "solve_for": [
+        "p2"
+      ],
+      "expected_as_specified": {
+        "p2": "65905.05 Pa"
+      },
+      "expected_SI": {
+        "p2": 65905.05
+      },
+      "actual_SI": {
+        "p2": {
+          "value": 65905.05,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.bernoulli_ideal (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "p2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 131.8101,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "p2 = p1 + \u03c1(v1\u00b2\u2212v2\u00b2)/2 + \u03c1g(z1\u2212z2) = 101325 + 1000(4\u221216)/2 + 1000\u00b79.80665\u00b7(0\u22123) = 101325 \u2212 6000 \u2212 29419.95 = 65905.05 Pa"
+      }
+    },
+    {
+      "id": "fluid_dynamics-004",
+      "calculator": "fluid_dynamics.energy_equation",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p1": "200 kPa",
+        "p2": "100 kPa",
+        "v1": "2 m/s",
+        "v2": "3 m/s",
+        "z1": "2 m",
+        "z2": "7 m",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665,
+        "h_p": "5 m",
+        "h_t": "2 m"
+      },
+      "solve_for": [
+        "H1",
+        "H2",
+        "h_L"
+      ],
+      "expected_as_specified": {
+        "H1": "22.5983 m",
+        "H2": "17.6560 m",
+        "h_L": "7.94223 m"
+      },
+      "expected_SI": {
+        "H1": 22.5983,
+        "H2": 17.656,
+        "h_L": 7.94223
+      },
+      "actual_SI": {
+        "H1": {
+          "value": 22.59826750215415,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.energy_equation (symbolic)"
+        },
+        "H2": {
+          "value": 17.65603442561935,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.energy_equation (symbolic)"
+        },
+        "h_L": {
+          "value": 7.942233076534799,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.energy_equation (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "H1": {
+          "absolute_error": 3.24978458472458e-05,
+          "relative_error": 1.4380659539543153e-06,
+          "allowed_absolute_error": 0.011299149999999999,
+          "passed": true
+        },
+        "H2": {
+          "absolute_error": 3.4425619350741954e-05,
+          "relative_error": 1.9497971992944016e-06,
+          "allowed_absolute_error": 0.008827999999999999,
+          "passed": true
+        },
+        "h_L": {
+          "absolute_error": 3.0765347984740288e-06,
+          "relative_error": 3.8736410283686426e-07,
+          "allowed_absolute_error": 0.003971115,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "H1 = 200000/(1000\u00b79.80665) + 4/(2\u00b79.80665) + 2 = 20.3943 + 0.20394 + 2 = 22.5983 m; H2 = 100000/9806.65 + 9/19.6133 + 7 = 10.1972 + 0.45887 + 7 = 17.6560 m; h_L = H1 + h_p \u2212 h_t \u2212 H2 = 22.5983 + 5 \u2212 2 \u2212 17.6560 = 7.94223 m"
+      }
+    },
+    {
+      "id": "fluid_dynamics-005",
+      "calculator": "fluid_dynamics.jet_force",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "Q": "0.05 m^3/s",
+        "v": "20 m/s",
+        "beta": "180 deg"
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expected_as_specified": {
+        "F": "2000 N"
+      },
+      "expected_SI": {
+        "F": 2000.0
+      },
+      "actual_SI": {
+        "F": {
+          "value": 2000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.jet_force (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = \u03c1Qv(1 \u2212 cos\u03b2) = 1000\u00b70.05\u00b720\u00b7(1 \u2212 cos180\u00b0) = 1000\u00b7(1 \u2212 (\u22121)) = 2000 N (cup vane)"
+      }
+    },
+    {
+      "id": "fluid_dynamics-006",
+      "calculator": "fluid_dynamics.momentum_bend",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "inlet": [
+          5,
+          150000,
+          0.02,
+          0
+        ],
+        "outlet": [
+          5,
+          130000,
+          0.02,
+          90
+        ]
+      },
+      "solve_for": [
+        "Fx",
+        "Fy",
+        "F",
+        "theta_F",
+        "mdot"
+      ],
+      "expected_as_specified": {
+        "Fx": "3500 N",
+        "Fy": "-3100 N",
+        "F": "4675.5 N",
+        "mdot": "100 kg/s"
+      },
+      "expected_SI": {
+        "Fx": 3500.0,
+        "Fy": -3100.0,
+        "F": 4675.5,
+        "mdot": 100.0
+      },
+      "actual_SI": {
+        "Fx": {
+          "value": 3500.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.momentum_bend (procedure)"
+        },
+        "Fy": {
+          "value": -3100.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.momentum_bend (procedure)"
+        },
+        "F": {
+          "value": 4675.467891024384,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.momentum_bend (procedure)"
+        },
+        "mdot": {
+          "value": 100.0,
+          "unit": "kg/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.momentum_bend (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "Fx": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 3.5,
+          "passed": true
+        },
+        "Fy": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 3.1,
+          "passed": true
+        },
+        "F": {
+          "absolute_error": 0.032108975616210955,
+          "relative_error": 6.867495586827282e-06,
+          "allowed_absolute_error": 4.6755,
+          "passed": true
+        },
+        "mdot": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.1,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "90\u00b0 bend. \u1e41 = \u03c1A1v1 = 1000\u00b70.02\u00b75 = 100 kg/s. Fx = p1A1cos0 \u2212 p2A2cos90 + \u1e41(v1cos0 \u2212 v2cos90) = 3000 \u2212 0 + 100(5\u22120) = 3500 N; Fy = p1A1sin0 \u2212 p2A2sin90 + \u1e41(v1sin0 \u2212 v2sin90) = 0 \u2212 2600 + 100(0\u22125) = \u22123100 N; F = \u221a(3500\u00b2+3100\u00b2) = 4675.5 N"
+      }
+    },
+    {
+      "id": "fluid_dynamics-007",
+      "calculator": "fluid_dynamics.momentum_bend",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "inlet": [
+          10,
+          150000,
+          0.02,
+          0
+        ],
+        "outlet": [
+          20,
+          100000,
+          0.01,
+          30
+        ]
+      },
+      "solve_for": [
+        "Fx",
+        "Fy",
+        "F",
+        "theta_F",
+        "mdot"
+      ],
+      "expected_as_specified": {
+        "Fx": "669.873 N",
+        "Fy": "-2500 N",
+        "F": "2588.19 N",
+        "mdot": "200 kg/s"
+      },
+      "expected_SI": {
+        "Fx": 669.873,
+        "Fy": -2500.0,
+        "F": 2588.19,
+        "mdot": 200.0
+      },
+      "actual_SI": {
+        "Fx": {
+          "value": 669.8729810778063,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.momentum_bend (procedure)"
+        },
+        "Fy": {
+          "value": -2499.9999999999995,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.momentum_bend (procedure)"
+        },
+        "F": {
+          "value": 2588.190451025207,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.momentum_bend (procedure)"
+        },
+        "mdot": {
+          "value": 200.0,
+          "unit": "kg/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.momentum_bend (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "Fx": {
+          "absolute_error": 1.8922193703474477e-05,
+          "relative_error": 2.8247434518893096e-08,
+          "allowed_absolute_error": 0.669873,
+          "passed": true
+        },
+        "Fy": {
+          "absolute_error": 4.547473508864641e-13,
+          "relative_error": 1.8189894035458566e-16,
+          "allowed_absolute_error": 2.5,
+          "passed": true
+        },
+        "F": {
+          "absolute_error": 0.000451025206984923,
+          "relative_error": 1.7426278866115819e-07,
+          "allowed_absolute_error": 2.58819,
+          "passed": true
+        },
+        "mdot": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.2,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Converging nozzle with continuity satisfied: A1v1 = 0.02\u00b710 = 0.2 = A2v2 = 0.01\u00b720. \u1e41 = \u03c1A1v1 = 200 kg/s; cos30\u00b0 = 0.866025. Fx = p1A1cos0 \u2212 p2A2cos30 + \u1e41(v1cos0 \u2212 v2cos30) = 3000 \u2212 100000\u00b70.01\u00b70.866025 + 200(10 \u2212 20\u00b70.866025) = 3000 \u2212 866.025 + 200(\u22127.32051) = 669.873 N; Fy = 0 \u2212 100000\u00b70.01\u00b7sin30 + 200(0 \u2212 20\u00b7sin30) = 0 \u2212 500 \u2212 2000 = \u22122500 N; F = \u221a(669.873\u00b2 + 2500\u00b2) = 2588.19 N"
+      }
+    },
+    {
+      "id": "fluid_dynamics-008",
+      "calculator": "fluid_dynamics.turbine_torque",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mdot": "2 kg/s",
+        "r1": "0.1 m",
+        "r2": "0.3 m",
+        "vt1": "5 m/s",
+        "vt2": "15 m/s"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expected_as_specified": {
+        "T": "8 N*m"
+      },
+      "expected_SI": {
+        "T": 8.0
+      },
+      "actual_SI": {
+        "T": {
+          "value": 8.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.turbine_torque (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.016,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = \u1e41(r\u2082v_t2 \u2212 r\u2081v_t1) = 2(0.3\u00b715 \u2212 0.1\u00b75) = 2(4.5 \u2212 0.5) = 8 N\u00b7m (pump: angular momentum added to the fluid)"
+      }
+    },
+    {
+      "id": "fluid_dynamics-009",
+      "calculator": "fluid_dynamics.turbine_torque",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mdot": "2 kg/s",
+        "r1": "0.3 m",
+        "r2": "0.1 m",
+        "vt1": "15 m/s",
+        "vt2": "5 m/s"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expected_as_specified": {
+        "T": "-8 N*m"
+      },
+      "expected_SI": {
+        "T": -8.0
+      },
+      "actual_SI": {
+        "T": {
+          "value": -8.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.turbine_torque (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.016,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Turbine: the fluid loses angular momentum (r\u2082v_t2 = 0.1\u00b75 = 0.5 < r\u2081v_t1 = 0.3\u00b715 = 4.5). T = \u1e41(r\u2082v_t2 \u2212 r\u2081v_t1) = 2(0.5 \u2212 4.5) = \u22128 N\u00b7m, negative as expected for a turbine"
+      }
+    },
+    {
+      "id": "fluid_dynamics-010",
+      "calculator": "fluid_dynamics.sprinkler_torque",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "Q": "0.001 m^3/s",
+        "r": "0.2 m",
+        "v_j": "10 m/s",
+        "omega": "20 rad/s"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expected_as_specified": {
+        "T": "1.2 N*m"
+      },
+      "expected_SI": {
+        "T": 1.2
+      },
+      "actual_SI": {
+        "T": {
+          "value": 1.1999999999999997,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.sprinkler_torque (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T": {
+          "absolute_error": 2.220446049250313e-16,
+          "relative_error": 1.8503717077085943e-16,
+          "allowed_absolute_error": 0.0024,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = \u03c1Qr(v_j \u2212 \u03c9r) = 1000\u00b70.001\u00b70.2\u00b7(10 \u2212 20\u00b70.2) = 0.2\u00b7(10 \u2212 4) = 1.2 N\u00b7m"
+      }
+    },
+    {
+      "id": "fluid_dynamics-011",
+      "calculator": "fluid_dynamics.reynolds_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "v": "1 m/s",
+        "L": "10 mm",
+        "mu": "1 mPa*s"
+      },
+      "solve_for": [
+        "Re"
+      ],
+      "expected_as_specified": {
+        "Re": 10000.0
+      },
+      "expected_SI": {
+        "Re": 10000.0
+      },
+      "actual_SI": {
+        "Re": {
+          "value": 10000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.reynolds_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Re": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 20.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Re = \u03c1vL/\u03bc = 1000\u00b71\u00b70.01/0.001 = 10000"
+      }
+    },
+    {
+      "id": "fluid_dynamics-012",
+      "calculator": "fluid_dynamics.froude_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v": "5 m/s",
+        "g": 9.80665,
+        "L": "1 m"
+      },
+      "solve_for": [
+        "Fr"
+      ],
+      "expected_as_specified": {
+        "Fr": 1.59665
+      },
+      "expected_SI": {
+        "Fr": 1.59665
+      },
+      "actual_SI": {
+        "Fr": {
+          "value": 1.5966497839052936,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.froude_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Fr": {
+          "absolute_error": 2.1609470635119976e-07,
+          "relative_error": 1.353425649648951e-07,
+          "allowed_absolute_error": 0.0031933,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Fr = v/\u221a(gL) = 5/\u221a9.80665 = 5/3.13156 = 1.59665"
+      }
+    },
+    {
+      "id": "fluid_dynamics-013",
+      "calculator": "fluid_dynamics.mach_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "v": "170 m/s",
+        "c": "340 m/s"
+      },
+      "solve_for": [
+        "Ma"
+      ],
+      "expected_as_specified": {
+        "Ma": 0.5
+      },
+      "expected_SI": {
+        "Ma": 0.5
+      },
+      "actual_SI": {
+        "Ma": {
+          "value": 0.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.mach_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Ma": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Ma = v/c = 170/340 = 0.5"
+      }
+    },
+    {
+      "id": "fluid_dynamics-014",
+      "calculator": "fluid_dynamics.weber_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "v": "2 m/s",
+        "L": "10 mm",
+        "sigma": "0.0728 N/m"
+      },
+      "solve_for": [
+        "We"
+      ],
+      "expected_as_specified": {
+        "We": 549.4505
+      },
+      "expected_SI": {
+        "We": 549.4505
+      },
+      "actual_SI": {
+        "We": {
+          "value": 549.4505494505494,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.weber_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "We": {
+          "absolute_error": 4.9450549340690486e-05,
+          "relative_error": 9.000000790005739e-08,
+          "allowed_absolute_error": 1.0989010000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "We = \u03c1v\u00b2L/\u03c3 = 1000\u00b74\u00b70.01/0.0728 = 40/0.0728 = 549.45"
+      }
+    },
+    {
+      "id": "fluid_dynamics-015",
+      "calculator": "fluid_dynamics.euler_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dp": "4 kPa",
+        "rho": "1000 kg/m^3",
+        "v": "2 m/s"
+      },
+      "solve_for": [
+        "Eu"
+      ],
+      "expected_as_specified": {
+        "Eu": 1.0
+      },
+      "expected_SI": {
+        "Eu": 1.0
+      },
+      "actual_SI": {
+        "Eu": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.euler_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Eu": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Eu = \u0394p/(\u03c1v\u00b2) = 4000/(1000\u00b74) = 1.0"
+      }
+    },
+    {
+      "id": "fluid_dynamics-016",
+      "calculator": "fluid_dynamics.strouhal_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f": "10 Hz",
+        "L": "50 mm",
+        "v": "2 m/s"
+      },
+      "solve_for": [
+        "St"
+      ],
+      "expected_as_specified": {
+        "St": 0.25
+      },
+      "expected_SI": {
+        "St": 0.25
+      },
+      "actual_SI": {
+        "St": {
+          "value": 0.25,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.strouhal_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "St": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "St = fL/v = 10\u00b70.05/2 = 0.25"
+      }
+    },
+    {
+      "id": "fluid_dynamics-017",
+      "calculator": "fluid_dynamics.hagen_poiseuille",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dp": "1 kPa",
+        "D": "10 mm",
+        "mu": "1 mPa*s",
+        "L": "1 m"
+      },
+      "solve_for": [
+        "Q",
+        "u_avg",
+        "u_max"
+      ],
+      "expected_as_specified": {
+        "Q": "2.45437e-4 m^3/s",
+        "u_avg": "3.125 m/s",
+        "u_max": "6.25 m/s"
+      },
+      "expected_SI": {
+        "Q": 0.000245437,
+        "u_avg": 3.125,
+        "u_max": 6.25
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 0.00024543692606170255,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.hagen_poiseuille (symbolic)"
+        },
+        "u_avg": {
+          "value": 3.125,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.hagen_poiseuille (symbolic)"
+        },
+        "u_max": {
+          "value": 6.25,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.hagen_poiseuille (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q": {
+          "absolute_error": 7.393829743341379e-11,
+          "relative_error": 3.0125163456778643e-07,
+          "allowed_absolute_error": 4.90874e-07,
+          "passed": true
+        },
+        "u_avg": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00625,
+          "passed": true
+        },
+        "u_max": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0125,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = \u03c0\u0394pD\u2074/(128\u03bcL) = \u03c0\u00b71000\u00b71e-8/(128\u00b70.001\u00b71) = 3.14159e-5/0.128 = 2.45437e-4 m\u00b3/s; u_avg = Q/(\u03c0D\u00b2/4) = 2.45437e-4/7.85398e-5 = 3.125 m/s; u_max = 2u_avg = 6.25 m/s"
+      }
+    },
+    {
+      "id": "fluid_dynamics-018",
+      "calculator": "fluid_dynamics.hagen_poiseuille",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Q": "2.45437e-4 m^3/s",
+        "dp": "1 kPa",
+        "mu": "1 mPa*s",
+        "L": "1 m"
+      },
+      "solve_for": [
+        "D",
+        "u_avg",
+        "u_max"
+      ],
+      "expected_as_specified": {
+        "D": "10 mm"
+      },
+      "expected_SI": {
+        "D": 0.01
+      },
+      "actual_SI": {
+        "D": {
+          "value": 0.010000000753129228,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.hagen_poiseuille (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "D": {
+          "absolute_error": 7.531292273849077e-10,
+          "relative_error": 7.531292273849077e-08,
+          "allowed_absolute_error": 5e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = (128\u03bcLQ/(\u03c0\u0394p))^(1/4) = (128\u00b70.001\u00b72.45437e-4/(\u03c0\u00b71000))^(1/4) = (1e-8)^(1/4) = 0.01 m"
+      }
+    },
+    {
+      "id": "fluid_dynamics-019",
+      "calculator": "fluid_dynamics.friction_factor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Re": 100000.0,
+        "rel_rough": 0.001
+      },
+      "solve_for": [
+        "f_colebrook",
+        "f_swamee_jain",
+        "f_haaland",
+        "f_laminar"
+      ],
+      "expected_as_specified": {
+        "f_colebrook": 0.0221745,
+        "f_swamee_jain": 0.0223424,
+        "f_haaland": 0.0219662,
+        "f_laminar": 0.00064
+      },
+      "expected_SI": {
+        "f_colebrook": 0.0221745,
+        "f_swamee_jain": 0.0223424,
+        "f_haaland": 0.0219662,
+        "f_laminar": 0.00064
+      },
+      "actual_SI": {
+        "f_colebrook": {
+          "value": 0.02217453594451506,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.friction_factor (procedure)"
+        },
+        "f_swamee_jain": {
+          "value": 0.02234241216395183,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.friction_factor (procedure)"
+        },
+        "f_haaland": {
+          "value": 0.021966214014076613,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.friction_factor (procedure)"
+        },
+        "f_laminar": {
+          "value": 0.00064,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.friction_factor (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "f_colebrook": {
+          "absolute_error": 3.594451505883889e-08,
+          "relative_error": 1.6209842413059546e-06,
+          "allowed_absolute_error": 1.108725e-05,
+          "passed": true
+        },
+        "f_swamee_jain": {
+          "absolute_error": 1.2163951831900555e-08,
+          "relative_error": 5.44433535873521e-07,
+          "allowed_absolute_error": 1.1171199999999999e-05,
+          "passed": true
+        },
+        "f_haaland": {
+          "absolute_error": 1.4014076610974202e-08,
+          "relative_error": 6.379836572085386e-07,
+          "allowed_absolute_error": 1.0983100000000002e-05,
+          "passed": true
+        },
+        "f_laminar": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 3.2e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "f_laminar = 64/1e5 = 6.4e-4. Haaland: f = (\u22121.8 log10(0.001/3.7^1.11 + 6.9/1e5))\u207b\u00b2 = (\u22121.8\u00b7(\u22126.74717))\u207b\u00b2 = 0.0219662. Swamee\u2013Jain: f = 0.25/log10(0.001/3.7 + 5.74/1e5^0.9)\u00b2 = 0.25/3.34503\u00b2 = 0.0223424. Colebrook: iterate 1/\u221af = \u22122 log10(0.001/3.7 + 2.51/(1e5\u00b7\u221af)) from the Haaland seed; converges to f = 0.0221745 (plain-math iteration, not mechcalc)"
+      }
+    },
+    {
+      "id": "fluid_dynamics-020",
+      "calculator": "fluid_dynamics.friction_factor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f_colebrook": 0.0221745,
+        "Re": 100000.0
+      },
+      "solve_for": [
+        "rel_rough"
+      ],
+      "expected_as_specified": {
+        "rel_rough": 0.001
+      },
+      "expected_SI": {
+        "rel_rough": 0.001
+      },
+      "actual_SI": {
+        "rel_rough": {
+          "value": 0.0009999893203142287,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.friction_factor (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "rel_rough": {
+          "absolute_error": 1.0679685771364592e-08,
+          "relative_error": 1.0679685771364592e-05,
+          "allowed_absolute_error": 5e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse of the Colebrook case above: the relative roughness that gives f = 0.0221745 at Re = 1e5 is \u03b5/D = 0.001"
+      }
+    },
+    {
+      "id": "fluid_dynamics-021",
+      "calculator": "fluid_dynamics.head_loss",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f": 0.02,
+        "L": "100 m",
+        "D": "50 mm",
+        "v": "2 m/s",
+        "g": 9.80665,
+        "K": 2.0
+      },
+      "solve_for": [
+        "h_f",
+        "h_m",
+        "h_total",
+        "L_eq"
+      ],
+      "expected_as_specified": {
+        "h_f": "8.15773 m",
+        "h_m": "0.407886 m",
+        "h_total": "8.56562 m",
+        "L_eq": "5 m"
+      },
+      "expected_SI": {
+        "h_f": 8.15773,
+        "h_m": 0.407886,
+        "h_total": 8.56562,
+        "L_eq": 5.0
+      },
+      "actual_SI": {
+        "h_f": {
+          "value": 8.157729703823426,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.head_loss (symbolic)"
+        },
+        "h_m": {
+          "value": 0.4078864851911713,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.head_loss (symbolic)"
+        },
+        "h_total": {
+          "value": 8.565616189014598,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.head_loss (symbolic)"
+        },
+        "L_eq": {
+          "value": 5.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.head_loss (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "h_f": {
+          "absolute_error": 2.9617657482106097e-07,
+          "relative_error": 3.630624877521822e-08,
+          "allowed_absolute_error": 0.01631546,
+          "passed": true
+        },
+        "h_m": {
+          "absolute_error": 4.851911712955292e-07,
+          "relative_error": 1.1895264149677342e-06,
+          "allowed_absolute_error": 0.0008157720000000001,
+          "passed": true
+        },
+        "h_total": {
+          "absolute_error": 3.8109854010315303e-06,
+          "relative_error": 4.4491646851384146e-07,
+          "allowed_absolute_error": 0.01713124,
+          "passed": true
+        },
+        "L_eq": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "h_f = f(L/D)v\u00b2/(2g) = 0.02\u00b7(100/0.05)\u00b74/(2\u00b79.80665) = 8/0.980665 = 8.15773 m; h_m = Kv\u00b2/(2g) = 2\u00b74/19.6133 = 0.407886 m; h_total = 8.56562 m; L_eq = KD/f = 2\u00b70.05/0.02 = 5 m"
+      }
+    },
+    {
+      "id": "fluid_dynamics-022",
+      "calculator": "fluid_dynamics.hydraulic_diameter",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A": "0.01 m^2",
+        "P": "0.4 m"
+      },
+      "solve_for": [
+        "D_h"
+      ],
+      "expected_as_specified": {
+        "D_h": "0.1 m"
+      },
+      "expected_SI": {
+        "D_h": 0.1
+      },
+      "actual_SI": {
+        "D_h": {
+          "value": 0.09999999999999999,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.hydraulic_diameter (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "D_h": {
+          "absolute_error": 1.3877787807814457e-17,
+          "relative_error": 1.3877787807814457e-16,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D_h = 4A/P = 4\u00b70.01/0.4 = 0.1 m"
+      }
+    },
+    {
+      "id": "fluid_dynamics-023",
+      "calculator": "fluid_dynamics.series_pipes",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "pipes": [
+          [
+            50,
+            0.05,
+            0.02,
+            0.5
+          ],
+          [
+            30,
+            0.04,
+            0.02,
+            1.0
+          ]
+        ],
+        "Q": "0.002 m^3/s"
+      },
+      "solve_for": [
+        "h_total",
+        "h_each"
+      ],
+      "expected_as_specified": {
+        "h_total": "3.15081 m",
+        "h_each": [
+          1.08443,
+          2.06638
+        ]
+      },
+      "expected_SI": {
+        "h_total": 3.15081,
+        "h_each": [
+          1.08443,
+          2.06638
+        ]
+      },
+      "actual_SI": {
+        "h_total": {
+          "value": 3.1508117617705667,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.series_pipes (procedure)"
+        },
+        "h_each": {
+          "value": [
+            1.084434688206449,
+            2.0663770735641176
+          ],
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.series_pipes (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "h_total": {
+          "absolute_error": 1.7617705667660744e-06,
+          "relative_error": 5.591484623846168e-07,
+          "allowed_absolute_error": 0.00315081,
+          "passed": true
+        },
+        "h_each": [
+          {
+            "absolute_error": 4.688206449054988e-06,
+            "relative_error": 4.323198776366375e-06,
+            "allowed_absolute_error": 0.00108443,
+            "passed": true
+          },
+          {
+            "absolute_error": 2.926435882510958e-06,
+            "relative_error": 1.4162138050653597e-06,
+            "allowed_absolute_error": 0.00206638,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Pipe 1: A = \u03c0\u00b70.05\u00b2/4 = 1.96350e-3, v = 0.002/1.96350e-3 = 1.01859, h = (0.02\u00b750/0.05 + 0.5)\u00b71.01859\u00b2/19.6133 = 20.5\u00b71.03752/19.6133 = 1.08443 m. Pipe 2: A = \u03c0\u00b70.04\u00b2/4 = 1.25664e-3, v = 1.59155, h = (0.02\u00b730/0.04 + 1.0)\u00b71.59155\u00b2/19.6133 = 16\u00b72.53303/19.6133 = 2.06638 m. h_total = 3.15081 m"
+      }
+    },
+    {
+      "id": "fluid_dynamics-024",
+      "calculator": "fluid_dynamics.pipe_network",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "pipes": [
+          [
+            "p1",
+            100,
+            0.2,
+            0.02,
+            0,
+            0.3
+          ],
+          [
+            "p2",
+            150,
+            0.15,
+            0.02,
+            0,
+            0.2
+          ]
+        ],
+        "loops": [
+          [
+            [
+              "p1",
+              1
+            ],
+            [
+              "p2",
+              -1
+            ]
+          ]
+        ]
+      },
+      "solve_for": [
+        "flows",
+        "iterations",
+        "max_correction"
+      ],
+      "expected_as_specified": {
+        "flows": [
+          [
+            "p1",
+            0.357718,
+            66.1047
+          ],
+          [
+            "p2",
+            0.142282,
+            66.1047
+          ]
+        ]
+      },
+      "expected_SI": {
+        "flows": [
+          [
+            "p1",
+            0.357718,
+            66.1047
+          ],
+          [
+            "p2",
+            0.142282,
+            66.1047
+          ]
+        ]
+      },
+      "actual_SI": {
+        "flows": {
+          "value": [
+            [
+              "p1",
+              0.3577183840119192,
+              66.10466424088511
+            ],
+            [
+              "p2",
+              0.14228161598808084,
+              66.10466424088511
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.pipe_network (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "flows": [
+          [
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 3.840119192077829e-07,
+              "relative_error": 1.0735046019707784e-06,
+              "allowed_absolute_error": 0.000357718,
+              "passed": true
+            },
+            {
+              "absolute_error": 3.575911487985195e-05,
+              "relative_error": 5.409466328392982e-07,
+              "allowed_absolute_error": 0.06610469999999999,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 3.8401191915227173e-07,
+              "relative_error": 2.6989494043678873e-06,
+              "allowed_absolute_error": 0.000142282,
+              "passed": true
+            },
+            {
+              "absolute_error": 3.575911487985195e-05,
+              "relative_error": 5.409466328392982e-07,
+              "allowed_absolute_error": 0.06610469999999999,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two parallel pipes, total Q = 0.5 m\u00b3/s. R1 = (0.02\u00b7100/0.2)/(2\u00b79.80665\u00b7(\u03c0\u00b70.2\u00b2/4)\u00b2) = 10/(2\u00b79.80665\u00b79.86960e-4) = 516.594; R2 = (0.02\u00b7150/0.15)/(2\u00b79.80665\u00b7(\u03c0\u00b70.15\u00b2/4)\u00b2) = 20/(2\u00b79.80665\u00b73.12297e-4) = 3265.39. Equal head: Q1 = Q\u00b7\u221aR2/(\u221aR1+\u221aR2) = 0.5\u00b757.147/(22.728+57.147) = 0.357718; Q2 = 0.5 \u2212 0.357718 = 0.142282 m\u00b3/s. h = R1\u00b7Q1\u00b2 = 516.594\u00b70.127962 = 66.1047 m (Hardy Cross converges to the same)"
+      }
+    },
+    {
+      "id": "fluid_dynamics-025",
+      "calculator": "fluid_dynamics.boundary_layer",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "U": "1 m/s",
+        "x": "0.1 m",
+        "mu": "1 mPa*s"
+      },
+      "solve_for": [
+        "Re_x",
+        "delta_lam",
+        "delta_star_lam",
+        "theta_lam",
+        "delta_turb",
+        "delta_star_turb",
+        "theta_turb",
+        "cf_lam",
+        "cf_turb",
+        "cf_lam_mean",
+        "cf_turb_mean"
+      ],
+      "expected_as_specified": {
+        "Re_x": 100000.0,
+        "delta_lam": "0.00158114 m",
+        "delta_star_lam": "0.000544166 m",
+        "theta_lam": "0.000209976 m",
+        "delta_turb": "0.0037 m",
+        "cf_lam": 0.00209976,
+        "cf_turb": 0.00592,
+        "cf_lam_mean": 0.0041995,
+        "cf_turb_mean": 0.0074
+      },
+      "expected_SI": {
+        "Re_x": 100000.0,
+        "delta_lam": 0.00158114,
+        "delta_star_lam": 0.000544166,
+        "theta_lam": 0.000209976,
+        "delta_turb": 0.0037,
+        "cf_lam": 0.00209976,
+        "cf_turb": 0.00592,
+        "cf_lam_mean": 0.0041995,
+        "cf_turb_mean": 0.0074
+      },
+      "actual_SI": {
+        "Re_x": {
+          "value": 100000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.boundary_layer (procedure)"
+        },
+        "delta_lam": {
+          "value": 0.0015811388300841895,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.boundary_layer (procedure)"
+        },
+        "delta_star_lam": {
+          "value": 0.0005441647397617747,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.boundary_layer (procedure)"
+        },
+        "theta_lam": {
+          "value": 0.00020997523663518036,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.boundary_layer (procedure)"
+        },
+        "delta_turb": {
+          "value": 0.0036999999999999993,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.boundary_layer (procedure)"
+        },
+        "cf_lam": {
+          "value": 0.002099752366351804,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.boundary_layer (procedure)"
+        },
+        "cf_turb": {
+          "value": 0.005919999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.boundary_layer (procedure)"
+        },
+        "cf_lam_mean": {
+          "value": 0.004199504732703608,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.boundary_layer (procedure)"
+        },
+        "cf_turb_mean": {
+          "value": 0.007399999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.boundary_layer (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Re_x": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 50.0,
+          "passed": true
+        },
+        "delta_lam": {
+          "absolute_error": 1.1699158104956642e-09,
+          "relative_error": 7.399191788808481e-07,
+          "allowed_absolute_error": 7.9057e-07,
+          "passed": true
+        },
+        "delta_star_lam": {
+          "absolute_error": 1.2602382252991859e-09,
+          "relative_error": 2.3159076923203323e-06,
+          "allowed_absolute_error": 2.72083e-07,
+          "passed": true
+        },
+        "theta_lam": {
+          "absolute_error": 7.633648196523311e-10,
+          "relative_error": 3.6354860538934502e-06,
+          "allowed_absolute_error": 1.0498800000000001e-07,
+          "passed": true
+        },
+        "delta_turb": {
+          "absolute_error": 8.673617379884035e-19,
+          "relative_error": 2.3442209134821717e-16,
+          "allowed_absolute_error": 1.85e-06,
+          "passed": true
+        },
+        "cf_lam": {
+          "absolute_error": 7.63364819619805e-09,
+          "relative_error": 3.6354860537385465e-06,
+          "allowed_absolute_error": 1.04988e-06,
+          "passed": true
+        },
+        "cf_turb": {
+          "absolute_error": 8.673617379884035e-19,
+          "relative_error": 1.4651380709263575e-16,
+          "allowed_absolute_error": 2.96e-06,
+          "passed": true
+        },
+        "cf_lam_mean": {
+          "absolute_error": 4.7327036074851225e-09,
+          "relative_error": 1.126968355157786e-06,
+          "allowed_absolute_error": 2.09975e-06,
+          "passed": true
+        },
+        "cf_turb_mean": {
+          "absolute_error": 1.734723475976807e-18,
+          "relative_error": 2.3442209134821717e-16,
+          "allowed_absolute_error": 3.7e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Re_x = \u03c1Ux/\u03bc = 1000\u00b71\u00b70.1/0.001 = 1e5; \u221aRe_x = 316.228. \u03b4_lam = 5x/\u221aRe_x = 0.5/316.228 = 1.58114e-3 m; \u03b4*_lam = 1.7208\u00b70.1/316.228 = 5.44166e-4 m; \u03b8_lam = 0.664\u00b70.1/316.228 = 2.09976e-4 m; C_f,lam = 0.664/316.228 = 2.09976e-3; mean C_f,lam = 1.328/316.228 = 4.19950e-3. Turbulent (1/7 law): Re_x^0.2 = 10, \u03b4 = 0.37\u00b70.1/10 = 3.7e-3 m; C_f,turb = 0.0592/10 = 5.92e-3; mean C_f,turb = 0.074/10 = 7.4e-3"
+      }
+    },
+    {
+      "id": "fluid_dynamics-026",
+      "calculator": "fluid_dynamics.drag_lift",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C_D": 0.3,
+        "C_L": 0.5,
+        "C_f": 0.003,
+        "rho": "1.225 kg/m^3",
+        "V": "30 m/s",
+        "A": "2 m^2",
+        "A_wet": "10 m^2"
+      },
+      "solve_for": [
+        "q",
+        "F_D",
+        "F_L",
+        "F_sf"
+      ],
+      "expected_as_specified": {
+        "q": "551.25 Pa",
+        "F_D": "330.75 N",
+        "F_L": "551.25 N",
+        "F_sf": "16.5375 N"
+      },
+      "expected_SI": {
+        "q": 551.25,
+        "F_D": 330.75,
+        "F_L": 551.25,
+        "F_sf": 16.5375
+      },
+      "actual_SI": {
+        "q": {
+          "value": 551.25,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.drag_lift (symbolic)"
+        },
+        "F_D": {
+          "value": 330.75,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.drag_lift (symbolic)"
+        },
+        "F_L": {
+          "value": 551.25,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.drag_lift (symbolic)"
+        },
+        "F_sf": {
+          "value": 16.5375,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.drag_lift (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "q": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.1025,
+          "passed": true
+        },
+        "F_D": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.6615,
+          "passed": true
+        },
+        "F_L": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.1025,
+          "passed": true
+        },
+        "F_sf": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.033075,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "q = \u03c1V\u00b2/2 = 1.225\u00b7900/2 = 551.25 Pa; F_D = C_D\u00b7q\u00b7A = 0.3\u00b7551.25\u00b72 = 330.75 N; F_L = 0.5\u00b7551.25\u00b72 = 551.25 N; F_sf = 0.003\u00b7551.25\u00b710 = 16.5375 N"
+      }
+    },
+    {
+      "id": "fluid_dynamics-027",
+      "calculator": "fluid_dynamics.terminal_velocity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "70 kg",
+        "g": 9.80665,
+        "rho": "1.225 kg/m^3",
+        "C_D": 1.0,
+        "A": "0.7 m^2"
+      },
+      "solve_for": [
+        "v_t"
+      ],
+      "expected_as_specified": {
+        "v_t": "40.0136 m/s"
+      },
+      "expected_SI": {
+        "v_t": 40.0136
+      },
+      "actual_SI": {
+        "v_t": {
+          "value": 40.01356912705632,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.terminal_velocity (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v_t": {
+          "absolute_error": 3.0872943675319675e-05,
+          "relative_error": 7.715612610542335e-07,
+          "allowed_absolute_error": 0.08002719999999999,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v_t = \u221a(2mg/(\u03c1C_D A)) = \u221a(2\u00b770\u00b79.80665/(1.225\u00b71\u00b70.7)) = \u221a(1372.93/0.8575) = \u221a1601.09 = 40.0136 m/s"
+      }
+    },
+    {
+      "id": "fluid_dynamics-028",
+      "calculator": "fluid_dynamics.pitot_tube",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dp": "500 Pa",
+        "rho": "1.225 kg/m^3"
+      },
+      "solve_for": [
+        "v"
+      ],
+      "expected_as_specified": {
+        "v": "28.5714 m/s"
+      },
+      "expected_SI": {
+        "v": 28.5714
+      },
+      "actual_SI": {
+        "v": {
+          "value": 28.571428571428573,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.pitot_tube (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v": {
+          "absolute_error": 2.8571428572377044e-05,
+          "relative_error": 1.0000010000341966e-06,
+          "allowed_absolute_error": 0.0571428,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v = \u221a(2\u0394p/\u03c1) = \u221a(1000/1.225) = \u221a816.327 = 28.5714 m/s"
+      }
+    },
+    {
+      "id": "fluid_dynamics-029",
+      "calculator": "fluid_dynamics.obstruction_flowmeter",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C_d": 0.98,
+        "A_2": "500 mm^2",
+        "dp": "20 kPa",
+        "rho": "1000 kg/m^3",
+        "beta": 0.5
+      },
+      "solve_for": [
+        "Q"
+      ],
+      "expected_as_specified": {
+        "Q": "0.00320067 m^3/s"
+      },
+      "expected_SI": {
+        "Q": 0.00320067
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 0.0032006665972366863,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.obstruction_flowmeter (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q": {
+          "absolute_error": 3.402763313741647e-09,
+          "relative_error": 1.0631409404098662e-06,
+          "allowed_absolute_error": 6.40134e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = C_d\u00b7A\u2082\u00b7\u221a(2\u0394p/(\u03c1(1\u2212\u03b2\u2074))) = 0.98\u00b75e-4\u00b7\u221a(40000/(1000\u00b70.9375)) = 0.98\u00b75e-4\u00b7\u221a42.6667 = 0.98\u00b75e-4\u00b76.53197 = 3.20067e-3 m\u00b3/s"
+      }
+    },
+    {
+      "id": "fluid_dynamics-030",
+      "calculator": "fluid_dynamics.rotameter",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C_d": 0.95,
+        "A_t": "300 mm^2",
+        "A_f": "200 mm^2",
+        "g": 9.80665,
+        "V_f": "5 cm^3",
+        "rho_f": "8000 kg/m^3",
+        "rho": "1000 kg/m^3"
+      },
+      "solve_for": [
+        "Q"
+      ],
+      "expected_as_specified": {
+        "Q": "1.76002e-4 m^3/s"
+      },
+      "expected_SI": {
+        "Q": 0.000176002
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 0.00017600214682639504,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.rotameter (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q": {
+          "absolute_error": 1.4682639503629975e-10,
+          "relative_error": 8.342314009857828e-07,
+          "allowed_absolute_error": 3.5200400000000003e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = C_d(A_t \u2212 A_f)\u221a(2gV_f(\u03c1_f \u2212 \u03c1)/(\u03c1A_f)) = 0.95\u00b71e-4\u00b7\u221a(2\u00b79.80665\u00b75e-6\u00b77000/(1000\u00b72e-4)) = 0.95\u00b71e-4\u00b7\u221a3.43233 = 0.95\u00b71e-4\u00b71.85265 = 1.76002e-4 m\u00b3/s"
+      }
+    },
+    {
+      "id": "fluid_dynamics-031",
+      "calculator": "fluid_dynamics.point_vortex",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Gamma": "6.28319 m^2/s",
+        "r": "2 m",
+        "r0": "1 m",
+        "theta": "0.5 rad"
+      },
+      "solve_for": [
+        "psi",
+        "phi"
+      ],
+      "expected_as_specified": {
+        "psi": "-0.693147 m^2/s",
+        "phi": "0.5 m^2/s"
+      },
+      "expected_SI": {
+        "psi": -0.693147,
+        "phi": 0.5
+      },
+      "actual_SI": {
+        "psi": {
+          "value": -0.6931476982615695,
+          "unit": "m^2/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.point_vortex (symbolic)"
+        },
+        "phi": {
+          "value": 0.5000003734427829,
+          "unit": "m^2/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.point_vortex (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "psi": {
+          "absolute_error": 6.982615695649841e-07,
+          "relative_error": 1.0073787660698007e-06,
+          "allowed_absolute_error": 0.001386294,
+          "passed": true
+        },
+        "phi": {
+          "absolute_error": 3.734427829193976e-07,
+          "relative_error": 7.468855658387952e-07,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u0393 = 2\u03c0. With v_\u03b8 = \u0393/(2\u03c0r) and v_\u03b8 = \u2212\u2202\u03c8/\u2202r, \u03c8 = \u2212(\u0393/2\u03c0)\u00b7ln(r/r0) = \u22121\u00b7ln(2) = \u22120.693147 m\u00b2/s (negative for r > r0); \u03c6 = \u0393/(2\u03c0)\u00b7\u03b8 = 1\u00b70.5 = 0.5 m\u00b2/s. Numerical-derivative check at r = 2 m: d\u03c8/dr \u2248 [\u03c8(2+h) \u2212 \u03c8(2\u2212h)]/(2h) with \u03c8(r) = \u2212ln(r) and h = 1e-6 gives \u2212d\u03c8/dr = 0.5000 = \u0393/(2\u03c0r) = v_\u03b8, so the sign convention is consistent."
+      }
+    },
+    {
+      "id": "fluid_dynamics-032",
+      "calculator": "fluid_dynamics.forced_vortex",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega": "5 rad/s",
+        "r": "0.2 m"
+      },
+      "solve_for": [
+        "v_theta",
+        "zeta"
+      ],
+      "expected_as_specified": {
+        "v_theta": "1 m/s",
+        "zeta": "10 rad/s"
+      },
+      "expected_SI": {
+        "v_theta": 1.0,
+        "zeta": 10.0
+      },
+      "actual_SI": {
+        "v_theta": {
+          "value": 1.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.forced_vortex (symbolic)"
+        },
+        "zeta": {
+          "value": 10.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.forced_vortex (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v_theta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "zeta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v_\u03b8 = \u03c9r = 5\u00b70.2 = 1 m/s; \u03b6 = 2\u03c9 = 10 rad/s"
+      }
+    },
+    {
+      "id": "fluid_dynamics-033",
+      "calculator": "fluid_dynamics.circulation",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "r": "0.2 m",
+        "v_theta": "5 m/s"
+      },
+      "solve_for": [
+        "Gamma"
+      ],
+      "expected_as_specified": {
+        "Gamma": "6.28319 m^2/s"
+      },
+      "expected_SI": {
+        "Gamma": 6.28319
+      },
+      "actual_SI": {
+        "Gamma": {
+          "value": 6.283185307179586,
+          "unit": "m^2/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.circulation (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Gamma": {
+          "absolute_error": 4.692820414042842e-06,
+          "relative_error": 7.468850080998413e-07,
+          "allowed_absolute_error": 0.01256638,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u0393 = 2\u03c0r\u00b7v_\u03b8 = 2\u03c0\u00b70.2\u00b75 = 2\u03c0 = 6.28319 m\u00b2/s"
+      }
+    },
+    {
+      "id": "fluid_dynamics-034",
+      "calculator": "fluid_dynamics.water_hammer",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "K": "2.2 GPa",
+        "E": "200 GPa",
+        "D": "100 mm",
+        "t": "5 mm",
+        "dV": "-1 m/s"
+      },
+      "solve_for": [
+        "c",
+        "dp_wh"
+      ],
+      "expected_as_specified": {
+        "c": "1342.86 m/s",
+        "dp_wh": "1342862 Pa"
+      },
+      "expected_SI": {
+        "c": 1342.86,
+        "dp_wh": 1342862.0
+      },
+      "actual_SI": {
+        "c": {
+          "value": 1342.862125657206,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.water_hammer (symbolic)"
+        },
+        "dp_wh": {
+          "value": 1342862.125657206,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.water_hammer (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "c": {
+          "absolute_error": 0.0021256572060792678,
+          "relative_error": 1.5829328493508393e-06,
+          "allowed_absolute_error": 0.67143,
+          "passed": true
+        },
+        "dp_wh": {
+          "absolute_error": 0.12565720593556762,
+          "relative_error": 9.357417659861373e-08,
+          "allowed_absolute_error": 671.431,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "c = \u221a(K/(\u03c1(1 + KD/(Et)))) = \u221a(2.2e9/(1000\u00b7(1 + 2.2e9\u00b70.1/(200e9\u00b70.005)))) = \u221a(2.2e9/(1000\u00b71.22)) = \u221a(1.80328e6) = 1342.86 m/s; \u0394p = \u2212\u03c1c\u00b7dV = \u22121000\u00b71342.86\u00b7(\u22121) = +1.34286e6 Pa (a sudden closure dV = \u22121 m/s gives a pressure rise)"
+      }
+    },
+    {
+      "id": "fluid_dynamics-035",
+      "calculator": "fluid_dynamics.buckingham_pi",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "matrix": [
+          [
+            0,
+            0,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            -3,
+            1,
+            -1
+          ],
+          [
+            -1,
+            0,
+            0,
+            -2,
+            -1
+          ]
+        ]
+      },
+      "solve_for": [
+        "pi_groups",
+        "n_pi",
+        "rank"
+      ],
+      "expected_as_specified": {
+        "pi_groups": [
+          [
+            -2,
+            -2,
+            -1,
+            1,
+            0
+          ],
+          [
+            -1,
+            -1,
+            -1,
+            0,
+            1
+          ]
+        ],
+        "n_pi": 2,
+        "rank": 3
+      },
+      "expected_SI": {
+        "pi_groups": [
+          [
+            -2,
+            -2,
+            -1,
+            1,
+            0
+          ],
+          [
+            -1,
+            -1,
+            -1,
+            0,
+            1
+          ]
+        ],
+        "n_pi": 2.0,
+        "rank": 3.0
+      },
+      "actual_SI": {
+        "pi_groups": {
+          "value": [
+            [
+              -2,
+              -2,
+              -1,
+              1,
+              0
+            ],
+            [
+              -1,
+              -1,
+              -1,
+              0,
+              1
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.buckingham_pi (procedure)",
+          "unit": ""
+        },
+        "n_pi": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.buckingham_pi (procedure)"
+        },
+        "rank": {
+          "value": 3.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fluid_dynamics.buckingham_pi (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "pi_groups": [
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.001,
+              "passed": true
+            },
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.001,
+              "passed": true
+            },
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0005,
+              "passed": true
+            },
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0005,
+              "passed": true
+            },
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0005,
+              "passed": true
+            },
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0005,
+              "passed": true
+            },
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0005,
+              "passed": true
+            },
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0005,
+              "passed": true
+            }
+          ]
+        ],
+        "n_pi": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "rank": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0015,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Sphere drag: columns [V, D, \u03c1, F, \u03bc], rows [M, L, T]; rank 3, repeating variables V, D, \u03c1. \u03c0(F): solve D_r\u00b7a = \u2212[1,1,\u22122]\u1d40: a_\u03c1 = \u22121, a_V = \u22122, a_D = \u22122 \u2192 \u03c01 = F\u00b7V\u207b\u00b2D\u207b\u00b2\u03c1\u207b\u00b9 = F/(\u03c1V\u00b2D\u00b2) \u2192 exponents [\u22122,\u22122,\u22121,1,0]. \u03c0(\u03bc): solve D_r\u00b7a = \u2212[1,\u22121,\u22121]\u1d40: a = [\u22121,\u22121,\u22121] \u2192 \u03c02 = \u03bc/(\u03c1VD) \u2192 exponents [\u22121,\u22121,\u22121,0,1] (inverse Reynolds number)"
+      }
+    }
+  ],
+  "passed": 35,
+  "failed": 0
+}

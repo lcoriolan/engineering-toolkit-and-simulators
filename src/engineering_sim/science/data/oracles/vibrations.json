@@ -1,0 +1,615 @@
+{
+  "section": "vibrations",
+  "cases": [
+    {
+      "calc": "vibrations.natural_frequency",
+      "inputs": {
+        "k": "4 kN/m",
+        "m": "10 kg"
+      },
+      "expect": {
+        "omega_n": "20 rad/s",
+        "f_n": "3.1830989 Hz",
+        "T": "0.31415927 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_n = sqrt(4000/10) = 20 rad/s; f_n = 20/(2 pi) = 3.18310 Hz; T = 1/f_n = 0.314159 s"
+      }
+    },
+    {
+      "calc": "vibrations.natural_frequency",
+      "inputs": {
+        "omega_n": "20 rad/s",
+        "m": "10 kg"
+      },
+      "solve_for": [
+        "k",
+        "f_n",
+        "T"
+      ],
+      "expect": {
+        "k": "4000 N/m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "k = m omega_n^2 = 10*400 = 4000 N/m"
+      }
+    },
+    {
+      "calc": "vibrations.equiv_stiffness",
+      "inputs": {
+        "k1": "2 kN/m",
+        "k2": "3 kN/m"
+      },
+      "expect": {
+        "k_series": "1200 N/m",
+        "k_parallel": "5000 N/m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "series: 2000*3000/5000 = 1200 N/m; parallel: 2000+3000 = 5000 N/m"
+      }
+    },
+    {
+      "calc": "vibrations.equiv_mass",
+      "inputs": {
+        "m": "10 kg",
+        "m_s": "0.3 kg"
+      },
+      "expect": {
+        "m_eq": "10.1 kg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "m_eq = 10 + 0.3/3 = 10.1 kg"
+      }
+    },
+    {
+      "calc": "vibrations.damping",
+      "inputs": {
+        "c": "50 N*s/m",
+        "k": "4 kN/m",
+        "m": "10 kg"
+      },
+      "expect": {
+        "c_c": "400 N*s/m",
+        "zeta": 0.125
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "c_c = 2 sqrt(4000*10) = 2*200 = 400 N*s/m; zeta = 50/400 = 0.125"
+      }
+    },
+    {
+      "calc": "vibrations.damping",
+      "inputs": {
+        "zeta": 0.125,
+        "c_c": "400 N*s/m",
+        "m": "10 kg"
+      },
+      "solve_for": [
+        "c",
+        "k"
+      ],
+      "expect": {
+        "c": "50 N*s/m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "c = zeta c_c = 0.125*400 = 50 N*s/m"
+      }
+    },
+    {
+      "calc": "vibrations.log_decrement",
+      "inputs": {
+        "zeta": 0.125,
+        "omega_n": "20 rad/s"
+      },
+      "expect": {
+        "delta": 0.79160694,
+        "omega_d": "19.8431348 rad/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "delta = 2 pi zeta/sqrt(1-zeta^2) = 0.785398/0.992157 = 0.791607; omega_d = 20*0.992157 = 19.84313 rad/s"
+      }
+    },
+    {
+      "calc": "vibrations.free_response",
+      "inputs": {
+        "x0": "0.01 m",
+        "v0": "0.2 m/s",
+        "zeta": 0.1,
+        "omega_n": "20 rad/s"
+      },
+      "expect": {
+        "A": "0.01490712 m",
+        "phi": "47.8695852 deg",
+        "omega_d": "19.8997487 rad/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_d = omega_n sqrt(1-zeta^2) = 20*sqrt(0.99) = 19.8997487 rad/s (derived, not an input). v0 + zeta omega_n x0 = 0.2 + 0.1*20*0.01 = 0.22; A = sqrt(x0^2 + (0.22/omega_d)^2) = sqrt(1e-4 + (0.22/19.89975)^2) = sqrt(1e-4 + 0.011055^2) = sqrt(2.2221e-4) = 0.0149071 m; phi = atan2(0.22, omega_d x0) = atan2(0.22, 0.198997) = 47.8696 deg"
+      }
+    },
+    {
+      "calc": "vibrations.forced_response",
+      "inputs": {
+        "F0": "100 N",
+        "k": "4 kN/m",
+        "omega": "15 rad/s",
+        "omega_n": "20 rad/s",
+        "zeta": 0.1
+      },
+      "expect": {
+        "r": 0.75,
+        "M": 2.1621622,
+        "X": "0.054054054 m",
+        "phi": "18.9246444 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 15/20 = 0.75; M = 1/sqrt((1-0.5625)^2 + (0.15)^2) = 1/sqrt(0.191406+0.0225) = 1/sqrt(0.213906) = 1/0.4625 = 2.16216; X = (100/4000)*2.16216 = 0.0540541 m; phi = atan2(0.15, 0.4375) = 18.9246 deg"
+      }
+    },
+    {
+      "calc": "vibrations.transmissibility",
+      "inputs": {
+        "zeta": 0.05,
+        "r": 2.0
+      },
+      "expect": {
+        "TR": 0.33918173,
+        "eta": 0.66081827
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "TR = sqrt((1 + (0.1*2)^2)/((1-4)^2 + (0.1*2)^2)) = sqrt((1+0.04)/(9+0.04)) = sqrt(1.04/9.04) = sqrt(0.115044) = 0.339182; eta = 1 - TR = 0.660818 (r > sqrt(2), so isolation)"
+      }
+    },
+    {
+      "calc": "vibrations.rotating_unbalance_response",
+      "inputs": {
+        "m_e": "0.5 kg",
+        "e": "10 mm",
+        "M": "20 kg",
+        "r": 0.8,
+        "zeta": 0.05
+      },
+      "expect": {
+        "X": "0.43386092 mm",
+        "phi": "12.5288077 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "X = (m_e e/M) r^2/sqrt((1-r^2)^2 + (2 zeta r)^2) = (0.5*0.01/20)*0.64/sqrt((1-0.64)^2 + 0.0064) = 0.00025*0.64/sqrt(0.1296+0.0064) = 0.00016/sqrt(0.136) = 0.00016/0.368782 = 0.000433861 m; phi = atan2(0.08, 0.36) = 12.5288 deg"
+      }
+    },
+    {
+      "calc": "vibrations.base_excitation",
+      "inputs": {
+        "Y": "2 mm",
+        "zeta": 0.05,
+        "r": 2.0
+      },
+      "expect": {
+        "X": "0.67836347 mm",
+        "Z": "2.66076042 mm"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "X is the ABSOLUTE displacement: X = Y sqrt((1+(2 zeta r)^2)/((1-r^2)^2+(2 zeta r)^2)) = 0.002*sqrt(1.04/9.04) = 0.002*0.339182 = 0.000678363 m (same ratio as transmissibility). Z is the RELATIVE displacement between mass and base: Z = Y r^2/sqrt((1-r^2)^2+(2 zeta r)^2) = 0.002*4/3.006659 = 0.002*1.330384 = 0.002660760 m = 2.660760 mm (|Z|/Y = r^2/sqrt((1-r^2)^2+(2 zeta r)^2))."
+      }
+    },
+    {
+      "calc": "vibrations.mdof",
+      "inputs": {
+        "M": [
+          [
+            2.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "K": [
+          [
+            300.0,
+            -100.0
+          ],
+          [
+            -100.0,
+            100.0
+          ]
+        ]
+      },
+      "expect": {
+        "freqs": [
+          7.0710678,
+          14.1421356
+        ],
+        "f_n": [
+          1.1253954,
+          2.2507909
+        ]
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "det(K - lambda M) = (300-2L)(100-L) - 10000 = 2L^2 - 500L + 20000 = 0 -> L = 50, 200. omega_n = sqrt(50) = 7.07107 rad/s and sqrt(200) = 14.14214 rad/s; f_n = 1.12540 and 2.25079 Hz (modes[j] are the corresponding mass-normalized mode vectors)"
+      }
+    },
+    {
+      "calc": "vibrations.absorber_tuning",
+      "inputs": {
+        "m_a": "0.5 kg",
+        "omega": "20 rad/s"
+      },
+      "expect": {
+        "k_a": "200 N/m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "k_a = m_a omega^2 = 0.5*400 = 200 N/m"
+      }
+    },
+    {
+      "calc": "vibrations.absorber_frequencies",
+      "inputs": {
+        "m": "10 kg",
+        "k": "4 kN/m",
+        "m_a": "0.5 kg",
+        "k_a": "200 N/m"
+      },
+      "expect": {
+        "omega1": "17.8885438 rad/s",
+        "omega2": "22.3606798 rad/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "m m_a omega^4 - [k m_a + k_a (m + m_a)] omega^2 + k k_a = 0 -> 5 omega^4 - 4100 omega^2 + 800000 = 0 -> omega^2 = (4100 +/- 900)/10 = 320 or 500 -> omega1 = sqrt(320) = 17.8885, omega2 = sqrt(500) = 22.3607 rad/s (bracketing the 20 rad/s tuned frequency)"
+      }
+    },
+    {
+      "calc": "vibrations.torsional_vibration",
+      "inputs": {
+        "G": "79.3 GPa",
+        "J": "2.5e-7 m^4",
+        "L": "1 m",
+        "I": "0.02 kg*m^2"
+      },
+      "expect": {
+        "k_t": "19825 N*m/rad",
+        "omega_n": "995.61539 rad/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "k_t = GJ/L = 79.3e9*2.5e-7/1 = 19825 N*m/rad; omega_n = sqrt(19825/0.02) = sqrt(991250) = 995.615 rad/s"
+      }
+    },
+    {
+      "calc": "vibrations.critical_speed_shaft",
+      "inputs": {
+        "delta_st": "1 mm",
+        "g": "9.80665 m/s^2"
+      },
+      "expect": {
+        "omega_cr": "99.028531 rad/s",
+        "f_cr": "15.760880 Hz"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_cr = sqrt(9.80665/0.001) = sqrt(9806.65) = 99.0285 rad/s; f_cr = 99.0285/(2 pi) = 15.7609 Hz"
+      }
+    },
+    {
+      "calc": "vibrations.rayleigh",
+      "inputs": {
+        "masses": [
+          [
+            200.0,
+            0.0005
+          ],
+          [
+            150.0,
+            0.0004
+          ]
+        ]
+      },
+      "expect": {
+        "omega_cr": "145.61445 rad/s",
+        "f_cr": "23.175259 Hz"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "sum(W y) = 200*0.0005 + 150*0.0004 = 0.16; sum(W y^2) = 200*2.5e-7 + 150*1.6e-7 = 7.4e-5; omega_cr = sqrt(9.80665*0.16/7.4e-5) = sqrt(21203.6) = 145.614 rad/s"
+      }
+    },
+    {
+      "calc": "vibrations.dunkerley",
+      "inputs": {
+        "speeds": [
+          100.0,
+          150.0
+        ]
+      },
+      "expect": {
+        "omega_cr": "83.205029 rad/s",
+        "f_cr": "13.242499 Hz"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "1/omega_cr^2 = 1/100^2 + 1/150^2 = 1e-4 + 4.4444e-5 = 1.44444e-4 -> omega_cr = 1/sqrt(1.44444e-4) = 83.2050 rad/s"
+      }
+    },
+    {
+      "calc": "vibrations.string_frequency",
+      "inputs": {
+        "n": 1,
+        "L": "1 m",
+        "T": "100 N",
+        "mu": "0.01 kg/m"
+      },
+      "expect": {
+        "omega_n": "314.15927 rad/s",
+        "f_n": "50 Hz"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_n = (1*pi/1)*sqrt(100/0.01) = pi*100 = 314.159 rad/s; f_n = 314.159/(2 pi) = 50 Hz"
+      }
+    },
+    {
+      "calc": "vibrations.bar_longitudinal",
+      "inputs": {
+        "n": 1,
+        "L": "1 m",
+        "E": "200 GPa",
+        "rho": "7850 kg/m^3"
+      },
+      "expect": {
+        "omega_n": "15857.3292 rad/s",
+        "f_n": "2523.7723 Hz"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_n = (pi/1)*sqrt(200e9/7850) = pi*5047.537 = 15857.3 rad/s; f_n = 2523.77 Hz"
+      }
+    },
+    {
+      "calc": "vibrations.beam_frequency",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "1e-6 m^4",
+        "rho": "7850 kg/m^3",
+        "A": "0.001 m^2",
+        "L": "1 m",
+        "n": 1,
+        "bc": "pinned-pinned"
+      },
+      "expect": {
+        "betaL": 3.14159265,
+        "omega_n": "1575.3604 rad/s",
+        "f_n": "250.72639 Hz"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Pinned-pinned landmark: betaL = n pi = 3.14159; omega_n = betaL^2 sqrt(EI/(rho A L^4)) = pi^2*sqrt(200e9*1e-6/(7850*0.001*1)) = 9.8696*sqrt(25477.7) = 9.8696*159.614 = 1575.36 rad/s"
+      }
+    },
+    {
+      "calc": "vibrations.beam_frequency",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "1e-6 m^4",
+        "rho": "7850 kg/m^3",
+        "A": "0.001 m^2",
+        "L": "1 m",
+        "n": 1,
+        "bc": "fixed-free"
+      },
+      "expect": {
+        "betaL": 1.8751041,
+        "omega_n": "561.21646 rad/s",
+        "f_n": "89.320545 Hz"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "cited",
+        "ref": "Cantilever (fixed-free) first root of cos(betaL) cosh(betaL) = -1 is betaL = 1.875104 (standard textbook value; recalled, not re-read). omega_n = 1.875104^2 * sqrt(EI/(rho A)) = 3.51602*159.614 = 561.216 rad/s"
+      }
+    },
+    {
+      "calc": "vibrations.quality_factor",
+      "inputs": {
+        "zeta": 0.05,
+        "omega_n": "100 rad/s"
+      },
+      "expect": {
+        "Q": 10,
+        "delta_omega": "10 rad/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = 1/(2*0.05) = 10; half-power bandwidth = omega_n/Q = 100/10 = 10 rad/s"
+      }
+    },
+    {
+      "calc": "vibrations.duhamel",
+      "inputs": {
+        "m": "1 kg",
+        "k": "100 N/m",
+        "zeta": 0.0,
+        "times": [
+          0.0,
+          0.05,
+          0.1,
+          0.15,
+          0.2,
+          0.25,
+          0.3,
+          0.35,
+          0.4,
+          0.45,
+          0.5,
+          0.55,
+          0.6,
+          0.65,
+          0.7,
+          0.75,
+          0.8,
+          0.85,
+          0.9,
+          0.95,
+          1.0,
+          1.05,
+          1.1,
+          1.15,
+          1.2,
+          1.25,
+          1.3,
+          1.35,
+          1.4,
+          1.45,
+          1.5
+        ],
+        "forces": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ]
+      },
+      "expect": {
+        "x_max": "0.19971722 m",
+        "t_max": "0.95 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Undamped step response x(t) = (F0/k)(1 - cos(omega_n t)) = 0.1(1 - cos(10 t)), omega_n = sqrt(100/1) = 10 rad/s. The exact peak is 2 F0/k = 0.2 m at t = pi/10 = 0.314 s, which the 0.05 s grid misses; the LARGEST SAMPLED |x| is at t = 0.95 s where 10 t = 9.5 rad (nearest sample to 3 pi) and x = 0.1(1 - cos 9.5) = 0.1(1 + 0.9971722) = 0.19971722 m."
+      }
+    },
+    {
+      "calc": "vibrations.duhamel",
+      "inputs": {
+        "m": "1 kg",
+        "k": "100 N/m",
+        "zeta": 0.0,
+        "times": [
+          0.0,
+          0.05,
+          0.1,
+          0.15,
+          0.2,
+          0.25,
+          0.3,
+          0.35,
+          0.4,
+          0.45,
+          0.5,
+          0.55,
+          0.6,
+          0.65,
+          0.7,
+          0.75,
+          0.8,
+          0.85,
+          0.9,
+          0.95,
+          1.0,
+          1.05,
+          1.1,
+          1.15,
+          1.2,
+          1.25,
+          1.3,
+          1.35,
+          1.4,
+          1.45,
+          1.5
+        ],
+        "forces": [
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0,
+          -10.0
+        ]
+      },
+      "expect": {
+        "x_max": "-0.19971722 m",
+        "t_max": "0.95 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Negative step (forces all -10 N): by linearity the response is -0.1(1 - cos(10 t)). The extreme is reported by the largest |x|, so the SAME sample (t = 0.95 s) gives the signed value x_max = -0.19971722 m (the sign follows the load)."
+      }
+    }
+  ]
+}

@@ -1,0 +1,1439 @@
+{
+  "section": "heat_transfer",
+  "cases": [
+    {
+      "calc": "heat_transfer.conduction_plane",
+      "inputs": {
+        "k": 0.6,
+        "A": "2 m^2",
+        "T1": "300 K",
+        "T2": "280 K",
+        "L": "0.5 m"
+      },
+      "expect": {
+        "q": "48 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "q = kA(T1-T2)/L = 0.6 x 2 x (300-280)/0.5 = 0.6 x 2 x 40 = 48 W (off-example geometry and materials)."
+      }
+    },
+    {
+      "calc": "heat_transfer.conduction_plane",
+      "inputs": {
+        "q": "48 W",
+        "A": "2 m^2",
+        "T1": "300 K",
+        "T2": "280 K",
+        "L": "0.5 m"
+      },
+      "solve_for": [
+        "k"
+      ],
+      "expect": {
+        "k": "0.6 W/(m*K)"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "k = qL/(A dT) = 48 x 0.5/(2 x 20) = 24/40 = 0.6 W/mK (inverse of the off-example case)."
+      }
+    },
+    {
+      "calc": "heat_transfer.conduction_plane",
+      "inputs": {
+        "k": 0.78,
+        "A": "10 m^2",
+        "T1": "10 degC",
+        "T2": "40 degC",
+        "L": "200 mm"
+      },
+      "expect": {
+        "q": "-1170 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Cold surface 1 (cooling): q = 0.78 x 10 x (283.15 - 313.15)/0.2 = 7.8 x (-30)/0.2 = -1170 W (signed q)."
+      }
+    },
+    {
+      "calc": "heat_transfer.thermal_resistance_plane",
+      "inputs": {
+        "L": "40 mm",
+        "k": 1.2,
+        "A": "5 m^2"
+      },
+      "expect": {
+        "R": "0.00666667 K/W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = L/(kA) = 0.04/(1.2 x 5) = 0.04/6 = 0.00666667 K/W (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.thermal_resistance_cylinder",
+      "inputs": {
+        "r1": "25 mm",
+        "r2": "40 mm",
+        "k": 0.6,
+        "L": "3 m"
+      },
+      "expect": {
+        "R": "0.0415574 K/W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = ln(r2/r1)/(2 pi k L) = ln(0.04/0.025)/(2 pi x 0.6 x 3) = ln(1.6)/11.3097 = 0.470004/11.3097 = 0.0415574 K/W (off-example radii and insulation k)."
+      }
+    },
+    {
+      "calc": "heat_transfer.thermal_resistance_sphere",
+      "inputs": {
+        "r1": "0.3 m",
+        "r2": "0.35 m",
+        "k": 1.8
+      },
+      "expect": {
+        "R": "0.0210522 K/W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = (1/r1 - 1/r2)/(4 pi k) = (1/0.3 - 1/0.35)/(4 pi x 1.8) = (3.33333 - 2.85714)/22.6195 = 0.476190/22.6195 = 0.0210522 K/W (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.series_resistance",
+      "inputs": {
+        "R1": "0.5 K/W",
+        "R2": "1.2 K/W",
+        "R3": "0 K/W"
+      },
+      "expect": {
+        "R": "1.7 K/W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = R1 + R2 + R3 = 0.5 + 1.2 + 0 = 1.7 K/W (R3 = 0 exercises the unused-resistance term)."
+      }
+    },
+    {
+      "calc": "heat_transfer.contact_resistance",
+      "inputs": {
+        "h_c": "25000 W/(m^2*K)",
+        "A": "50 cm^2"
+      },
+      "expect": {
+        "R_c": "0.008 K/W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R_c = 1/(h_c A) = 1/(25000 x 0.005) = 1/125 = 0.008 K/W (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.plane_wall_series",
+      "inputs": {
+        "layers": [
+          [
+            0.02,
+            0.5,
+            0.0005
+          ],
+          [
+            0.08,
+            0.04,
+            0.0
+          ]
+        ],
+        "h1": 10,
+        "h2": 20,
+        "T_inf1": "350 K",
+        "T_inf2": "290 K"
+      },
+      "expect": {
+        "q": "27.3910 W/m^2",
+        "R_total": "2.1905 m^2*K/W"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = 1/10 + 1/20 + 0.02/0.5 + 0.0005 + 0.08/0.04 = 0.1 + 0.05 + 0.04 + 0.0005 + 2.0 = 2.1905 m2K/W; q = (350 - 290)/2.1905 = 60/2.1905 = 27.3910 W/m2 (two layers, one contact resistance, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.overall_U_plane",
+      "inputs": {
+        "h_i": 5000,
+        "h_o": 50,
+        "t": "5 mm",
+        "k": 1.5,
+        "R_fi": 0.0005,
+        "R_fo": 0.0002
+      },
+      "expect": {
+        "U": "41.2655 W/(m^2*K)"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "U = 1/(1/5000 + 0.0005 + 0.005/1.5 + 0.0002 + 1/50) = 1/(0.0002 + 0.0005 + 0.0033333 + 0.0002 + 0.02) = 1/0.0242333 = 41.2655 W/m2K (fouling + a resistive wall, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.heat_gen_plane",
+      "inputs": {
+        "qdot": "2 MW/m^3",
+        "L": "10 mm",
+        "k": 50,
+        "T_inf": "300 K",
+        "h": 200
+      },
+      "expect": {
+        "T_s": "400 K",
+        "T_max": "402 K"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T_s = 300 + 2e6 x 0.01/200 = 300 + 100 = 400 K; T_max = 400 + 2e6 x 0.01^2/(2 x 50) = 400 + 2 = 402 K (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.critical_insulation",
+      "inputs": {
+        "geometry": "cylinder",
+        "k": 0.2,
+        "h": 10
+      },
+      "expect": {
+        "r_cr": "20 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Cylinder: r_cr = k/h = 0.2/10 = 0.02 m = 20 mm (off-example k and h)."
+      }
+    },
+    {
+      "calc": "heat_transfer.critical_insulation",
+      "inputs": {
+        "geometry": "sphere",
+        "k": 0.2,
+        "h": 10
+      },
+      "expect": {
+        "r_cr": "40 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Sphere: r_cr = 2k/h = 2 x 0.2/10 = 0.04 m = 40 mm (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.fin_straight",
+      "inputs": {
+        "L": "100 mm",
+        "t": "10 mm",
+        "w": "50 mm",
+        "k": 180,
+        "h": 30,
+        "T_b": "350 K",
+        "T_inf": "300 K"
+      },
+      "expect": {
+        "Q_fin": "16.4380 W",
+        "eta": 0.876695,
+        "eps": 21.9174
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "hand",
+        "derivation": "Exact convective tip: P = 2(0.05+0.01) = 0.12, A_c = 0.0005; m = sqrt(30 x 0.12/(180 x 0.0005)) = 6.32456; N = h/(mk) = 0.026353; mL = 0.632456; Q = sqrt(30 x 0.12 x 180 x 0.0005) x 50 x (sinh 0.632456 + 0.026353 cosh 0.632456)/(cosh 0.632456 + 0.026353 sinh 0.632456) = 0.569210 x 50 x 0.577552 = 16.4380 W; eta = 16.4380/(30 x (0.12 x 0.1 + 0.0005) x 50) = 0.876695; eps = 16.4380/(30 x 0.0005 x 50) = 21.9174 (off-example geometry)."
+      }
+    },
+    {
+      "calc": "heat_transfer.fin_straight",
+      "inputs": {
+        "L": "80 mm",
+        "t": "2 mm",
+        "w": "150 mm",
+        "k": 400,
+        "h": 100,
+        "T_b": "500 K",
+        "T_inf": "300 K"
+      },
+      "expect": {
+        "Q_fin": "328.084 W",
+        "eta": 0.666296,
+        "eps": 54.6807,
+        "T_tip": "402.451 K"
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "hand",
+        "derivation": "Exact convective tip: P = 2(0.15+0.002) = 0.304, A_c = 0.0003; m = sqrt(100 x 0.304/(400 x 0.0003)) = 15.9168; N = h/(mk) = 0.015708; mL = 1.27334; Q = sqrt(100 x 0.304 x 400 x 0.0003) x 200 x (sinh 1.27334 + 0.015708 cosh 1.27334)/(cosh 1.27334 + 0.015708 sinh 1.27334); eta = 0.666296; eps = 54.6807; T_tip = 300 + 200/(cosh 1.27334 + 0.015708 sinh 1.27334) = 402.451 K (copper fin, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.lumped_capacitance",
+      "inputs": {
+        "T_i": "500 K",
+        "T_inf": "300 K",
+        "t": "30 s",
+        "rho": 2700,
+        "V": "200 cm^3",
+        "c_p": 900,
+        "h": 100,
+        "A_s": "300 cm^2",
+        "k": 205
+      },
+      "expect": {
+        "T": "466.190 K",
+        "tau": "162 s",
+        "Bi": 0.00325203
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Aluminium block: tau = 2700 x 0.0002 x 900/(100 x 0.03) = 486/3 = 162 s; T = 300 + 200 exp(-30/162) = 300 + 200 x 0.830950 = 466.190 K; Bi = h(V/A_s)/k = 100 x (0.0002/0.03)/205 = 0.00325203 (off-example material)."
+      }
+    },
+    {
+      "calc": "heat_transfer.lumped_capacitance",
+      "inputs": {
+        "T_i": "300 K",
+        "T_inf": "500 K",
+        "t": "45 s",
+        "rho": 8500,
+        "V": "50 cm^3",
+        "c_p": 385,
+        "h": 200,
+        "A_s": "100 cm^2",
+        "k": 390
+      },
+      "expect": {
+        "T": "384.614 K",
+        "tau": "81.8125 s",
+        "Bi": 0.0025641
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Brass quench heated by a hot bath (negative dT): tau = 8500 x 0.00005 x 385/(200 x 0.01) = 163.625/2 = 81.8125 s; T = 500 + (300-500) exp(-45/81.8125) = 500 - 200 x 0.576928 = 384.614 K; Bi = 200 x (0.00005/0.01)/390 = 0.00256410."
+      }
+    },
+    {
+      "calc": "heat_transfer.one_term_plane",
+      "inputs": {
+        "T_i": "500 K",
+        "T_inf": "300 K",
+        "L": "40 mm",
+        "k": 0.8,
+        "h": 10,
+        "alpha": "4e-6 m^2/s",
+        "t": "200 s"
+      },
+      "expect": {
+        "T_center": "472.900 K",
+        "T_surface": "437.300 K",
+        "zeta1": 0.653271,
+        "C1": 1.07013,
+        "Bi": 0.5,
+        "Fo": 0.5
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "hand",
+        "derivation": "Bi = 10 x 0.04/0.8 = 0.5; Fo = 4e-6 x 200/0.04^2 = 0.5; zeta1 = brentq(z tan z - 0.5 on (0, pi/2)) = 0.653271; C1 = 4 sin z/(2z + sin 2z) = 1.07013; theta_c = C1 exp(-z^2 Fo) = 0.864501; T_center = 300 + 200 x 0.864501 = 472.900 K; T_surface = 300 + 200 x 0.864501 cos(0.653271) = 437.300 K (Bi = 0.5, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.one_term_plane",
+      "inputs": {
+        "T_i": "500 K",
+        "T_inf": "300 K",
+        "L": "50 mm",
+        "k": 1,
+        "h": 100,
+        "alpha": "8e-6 m^2/s",
+        "t": "200 s"
+      },
+      "expect": {
+        "T_center": "382.177 K",
+        "T_surface": "320.885 K",
+        "zeta1": 1.31384,
+        "C1": 1.24025,
+        "Bi": 5,
+        "Fo": 0.64
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "hand",
+        "derivation": "Bi = 100 x 0.05/1 = 5; Fo = 8e-6 x 200/0.05^2 = 0.64; zeta1 = brentq(z tan z - 5 on (0, pi/2)) = 1.31384; C1 = 4 sin z/(2z + sin 2z) = 1.24025; theta_c = C1 exp(-z^2 Fo) = 0.410887; T_center = 300 + 200 x 0.410887 = 382.177 K; T_surface = 300 + 200 x 0.410887 cos(1.31384) = 320.885 K (large Bi = 5, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.one_term_cylinder",
+      "inputs": {
+        "T_i": "400 K",
+        "T_inf": "300 K",
+        "r0": "50 mm",
+        "k": 10,
+        "h": 100,
+        "alpha": "5e-6 m^2/s",
+        "t": "120 s"
+      },
+      "expect": {
+        "T_center": "390.102 K",
+        "T_surface": "371.242 K",
+        "zeta1": 0.940771,
+        "C1": 1.11425,
+        "Bi": 0.5,
+        "Fo": 0.24
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "hand",
+        "derivation": "Bi = 100 x 0.05/10 = 0.5; Fo = 5e-6 x 120/0.05^2 = 0.24; zeta1 = brentq(z J1(z)/J0(z) - 0.5 on (0, 2.4048)) = 0.940771; C1 = 2 J1(z)/(z (J0^2 + J1^2)) = 1.11425; theta_c = C1 exp(-z^2 Fo) = 0.901021; T_center = 300 + 100 x 0.901021 = 390.102 K; T_surface = 300 + 100 x 0.901021 J0(0.940771) = 371.242 K (Bi = 0.5, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.one_term_cylinder",
+      "inputs": {
+        "T_i": "500 K",
+        "T_inf": "300 K",
+        "r0": "20 mm",
+        "k": 0.2,
+        "h": 50,
+        "alpha": "6e-6 m^2/s",
+        "t": "50 s"
+      },
+      "expect": {
+        "T_center": "315.428 K",
+        "T_surface": "303.545 K",
+        "zeta1": 1.98981,
+        "C1": 1.50287,
+        "Bi": 5,
+        "Fo": 0.75
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "hand",
+        "derivation": "Bi = 50 x 0.02/0.2 = 5; Fo = 6e-6 x 50/0.02^2 = 0.75; zeta1 = brentq(z J1(z)/J0(z) - 5 on (0, 2.4048)) = 1.98981; C1 = 2 J1(z)/(z (J0^2 + J1^2)) = 1.50287; theta_c = C1 exp(-z^2 Fo) = 0.077139; T_center = 300 + 200 x 0.077139 = 315.428 K; T_surface = 300 + 200 x 0.077139 J0(1.98981) = 303.545 K (large Bi = 5, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.one_term_sphere",
+      "inputs": {
+        "T_i": "400 K",
+        "T_inf": "300 K",
+        "r0": "50 mm",
+        "k": 10,
+        "h": 100,
+        "alpha": "5e-6 m^2/s",
+        "t": "120 s"
+      },
+      "expect": {
+        "T_center": "382.578 K",
+        "T_surface": "365.110 K",
+        "zeta1": 1.16556,
+        "C1": 1.14411,
+        "Bi": 0.5,
+        "Fo": 0.24
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "hand",
+        "derivation": "Bi = 0.5; Fo = 0.24; zeta1 = brentq(1 - z cot z - 0.5 on (0, pi)) = 1.16556; C1 = 4 (sin z - z cos z)/(2z - sin 2z) = 1.14411; theta_c = C1 exp(-z^2 Fo) = 0.825782; T_center = 300 + 100 x 0.825782 = 382.578 K; T_surface = 300 + 100 x 0.825782 sin(1.16556)/1.16556 = 365.110 K (Bi = 0.5, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.one_term_sphere",
+      "inputs": {
+        "T_i": "500 K",
+        "T_inf": "300 K",
+        "r0": "20 mm",
+        "k": 0.2,
+        "h": 50,
+        "alpha": "6e-6 m^2/s",
+        "t": "50 s"
+      },
+      "expect": {
+        "T_center": "302.518 K",
+        "T_surface": "300.530 K",
+        "zeta1": 2.57043,
+        "C1": 1.787,
+        "Bi": 5,
+        "Fo": 0.75
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "hand",
+        "derivation": "Bi = 5; Fo = 0.75; zeta1 = brentq(1 - z cot z - 5 on (0, pi)) = 2.57043; C1 = 4 (sin z - z cos z)/(2z - sin 2z) = 1.78700; theta_c = C1 exp(-z^2 Fo) = 0.0125907; T_center = 300 + 200 x 0.0125907 = 302.518 K; T_surface = 300 + 200 x 0.0125907 sin(2.57043)/2.57043 = 300.530 K (large Bi = 5, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.semi_infinite",
+      "inputs": {
+        "T_i": "280 K",
+        "T_s": "350 K",
+        "x": "5 mm",
+        "alpha": "2e-7 m^2/s",
+        "t": "120 s",
+        "k": 2
+      },
+      "expect": {
+        "T": "312.934 K",
+        "q_s": "16123.1 W/m^2"
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "hand",
+        "derivation": "arg = 0.005/(2 sqrt(2e-7 x 120)) = 0.005/(2 x 0.00489898) = 0.510310; erfc(0.510310) = 0.470486; T = 280 + 70 x 0.470486 = 312.934 K; q_s = 2 x 70/sqrt(pi x 2e-7 x 120) = 140/0.00868305 = 16123.1 W/m2 (off-example time/position)."
+      }
+    },
+    {
+      "calc": "heat_transfer.semi_infinite",
+      "inputs": {
+        "T_i": "400 K",
+        "T_s": "300 K",
+        "x": "10 mm",
+        "alpha": "1e-6 m^2/s",
+        "t": "30 s",
+        "k": 1.5
+      },
+      "expect": {
+        "T": "380.329 K",
+        "q_s": "-15451.0 W/m^2"
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "hand",
+        "derivation": "Cooling surface (T_s < T_i): arg = 0.01/(2 sqrt(1e-6 x 30)) = 0.01/0.0109545 = 0.912871; erfc(0.912871) = 0.196704; T = 400 + (300-400) x 0.196704 = 380.329 K; q_s = 1.5 x (300-400)/sqrt(pi x 1e-6 x 30) = -150/0.009708 = -15451.0 W/m2 (signed q_s)."
+      }
+    },
+    {
+      "calc": "heat_transfer.shape_factor_cylinder",
+      "inputs": {
+        "L": "20 m",
+        "D": "0.2 m",
+        "z": "0.5 m",
+        "k": 1.4,
+        "dT": "30 K"
+      },
+      "expect": {
+        "S": "54.8168 m",
+        "q": "2302.30 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "S = 2 pi x 20/acosh(2 x 0.5/0.2) = 125.664/acosh(5) = 125.664/2.29243 = 54.8168 m; q = 54.8168 x 1.4 x 30 = 2302.30 W (off-example geometry)."
+      }
+    },
+    {
+      "calc": "heat_transfer.shape_factor_sphere",
+      "inputs": {
+        "r": "0.3 m",
+        "z": "1 m",
+        "k": 0.6,
+        "dT": "20 K"
+      },
+      "expect": {
+        "S": "4.43519 m",
+        "q": "53.2223 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "S = 4 pi x 0.3/(1 - 0.3/(2 x 1)) = 3.76991/(1 - 0.15) = 3.76991/0.85 = 4.43519 m; q = 4.43519 x 0.6 x 20 = 53.2223 W (off-example geometry and k)."
+      }
+    },
+    {
+      "calc": "heat_transfer.finite_difference_2d",
+      "inputs": {
+        "grid": [
+          9,
+          9
+        ],
+        "T_top": "100 degC",
+        "T_bottom": "20 degC",
+        "T_left": "20 degC",
+        "T_right": "20 degC"
+      },
+      "expect": {
+        "T_center": "313.15 K"
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "cited",
+        "ref": "Separation-of-variables landmark: the centre of a square plate with three sides at Tc and the top at Th is exactly (Th + 3Tc)/4 = (373.15 + 3 x 293.15)/4 = 313.15 K (recalled; the FD solution approaches this with grid refinement)."
+      }
+    },
+    {
+      "calc": "heat_transfer.finite_difference_2d",
+      "inputs": {
+        "grid": [
+          11,
+          11
+        ],
+        "T_top": "100 degC",
+        "T_bottom": "20 degC",
+        "T_left": "40 degC",
+        "T_right": "60 degC"
+      },
+      "expect": {
+        "T_center": "328.15 K"
+      },
+      "rel_tol": 1e-05,
+      "source": {
+        "kind": "cited",
+        "ref": "Superposition + 90-degree rotational symmetry: decomposing into four single-hot-side problems, each has the same centre value c and their sum (all sides = 1) is the constant 1, so c = 1/4. Hence the centre is exactly (Ttop + Tbottom + Tleft + Tright)/4 = (373.15 + 293.15 + 313.15 + 333.15)/4 = 328.15 K for the 11x11 odd grid (off-example grid and temperatures; recalled)."
+      }
+    },
+    {
+      "calc": "heat_transfer.prandtl_number",
+      "inputs": {
+        "mu": "4.2e-5 Pa*s",
+        "c_p": 4186,
+        "k": 0.6
+      },
+      "expect": {
+        "Pr": 0.29302
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Pr = mu c_p/k = 4.2e-5 x 4186/0.6 = 0.175812/0.6 = 0.29302 (water-like, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.nusselt_from_h",
+      "inputs": {
+        "h": 150,
+        "L": "50 mm",
+        "k": 0.6
+      },
+      "expect": {
+        "Nu": 12.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Nu = hL/k = 150 x 0.05/0.6 = 7.5/0.6 = 12.5 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.grashof_rayleigh",
+      "inputs": {
+        "g": 9.80665,
+        "beta": "1.5e-3 1/K",
+        "dT": "50 K",
+        "L": "0.5 m",
+        "nu": "2.0e-5 m^2/s",
+        "Pr": 0.71
+      },
+      "expect": {
+        "Gr": 229843000.0,
+        "Ra": 163189000.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Gr = 9.80665 x 1.5e-3 x 50 x 0.5^3/(2.0e-5)^2 = 9.80665 x 1.5e-3 x 50 x 0.125/4.0e-10 = 0.0919373/4.0e-10 = 2.29843e8; Ra = 2.29843e8 x 0.71 = 1.63189e8 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.biot_fourier",
+      "inputs": {
+        "h": 200,
+        "L": "20 mm",
+        "k": 40,
+        "alpha": "4e-6 m^2/s",
+        "t": "50 s"
+      },
+      "expect": {
+        "Bi": 0.1,
+        "Fo": 0.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Bi = 200 x 0.02/40 = 4/40 = 0.1; Fo = 4e-6 x 50/0.02^2 = 2e-4/4e-4 = 0.5 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.peclet_stanton",
+      "inputs": {
+        "Re": 20000,
+        "Pr": 0.71,
+        "Nu": 120
+      },
+      "expect": {
+        "Pe": 14200,
+        "St": 0.0084507
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Pe = 20000 x 0.71 = 14200; St = 120/14200 = 0.00845070 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.forced_flat_plate",
+      "inputs": {
+        "Re": 100000.0,
+        "Pr": 0.7,
+        "C": 0.664,
+        "m": 0.5,
+        "n": 0.333333,
+        "k": 0.026,
+        "L": "0.5 m"
+      },
+      "expect": {
+        "Nu": 186.438,
+        "h": "9.69477 W/(m^2*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Laminar average constants (C = 0.664, m = 0.5): Nu = 0.664 x (1e5)^0.5 x 0.7^(1/3) = 0.664 x 316.228 x 0.887904 = 186.438; h = 186.438 x 0.026/0.5 = 9.69477 W/m2K (off-example laminar branch)."
+      }
+    },
+    {
+      "calc": "heat_transfer.flat_plate_mixed",
+      "inputs": {
+        "Re": 1000000.0,
+        "Pr": 0.7,
+        "k": 0.026,
+        "L": "1 m"
+      },
+      "expect": {
+        "Nu": 1299.48,
+        "h": "33.7866 W/(m^2*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Nu = (0.037 x (1e6)^0.8 - 871) x 0.7^(1/3) = (0.037 x 63095.7 - 871) x 0.887904 = (2334.54 - 871) x 0.887904 = 1299.48; h = 1299.48 x 0.026/1 = 33.7866 W/m2K (off-example Re)."
+      }
+    },
+    {
+      "calc": "heat_transfer.cylinder_churchill_bernstein",
+      "inputs": {
+        "Re": 10000,
+        "Pr": 0.7,
+        "k": 0.6,
+        "D": "25 mm"
+      },
+      "expect": {
+        "Nu": 53.3278,
+        "h": "1279.87 W/(m^2*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Nu = 0.3 + 0.62 x 100 x 0.887904/(1 + (0.4/0.7)^(2/3))^0.25 x (1 + (10000/282000)^(5/8))^(4/5) = 0.3 + 55.0500/1.14008 x 1.09797 = 0.3 + 53.0278 = 53.3278; h = 53.3278 x 0.6/0.025 = 1279.87 W/m2K (off-example Re, D, k)."
+      }
+    },
+    {
+      "calc": "heat_transfer.sphere_whitaker",
+      "inputs": {
+        "Re": 50000,
+        "Pr": 0.71,
+        "mu_ratio": 0.9,
+        "k": 0.026,
+        "D": "30 mm"
+      },
+      "expect": {
+        "Nu": 147.125,
+        "h": "127.509 W/(m^2*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Nu = 2 + (0.4 x 50000^0.5 + 0.06 x 50000^(2/3)) x 0.71^0.4 x 0.9^0.25 = 2 + (89.4427 + 81.4310) x 0.872131 x 0.974004 = 2 + 145.125 = 147.125; h = 147.125 x 0.026/0.03 = 127.509 W/m2K (off-example Re, Pr, mu_ratio, D)."
+      }
+    },
+    {
+      "calc": "heat_transfer.tube_bank_zukauskas",
+      "inputs": {
+        "Re": 20000,
+        "Pr": 0.7,
+        "C": 0.27,
+        "m": 0.63,
+        "Pr_s": 0.75,
+        "k": 0.026,
+        "D": "16 mm"
+      },
+      "expect": {
+        "Nu": 119.607,
+        "h": "194.362 W/(m^2*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Nu = 0.27 x 20000^0.63 x 0.7^0.36 x (0.7/0.75)^0.25 = 0.27 x 511.826 x 0.879445 x 0.982593 = 119.607; h = 119.607 x 0.026/0.016 = 194.362 W/m2K (off-example Re and Pr_s; C, m are the user's table constants)."
+      }
+    },
+    {
+      "calc": "heat_transfer.internal_entrance_length",
+      "inputs": {
+        "Re": 2000,
+        "D": "15 mm"
+      },
+      "expect": {
+        "L_h_lam": "1.5 m",
+        "L_h_turb": "0.15 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L_h,lam = 0.05 x 2000 x 0.015 = 1.5 m; L_h,turb = 10 x 0.015 = 0.15 m (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.thermal_entrance_length",
+      "inputs": {
+        "Re": 2000,
+        "Pr": 5,
+        "D": "10 mm"
+      },
+      "expect": {
+        "L_t_lam": "5 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L_t,lam = 0.05 x 2000 x 5 x 0.01 = 5 m (off-example; water-like Pr = 5 develops thermally far more slowly than hydrodynamically)."
+      }
+    },
+    {
+      "calc": "heat_transfer.dittus_boelter",
+      "inputs": {
+        "mode": "heating",
+        "Re": 30000,
+        "Pr": 3,
+        "k": 0.6,
+        "D": "10 mm"
+      },
+      "expect": {
+        "Nu": 136.23,
+        "h": "8173.81 W/(m^2*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Heating (n = 0.4): Nu = 0.023 x 30000^0.8 x 3^0.4 = 0.023 x 3820.33 x 1.55185 = 136.230; h = 136.230 x 0.6/0.01 = 8173.81 W/m2K (off-example heating)."
+      }
+    },
+    {
+      "calc": "heat_transfer.dittus_boelter",
+      "inputs": {
+        "mode": "cooling",
+        "Re": 20000,
+        "Pr": 5,
+        "k": 0.6,
+        "D": "20 mm"
+      },
+      "expect": {
+        "Nu": 102.859,
+        "h": "3085.77 W/(m^2*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Cooling (n = 0.3): Nu = 0.023 x 20000^0.8 x 5^0.3 = 0.023 x 2756.71 x 1.62066 = 102.859; h = 102.859 x 0.6/0.02 = 3085.77 W/m2K (off-example cooling branch)."
+      }
+    },
+    {
+      "calc": "heat_transfer.laminar_fully_developed",
+      "inputs": {
+        "mode": "const_T"
+      },
+      "expect": {
+        "Nu": 3.66
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: fully developed laminar circular-tube Nusselt number is 3.66 for constant wall temperature (recalled)."
+      }
+    },
+    {
+      "calc": "heat_transfer.laminar_fully_developed",
+      "inputs": {
+        "mode": "const_q"
+      },
+      "expect": {
+        "Nu": 4.36
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: fully developed laminar circular-tube Nusselt number is 4.36 for constant wall heat flux (recalled; the other branch of the mode choice)."
+      }
+    },
+    {
+      "calc": "heat_transfer.natural_convection_powerlaw",
+      "inputs": {
+        "Ra": 1000000000.0,
+        "C": 0.1,
+        "n": 0.333333,
+        "k": 0.026,
+        "L": "0.4 m"
+      },
+      "expect": {
+        "Nu": 100.0,
+        "h": "6.5 W/(m^2*K)"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Turbulent constants (C = 0.10, n = 1/3): Nu = 0.10 x (1e9)^(1/3) = 0.10 x 1000 = 100; h = 100 x 0.026/0.4 = 6.5 W/m2K (off-example turbulent branch)."
+      }
+    },
+    {
+      "calc": "heat_transfer.vertical_plate_churchill_chu",
+      "inputs": {
+        "Ra": 10000000000.0,
+        "Pr": 0.71,
+        "k": 0.026,
+        "L": "1 m"
+      },
+      "expect": {
+        "Nu": 252.278,
+        "h": "6.55922 W/(m^2*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Nu = (0.825 + 0.387 x (1e10)^(1/6)/(1 + (0.492/0.71)^(9/16))^(8/27))^2 = (0.825 + 0.387 x 46.4159/1.19287)^2 = (0.825 + 15.0580)^2 = 252.278; h = 252.278 x 0.026/1 = 6.55922 W/m2K (off-example Ra, Pr, L)."
+      }
+    },
+    {
+      "calc": "heat_transfer.nucleate_boiling_rohsenow",
+      "inputs": {
+        "mu_l": 0.00028,
+        "h_fg": 2260000.0,
+        "g": 9.80665,
+        "rho_l": 958,
+        "rho_v": 0.6,
+        "sigma": 0.0589,
+        "cp_l": 4217,
+        "dT_e": "15 K",
+        "C_sf": 0.013,
+        "Pr_l": 1.75,
+        "n": 1.0
+      },
+      "expect": {
+        "q": "470469 W/m^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "group1 = 2.8e-4 x 2.26e6 x sqrt(9.80665 x (958 - 0.6)/0.0589) = 632.8 x 399.34 = 252702; group2 = (4217 x 15/(0.013 x 2.26e6 x 1.75^1))^3 = (63255/51415)^3 = 1.23027^3 = 1.8620; q = 252702 x 1.8620 = 470469 W/m2 (off-example superheat dT_e = 15 K)."
+      }
+    },
+    {
+      "calc": "heat_transfer.critical_heat_flux_zuber",
+      "inputs": {
+        "C": 0.149,
+        "h_fg": 2260000.0,
+        "rho_v": 0.6,
+        "sigma": 0.0589,
+        "g": 9.80665,
+        "rho_l": 958
+      },
+      "expect": {
+        "q_max": "1.26489 MW/m^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "q_max = 0.149 x 2.26e6 x 0.6^0.5 x (0.0589 x 9.80665 x (958 - 0.6))^0.25 = 336740 x 0.774597 x 4.84896 = 1.26489e6 W/m2 (Lienhard-Dhir constant C = 0.149, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.film_condensation_vertical",
+      "inputs": {
+        "g": 9.80665,
+        "rho_l": 958,
+        "rho_v": 0.6,
+        "h_fg": 2320000.0,
+        "k_l": 0.68,
+        "mu_l": 0.00028,
+        "T_sat": "373.15 K",
+        "T_s": "358.15 K",
+        "L": "1 m",
+        "A": "0.3 m^2"
+      },
+      "expect": {
+        "h": "5928.54 W/(m^2*K)",
+        "q": "26678.4 W"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "h = 0.943 x (9.80665 x 958 x (958 - 0.6) x 2.32e6 x 0.68^3/(2.8e-4 x 15 x 1))^0.25 = 0.943 x (2.0869e9 x 0.314432/4.2e-3)^0.25 = 0.943 x (1.5622e11)^0.25 = 0.943 x 628.70 = 5928.54 W/m2K; q = 5928.54 x 0.3 x 15 = 26678.4 W (off-example dT, L, A)."
+      }
+    },
+    {
+      "calc": "heat_transfer.blackbody_emission",
+      "inputs": {
+        "sigma_sb": 5.670374419e-08,
+        "T": "1500 K"
+      },
+      "expect": {
+        "E_b": "287063 W/m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "E_b = 5.670374419e-8 x 1500^4 = 5.670374419e-8 x 5.0625e12 = 287063 W/m2 (off-example temperature)."
+      }
+    },
+    {
+      "calc": "heat_transfer.blackbody_emission",
+      "inputs": {
+        "sigma_sb": 5.670374419e-08,
+        "E_b": "23225.854 W/m^2"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expect": {
+        "T": "800 K"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: T = (E_b/sigma)^(1/4) = (23225.854/5.670374419e-8)^(1/4) = (4.09600e11)^(1/4) = 800 K (off-example inverse)."
+      }
+    },
+    {
+      "calc": "heat_transfer.wien_displacement",
+      "inputs": {
+        "b": 0.002897771955,
+        "T": "3000 K"
+      },
+      "expect": {
+        "lambda_max": "0.965924 um"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "lambda_max = 2.897771955e-3/3000 = 9.65924e-7 m = 0.965924 um (off-example temperature, near-IR)."
+      }
+    },
+    {
+      "calc": "heat_transfer.planck_spectral",
+      "inputs": {
+        "C1": 3.741771852e-16,
+        "C2": 0.01438776877,
+        "lam": "0.5 um",
+        "T": "5800 K"
+      },
+      "expect": {
+        "E_bl": "8.44529e13 W/m^3"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "C2/(lam T) = 0.01438776877/(0.5e-6 x 5800) = 0.01438776877/0.0029 = 4.96130; e^4.96130 - 1 = 141.779; lam^5 = 3.125e-32; E_b,lam = 3.741771852e-16/(3.125e-32 x 141.779) = 8.44529e13 W/m3 (0.5 um, near the solar peak, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.band_fraction",
+      "inputs": {
+        "T": "1000 K",
+        "lambda1": "0.4 um",
+        "lambda2": "0.7 um"
+      },
+      "expect": {
+        "F": 1.83859e-06
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 15/pi^4 int_{x2}^{x1} x^3/(e^x - 1) dx with x = C2/(lambda T): x1 = 0.01438776877/(0.4e-6 x 1000) = 35.9694, x2 = 20.5540; scipy.integrate.quad of x^3/(e^x - 1) over [x2, x1] times 15/pi^4 = 1.83859e-6 (a 1000 K blackbody emits almost nothing in the visible band)."
+      }
+    },
+    {
+      "calc": "heat_transfer.band_fraction",
+      "inputs": {
+        "T": "5800 K",
+        "lambda1": "0.4 um",
+        "lambda2": "0.7 um"
+      },
+      "expect": {
+        "F": 0.367658
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 15/pi^4 int_{x2}^{x1} x^3/(e^x - 1) dx with x = C2/(lambda T): x1 = 0.01438776877/(0.4e-6 x 5800) = 6.20162, x2 = 3.54379; scipy.integrate.quad over [x2, x1] times 15/pi^4 = 0.367658 (solar fraction in the visible band, off-example; matches the tabulated value ~0.37, recalled)."
+      }
+    },
+    {
+      "calc": "heat_transfer.surface_radiation_props",
+      "inputs": {
+        "rho": 0.3,
+        "epsilon": 0.5
+      },
+      "expect": {
+        "tau": 0.2,
+        "alpha": 0.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "tau = 1 - 0.3 - 0.5 = 0.2; alpha = epsilon = 0.5 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.parallel_plates_exchange",
+      "inputs": {
+        "sigma_sb": 5.670374419e-08,
+        "T1": "600 K",
+        "T2": "400 K",
+        "eps1": 0.9,
+        "eps2": 0.3
+      },
+      "expect": {
+        "q": "1712.09 W/m^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "denom = 1/0.9 + 1/0.3 - 1 = 1.11111 + 3.33333 - 1 = 3.44444; q = 5.670374419e-8 x (600^4 - 400^4)/3.44444 = 5.670374419e-8 x (1.296e11 - 2.56e10)/3.44444 = 5897.19/3.44444 = 1712.09 W/m2 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.parallel_plates_exchange",
+      "inputs": {
+        "sigma_sb": 5.670374419e-08,
+        "T1": "300 K",
+        "T2": "600 K",
+        "eps1": 0.7,
+        "eps2": 0.4
+      },
+      "expect": {
+        "q": "-2352.51 W/m^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Cold surface 1 (net cooling, signed q): denom = 1/0.7 + 1/0.4 - 1 = 1.42857 + 2.5 - 1 = 2.92857; q = 5.670374419e-8 x (300^4 - 600^4)/2.92857 = 5.670374419e-8 x (8.1e9 - 1.296e11)/2.92857 = -6889.0/2.92857 = -2352.51 W/m2."
+      }
+    },
+    {
+      "calc": "heat_transfer.small_body_enclosure",
+      "inputs": {
+        "eps": 0.9,
+        "sigma_sb": 5.670374419e-08,
+        "A": "0.2 m^2",
+        "T1": "800 K",
+        "T2": "350 K"
+      },
+      "expect": {
+        "q": "4027.49 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "q = 0.9 x 5.670374419e-8 x 0.2 x (800^4 - 350^4) = 0.9 x 5.670374419e-8 x 0.2 x (4.096e11 - 1.500625e10) = 0.9 x 5.670374419e-8 x 0.2 x 3.9459375e11 = 4027.49 W (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.two_surface_enclosure",
+      "inputs": {
+        "sigma_sb": 5.670374419e-08,
+        "T1": "1000 K",
+        "T2": "500 K",
+        "eps1": 0.9,
+        "eps2": 0.7,
+        "A1": "0.5 m^2",
+        "A2": "1.5 m^2",
+        "F12": 0.6
+      },
+      "expect": {
+        "q12": "13839.1 W"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "denom = (1-0.9)/(0.9 x 0.5) + 1/(0.5 x 0.6) + (1-0.7)/(0.7 x 1.5) = 0.222222 + 3.33333 + 0.285714 = 3.84127; q12 = 5.670374419e-8 x (1000^4 - 500^4)/3.84127 = 5.670374419e-8 x (1e12 - 6.25e10)/3.84127 = 53159.8/3.84127 = 13839.1 W (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.radiation_shield",
+      "inputs": {
+        "sigma_sb": 5.670374419e-08,
+        "T1": "900 K",
+        "T2": "300 K",
+        "eps": 0.3,
+        "n": 2
+      },
+      "expect": {
+        "q": "2161.41 W/m^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "q = 5.670374419e-8 x (900^4 - 300^4)/((2 + 1) x (2/0.3 - 1)) = 5.670374419e-8 x (6.561e11 - 8.1e9)/(3 x 5.66667) = 36745.9/17.0 = 2161.41 W/m2 (two shields, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.view_factor_reciprocity",
+      "inputs": {
+        "A1": "0.5 m^2",
+        "F12": 0.4,
+        "A2": "2 m^2"
+      },
+      "expect": {
+        "F21": 0.1
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F21 = A1 F12/A2 = 0.5 x 0.4/2 = 0.2/2 = 0.1 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.heat_capacity_ratio",
+      "inputs": {
+        "C_min": "250 W/K",
+        "C_max": "1000 W/K"
+      },
+      "expect": {
+        "Cr": 0.25
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Cr = 250/1000 = 0.25 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.ntu",
+      "inputs": {
+        "U": "800 W/(m^2*K)",
+        "A": "3 m^2",
+        "C_min": "300 W/K"
+      },
+      "expect": {
+        "NTU": 8.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "NTU = 800 x 3/300 = 2400/300 = 8 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.effectiveness_counter",
+      "inputs": {
+        "NTU": 3.0,
+        "Cr": 0.3
+      },
+      "expect": {
+        "eps": 0.911011
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "eps = (1 - e^(-3 x 0.7))/(1 - 0.3 e^(-3 x 0.7)) = (1 - e^-2.1)/(1 - 0.3 e^-2.1) = (1 - 0.122456)/(1 - 0.0367370) = 0.877544/0.963263 = 0.911011 (off-example NTU, Cr)."
+      }
+    },
+    {
+      "calc": "heat_transfer.effectiveness_counter",
+      "inputs": {
+        "NTU": 4.0,
+        "Cr": 1.0
+      },
+      "expect": {
+        "eps": 0.8
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Cr = 1 boundary: eps = NTU/(1 + NTU) = 4/5 = 0.8 (off-example NTU at the Cr = 1 limit)."
+      }
+    },
+    {
+      "calc": "heat_transfer.effectiveness_counter",
+      "inputs": {
+        "eps": 0.75,
+        "Cr": 0.4
+      },
+      "solve_for": [
+        "NTU"
+      ],
+      "expect": {
+        "NTU": 1.71603
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: a = (1-eps)/(1-eps Cr) = 0.25/(1 - 0.3) = 0.25/0.7 = 0.357143 = e^(-NTU(1-Cr)); NTU = -ln(0.357143)/0.6 = 1.02962/0.6 = 1.71603 (off-example inverse)."
+      }
+    },
+    {
+      "calc": "heat_transfer.effectiveness_parallel",
+      "inputs": {
+        "NTU": 3.0,
+        "Cr": 0.4
+      },
+      "expect": {
+        "eps": 0.703575
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "eps = (1 - e^(-3 x 1.4))/1.4 = (1 - e^-4.2)/1.4 = (1 - 0.0149956)/1.4 = 0.985004/1.4 = 0.703575 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.effectiveness_phase_change",
+      "inputs": {
+        "NTU": 2.5
+      },
+      "expect": {
+        "eps": 0.917915
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "eps = 1 - e^-2.5 = 1 - 0.0820850 = 0.917915 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.exchanger_duty",
+      "inputs": {
+        "eps": 0.85,
+        "C_min": "500 W/K",
+        "Th_in": "120 degC",
+        "Tc_in": "30 degC"
+      },
+      "expect": {
+        "q": "38.25 kW"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "q = 0.85 x 500 x (393.15 - 303.15) = 0.85 x 500 x 90 = 38250 W = 38.25 kW (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.heat_exchanger_lmtd",
+      "inputs": {
+        "Th_in": "95 degC",
+        "Th_out": "45 degC",
+        "Tc_in": "20 degC",
+        "Tc_out": "60 degC",
+        "flow": "counter"
+      },
+      "expect": {
+        "LMTD": "29.7201 K"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Counter-flow: dT1 = 368.15 - 333.15 = 35, dT2 = 318.15 - 293.15 = 25; LMTD = (35 - 25)/ln(35/25) = 10/0.336472 = 29.7201 K (off-example counter-flow)."
+      }
+    },
+    {
+      "calc": "heat_transfer.heat_exchanger_lmtd",
+      "inputs": {
+        "Th_in": "100 degC",
+        "Th_out": "60 degC",
+        "Tc_in": "20 degC",
+        "Tc_out": "50 degC",
+        "flow": "parallel"
+      },
+      "expect": {
+        "LMTD": "33.6629 K"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Parallel flow: dT1 = 373.15 - 293.15 = 80, dT2 = 333.15 - 323.15 = 10; LMTD = (80 - 10)/ln(80/10) = 70/2.07944 = 33.6629 K (parallel-flow branch)."
+      }
+    },
+    {
+      "calc": "heat_transfer.heat_exchanger_sizing",
+      "inputs": {
+        "U": "750 W/(m^2*K)",
+        "A": "3 m^2",
+        "F": 0.9,
+        "LMTD": "30 K"
+      },
+      "expect": {
+        "Q": "60.75 kW"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = 750 x 3 x 0.9 x 30 = 60750 W = 60.75 kW (U already includes fouling via the overall-U calculator, off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.heat_exchanger_sizing",
+      "inputs": {
+        "U": "750 W/(m^2*K)",
+        "Q": "60750 W",
+        "F": 0.9,
+        "LMTD": "30 K"
+      },
+      "solve_for": [
+        "A"
+      ],
+      "expect": {
+        "A": "3 m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "A = Q/(U F LMTD) = 60750/(750 x 0.9 x 30) = 60750/20250 = 3 m2 (off-example inverse sizing)."
+      }
+    },
+    {
+      "calc": "heat_transfer.fick_diffusion",
+      "inputs": {
+        "D_AB": "1.5e-5 m^2/s",
+        "A": "50 cm^2",
+        "rho_A1": "0.03 kg/m^3",
+        "rho_A2": "0.005 kg/m^3",
+        "L": "20 mm"
+      },
+      "expect": {
+        "m_dot": "9.375e-8 kg/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "m_dot = 1.5e-5 x 0.005 x (0.03 - 0.005)/0.02 = 1.5e-5 x 0.005 x 0.025/0.02 = 9.375e-8 kg/s (off-example concentrations)."
+      }
+    },
+    {
+      "calc": "heat_transfer.schmidt_number",
+      "inputs": {
+        "nu": "1.0e-5 m^2/s",
+        "D_AB": "2.0e-5 m^2/s"
+      },
+      "expect": {
+        "Sc": 0.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Sc = 1.0e-5/2.0e-5 = 0.5 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.sherwood_number",
+      "inputs": {
+        "h_m": "0.02 m/s",
+        "L": "50 mm",
+        "D_AB": "1.5e-5 m^2/s"
+      },
+      "expect": {
+        "Sh": 66.6667
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Sh = 0.02 x 0.05/1.5e-5 = 0.001/1.5e-5 = 66.6667 (off-example)."
+      }
+    },
+    {
+      "calc": "heat_transfer.sherwood_correlation",
+      "inputs": {
+        "Re": 20000,
+        "Sc": 0.8,
+        "C": 0.664,
+        "m": 0.5,
+        "n": 0.333333
+      },
+      "expect": {
+        "Sh": 87.1725
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Sh = 0.664 x 20000^0.5 x 0.8^(1/3) = 0.664 x 141.421 x 0.928318 = 87.1725 (laminar mass-transfer constants, off-example)."
+      }
+    }
+  ]
+}

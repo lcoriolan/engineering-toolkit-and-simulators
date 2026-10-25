@@ -1,0 +1,3313 @@
+{
+  "section": "clutches_brakes",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k clutches_brakes",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "clutches_brakes.disk_clutch_uniform_wear": {
+      "title": "Disk clutch torque (uniform wear / worn lining)",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "clutch torque capacity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of friction surfaces (2 for one plate)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "axial actuating (clamping) force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_o",
+          "unit": "m",
+          "desc": "outer radius of the friction lining",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_i",
+          "unit": "m",
+          "desc": "inner radius of the friction lining",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = n*mu*F*(r_o + r_i)/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T"
+      ],
+      "assumptions": [
+        "Uniform-wear model (worn lining): pressure p = C/r, so the effective radius is the mean radius (r_o + r_i)/2. Peak pressure p_max = F/(2 pi r_i (r_o - r_i)) occurs at the inner edge."
+      ],
+      "method_references": [
+        "Disk-clutch torque, uniform wear (Shigley; recalled)"
+      ],
+      "synthetic_example": {
+        "n": 2,
+        "mu": 0.3,
+        "F": 4000.0,
+        "r_o": 0.1,
+        "r_i": 0.06
+      }
+    },
+    "clutches_brakes.disk_clutch_uniform_pressure": {
+      "title": "Disk clutch torque (uniform pressure / new lining)",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "clutch torque capacity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of friction surfaces (2 for one plate)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "axial actuating (clamping) force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_o",
+          "unit": "m",
+          "desc": "outer radius of the friction lining",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_i",
+          "unit": "m",
+          "desc": "inner radius of the friction lining",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = n*mu*F*(2/3)*(r_o**3 - r_i**3)/(r_o**2 - r_i**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T"
+      ],
+      "assumptions": [
+        "Uniform-pressure model (new, unworn lining): p = F/(pi(r_o^2 - r_i^2)) uniform, effective radius (2/3)(r_o^3 - r_i^3)/(r_o^2 - r_i^2)."
+      ],
+      "method_references": [
+        "Disk-clutch torque, uniform pressure (Shigley; recalled)"
+      ],
+      "synthetic_example": {
+        "n": 2,
+        "mu": 0.3,
+        "F": 4000.0,
+        "r_o": 0.1,
+        "r_i": 0.06
+      }
+    },
+    "clutches_brakes.cone_clutch": {
+      "title": "Cone clutch torque and normal/axial force",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "clutch torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "axial actuating force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "N",
+          "desc": "normal force on the conical friction surface",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "rad",
+          "desc": "cone semi-apex angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_m",
+          "unit": "m",
+          "desc": "mean radius of the cone",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "N = F/sin(alpha)",
+        "T = mu*N*r_m"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T",
+        "N"
+      ],
+      "assumptions": [
+        "Wedge action of the cone raises the normal force to F/sin(alpha); the torque uses the mean radius. A smaller alpha increases torque but risks sticking (alpha should exceed the friction angle to allow disengagement)."
+      ],
+      "method_references": [
+        "Cone-clutch torque, T = mu F r_m / sin(alpha) (Shigley; recalled)"
+      ],
+      "synthetic_example": {
+        "mu": 0.3,
+        "F": 2000.0,
+        "alpha": 0.2181661564992912,
+        "r_m": 0.08
+      }
+    },
+    "clutches_brakes.band_brake": {
+      "title": "Band brake tensions, braking torque and peak band pressure",
+      "variables": [
+        {
+          "name": "T1",
+          "unit": "N",
+          "desc": "tight-side band tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2",
+          "unit": "N",
+          "desc": "slack-side band tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "friction coefficient between band and drum",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "wrap angle of the band",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "drum radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "band width (axial)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_brake",
+          "unit": "N*m",
+          "desc": "braking torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_max",
+          "unit": "Pa",
+          "desc": "peak band pressure (at the tight end)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T1 = T2*exp(mu*theta)",
+        "T_brake = (T1 - T2)*r",
+        "p_max = T1/(b*r)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T1",
+        "T_brake",
+        "p_max"
+      ],
+      "assumptions": [
+        "Tension relation is the capstan (Euler\u2013Eytelwein) equation, identical to statics.belt_friction. The braking torque is the net band tension times the drum radius. The peak band pressure at the tight end is p = 2 P1/(b D) with drum diameter D = 2 r, i.e. p = P1/(b r)."
+      ],
+      "method_references": [
+        "Capstan equation; band-brake torque and peak pressure (recalled)"
+      ],
+      "synthetic_example": {
+        "T2": 100.0,
+        "mu": 0.3,
+        "theta": 3.9269908169872414,
+        "r": 0.15,
+        "b": 0.05
+      }
+    },
+    "clutches_brakes.drum_brake_short_shoe": {
+      "title": "Short-shoe drum brake: normal force and braking torque",
+      "variables": [
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "actuating force applied to the shoe",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "lining friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "drum radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "perpendicular distance from pivot to the normal-force line of action",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "perpendicular distance from pivot to the friction-force line of action",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "perpendicular distance from pivot to the actuating-force line of action",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sense",
+          "unit": "",
+          "desc": "shoe sense: leading (self-energizing) or trailing",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "leading",
+            "trailing"
+          ]
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "braking torque from this shoe",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "N",
+          "desc": "resultant normal (lining) force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _drum_short(v):\n    \"\"\"Single internal-expanding short shoe (point-force model).\n\n    sense 'leading' is self-energizing (F = N(a - mu b)/c); 'trailing' adds the friction moment.\n    T = mu N r. a, b, c are perpendicular lever arms from the pivot to the lines of action of N, fN\n    and F respectively (see module docstring).\n    \"\"\"\n    F, mu, r, a, b, c = v['F'], v['mu'], v['r'], v['a'], v['b'], v['c']\n    sense = v['sense']\n    denom = (a - mu * b) if sense == 'leading' else (a + mu * b)\n    if denom <= 0:\n        raise MechError('self-locking: a <= mu*b for a leading shoe, so no finite actuating force exists')\n    N = F * c / denom\n    return {'T': mu * N * r, 'N': N}\n",
+        "source": "clutches_brakes.py",
+        "line": 30
+      },
+      "outputs": [
+        "T",
+        "N"
+      ],
+      "assumptions": [
+        "Short shoe: the lining subtends a small angle so the pressure is uniform and the total normal force acts at the shoe midpoint. Leading shoe: F = N(a - mu b)/c (self-energizing, a > mu b required or the shoe self-locks); trailing shoe: F = N(a + mu b)/c. A two-shoe brake is the sum of one leading and one trailing shoe."
+      ],
+      "method_references": [
+        "Short-shoe drum brake moment balance (Juvinall; recalled)"
+      ],
+      "synthetic_example": {
+        "F": 500.0,
+        "mu": 0.35,
+        "r": 0.12,
+        "a": 0.1,
+        "b": 0.05,
+        "c": 0.2,
+        "sense": "leading"
+      }
+    },
+    "clutches_brakes.drum_brake_long_shoe": {
+      "title": "Long-shoe drum brake: Shigley internal-shoe integrals",
+      "variables": [
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "lining friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "drum radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "face width of the lining",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_a",
+          "unit": "Pa",
+          "desc": "maximum lining pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "distance from the hinge pin to the drum centre",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "lever arm of the actuating force about the pin",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta1",
+          "unit": "rad",
+          "desc": "shoe toe angle from the hinge pin",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b81",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "shoe heel angle from the hinge pin (\u03b82 > \u03b81)",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b82",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sense",
+          "unit": "",
+          "desc": "shoe sense: leading (self-energizing) or trailing",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "leading",
+            "trailing"
+          ]
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "actuating force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "braking torque from this shoe",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M_N",
+          "unit": "N*m",
+          "desc": "moment of the normal forces about the hinge pin",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M_f",
+          "unit": "N*m",
+          "desc": "moment of the friction forces about the hinge pin",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_a",
+          "unit": "rad",
+          "desc": "angle of maximum pressure (\u03b8a = min(\u03b82, 90\u00b0))",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b8a",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _drum_long(v):\n    \"\"\"Single internal-expanding long shoe with sinusoidal pressure p = p_a sin(theta)/sin(theta_a).\n\n    The angle of maximum pressure is theta_a = min(theta2, 90 deg): the pressure peaks at the heel when\n    the shoe does not wrap past 90 deg, otherwise at 90 deg (so it must also satisfy theta1 <= theta_a).\n    Standard internal-shoe integrals (Shigley): moment of normal forces M_N, of friction M_f about the\n    hinge pin, braking torque T about the drum centre, and actuating force F = (M_N - M_f)/c for a\n    self-energizing (leading) shoe or (M_N + M_f)/c for a trailing shoe. A leading shoe self-locks when\n    M_N - M_f <= 0.\n    \"\"\"\n    mu, r, b, p_a, a, c = v['mu'], v['r'], v['b'], v['p_a'], v['a'], v['c']\n    th1, th2 = v['theta1'], v['theta2']\n    sense = v['sense']\n    if th2 <= th1:\n        raise MechError('theta2 (shoe heel angle) must be greater than theta1 (toe angle)')\n    th_a = min(th2, PI / 2)\n    if th1 > th_a:\n        raise MechError('theta1 (toe angle) must not exceed theta_a (angle of maximum pressure): '\n                        'a shoe that wraps past 90 deg must start before 90 deg')\n    s = math.sin(th_a)\n    if abs(s) < 1e-12:\n        raise MechError('theta_a (angle of maximum pressure) must not be 0')\n    I1 = 0.5 * (th2 - th1) - 0.25 * (math.sin(2 * th2) - math.sin(2 * th1))\n    I2 = r * (math.cos(th1) - math.cos(th2)) - (a / 2.0) * (math.sin(th2) ** 2 - math.sin(th1) ** 2)\n    I3 = math.cos(th1) - math.cos(th2)\n    M_N = p_a * b * r * a / s * I1\n    M_f = mu * p_a * b * r / s * I2\n    T = mu * p_a * b * r ** 2 / s * I3\n    if sense == 'leading':\n        if M_N - M_f <= 0:\n            raise MechError('self-locking: for a leading shoe M_N - M_f <= 0, so no finite actuating '\n                            'force exists (increase a, reduce mu, or use a trailing shoe)')\n        F = (M_N - M_f) / c\n    else:\n        F = (M_N + M_f) / c\n    return {'F': F, 'T': T, 'M_N': M_N, 'M_f': M_f, 'theta_a': th_a}\n",
+        "source": "clutches_brakes.py",
+        "line": 46
+      },
+      "outputs": [
+        "F",
+        "T",
+        "M_N",
+        "M_f",
+        "theta_a"
+      ],
+      "assumptions": [
+        "Long shoe with sinusoidal pressure p = p_a sin(theta)/sin(theta_a); the angle of maximum pressure is theta_a = min(theta2, 90\u00b0) (at the heel when the shoe does not wrap past 90\u00b0, else at 90\u00b0). F = (M_N - M_f)/c for a leading (self-energizing) shoe and (M_N + M_f)/c for a trailing shoe; a two-shoe brake pairs one of each. A leading shoe self-locks (M_N - M_f <= 0) and raises an error. Angles measured from the hinge-pin line."
+      ],
+      "method_references": [
+        "Internal expanding shoe: Shigley eqs. for M_N, M_f, T (recalled)"
+      ],
+      "synthetic_example": {
+        "mu": 0.35,
+        "r": 0.15,
+        "b": 0.05,
+        "p_a": 1000000.0,
+        "a": 0.13,
+        "c": 0.18,
+        "theta1": 0.17453292519943295,
+        "theta2": 1.5707963267948966,
+        "sense": "leading"
+      }
+    },
+    "clutches_brakes.disk_brake_caliper": {
+      "title": "Disk (caliper) brake torque and effective radius",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "braking torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "caliper clamping force on each pad (two pads)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "pad friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_m",
+          "unit": "m",
+          "desc": "mean (effective) pad radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_o",
+          "unit": "m",
+          "desc": "outer pad radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_i",
+          "unit": "m",
+          "desc": "inner pad radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = 2*mu*F*r_m",
+        "r_m = (r_o + r_i)/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T",
+        "r_m"
+      ],
+      "assumptions": [
+        "Two pads acting on a disk (rotor); uniform-wear effective radius (r_o + r_i)/2 is standard for disk brakes. For a new (unworn) lining use disk_brake_uniform_pressure."
+      ],
+      "method_references": [
+        "Disk-brake torque, T = 2 mu F r_m (Shigley; recalled)"
+      ],
+      "synthetic_example": {
+        "mu": 0.4,
+        "F": 5000.0,
+        "r_o": 0.14,
+        "r_i": 0.09
+      }
+    },
+    "clutches_brakes.disk_brake_uniform_pressure": {
+      "title": "Disk (caliper) brake torque (uniform pressure / new lining)",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "braking torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "caliper clamping force on each pad (two pads)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "pad friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_o",
+          "unit": "m",
+          "desc": "outer pad radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_i",
+          "unit": "m",
+          "desc": "inner pad radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_m",
+          "unit": "m",
+          "desc": "effective (mean) pad radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = 2*mu*F*(2/3)*(r_o**3 - r_i**3)/(r_o**2 - r_i**2)",
+        "r_m = (2/3)*(r_o**3 - r_i**3)/(r_o**2 - r_i**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T",
+        "r_m"
+      ],
+      "assumptions": [
+        "Uniform-pressure (new, unworn) pad: p = F/(pi(r_o^2 - r_i^2)) uniform, effective radius (2/3)(r_o^3 - r_i^3)/(r_o^2 - r_i^2). Two pads acting on a disk."
+      ],
+      "method_references": [
+        "Disk-brake torque, uniform pressure (Shigley; recalled)"
+      ],
+      "synthetic_example": {
+        "mu": 0.4,
+        "F": 5000.0,
+        "r_o": 0.14,
+        "r_i": 0.09
+      }
+    },
+    "clutches_brakes.disk_brake_button": {
+      "title": "Button (circular) pad brake torque",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "braking torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "clamping force on each pad (two pads)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "pad friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_e",
+          "unit": "m",
+          "desc": "effective radius (pad centre distance from the rotation axis)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = 2*mu*F*r_e"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T"
+      ],
+      "assumptions": [
+        "A small circular button pad carries nearly uniform pressure, so the resultant friction force acts at the pad centre and the effective radius is the centre distance r_e. Two pads, T = 2 mu F r_e."
+      ],
+      "method_references": [
+        "Button-pad brake torque, T = 2 mu F r_e (Shigley; recalled)"
+      ],
+      "synthetic_example": {
+        "mu": 0.4,
+        "F": 5000.0,
+        "r_e": 0.115
+      }
+    },
+    "clutches_brakes.brake_energy": {
+      "title": "Kinetic energy absorbed by a brake (speed change)",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "J",
+          "desc": "kinetic energy to be absorbed (translational + rotational)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "translating mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v1",
+          "unit": "m/s",
+          "desc": "initial translating speed",
+          "lo": null,
+          "hi": null,
+          "label": "v\u2081",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v2",
+          "unit": "m/s",
+          "desc": "final translating speed",
+          "lo": null,
+          "hi": null,
+          "label": "v\u2082",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "kg*m^2",
+          "desc": "rotating inertia",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega1",
+          "unit": "rad/s",
+          "desc": "initial angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9\u2081",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega2",
+          "unit": "rad/s",
+          "desc": "final angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9\u2082",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "E = 0.5*m*(v1**2 - v2**2) + 0.5*I*(omega1**2 - omega2**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "E"
+      ],
+      "assumptions": [
+        "Energy removed when speed drops from v1, omega1 to v2, omega2 (set v2 = omega2 = 0 for a stop; keep v2 <= v1 and omega2 <= omega1 so the absorbed energy is non-negative). For a pure flywheel set m = 0 (or v1 = v2); for a pure vehicle set I = 0 (or omega1 = omega2)."
+      ],
+      "method_references": [
+        "Kinetic energy change, E = 1/2 m (v1^2 - v2^2) + 1/2 I (omega1^2 - omega2^2)"
+      ],
+      "synthetic_example": {
+        "m": 1000.0,
+        "v1": 10.0,
+        "v2": 0.0,
+        "I": 1.5,
+        "omega1": 20.0,
+        "omega2": 0.0
+      }
+    },
+    "clutches_brakes.brake_stop_time": {
+      "title": "Braking time to a stop (constant torque)",
+      "variables": [
+        {
+          "name": "t",
+          "unit": "s",
+          "desc": "time to bring the rotor to rest",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "kg*m^2",
+          "desc": "rotating inertia",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "initial angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "constant braking torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "t = I*omega/T"
+      ],
+      "procedure": null,
+      "outputs": [
+        "t"
+      ],
+      "assumptions": [
+        "Constant braking torque gives uniform angular deceleration alpha = T/I, so t = omega/alpha. For a translating vehicle the analogous time is t = m v / F_brake."
+      ],
+      "method_references": [
+        "Uniform-deceleration stopping time"
+      ],
+      "synthetic_example": {
+        "I": 2.0,
+        "omega": 100.0,
+        "T": 50.0
+      }
+    },
+    "clutches_brakes.brake_temp_rise": {
+      "title": "Brake temperature rise (adiabatic)",
+      "variables": [
+        {
+          "name": "dT",
+          "unit": "K",
+          "desc": "temperature rise (K = \u00b0C difference)",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394T",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "J",
+          "desc": "energy absorbed by the brake",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_brake",
+          "unit": "kg",
+          "desc": "mass of the brake drum/disk",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cp",
+          "unit": "J/(kg*K)",
+          "desc": "specific heat capacity of the brake material",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "dT = E/(m_brake*cp)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "dT"
+      ],
+      "assumptions": [
+        "Adiabatic single-stop estimate (no cooling, no conduction to other parts): all absorbed energy heats the brake mass. Enter dT in K or delta_degC."
+      ],
+      "method_references": [
+        "Heat balance, delta_T = E/(m c_p)"
+      ],
+      "synthetic_example": {
+        "E": 50000.0,
+        "m_brake": 5.0,
+        "cp": 500.0
+      }
+    },
+    "clutches_brakes.flywheel_energy": {
+      "title": "Flywheel energy fluctuation and coefficient of speed fluctuation",
+      "variables": [
+        {
+          "name": "delta_E",
+          "unit": "J",
+          "desc": "energy fluctuation (largest energy the flywheel stores/returns)",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394E",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_s",
+          "unit": "",
+          "desc": "coefficient of speed fluctuation (omega_max - omega_min)/omega_avg",
+          "lo": null,
+          "hi": null,
+          "label": "Cs",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_avg",
+          "unit": "rad/s",
+          "desc": "mean angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9avg",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_max",
+          "unit": "rad/s",
+          "desc": "maximum angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9max",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_min",
+          "unit": "rad/s",
+          "desc": "minimum angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9min",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "kg*m^2",
+          "desc": "flywheel inertia",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "omega_avg = (omega_max + omega_min)/2",
+        "C_s = (omega_max - omega_min)/omega_avg",
+        "delta_E = 0.5*I*(omega_max**2 - omega_min**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "omega_avg",
+        "C_s",
+        "delta_E"
+      ],
+      "assumptions": [
+        "delta_E = 1/2 I (omega_max^2 - omega_min^2) is the exact fluctuation; it also equals I omega_avg^2 C_s. The coefficient C_s is the standard definition."
+      ],
+      "method_references": [
+        "Flywheel energy fluctuation; coefficient of speed fluctuation (Shigley; recalled)"
+      ],
+      "synthetic_example": {
+        "omega_max": 105.0,
+        "omega_min": 95.0,
+        "I": 3.0
+      }
+    },
+    "clutches_brakes.flywheel_inertia_required": {
+      "title": "Required flywheel inertia for a given speed fluctuation",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "kg*m^2",
+          "desc": "required flywheel inertia",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_E",
+          "unit": "J",
+          "desc": "energy fluctuation to be absorbed",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394E",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_s",
+          "unit": "",
+          "desc": "allowable coefficient of speed fluctuation",
+          "lo": null,
+          "hi": null,
+          "label": "Cs",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "mean angular speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "I = delta_E/(C_s*omega**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "I"
+      ],
+      "assumptions": [
+        "Inverts delta_E = I omega^2 C_s. Combine with flywheel_rim to turn the required inertia into rim dimensions."
+      ],
+      "method_references": [
+        "Flywheel sizing, I = delta_E/(C_s omega^2)"
+      ],
+      "synthetic_example": {
+        "delta_E": 3000.0,
+        "C_s": 0.1,
+        "omega": 100.0
+      }
+    },
+    "clutches_brakes.flywheel_rim": {
+      "title": "Thin-rim flywheel: mass, volume and inertia",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "kg*m^2",
+          "desc": "rim moment of inertia about the spin axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "rim mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m^3",
+          "desc": "rim volume",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "rim material density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "m",
+          "desc": "mean rim radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "rim width (axial thickness)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "rim thickness (radial)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "V = 2*pi*R*b*t",
+        "m = rho*V",
+        "I = m*R**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "V",
+        "m",
+        "I"
+      ],
+      "assumptions": [
+        "Thin rim (t << R) so the whole mass is treated at radius R and I = m R^2; volume is the mean circumference times cross-section. Spokes/hub add a little mass and inertia."
+      ],
+      "method_references": [
+        "Thin-ring inertia, I = m R^2"
+      ],
+      "synthetic_example": {
+        "rho": 7850.0,
+        "R": 0.3,
+        "b": 0.05,
+        "t": 0.02
+      }
+    },
+    "clutches_brakes.flywheel_torque_angle": {
+      "title": "Flywheel energy fluctuation from a turning-moment diagram",
+      "variables": [
+        {
+          "name": "torque_curve",
+          "unit": "",
+          "desc": "[[angle (deg), torque (N\u00b7m)], ...] over one full cycle, non-decreasing angles (repeat an angle for a vertical step)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "T_mean",
+          "unit": "N*m",
+          "desc": "mean (resisting) torque over the cycle",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_max",
+          "unit": "J",
+          "desc": "maximum cumulative energy above the mean line",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_min",
+          "unit": "J",
+          "desc": "minimum cumulative energy above the mean line (typically 0 or negative)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta_E",
+          "unit": "J",
+          "desc": "energy fluctuation W_max - W_min",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394E",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "energy_curve",
+          "unit": "",
+          "desc": "[[angle (deg), cumulative energy (J)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _turning_moment(v):\n    \"\"\"Flywheel energy fluctuation from a turning-moment diagram.\n\n    torque_curve: [[angle (deg), torque (N\u00b7m)], ...] over one full cycle with strictly increasing\n    angles. The mean torque is the trapezoidal average; the cumulative energy W(theta) = integral of\n    (T - T_mean) d(theta) gives the fluctuation delta_E = W_max - W_min (largest excess of energy,\n    which the flywheel must store and return).\n    \"\"\"\n    curve = v['torque_curve']\n    if not isinstance(curve, list) or len(curve) < 2:\n        raise MechError('torque_curve: [[angle (deg), torque (N\u00b7m)], ...] over one full cycle')\n    ang = np.array([math.radians(float(row[0])) for row in curve])\n    Tq = np.array([float(row[1]) for row in curve])\n    if ang[-1] <= ang[0]:\n        raise MechError('torque_curve must span a positive angle range (ang_last > ang_first)')\n    dth = np.diff(ang)\n    if np.any(dth < 0):\n        raise MechError('torque_curve angles must be non-decreasing (repeat an angle for a vertical step)')\n    Tmean = float(np.trapezoid(Tq, ang) / (ang[-1] - ang[0]))\n    W = np.zeros(len(curve))\n    for i in range(1, len(curve)):\n        W[i] = W[i - 1] + 0.5 * (Tq[i - 1] + Tq[i] - 2 * Tmean) * (ang[i] - ang[i - 1])\n    energy_curve = [[float(math.degrees(ang[i])), float(W[i])] for i in range(len(curve))]\n    return {'T_mean': Tmean, 'W_max': float(W.max()), 'W_min': float(W.min()),\n            'delta_E': float(W.max() - W.min()), 'energy_curve': energy_curve}\n",
+        "source": "clutches_brakes.py",
+        "line": 84
+      },
+      "outputs": [
+        "T_mean",
+        "W_max",
+        "W_min",
+        "delta_E",
+        "energy_curve"
+      ],
+      "assumptions": [
+        "The torque curve is one complete cycle (a repeating periodic input); the mean torque is the trapezoidal average, and the energy fluctuation is the swing of the cumulative (T - T_mean) integral. delta_E is the energy the flywheel must store and return."
+      ],
+      "method_references": [
+        "Turning-moment diagram; energy fluctuation = area between torque curve and mean-torque line"
+      ],
+      "synthetic_example": {
+        "torque_curve": [
+          [
+            0,
+            150
+          ],
+          [
+            180,
+            150
+          ],
+          [
+            180,
+            50
+          ],
+          [
+            360,
+            50
+          ]
+        ]
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "clutches_brakes-001",
+      "calculator": "clutches_brakes.disk_clutch_uniform_wear",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 2,
+        "mu": 0.3,
+        "F": "4 kN",
+        "r_o": "100 mm",
+        "r_i": "60 mm"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expected_as_specified": {
+        "T": "192 N*m"
+      },
+      "expected_SI": {
+        "T": 192.0
+      },
+      "actual_SI": {
+        "T": {
+          "value": 192.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.disk_clutch_uniform_wear (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.384,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = n mu F (r_o + r_i)/2 = 2 x 0.3 x 4000 x (0.100 + 0.060)/2 = 2 x 0.3 x 4000 x 0.08 = 192 N\u00b7m"
+      }
+    },
+    {
+      "id": "clutches_brakes-002",
+      "calculator": "clutches_brakes.disk_clutch_uniform_wear",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 2,
+        "mu": 0.3,
+        "T": "192 N*m",
+        "r_o": "100 mm",
+        "r_i": "60 mm"
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expected_as_specified": {
+        "F": "4 kN"
+      },
+      "expected_SI": {
+        "F": 4000.0
+      },
+      "actual_SI": {
+        "F": {
+          "value": 4000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.disk_clutch_uniform_wear (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse of the case above: F = 2T/(n mu (r_o + r_i)) = 2 x 192/(2 x 0.3 x 0.16) = 384/0.096 = 4000 N"
+      }
+    },
+    {
+      "id": "clutches_brakes-003",
+      "calculator": "clutches_brakes.disk_clutch_uniform_pressure",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 2,
+        "mu": 0.35,
+        "F": "3 kN",
+        "r_o": "90 mm",
+        "r_i": "50 mm"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expected_as_specified": {
+        "T": "151 N*m"
+      },
+      "expected_SI": {
+        "T": 151.0
+      },
+      "actual_SI": {
+        "T": {
+          "value": 150.99999999999997,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.disk_clutch_uniform_pressure (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T": {
+          "absolute_error": 2.842170943040401e-14,
+          "relative_error": 1.882232412609537e-16,
+          "allowed_absolute_error": 0.302,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "ratio = (r_o^3 - r_i^3)/(r_o^2 - r_i^2) = (0.09^3 - 0.05^3)/(0.09^2 - 0.05^2) = (7.29e-4 - 1.25e-4)/(8.1e-3 - 2.5e-3) = 6.04e-4/5.6e-3 = 0.107857; T = 2 x 0.35 x 3000 x (2/3) x 0.107857 = 1400 x 0.107857 = 151.0 N\u00b7m"
+      }
+    },
+    {
+      "id": "clutches_brakes-004",
+      "calculator": "clutches_brakes.cone_clutch",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.3,
+        "F": "2 kN",
+        "alpha": "15 deg",
+        "r_m": "80 mm"
+      },
+      "solve_for": [
+        "T",
+        "N"
+      ],
+      "expected_as_specified": {
+        "T": "185.46 N*m",
+        "N": "7.7274 kN"
+      },
+      "expected_SI": {
+        "T": 185.46,
+        "N": 7727.400000000001
+      },
+      "actual_SI": {
+        "T": {
+          "value": 185.45775864750112,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.cone_clutch (symbolic)"
+        },
+        "N": {
+          "value": 7727.406610312547,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.cone_clutch (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T": {
+          "absolute_error": 0.0022413524988849076,
+          "relative_error": 1.2085368806669403e-05,
+          "allowed_absolute_error": 0.09273,
+          "passed": true
+        },
+        "N": {
+          "absolute_error": 0.006610312546399655,
+          "relative_error": 8.554381223179406e-07,
+          "allowed_absolute_error": 3.8637,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sin15\u00b0 = 0.258819; N = F/sin(alpha) = 2000/0.258819 = 7727.4 N; T = mu N r_m = 0.3 x 7727.4 x 0.080 = 185.46 N\u00b7m"
+      }
+    },
+    {
+      "id": "clutches_brakes-005",
+      "calculator": "clutches_brakes.band_brake",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T2": "100 N",
+        "mu": 0.3,
+        "theta": "225 deg",
+        "r": "150 mm",
+        "b": "50 mm"
+      },
+      "solve_for": [
+        "T1",
+        "T_brake",
+        "p_max"
+      ],
+      "expected_as_specified": {
+        "T1": "324.82 N",
+        "T_brake": "33.723 N*m",
+        "p_max": "43.309 kPa"
+      },
+      "expected_SI": {
+        "T1": 324.82,
+        "T_brake": 33.723,
+        "p_max": 43309.0
+      },
+      "actual_SI": {
+        "T1": {
+          "value": 324.8187813873724,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.band_brake (symbolic)"
+        },
+        "T_brake": {
+          "value": 33.72281720810585,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.band_brake (symbolic)"
+        },
+        "p_max": {
+          "value": 43309.17085164965,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.band_brake (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T1": {
+          "absolute_error": 0.0012186126276105824,
+          "relative_error": 3.7516551555033015e-06,
+          "allowed_absolute_error": 0.64964,
+          "passed": true
+        },
+        "T_brake": {
+          "absolute_error": 0.0001827918941472717,
+          "relative_error": 5.42039243683159e-06,
+          "allowed_absolute_error": 0.067446,
+          "passed": true
+        },
+        "p_max": {
+          "absolute_error": 0.17085164965101285,
+          "relative_error": 3.944945615253477e-06,
+          "allowed_absolute_error": 86.618,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta = 225\u00b0 = 3.92699 rad; T1 = T2 e^(mu theta) = 100 e^(0.3 x 3.92699) = 100 e^1.17810 = 100 x 3.24818 = 324.82 N; T_brake = (T1 - T2) r = (324.82 - 100) x 0.15 = 33.723 N\u00b7m; p_max = 2 T1/(b D) = T1/(b r) = 324.82/(0.05 x 0.15) = 43.309 kPa"
+      }
+    },
+    {
+      "id": "clutches_brakes-006",
+      "calculator": "clutches_brakes.drum_brake_short_shoe",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "500 N",
+        "mu": 0.35,
+        "r": "0.12 m",
+        "a": "0.1 m",
+        "b": "0.05 m",
+        "c": "0.2 m",
+        "sense": "leading"
+      },
+      "solve_for": [
+        "T",
+        "N"
+      ],
+      "expected_as_specified": {
+        "T": "50.909 N*m",
+        "N": "1.2121 kN"
+      },
+      "expected_SI": {
+        "T": 50.909,
+        "N": 1212.1
+      },
+      "actual_SI": {
+        "T": {
+          "value": 50.9090909090909,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_short_shoe (procedure)"
+        },
+        "N": {
+          "value": 1212.121212121212,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_short_shoe (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T": {
+          "absolute_error": 9.090909090048171e-05,
+          "relative_error": 1.7857174743263808e-06,
+          "allowed_absolute_error": 0.0254545,
+          "passed": true
+        },
+        "N": {
+          "absolute_error": 0.02121212121210192,
+          "relative_error": 1.7500306255343553e-05,
+          "allowed_absolute_error": 0.60605,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Leading (self-energizing) shoe: N = F c/(a - mu b) = 500 x 0.2/(0.1 - 0.35 x 0.05) = 100/0.0825 = 1212.1 N; T = mu N r = 0.35 x 1212.1 x 0.12 = 50.909 N\u00b7m"
+      }
+    },
+    {
+      "id": "clutches_brakes-007",
+      "calculator": "clutches_brakes.drum_brake_short_shoe",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T": "50.909 N*m",
+        "mu": 0.35,
+        "r": "0.12 m",
+        "a": "0.1 m",
+        "b": "0.05 m",
+        "c": "0.2 m",
+        "sense": "leading"
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expected_as_specified": {
+        "F": "500 N"
+      },
+      "expected_SI": {
+        "F": 500.0
+      },
+      "actual_SI": {
+        "F": {
+          "value": 499.99910714285716,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_short_shoe (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0008928571428441501,
+          "relative_error": 1.7857142856883002e-06,
+          "allowed_absolute_error": 0.5,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse of the leading-shoe case: N = T/(mu r) = 50.909/(0.35 x 0.12) = 1212.1 N; F = N(a - mu b)/c = 1212.1 x 0.0825/0.2 = 500 N"
+      }
+    },
+    {
+      "id": "clutches_brakes-008",
+      "calculator": "clutches_brakes.drum_brake_short_shoe",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "500 N",
+        "mu": 0.35,
+        "r": "0.12 m",
+        "a": "0.1 m",
+        "b": "0.05 m",
+        "c": "0.2 m",
+        "sense": "trailing"
+      },
+      "solve_for": [
+        "T",
+        "N"
+      ],
+      "expected_as_specified": {
+        "T": "35.745 N*m",
+        "N": "851.06 N"
+      },
+      "expected_SI": {
+        "T": 35.745,
+        "N": 851.06
+      },
+      "actual_SI": {
+        "T": {
+          "value": 35.744680851063826,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_short_shoe (procedure)"
+        },
+        "N": {
+          "value": 851.063829787234,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_short_shoe (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T": {
+          "absolute_error": 0.00031914893617113194,
+          "relative_error": 8.928491709921162e-06,
+          "allowed_absolute_error": 0.0178725,
+          "passed": true
+        },
+        "N": {
+          "absolute_error": 0.0038297872340535832,
+          "relative_error": 4.5000202501040865e-06,
+          "allowed_absolute_error": 0.42552999999999996,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Trailing shoe: N = F c/(a + mu b) = 100/(0.1 + 0.0175) = 851.06 N; T = 0.35 x 851.06 x 0.12 = 35.745 N\u00b7m"
+      }
+    },
+    {
+      "id": "clutches_brakes-009",
+      "calculator": "clutches_brakes.drum_brake_long_shoe",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.35,
+        "r": "150 mm",
+        "b": "50 mm",
+        "p_a": "1 MPa",
+        "a": "130 mm",
+        "c": "180 mm",
+        "theta1": "10 deg",
+        "theta2": "90 deg",
+        "sense": "leading"
+      },
+      "solve_for": [
+        "F",
+        "T",
+        "M_N",
+        "M_f",
+        "theta_a"
+      ],
+      "expected_as_specified": {
+        "F": "3.0098 kN",
+        "T": "387.77 N*m",
+        "M_N": "764.05 N*m",
+        "M_f": "222.29 N*m",
+        "theta_a": "90 deg"
+      },
+      "expected_SI": {
+        "F": 3009.7999999999997,
+        "T": 387.77,
+        "M_N": 764.05,
+        "M_f": 222.29,
+        "theta_a": 1.5707963267948966
+      },
+      "actual_SI": {
+        "F": {
+          "value": 3009.765512087006,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "T": {
+          "value": 387.76805274855684,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "M_N": {
+          "value": 764.0458182134201,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "M_f": {
+          "value": 222.28802603775904,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "theta_a": {
+          "value": 1.5707963267948966,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.034487912993881764,
+          "relative_error": 1.145853976805162e-05,
+          "allowed_absolute_error": 1.5049,
+          "passed": true
+        },
+        "T": {
+          "absolute_error": 0.0019472514431413401,
+          "relative_error": 5.021666047247957e-06,
+          "allowed_absolute_error": 0.193885,
+          "passed": true
+        },
+        "M_N": {
+          "absolute_error": 0.004181786579806612,
+          "relative_error": 5.473184451026258e-06,
+          "allowed_absolute_error": 0.382025,
+          "passed": true
+        },
+        "M_f": {
+          "absolute_error": 0.001973962240953142,
+          "relative_error": 8.880121647186747e-06,
+          "allowed_absolute_error": 0.111145,
+          "passed": true
+        },
+        "theta_a": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0007853981633974483,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta_a = min(theta2, 90\u00b0) = 90\u00b0, sin(theta_a)=1; I1 = (theta2-theta1)/2 - (sin2theta2 - sin2theta1)/4 = (1.5708-0.17453)/2 - (0 - 0.34202)/4 = 0.69813 + 0.085506 = 0.78364; M_N = p_a b r a I1 = 1e6 x 0.05 x 0.15 x 0.13 x 0.78364 = 764.05 N\u00b7m; I2 = r(cos theta1 - cos theta2) - (a/2)(sin^2 theta2 - sin^2 theta1) = 0.15(0.98481 - 0) - 0.065(1 - 0.030154) = 0.14772 - 0.063040 = 0.084681; M_f = mu p_a b r I2 = 0.35 x 1e6 x 0.05 x 0.15 x 0.084681 = 222.29 N\u00b7m; T = mu p_a b r^2 (cos theta1 - cos theta2) = 0.35 x 1e6 x 0.05 x 0.0225 x 0.98481 = 387.77 N\u00b7m; F = (M_N - M_f)/c = (764.05 - 222.29)/0.18 = 3009.8 N"
+      }
+    },
+    {
+      "id": "clutches_brakes-010",
+      "calculator": "clutches_brakes.drum_brake_long_shoe",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.35,
+        "r": "150 mm",
+        "b": "50 mm",
+        "p_a": "1 MPa",
+        "a": "130 mm",
+        "c": "180 mm",
+        "theta1": "10 deg",
+        "theta2": "90 deg",
+        "sense": "trailing"
+      },
+      "solve_for": [
+        "F",
+        "T",
+        "M_N",
+        "M_f",
+        "theta_a"
+      ],
+      "expected_as_specified": {
+        "F": "5.4796 kN",
+        "T": "387.77 N*m",
+        "M_N": "764.05 N*m",
+        "M_f": "222.29 N*m"
+      },
+      "expected_SI": {
+        "F": 5479.599999999999,
+        "T": 387.77,
+        "M_N": 764.05,
+        "M_f": 222.29
+      },
+      "actual_SI": {
+        "F": {
+          "value": 5479.632468062107,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "T": {
+          "value": 387.76805274855684,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "M_N": {
+          "value": 764.0458182134201,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "M_f": {
+          "value": 222.28802603775904,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.032468062107909645,
+          "relative_error": 5.925261352636989e-06,
+          "allowed_absolute_error": 2.7398,
+          "passed": true
+        },
+        "T": {
+          "absolute_error": 0.0019472514431413401,
+          "relative_error": 5.021666047247957e-06,
+          "allowed_absolute_error": 0.193885,
+          "passed": true
+        },
+        "M_N": {
+          "absolute_error": 0.004181786579806612,
+          "relative_error": 5.473184451026258e-06,
+          "allowed_absolute_error": 0.382025,
+          "passed": true
+        },
+        "M_f": {
+          "absolute_error": 0.001973962240953142,
+          "relative_error": 8.880121647186747e-06,
+          "allowed_absolute_error": 0.111145,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Same geometry as the leading case; a trailing shoe adds the friction moment instead of subtracting it. M_N = 764.05 N\u00b7m, M_f = 222.29 N\u00b7m (unchanged); F = (M_N + M_f)/c = (764.05 + 222.29)/0.18 = 986.34/0.18 = 5479.6 N; T = 387.77 N\u00b7m (torque is independent of shoe sense)."
+      }
+    },
+    {
+      "id": "clutches_brakes-011",
+      "calculator": "clutches_brakes.drum_brake_long_shoe",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 1.0,
+        "r": "150 mm",
+        "b": "50 mm",
+        "p_a": "1 MPa",
+        "a": "130 mm",
+        "c": "180 mm",
+        "theta1": "10 deg",
+        "theta2": "90 deg",
+        "sense": "leading"
+      },
+      "solve_for": [
+        "F",
+        "T",
+        "M_N",
+        "M_f",
+        "theta_a"
+      ],
+      "expected_as_specified": {
+        "F": "716.32 N",
+        "T": "1.1079 kN*m",
+        "M_N": "764.05 N*m",
+        "M_f": "635.11 N*m"
+      },
+      "expected_SI": {
+        "F": 716.32,
+        "T": 1107.9,
+        "M_N": 764.05,
+        "M_f": 635.11
+      },
+      "actual_SI": {
+        "F": {
+          "value": 716.3176243958414,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "T": {
+          "value": 1107.908722138734,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "M_N": {
+          "value": 764.0458182134201,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "M_f": {
+          "value": 635.1086458221687,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0023756041586011634,
+          "relative_error": 3.316400712811541e-06,
+          "allowed_absolute_error": 0.35816000000000003,
+          "passed": true
+        },
+        "T": {
+          "absolute_error": 0.008722138733901375,
+          "relative_error": 7.872676896742823e-06,
+          "allowed_absolute_error": 0.55395,
+          "passed": true
+        },
+        "M_N": {
+          "absolute_error": 0.004181786579806612,
+          "relative_error": 5.473184451026258e-06,
+          "allowed_absolute_error": 0.382025,
+          "passed": true
+        },
+        "M_f": {
+          "absolute_error": 0.0013541778313310715,
+          "relative_error": 2.1321941574389816e-06,
+          "allowed_absolute_error": 0.31755500000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Leading shoe near the self-locking boundary (mu = 1.0 is just below mu_crit = a I1/I2 = 0.13 x 0.78364/0.084681 = 1.203). M_N = 764.05 N\u00b7m (unchanged); M_f = mu p_a b r I2 = 1.0 x 1e6 x 0.05 x 0.15 x 0.084681 = 635.11 N\u00b7m; T = 1.0 x 1e6 x 0.05 x 0.0225 x 0.98481 = 1107.9 N\u00b7m; F = (M_N - M_f)/c = (764.05 - 635.11)/0.18 = 716.32 N (still positive, so no self-locking)."
+      }
+    },
+    {
+      "id": "clutches_brakes-012",
+      "calculator": "clutches_brakes.drum_brake_long_shoe",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.35,
+        "r": "150 mm",
+        "b": "50 mm",
+        "p_a": "1 MPa",
+        "a": "130 mm",
+        "c": "180 mm",
+        "theta1": "10 deg",
+        "theta2": "60 deg",
+        "sense": "leading"
+      },
+      "solve_for": [
+        "F",
+        "T",
+        "M_N",
+        "M_f",
+        "theta_a"
+      ],
+      "expected_as_specified": {
+        "F": "1.4731 kN",
+        "T": "220.42 N*m",
+        "M_N": "343.75 N*m",
+        "M_f": "78.600 N*m",
+        "theta_a": "60 deg"
+      },
+      "expected_SI": {
+        "F": 1473.1000000000001,
+        "T": 220.42,
+        "M_N": 343.75,
+        "M_f": 78.6,
+        "theta_a": 1.0471975511965976
+      },
+      "actual_SI": {
+        "F": {
+          "value": 1473.0671736750298,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "T": {
+          "value": 220.42431078161746,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "M_N": {
+          "value": 343.75172094939165,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "M_f": {
+          "value": 78.59962968788629,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        },
+        "theta_a": {
+          "value": 1.0471975511965976,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.drum_brake_long_shoe (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.03282632497030136,
+          "relative_error": 2.2283840180776155e-05,
+          "allowed_absolute_error": 0.73655,
+          "passed": true
+        },
+        "T": {
+          "absolute_error": 0.004310781617476778,
+          "relative_error": 1.955712556699382e-05,
+          "allowed_absolute_error": 0.11021,
+          "passed": true
+        },
+        "M_N": {
+          "absolute_error": 0.0017209493916539031,
+          "relative_error": 5.0063982302659e-06,
+          "allowed_absolute_error": 0.171875,
+          "passed": true
+        },
+        "M_f": {
+          "absolute_error": 0.0003703121137021981,
+          "relative_error": 4.711350047101757e-06,
+          "allowed_absolute_error": 0.039299999999999995,
+          "passed": true
+        },
+        "theta_a": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005235987755982988,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta2 = 60\u00b0 < 90\u00b0, so theta_a = theta2 = 60\u00b0 and sin(theta_a) = 0.866025. I1 = (theta2-theta1)/2 - (sin120 - sin20)/4 = (1.04720-0.17453)/2 - (0.866025-0.342020)/4 = 0.436332 - 0.131001 = 0.305331; M_N = p_a b r a I1/sin(theta_a) = 1e6 x 0.05 x 0.15 x 0.13 x 0.305331/0.866025 = 343.75 N\u00b7m; I2 = r(cos10 - cos60) - (a/2)(sin^2 60 - sin^2 10) = 0.15(0.98481 - 0.5) - 0.065(0.75 - 0.030154) = 0.072721 - 0.046790 = 0.025931; M_f = 0.35 x 1e6 x 0.05 x 0.15 x 0.025931/0.866025 = 78.600 N\u00b7m; T = 0.35 x 1e6 x 0.05 x 0.0225 x 0.48481/0.866025 = 220.42 N\u00b7m; F = (343.75 - 78.600)/0.18 = 1473.1 N"
+      }
+    },
+    {
+      "id": "clutches_brakes-013",
+      "calculator": "clutches_brakes.disk_brake_caliper",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.4,
+        "F": "5 kN",
+        "r_o": "140 mm",
+        "r_i": "90 mm"
+      },
+      "solve_for": [
+        "T",
+        "r_m"
+      ],
+      "expected_as_specified": {
+        "T": "460 N*m",
+        "r_m": "115 mm"
+      },
+      "expected_SI": {
+        "T": 460.0,
+        "r_m": 0.115
+      },
+      "actual_SI": {
+        "T": {
+          "value": 460.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.disk_brake_caliper (symbolic)"
+        },
+        "r_m": {
+          "value": 0.115,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.disk_brake_caliper (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.92,
+          "passed": true
+        },
+        "r_m": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00023,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r_m = (0.140 + 0.090)/2 = 0.115 m; T = 2 mu F r_m = 2 x 0.4 x 5000 x 0.115 = 460 N\u00b7m"
+      }
+    },
+    {
+      "id": "clutches_brakes-014",
+      "calculator": "clutches_brakes.disk_brake_uniform_pressure",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.4,
+        "F": "5 kN",
+        "r_o": "140 mm",
+        "r_i": "90 mm"
+      },
+      "solve_for": [
+        "T",
+        "r_m"
+      ],
+      "expected_as_specified": {
+        "T": "467.25 N*m",
+        "r_m": "116.81 mm"
+      },
+      "expected_SI": {
+        "T": 467.25,
+        "r_m": 0.11681000000000001
+      },
+      "actual_SI": {
+        "T": {
+          "value": 467.2463768115942,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.disk_brake_uniform_pressure (symbolic)"
+        },
+        "r_m": {
+          "value": 0.11681159420289855,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.disk_brake_uniform_pressure (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T": {
+          "absolute_error": 0.0036231884058111063,
+          "relative_error": 7.754282302431474e-06,
+          "allowed_absolute_error": 0.233625,
+          "passed": true
+        },
+        "r_m": {
+          "absolute_error": 1.5942028985388434e-06,
+          "relative_error": 1.3647828940491767e-05,
+          "allowed_absolute_error": 5.840500000000001e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r_m = (2/3)(r_o^3 - r_i^3)/(r_o^2 - r_i^2) = (2/3)(0.14^3 - 0.09^3)/(0.14^2 - 0.09^2) = (2/3)(2.744e-3 - 7.29e-4)/(0.0196 - 0.0081) = (2/3)(2.015e-3/0.0115) = 0.116812 m; T = 2 mu F r_m = 2 x 0.4 x 5000 x 0.116812 = 467.25 N\u00b7m"
+      }
+    },
+    {
+      "id": "clutches_brakes-015",
+      "calculator": "clutches_brakes.disk_brake_button",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.4,
+        "F": "5 kN",
+        "r_e": "115 mm"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expected_as_specified": {
+        "T": "460 N*m"
+      },
+      "expected_SI": {
+        "T": 460.0
+      },
+      "actual_SI": {
+        "T": {
+          "value": 460.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.disk_brake_button (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.92,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Button (circular) pad with nearly uniform pressure: resultant friction acts at the pad centre, so T = 2 mu F r_e = 2 x 0.4 x 5000 x 0.115 = 460 N\u00b7m"
+      }
+    },
+    {
+      "id": "clutches_brakes-016",
+      "calculator": "clutches_brakes.brake_energy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "1 t",
+        "v1": "36 km/h",
+        "v2": "0 m/s",
+        "I": "1.5 kg*m^2",
+        "omega1": "20 rad/s",
+        "omega2": "0 rad/s"
+      },
+      "solve_for": [
+        "E"
+      ],
+      "expected_as_specified": {
+        "E": "50.3 kJ"
+      },
+      "expected_SI": {
+        "E": 50300.0
+      },
+      "actual_SI": {
+        "E": {
+          "value": 50300.0,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.brake_energy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "E": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 100.60000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v1 = 36 km/h = 10 m/s; E = 0.5 m (v1^2 - v2^2) + 0.5 I (omega1^2 - omega2^2) = 0.5 x 1000 x 100 + 0.5 x 1.5 x 400 = 50000 + 300 = 50300 J = 50.3 kJ"
+      }
+    },
+    {
+      "id": "clutches_brakes-017",
+      "calculator": "clutches_brakes.brake_energy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "1 t",
+        "v1": "20 m/s",
+        "v2": "5 m/s",
+        "I": "2 kg*m^2",
+        "omega1": "150 rad/s",
+        "omega2": "40 rad/s"
+      },
+      "solve_for": [
+        "E"
+      ],
+      "expected_as_specified": {
+        "E": "208.4 kJ"
+      },
+      "expected_SI": {
+        "E": 208400.0
+      },
+      "actual_SI": {
+        "E": {
+          "value": 208400.0,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.brake_energy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "E": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 416.8,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Speed change (not to rest): E = 0.5 x 1000 x (20^2 - 5^2) + 0.5 x 2 x (150^2 - 40^2) = 500 x (400 - 25) + 1 x (22500 - 1600) = 187500 + 20900 = 208400 J = 208.4 kJ"
+      }
+    },
+    {
+      "id": "clutches_brakes-018",
+      "calculator": "clutches_brakes.brake_stop_time",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "2 kg*m^2",
+        "omega": "100 rad/s",
+        "T": "50 N*m"
+      },
+      "solve_for": [
+        "t"
+      ],
+      "expected_as_specified": {
+        "t": "4 s"
+      },
+      "expected_SI": {
+        "t": 4.0
+      },
+      "actual_SI": {
+        "t": {
+          "value": 4.0,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.brake_stop_time (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.008,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "t = I omega/T = 2 x 100/50 = 4 s"
+      }
+    },
+    {
+      "id": "clutches_brakes-019",
+      "calculator": "clutches_brakes.brake_stop_time",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "2 kg*m^2",
+        "T": "50 N*m",
+        "t": "4 s"
+      },
+      "solve_for": [
+        "omega"
+      ],
+      "expected_as_specified": {
+        "omega": "954.93 rpm"
+      },
+      "expected_SI": {
+        "omega": 100.0000357564167
+      },
+      "actual_SI": {
+        "omega": {
+          "value": 100.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.brake_stop_time (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "omega": {
+          "absolute_error": 3.5756416693288884e-05,
+          "relative_error": 3.575640390808011e-07,
+          "allowed_absolute_error": 0.1000000357564167,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = T t/I = 50 x 4/2 = 100 rad/s = 100 x 60/(2 pi) = 954.93 rpm"
+      }
+    },
+    {
+      "id": "clutches_brakes-020",
+      "calculator": "clutches_brakes.brake_temp_rise",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "50 kJ",
+        "m_brake": "5 kg",
+        "cp": "500 J/(kg*K)"
+      },
+      "solve_for": [
+        "dT"
+      ],
+      "expected_as_specified": {
+        "dT": "20 delta_degC"
+      },
+      "expected_SI": {
+        "dT": 20.0
+      },
+      "actual_SI": {
+        "dT": {
+          "value": 20.0,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.brake_temp_rise (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dT": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.04,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "dT = E/(m c_p) = 50000/(5 x 500) = 20 K"
+      }
+    },
+    {
+      "id": "clutches_brakes-021",
+      "calculator": "clutches_brakes.flywheel_energy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega_max": "105 rad/s",
+        "omega_min": "95 rad/s",
+        "I": "3 kg*m^2"
+      },
+      "solve_for": [
+        "omega_avg",
+        "C_s",
+        "delta_E"
+      ],
+      "expected_as_specified": {
+        "omega_avg": "100 rad/s",
+        "C_s": 0.1,
+        "delta_E": "3 kJ"
+      },
+      "expected_SI": {
+        "omega_avg": 100.0,
+        "C_s": 0.1,
+        "delta_E": 3000.0
+      },
+      "actual_SI": {
+        "omega_avg": {
+          "value": 100.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_energy (symbolic)"
+        },
+        "C_s": {
+          "value": 0.1,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_energy (symbolic)"
+        },
+        "delta_E": {
+          "value": 3000.0,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_energy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "omega_avg": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.2,
+          "passed": true
+        },
+        "C_s": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        },
+        "delta_E": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 6.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_avg = (105 + 95)/2 = 100; C_s = (105 - 95)/100 = 0.1; delta_E = 0.5 x 3 x (105^2 - 95^2) = 1.5 x (11025 - 9025) = 1.5 x 2000 = 3000 J"
+      }
+    },
+    {
+      "id": "clutches_brakes-022",
+      "calculator": "clutches_brakes.flywheel_inertia_required",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "3 kg*m^2",
+        "C_s": 0.1,
+        "delta_E": "3 kJ"
+      },
+      "solve_for": [
+        "omega"
+      ],
+      "expected_as_specified": {
+        "omega": "100 rad/s"
+      },
+      "expected_SI": {
+        "omega": 100.0
+      },
+      "actual_SI": {
+        "omega": {
+          "value": 100.00000000000001,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_inertia_required (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "omega": {
+          "absolute_error": 1.4210854715202004e-14,
+          "relative_error": 1.4210854715202004e-16,
+          "allowed_absolute_error": 0.1,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = sqrt(delta_E/(C_s I)) = sqrt(3000/(0.1 x 3)) = sqrt(10000) = 100 rad/s"
+      }
+    },
+    {
+      "id": "clutches_brakes-023",
+      "calculator": "clutches_brakes.flywheel_inertia_required",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "delta_E": "3 kJ",
+        "C_s": 0.1,
+        "omega": "100 rad/s"
+      },
+      "solve_for": [
+        "I"
+      ],
+      "expected_as_specified": {
+        "I": "3 kg*m^2"
+      },
+      "expected_SI": {
+        "I": 3.0
+      },
+      "actual_SI": {
+        "I": {
+          "value": 3.0,
+          "unit": "kg*m^2",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_inertia_required (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "I": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.006,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "I = delta_E/(C_s omega^2) = 3000/(0.1 x 10000) = 3000/1000 = 3 kg\u00b7m^2"
+      }
+    },
+    {
+      "id": "clutches_brakes-024",
+      "calculator": "clutches_brakes.flywheel_rim",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "7850 kg/m^3",
+        "R": "300 mm",
+        "b": "50 mm",
+        "t": "20 mm"
+      },
+      "solve_for": [
+        "V",
+        "m",
+        "I"
+      ],
+      "expected_as_specified": {
+        "V": "1.88496e-3 m^3",
+        "m": "14.797 kg",
+        "I": "1.3317 kg*m^2"
+      },
+      "expected_SI": {
+        "V": 0.00188496,
+        "m": 14.797,
+        "I": 1.3317
+      },
+      "actual_SI": {
+        "V": {
+          "value": 0.001884955592153876,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_rim (symbolic)"
+        },
+        "m": {
+          "value": 14.796901398407927,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_rim (symbolic)"
+        },
+        "I": {
+          "value": 1.331721125856713,
+          "unit": "kg*m^2",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_rim (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "V": {
+          "absolute_error": 4.407846123906725e-09,
+          "relative_error": 2.338429528428574e-06,
+          "allowed_absolute_error": 9.424800000000001e-07,
+          "passed": true
+        },
+        "m": {
+          "absolute_error": 9.860159207342178e-05,
+          "relative_error": 6.663620468569425e-06,
+          "allowed_absolute_error": 0.0073985000000000006,
+          "passed": true
+        },
+        "I": {
+          "absolute_error": 2.1125856712878033e-05,
+          "relative_error": 1.5863825721166952e-05,
+          "allowed_absolute_error": 0.0006658500000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = 2 pi R b t = 2 x pi x 0.3 x 0.05 x 0.02 = 1.88496e-3 m^3; m = rho V = 7850 x 1.88496e-3 = 14.797 kg; I = m R^2 = 14.797 x 0.09 = 1.3317 kg\u00b7m^2"
+      }
+    },
+    {
+      "id": "clutches_brakes-025",
+      "calculator": "clutches_brakes.flywheel_torque_angle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "torque_curve": [
+          [
+            0,
+            150
+          ],
+          [
+            180,
+            150
+          ],
+          [
+            180,
+            50
+          ],
+          [
+            360,
+            50
+          ]
+        ]
+      },
+      "solve_for": [
+        "T_mean",
+        "W_max",
+        "W_min",
+        "delta_E",
+        "energy_curve"
+      ],
+      "expected_as_specified": {
+        "T_mean": 100,
+        "W_max": "157.08 J",
+        "W_min": 0,
+        "delta_E": "157.08 J"
+      },
+      "expected_SI": {
+        "T_mean": 100.0,
+        "W_max": 157.08,
+        "W_min": 0.0,
+        "delta_E": 157.08
+      },
+      "actual_SI": {
+        "T_mean": {
+          "value": 100.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_torque_angle (procedure)"
+        },
+        "W_max": {
+          "value": 157.07963267948966,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_torque_angle (procedure)"
+        },
+        "W_min": {
+          "value": 0.0,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_torque_angle (procedure)"
+        },
+        "delta_E": {
+          "value": 157.07963267948966,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc clutches_brakes.flywheel_torque_angle (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T_mean": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.05,
+          "passed": true
+        },
+        "W_max": {
+          "absolute_error": 0.0003673205103496002,
+          "relative_error": 2.338429528581616e-06,
+          "allowed_absolute_error": 0.07854000000000001,
+          "passed": true
+        },
+        "W_min": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "delta_E": {
+          "absolute_error": 0.0003673205103496002,
+          "relative_error": 2.338429528581616e-06,
+          "allowed_absolute_error": 0.07854000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Square-wave turning moment, 150 N\u00b7m over [0, 180\u00b0] and 50 N\u00b7m over [180\u00b0, 360\u00b0]. Mean torque = (150 pi + 50 pi)/(2 pi) = 100 N\u00b7m. Cumulative W(theta) = integral (T - 100) dtheta: rises to (150 - 100) pi = 50 pi at 180\u00b0 then falls back to 0. W_max = 50 pi = 157.08 J, W_min = 0, delta_E = 157.08 J"
+      }
+    }
+  ],
+  "passed": 25,
+  "failed": 0
+}

@@ -1,0 +1,512 @@
+{
+  "section": "turbomachinery",
+  "cases": [
+    {
+      "calc": "turbomachinery.pump_power",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "g": "9.80665 m/s^2",
+        "Q": "50 L/s",
+        "H": "20 m",
+        "eta": 0.75
+      },
+      "expect": {
+        "P_hyd": "9806.65 W",
+        "P_shaft": "13.0755 kW"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "P_hyd = 1000 x 9.80665 x 0.05 x 20 = 9806.65 W; P_shaft = 9806.65/0.75 = 13075.5 W"
+      }
+    },
+    {
+      "calc": "turbomachinery.npsh_available",
+      "inputs": {
+        "fluid": "Water",
+        "T": "300 K",
+        "p_s": "101.325 kPa",
+        "z_s": "3 m",
+        "h_loss": "1.5 m",
+        "rho": "997 kg/m^3",
+        "g": "9.80665 m/s^2"
+      },
+      "expect": {
+        "NPSH_A": "11.5016 m",
+        "p_vap": "3536.81 Pa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "p_vap = 3536.81 Pa (CoolProp, Water @ 300 K); NPSHa = (101325 - 3536.81)/(997 x 9.80665) + 3 - 1.5 = 97788.2/9777.2 + 1.5 = 10.0016 + 1.5 = 11.5016 m"
+      }
+    },
+    {
+      "calc": "turbomachinery.npsh_margin",
+      "inputs": {
+        "NPSH_A": "5.2 m",
+        "NPSH_R": "3.1 m"
+      },
+      "expect": {
+        "margin": "2.1 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "margin = 5.2 - 3.1 = 2.1 m"
+      }
+    },
+    {
+      "calc": "turbomachinery.cavitation_number",
+      "inputs": {
+        "p": "200 kPa",
+        "p_vap": "2339 Pa",
+        "rho": "1000 kg/m^3",
+        "V": "10 m/s"
+      },
+      "expect": {
+        "sigma": 3.95322
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma = (200000 - 2339)/(0.5 x 1000 x 100) = 197661/50000 = 3.95322"
+      }
+    },
+    {
+      "calc": "turbomachinery.cavitation_number",
+      "inputs": {
+        "sigma": 3.95322,
+        "p": "200 kPa",
+        "p_vap": "2339 Pa",
+        "rho": "1000 kg/m^3"
+      },
+      "solve_for": [
+        "V"
+      ],
+      "expect": {
+        "V": "10 m/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = sqrt((p - p_vap)/(0.5 rho sigma)) = sqrt(197661/1976.61) = sqrt(100) = 10 m/s"
+      }
+    },
+    {
+      "calc": "turbomachinery.specific_speed",
+      "inputs": {
+        "omega": "1500 rpm",
+        "Q": "100 L/s",
+        "g": "9.80665 m/s^2",
+        "H": "15 m"
+      },
+      "expect": {
+        "N_s": 1.17601
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = 157.08 rad/s; N_s = 157.08 x sqrt(0.1)/(9.80665 x 15)^(3/4) = 49.673/42.230 = 1.17601"
+      }
+    },
+    {
+      "calc": "turbomachinery.suction_specific_speed",
+      "inputs": {
+        "omega": "1500 rpm",
+        "Q": "100 L/s",
+        "g": "9.80665 m/s^2",
+        "NPSH_R": "2.5 m"
+      },
+      "expect": {
+        "S": 4.50842
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "S = 157.08 x sqrt(0.1)/(9.80665 x 2.5)^(3/4) = 49.673/11.018 = 4.50842"
+      }
+    },
+    {
+      "calc": "turbomachinery.affinity_laws",
+      "inputs": {
+        "Q1": "0.1 m^3/s",
+        "H1": "20 m",
+        "P1": "30 kW",
+        "omega1": "1450 rpm",
+        "omega2": "1750 rpm",
+        "D1": "0.3 m",
+        "D2": "0.3 m",
+        "rho1": "1000 kg/m^3",
+        "rho2": "1000 kg/m^3"
+      },
+      "expect": {
+        "Q2": "0.120690 m^3/s",
+        "H2": "29.1320 m",
+        "P2": "52.7389 kW"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 1750/1450 = 1.20690, D2/D1 = 1, rho2/rho1 = 1; Q2 = 0.1 r = 0.120690; H2 = 20 r^2 = 29.1320; P2 = 30000 r^3 = 52738.9 W"
+      }
+    },
+    {
+      "calc": "turbomachinery.affinity_laws",
+      "inputs": {
+        "Q1": "0.1 m^3/s",
+        "H1": "20 m",
+        "P1": "30 kW",
+        "omega1": "1450 rpm",
+        "omega2": "1450 rpm",
+        "D1": "0.3 m",
+        "D2": "0.6 m",
+        "rho1": "1000 kg/m^3",
+        "rho2": "1000 kg/m^3"
+      },
+      "expect": {
+        "Q2": "0.8 m^3/s",
+        "H2": "80 m",
+        "P2": "960 kW"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "D2/D1 = 2 at constant speed and density: Q2 = Q1 x 2^3 = 0.8; H2 = H1 x 2^2 = 80; P2 = P1 x 2^5 = 30000 x 32 = 960000 W"
+      }
+    },
+    {
+      "calc": "turbomachinery.system_curve",
+      "inputs": {
+        "H_static": "20 m",
+        "K": "500 s^2/m^5",
+        "Q": "100 L/s"
+      },
+      "expect": {
+        "H_sys": "25 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "H_sys = 20 + 500 x 0.01 = 25 m"
+      }
+    },
+    {
+      "calc": "turbomachinery.system_curve",
+      "inputs": {
+        "H_sys": "25 m",
+        "H_static": "20 m",
+        "K": "500 s^2/m^5"
+      },
+      "solve_for": [
+        "Q"
+      ],
+      "expect": {
+        "Q": "0.1 m^3/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = sqrt((H_sys - H_static)/K) = sqrt(5/500) = sqrt(0.01) = 0.1 m^3/s"
+      }
+    },
+    {
+      "calc": "turbomachinery.operating_point",
+      "inputs": {
+        "pump_curve": [
+          [
+            0.0,
+            50.0
+          ],
+          [
+            0.05,
+            45.0
+          ],
+          [
+            0.1,
+            35.0
+          ],
+          [
+            0.15,
+            20.0
+          ]
+        ],
+        "H_static": "20 m",
+        "K": "500 s^2/m^5"
+      },
+      "expect": {
+        "Q_op": "0.124264 m^3/s",
+        "H_op": "27.7208 m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "In Q in [0.1, 0.15] the pump line is H = 65 - 300 Q; set 65 - 300 Q = 20 + 500 Q^2 -> 500 Q^2 + 300 Q - 45 = 0 -> Q = (-300 + sqrt(90000 + 90000))/1000 = 0.124264 m^3/s; H = 20 + 500 x 0.124264^2 = 27.7208 m"
+      }
+    },
+    {
+      "calc": "turbomachinery.pumps_series_parallel",
+      "inputs": {
+        "n_pumps": 3,
+        "H1": "15 m",
+        "Q1": "80 L/s"
+      },
+      "expect": {
+        "H_series": "45 m",
+        "Q_parallel": "0.24 m^3/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "series: 3 x 15 = 45 m; parallel: 3 x 0.08 = 0.24 m^3/s"
+      }
+    },
+    {
+      "calc": "turbomachinery.euler_turbomachine",
+      "inputs": {
+        "u1": "20 m/s",
+        "vu1": "4 m/s",
+        "u2": "40 m/s",
+        "vu2": "30 m/s",
+        "g": "9.80665 m/s^2"
+      },
+      "expect": {
+        "w_euler": "1120 J/kg",
+        "H_euler": "114.208 m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "w = 40 x 30 - 20 x 4 = 1120 J/kg; H = 1120/9.80665 = 114.208 m"
+      }
+    },
+    {
+      "calc": "turbomachinery.velocity_triangle",
+      "inputs": {
+        "U": "30 m/s",
+        "V": "50 m/s",
+        "alpha": "40 deg"
+      },
+      "expect": {
+        "Vu": "38.3022 m/s",
+        "Vm": "32.1394 m/s",
+        "Wu": "8.30222 m/s",
+        "W": "33.1944 m/s",
+        "beta": "75.5160 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Vu = 50 cos40 = 38.3022; Vm = 50 sin40 = 32.1394; Wu = 38.3022 - 30 = 8.30222; W = sqrt(32.1394^2 + 8.30222^2) = 33.1944; beta = atan2(32.1394, 8.30222) = 75.5160 deg"
+      }
+    },
+    {
+      "calc": "turbomachinery.degree_of_reaction",
+      "inputs": {
+        "h1": "3 MJ/kg",
+        "h2": "3.5 MJ/kg",
+        "h3": "4 MJ/kg"
+      },
+      "expect": {
+        "R": 0.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = (3.5 - 3)/(4 - 3) = 0.5"
+      }
+    },
+    {
+      "calc": "turbomachinery.turbine_power",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "g": "9.80665 m/s^2",
+        "Q": "2 m^3/s",
+        "H": "120 m",
+        "eta": 0.88
+      },
+      "expect": {
+        "P": "2.07116 MW"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = 1000 x 9.80665 x 2 x 120 x 0.88 = 2.07116e6 W"
+      }
+    },
+    {
+      "calc": "turbomachinery.turbine_specific_speed",
+      "inputs": {
+        "omega": "300 rpm",
+        "P": "1 MW",
+        "rho": "1000 kg/m^3",
+        "g": "9.80665 m/s^2",
+        "H": "60 m"
+      },
+      "expect": {
+        "N_s": 0.342815
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = 31.4159 rad/s; N_s = 31.4159 x sqrt(1000)/(9.80665 x 60)^(5/4) = 993.46/2898.3 = 0.342815"
+      }
+    },
+    {
+      "calc": "turbomachinery.compressor",
+      "inputs": {
+        "cp": "1005 J/(kg*K)",
+        "gamma": 1.4,
+        "T1": "300 K",
+        "P2": "800 kPa",
+        "P1": "100 kPa",
+        "w_actual": "245 kJ/kg"
+      },
+      "expect": {
+        "T2s": "543.434 K",
+        "w_s": "244.651 kJ/kg",
+        "eta_c": 0.998577
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "T2s = 300 x 8^(0.4/1.4) = 300 x 1.81145 = 543.434 K; w_s = 1005 x 243.434 = 244651 J/kg; eta_c = 244651/245000 = 0.998577"
+      }
+    },
+    {
+      "calc": "turbomachinery.fan_laws",
+      "inputs": {
+        "Q1": "2 m^3/s",
+        "dp1": "500 Pa",
+        "P1": "2 kW",
+        "omega1": "1000 rpm",
+        "omega2": "1200 rpm"
+      },
+      "expect": {
+        "Q2": "2.4 m^3/s",
+        "dp2": "720 Pa",
+        "P2": "3.456 kW"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 1.2; Q2 = 2 x 1.2 = 2.4; dp2 = 500 x 1.44 = 720; P2 = 2000 x 1.728 = 3456 W"
+      }
+    },
+    {
+      "calc": "turbomachinery.fan_total_pressure",
+      "inputs": {
+        "p_s": "400 Pa",
+        "rho": "1.2 kg/m^3",
+        "V": "20 m/s"
+      },
+      "expect": {
+        "p_t": "640 Pa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "p_t = 400 + 0.5 x 1.2 x 400 = 640 Pa"
+      }
+    },
+    {
+      "calc": "turbomachinery.wind_turbine_power",
+      "inputs": {
+        "rho": "1.225 kg/m^3",
+        "A": "500 m^2",
+        "V": "10 m/s",
+        "Cp": 0.45
+      },
+      "expect": {
+        "P": "137.8125 kW"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = 0.5 x 1.225 x 500 x 1000 x 0.45 = 306250 x 0.45 = 137812.5 W"
+      }
+    },
+    {
+      "calc": "turbomachinery.betz_limit",
+      "inputs": {
+        "rho": "1.225 kg/m^3",
+        "A": "500 m^2",
+        "V": "10 m/s"
+      },
+      "expect": {
+        "P_betz": "181.481 kW"
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "Betz limit landmark: Cp,max = 16/27. P_betz = (16/27) x 0.5 x 1.225 x 500 x 1000 = (16/27) x 306250 = 181481 W (recalled; not re-read)"
+      }
+    },
+    {
+      "calc": "turbomachinery.tip_speed_ratio",
+      "inputs": {
+        "omega": "20 rpm",
+        "R": "25 m",
+        "V": "10 m/s"
+      },
+      "expect": {
+        "TSR": 5.23599
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = 2.09440 rad/s; TSR = 2.09440 x 25/10 = 5.23599"
+      }
+    },
+    {
+      "calc": "turbomachinery.propeller",
+      "inputs": {
+        "mdot": "20 kg/s",
+        "V_e": "60 m/s",
+        "V_0": "40 m/s",
+        "P_shaft": "20 kW"
+      },
+      "expect": {
+        "T": "400 N",
+        "eta_p": 0.8
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T = 20 x (60 - 40) = 400 N; eta_p = 400 x 40/20000 = 0.8"
+      }
+    },
+    {
+      "calc": "turbomachinery.froude_efficiency",
+      "inputs": {
+        "V_e": "60 m/s",
+        "V_0": "40 m/s"
+      },
+      "expect": {
+        "eta_ideal": 0.8
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "eta_ideal = 2/(1 + 60/40) = 2/2.5 = 0.8"
+      }
+    },
+    {
+      "calc": "turbomachinery.pelton_optimum",
+      "inputs": {
+        "V": "60 m/s"
+      },
+      "expect": {
+        "u": "30 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "u = V/2 = 60/2 = 30 m/s"
+      }
+    },
+    {
+      "calc": "turbomachinery.froude_efficiency",
+      "inputs": {
+        "V_e": "30 m/s",
+        "V_0": "0 m/s"
+      },
+      "expect": {
+        "eta_ideal": 0.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Static thrust (V_0 = 0): η = 2·V_0/(V_0 + V_e) = 0"
+      }
+    }
+  ]
+}

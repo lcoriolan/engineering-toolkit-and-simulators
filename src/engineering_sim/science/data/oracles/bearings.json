@@ -1,0 +1,330 @@
+{
+  "section": "bearings",
+  "cases": [
+    {
+      "calc": "bearings.rolling_load",
+      "inputs": {
+        "X": 0.56,
+        "V": 1,
+        "Fr": "5 kN",
+        "Y": 1.5,
+        "Fa": "2 kN"
+      },
+      "expect": {
+        "P": "5.8 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P = X V Fr + Y Fa = 0.56*1*5000 + 1.5*2000 = 2800 + 3000 = 5800 N"
+      }
+    },
+    {
+      "calc": "bearings.rolling_load",
+      "inputs": {
+        "P": "5.8 kN",
+        "X": 0.56,
+        "V": 1,
+        "Y": 1.5,
+        "Fa": "2 kN"
+      },
+      "solve_for": [
+        "Fr"
+      ],
+      "expect": {
+        "Fr": "5 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Fr = (P - Y Fa)/(X V) = (5800 - 3000)/0.56 = 2800/0.56 = 5000 N"
+      }
+    },
+    {
+      "calc": "bearings.bearing_life",
+      "inputs": {
+        "C": "50 kN",
+        "P": "5 kN",
+        "a": 3,
+        "n": "1800 1/min"
+      },
+      "expect": {
+        "L10": 1000,
+        "L10h": "9259.259 h"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L10 = (50000/5000)^3 = 10^3 = 1000 million rev. n = 1800/60 = 30 rev/s; L10h = 1000e6/(3600*30) = 1e9/108000 = 9259.259 h"
+      }
+    },
+    {
+      "calc": "bearings.bearing_life",
+      "inputs": {
+        "P": "5 kN",
+        "a": 3,
+        "n": "1800 1/min",
+        "L10h": "9259.259 h"
+      },
+      "solve_for": [
+        "C"
+      ],
+      "expect": {
+        "C": "50 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: L10 = L10h*3600*n/1e6 = 9259.259*108000/1e6 = 1000; C = P*L10^(1/a) = 5000*10 = 50000 N"
+      }
+    },
+    {
+      "calc": "bearings.bearing_reliability_life",
+      "inputs": {
+        "a1": 0.62,
+        "L10": 1000
+      },
+      "expect": {
+        "L_na": 620
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L_na = a1*L10 = 0.62*1000 = 620 million rev (a1 = 0.62 is the ISO 281 factor for 95% reliability)"
+      }
+    },
+    {
+      "calc": "bearings.weibull_reliability",
+      "inputs": {
+        "L": 1000,
+        "x0": 0,
+        "theta": 1000,
+        "b": 1.5
+      },
+      "expect": {
+        "R": 0.367879
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: at L = theta (with x0 = 0) the Weibull survival probability is R = e^-1 = 0.36788 for ANY shape b, because (L/theta)^b = 1. Not re-read; standard Weibull result."
+      }
+    },
+    {
+      "calc": "bearings.weibull_reliability",
+      "inputs": {
+        "R": 0.367879,
+        "x0": 0,
+        "theta": 1000,
+        "b": 1.5
+      },
+      "solve_for": [
+        "L"
+      ],
+      "expect": {
+        "L": 1000
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = e^-1 gives -ln R = 1, so (L - x0)/(theta - x0) = 1^(1/b) = 1 and L = theta = 1000"
+      }
+    },
+    {
+      "calc": "bearings.static_load",
+      "inputs": {
+        "X0": 0.6,
+        "Fr": "5 kN",
+        "Y0": 0.5,
+        "Fa": "0 N",
+        "C0": "20 kN"
+      },
+      "expect": {
+        "P0": "5 kN",
+        "s0": 4
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ISO 76 max: X0 Fr + Y0 Fa = 0.6*5000 + 0.5*0 = 3000 N < Fr = 5000 N, so P0 = max(3000, 5000) = 5000 N (the Fr branch of the max, the case the old formula got wrong); s0 = C0/P0 = 20000/5000 = 4"
+      }
+    },
+    {
+      "calc": "bearings.static_load",
+      "inputs": {
+        "P0": "6 kN",
+        "Fr": "5 kN",
+        "Y0": 1.5,
+        "Fa": "2 kN",
+        "C0": "20 kN"
+      },
+      "solve_for": [
+        "X0",
+        "s0"
+      ],
+      "expect": {
+        "X0": 0.6,
+        "s0": 3.33333
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Combined branch: X0 Fr + Y0 Fa = 0.6*5000 + 1.5*2000 = 3000 + 3000 = 6000 N > Fr = 5000 N, so P0 = X0*5000 + 3000 = 6000 -> X0 = (6000 - 3000)/5000 = 0.6; s0 = C0/P0 = 20000/6000 = 3.3333"
+      }
+    },
+    {
+      "calc": "bearings.sommerfeld",
+      "inputs": {
+        "mu": "0.03 Pa*s",
+        "n": "1200 1/min",
+        "r": "25 mm",
+        "c": "50 um",
+        "L": "50 mm",
+        "W": "5 kN"
+      },
+      "expect": {
+        "P": "2 MPa",
+        "S": 0.075
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P = 5000/(2*0.025*0.05) = 2e6 Pa; r/c = 0.025/5e-5 = 500; S = 0.03*20*500^2/2e6 = 0.03*20*250000/2e6 = 0.075"
+      }
+    },
+    {
+      "calc": "bearings.sommerfeld",
+      "inputs": {
+        "S": 0.075,
+        "n": "1200 1/min",
+        "r": "25 mm",
+        "c": "50 um",
+        "L": "50 mm",
+        "W": "5 kN"
+      },
+      "solve_for": [
+        "mu",
+        "P"
+      ],
+      "expect": {
+        "mu": "0.03 Pa*s",
+        "P": "2 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P = W/(2 r L) = 5000/(2*0.025*0.05) = 2e6 Pa; mu = S*P/(n*(r/c)^2) = 0.075*2e6/(20*500^2) = 150000/5e6 = 0.03 Pa.s"
+      }
+    },
+    {
+      "calc": "bearings.petroff",
+      "inputs": {
+        "mu": "0.03 Pa*s",
+        "n": "1200 1/min",
+        "r": "25 mm",
+        "c": "50 um",
+        "L": "50 mm",
+        "W": "5 kN"
+      },
+      "expect": {
+        "P": "2 MPa",
+        "f": 0.0029609,
+        "T_f": "0.37011 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "f = 2*pi^2*mu*n*(r/c)/P = 2*9.8696*0.03*20*500/2e6 = 19.7392*0.03*20*500/2e6 = 5921.76/2e6 = 0.0029609; T_f = f*W*r = 0.0029609*5000*0.025 = 0.37011 N.m (check 4*pi^2*0.03*20*0.025^3*0.05/5e-5)"
+      }
+    },
+    {
+      "calc": "bearings.journal_min_film",
+      "inputs": {
+        "e": "30 um",
+        "c": "50 um"
+      },
+      "expect": {
+        "eps": 0.6,
+        "h0": "20 um"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "eps = e/c = 30/50 = 0.6; h0 = c - e = 50 - 30 = 20 um"
+      }
+    },
+    {
+      "calc": "bearings.journal_power_loss",
+      "inputs": {
+        "f": 0.003,
+        "W": "5 kN",
+        "r": "25 mm",
+        "n": "1200 1/min"
+      },
+      "expect": {
+        "H": "47.124 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "H = f*W*2*pi*r*n = 0.003*5000*2*pi*0.025*20 = 0.003*5000*pi = 15*pi = 47.124 W"
+      }
+    },
+    {
+      "calc": "bearings.journal_temp_rise",
+      "inputs": {
+        "H": "47.124 W",
+        "rho": "850 kg/m^3",
+        "cp": "1900 J/(kg*K)",
+        "Q": "50 mL/s"
+      },
+      "expect": {
+        "dT": "0.58358 K"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = 50e-6 m^3/s; dT = H/(rho*cp*Q) = 47.124/(850*1900*50e-6) = 47.124/80.75 = 0.58358 K"
+      }
+    },
+    {
+      "calc": "bearings.journal_oil_flow",
+      "inputs": {
+        "q_f": 4.3,
+        "r": "25 mm",
+        "c": "50 um",
+        "n": "1200 1/min",
+        "L": "50 mm"
+      },
+      "expect": {
+        "Q": "5.375e-6 m^3/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = q_f*r*c*n*L = 4.3*0.025*5e-5*20*0.05 = 4.3*1.25e-6 = 5.375e-6 m^3/s"
+      }
+    },
+    {
+      "calc": "bearings.thrust_bearing_load",
+      "inputs": {
+        "p_allow": "2 MPa",
+        "d_o": "60 mm",
+        "d_i": "20 mm"
+      },
+      "expect": {
+        "A": "0.0025133 m^2",
+        "W": "5026.55 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "A = pi/4*(0.06^2 - 0.02^2) = pi/4*0.0032 = 0.0025133 m^2; W = p_allow*A = 2e6*0.0025133 = 5026.55 N"
+      }
+    },
+    {
+      "calc": "bearings.thrust_bearing_load",
+      "inputs": {
+        "p_allow": "2 MPa",
+        "d_i": "20 mm",
+        "W": "5026.55 N"
+      },
+      "solve_for": [
+        "d_o",
+        "A"
+      ],
+      "expect": {
+        "d_o": "60 mm",
+        "A": "0.0025133 m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "A = W/p_allow = 5026.55/2e6 = 0.0025133 m^2; d_o = sqrt(4*A/pi + d_i^2) = sqrt(4*0.0025133/pi + 0.0004) = sqrt(0.0032 + 0.0004) = 0.06 m"
+      }
+    }
+  ]
+}

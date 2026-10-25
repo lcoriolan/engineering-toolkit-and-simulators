@@ -1,0 +1,483 @@
+{
+  "section": "statics",
+  "cases": [
+    {
+      "calc": "statics.moment",
+      "inputs": {
+        "F": "2.5 kN",
+        "d": "120 mm"
+      },
+      "expect": {
+        "M": "300 N*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "M = F d = 2500 N x 0.120 m = 300 N·m"
+      }
+    },
+    {
+      "calc": "statics.moment",
+      "inputs": {
+        "M": "300 N*m",
+        "d": "0.12 m"
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expect": {
+        "F": "2500 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = M/d = 300/0.12 = 2500 N"
+      }
+    },
+    {
+      "calc": "statics.force_components",
+      "inputs": {
+        "F": "500 N",
+        "theta": "30 deg"
+      },
+      "expect": {
+        "Fx": "433.0127 N",
+        "Fy": "250 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Fx = 500 cos30° = 500(0.866025) = 433.013 N; Fy = 500 sin30° = 250 N"
+      }
+    },
+    {
+      "calc": "statics.resultant_two",
+      "inputs": {
+        "F1": "300 N",
+        "F2": "400 N",
+        "gamma": "60 deg"
+      },
+      "expect": {
+        "R": "608.2763 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = sqrt(300² + 400² + 2·300·400·cos60°) = sqrt(90000+160000+120000) = sqrt(370000) = 608.276 N"
+      }
+    },
+    {
+      "calc": "statics.resultant_coplanar",
+      "inputs": {
+        "forces": [
+          [
+            100,
+            0,
+            0,
+            1
+          ],
+          [
+            200,
+            90,
+            2,
+            0
+          ],
+          [
+            150,
+            225,
+            1,
+            1
+          ]
+        ]
+      },
+      "expect": {
+        "Rx": "-6.0660 N",
+        "Ry": "93.9340 N",
+        "M_O": "300 N*m"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "150 N at 225°: (-106.066, -106.066). Rx = 100 - 106.066 = -6.066; Ry = 200 - 106.066 = 93.934. M_O = Σ(x Fy - y Fx) = (0-1·100) + (2·200) + (1·(-106.066) - 1·(-106.066)) = -100 + 400 + 0 = 300 N·m"
+      }
+    },
+    {
+      "calc": "statics.simple_beam_reactions",
+      "inputs": {
+        "P": "10 kN",
+        "a": "1.5 m",
+        "L": "4 m"
+      },
+      "expect": {
+        "R_A": "6.25 kN",
+        "R_B": "3.75 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ΣM_B: R_A·4 = 10·2.5 → R_A = 6.25 kN; R_B = 10 - 6.25 = 3.75 kN"
+      }
+    },
+    {
+      "calc": "statics.rigid_body_3",
+      "inputs": {
+        "loads": [
+          [
+            0,
+            -1000,
+            2,
+            0
+          ]
+        ],
+        "couples": [],
+        "unknowns": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            90,
+            0,
+            0
+          ],
+          [
+            90,
+            3,
+            0
+          ]
+        ]
+      },
+      "expect": {
+        "reactions": [
+          0.0,
+          333.3333,
+          666.6667
+        ]
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Beam pinned at x=0, roller at x=3, 1000 N down at x=2. ΣM_0: 3 R_B = 2000 → 666.667 N; ΣFy: R_A = 1000 - 666.667 = 333.333 N; ΣFx: 0"
+      }
+    },
+    {
+      "calc": "statics.truss",
+      "inputs": {
+        "nodes": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "members": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "x"
+          ],
+          [
+            0,
+            "y"
+          ],
+          [
+            1,
+            "y"
+          ]
+        ],
+        "loads": [
+          [
+            2,
+            0,
+            -12000
+          ]
+        ]
+      },
+      "expect": {
+        "member_forces": [
+          4000.0,
+          -7211.1026,
+          -7211.1026
+        ],
+        "max_compression": "7211.1026 N"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Symmetric: R = 6000 N each. Apex: 2 F (3/√13) = 12000 → F = 2000√13 = 7211.10 N compression in each rafter. Joint 0: chord T = F (2/√13) = 4000 N tension"
+      }
+    },
+    {
+      "calc": "statics.distributed_load",
+      "inputs": {
+        "w1": "2 kN/m",
+        "w2": "5 kN/m",
+        "L": "3 m"
+      },
+      "expect": {
+        "W": "10.5 kN",
+        "x_bar": "1.7142857 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "W = (2+5)·3/2 = 10.5 kN; x̄ = 3(2 + 10)/(3·7) = 36/21 = 1.71429 m"
+      }
+    },
+    {
+      "calc": "statics.friction",
+      "inputs": {
+        "mu": 0.35,
+        "N": "800 N"
+      },
+      "expect": {
+        "F": "280 N",
+        "phi": "0.3366748 rad"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 0.35·800 = 280 N; φ = atan(0.35) = 19.29° = 0.33667 rad"
+      }
+    },
+    {
+      "calc": "statics.friction",
+      "inputs": {
+        "F": "280 N",
+        "N": "800 N"
+      },
+      "solve_for": [
+        "mu",
+        "phi"
+      ],
+      "expect": {
+        "mu": 0.35
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "μ = F/N = 280/800 = 0.35"
+      }
+    },
+    {
+      "calc": "statics.incline_push",
+      "inputs": {
+        "W": "500 N",
+        "alpha": "25 deg",
+        "mu": 0.3
+      },
+      "expect": {
+        "P_up": "347.2553 N",
+        "P_hold": "75.3630 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "sin25° = 0.422618, cos25° = 0.906308. P_up = 500(0.422618 + 0.271892) = 347.255 N; P_hold = 500(0.422618 - 0.271892) = 75.363 N"
+      }
+    },
+    {
+      "calc": "statics.incline_push",
+      "inputs": {
+        "W": "500 N",
+        "mu": 0.3,
+        "P_hold": "0 N"
+      },
+      "solve_for": [
+        "alpha",
+        "P_up"
+      ],
+      "expect": {
+        "alpha": "16.69924 deg"
+      },
+      "abs_tol": 1e-06,
+      "source": {
+        "kind": "hand",
+        "derivation": "Onset of sliding: tan α = μ → α = atan(0.3) = 16.699°"
+      }
+    },
+    {
+      "calc": "statics.belt_friction",
+      "inputs": {
+        "T2": "100 N",
+        "mu": 0.3,
+        "theta": "180 deg"
+      },
+      "expect": {
+        "T1": "256.6332 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T1 = 100 e^(0.3π) = 100 e^0.942478 = 100·2.566332 = 256.633 N"
+      }
+    },
+    {
+      "calc": "statics.belt_friction",
+      "inputs": {
+        "T1": "256.6332 N",
+        "T2": "100 N",
+        "theta": "3.14159265 rad"
+      },
+      "solve_for": [
+        "mu"
+      ],
+      "expect": {
+        "mu": 0.3
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "μ = ln(T1/T2)/θ = ln(2.566332)/π = 0.942478/3.141593 = 0.3000"
+      }
+    },
+    {
+      "calc": "statics.vbelt_friction",
+      "inputs": {
+        "T2": "100 N",
+        "mu": 0.3,
+        "theta": "180 deg",
+        "beta": "36 deg"
+      },
+      "expect": {
+        "T1": "2111.370 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "sin18° = 0.309017; exponent = 0.3π/0.309017 = 3.049935; e^3.049935 = 21.1137 → T1 = 2111.37 N"
+      }
+    },
+    {
+      "calc": "statics.wedge",
+      "inputs": {
+        "W": "5 kN",
+        "alpha": "10 deg",
+        "phi": "14.036243 deg"
+      },
+      "expect": {
+        "P": "3479.934 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "φ = atan 0.25 = 14.0362°; tan φ = 0.25; tan(24.0362°) = 0.445987; P = 5000(0.25 + 0.445987) = 3479.93 N"
+      }
+    },
+    {
+      "calc": "statics.screw_jack",
+      "inputs": {
+        "W": "20 kN",
+        "r_m": "15 mm",
+        "l": "6 mm",
+        "mu": 0.15
+      },
+      "expect": {
+        "T_raise": "64.7166 N*m",
+        "T_lower": "25.6564 N*m",
+        "lam": "3.64265 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "λ = atan(6/(2π·15)) = atan(0.063662) = 3.6426°; φ = atan 0.15 = 8.5308°; T_r = 20000·0.015·tan(12.1734°) = 300·0.215722 = 64.717 N·m; T_l = 300·tan(4.8882°) = 300·0.085521 = 25.656 N·m"
+      }
+    },
+    {
+      "calc": "statics.cable_parabolic",
+      "inputs": {
+        "w": "2 kN/m",
+        "L": "100 m",
+        "h": "8 m"
+      },
+      "expect": {
+        "T0": "312.5 kN",
+        "T_max": "328.1101 kN",
+        "s": "101.68045 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T0 = 2000·100²/(8·8) = 312500 N; Tmax = sqrt(312500² + 100000²) = 328110 N; s = 100(1 + (8/3)(0.0064) - 6.4(0.00004096)) = 100(1 + 0.0170667 - 0.00026214) = 101.6805 m"
+      }
+    },
+    {
+      "calc": "statics.cable_catenary",
+      "inputs": {
+        "w": "50 N/m",
+        "L": "100 m",
+        "h": "10 m"
+      },
+      "expect": {
+        "c": "126.632 m",
+        "T0": "6331.6 N",
+        "T_max": "6831.6 N"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Solve 10 = c(cosh(50/c) - 1) by iteration: c = 126.63 m (check: 50/126.63 = 0.39485, cosh = 1.07897 → 126.63·0.07897 = 10.00). T0 = 50·126.63 = 6331.6 N; Tmax = 50(126.63 + 10) = 6831.6 N"
+      }
+    },
+    {
+      "calc": "statics.composite_centroid",
+      "inputs": {
+        "parts": [
+          [
+            0.02,
+            0.1,
+            0.05,
+            0
+          ],
+          [
+            0.01,
+            0.25,
+            0.1,
+            0
+          ],
+          [
+            -0.002,
+            0.1,
+            0.05,
+            0
+          ]
+        ]
+      },
+      "expect": {
+        "W_total": 0.028,
+        "x_bar": "0.1535714 m",
+        "y_bar": "0.0678571 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ΣA = 0.028; ΣAx = 0.002 + 0.0025 - 0.0002 = 0.0043 → x̄ = 0.153571; ΣAy = 0.001 + 0.001 - 0.0001 = 0.0019 → ȳ = 0.067857"
+      }
+    },
+    {
+      "calc": "statics.mechanical_advantage",
+      "inputs": {
+        "F_out": "1 kN",
+        "F_in": "120 N",
+        "d_in": "1 m",
+        "d_out": "100 mm"
+      },
+      "expect": {
+        "MA": 8.333333,
+        "VR": 10,
+        "eta": 0.8333333
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "MA = 1000/120 = 8.3333; VR = 1/0.1 = 10; η = 8.3333/10 = 0.83333"
+      }
+    }
+  ]
+}

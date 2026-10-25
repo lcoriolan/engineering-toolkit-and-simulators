@@ -1,0 +1,952 @@
+{
+  "section": "materials_mech",
+  "cases": [
+    {
+      "calc": "materials_mech.normal_stress",
+      "inputs": {
+        "P": "25 kN",
+        "A": "500 mm^2"
+      },
+      "expect": {
+        "sigma": "50 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ = 25000/500e-6 = 50e6 Pa"
+      }
+    },
+    {
+      "calc": "materials_mech.shear_stress",
+      "inputs": {
+        "V": "8 kN",
+        "A": "157.0796 mm^2"
+      },
+      "expect": {
+        "tau": "50.9296 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "10 mm pin in double shear: A = 2·π·5² = 157.08 mm²; τ = 8000/157.08e-6 = 50.93 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.bearing_stress",
+      "inputs": {
+        "P": "8 kN",
+        "t": "6 mm",
+        "d": "10 mm"
+      },
+      "expect": {
+        "sigma_b": "133.333 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σb = 8000/(0.006·0.010) = 133.33 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.normal_strain",
+      "inputs": {
+        "delta": "0.6 mm",
+        "L": "1.2 m"
+      },
+      "expect": {
+        "eps": 0.0005
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ε = 0.0006/1.2 = 500 µε"
+      }
+    },
+    {
+      "calc": "materials_mech.elastic_constants",
+      "inputs": {
+        "E": "200 GPa",
+        "nu": 0.29
+      },
+      "expect": {
+        "G": "77.5194 GPa",
+        "K": "158.7302 GPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "G = 200/(2·1.29) = 77.519 GPa; K = 200/(3·0.42) = 158.730 GPa"
+      }
+    },
+    {
+      "calc": "materials_mech.elastic_constants",
+      "inputs": {
+        "G": "80 GPa",
+        "E": "208 GPa"
+      },
+      "solve_for": [
+        "nu",
+        "K"
+      ],
+      "expect": {
+        "nu": 0.3
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ν = E/2G − 1 = 208/160 − 1 = 0.30"
+      }
+    },
+    {
+      "calc": "materials_mech.hooke_3d",
+      "inputs": {
+        "sx": "100 MPa",
+        "sy": "-40 MPa",
+        "sz": "20 MPa",
+        "E": "200 GPa",
+        "nu": 0.3
+      },
+      "expect": {
+        "eps_x": 0.00053,
+        "eps_y": -0.00038,
+        "eps_z": 1e-05
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "εx = (100 − 0.3(−20))/200000 = 106/200000 = 530 µε; εy = (−40 − 0.3·120)/200000 = −380 µε; εz = (20 − 0.3·60)/200000 = 10 µε"
+      }
+    },
+    {
+      "calc": "materials_mech.volumetric_strain",
+      "inputs": {
+        "sx": "100 MPa",
+        "sy": "-40 MPa",
+        "sz": "20 MPa",
+        "E": "200 GPa",
+        "nu": 0.3
+      },
+      "expect": {
+        "e_v": 0.00016
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "e = (1 − 0.6)(80 MPa)/200 GPa = 0.4·80/200000 = 160 µε (equals εx+εy+εz = 530 − 380 + 10)"
+      }
+    },
+    {
+      "calc": "materials_mech.shear_strain",
+      "inputs": {
+        "tau": "60 MPa",
+        "G": "77 GPa"
+      },
+      "expect": {
+        "gamma": 0.000779221
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "γ = 60/77000 = 7.792e-4 rad"
+      }
+    },
+    {
+      "calc": "materials_mech.axial_deformation",
+      "inputs": {
+        "P": "50 kN",
+        "L": "2 m",
+        "A": "400 mm^2",
+        "E": "200 GPa"
+      },
+      "expect": {
+        "delta": "1.25 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "δ = 50000·2/(400e-6·200e9) = 100000/80e6 = 1.25e-3 m"
+      }
+    },
+    {
+      "calc": "materials_mech.thermal_deformation",
+      "inputs": {
+        "alpha": "12e-6 1/K",
+        "dT": "60 delta_degC",
+        "L": "3 m",
+        "E": "200 GPa"
+      },
+      "expect": {
+        "delta_T": "2.16 mm",
+        "sigma_T": "-144 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "δ = 12e-6·60·3 = 2.16e-3 m; σ = −200e9·12e-6·60 = −144 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.torsion_circular",
+      "inputs": {
+        "T": "500 N*m",
+        "L": "1 m",
+        "G": "79.3 GPa",
+        "d_o": "40 mm",
+        "d_i": "0 mm"
+      },
+      "expect": {
+        "tau_max": "39.7887 MPa",
+        "theta": "0.0250875 rad"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "J = π·0.04⁴/32 = 2.5133e-7 m⁴; τ = 16T/πd³ = 16·500/(π·6.4e-5) = 39.789 MPa; θ = 500/(79.3e9·2.5133e-7) = 0.025088 rad"
+      }
+    },
+    {
+      "calc": "materials_mech.torsion_circular",
+      "inputs": {
+        "T": "800 N*m",
+        "L": "1 m",
+        "G": "79.3 GPa",
+        "d_o": "50 mm",
+        "d_i": "40 mm"
+      },
+      "expect": {
+        "tau_max": "55.2082 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "J = π(0.05⁴ − 0.04⁴)/32 = π(6.25e-6 − 2.56e-6)/32 = 3.6226e-7; τ = 800·0.025/3.6226e-7 = 55.21 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.torsion_circular",
+      "inputs": {
+        "T": "500 N*m",
+        "L": "1 m",
+        "G": "79.3 GPa",
+        "d_i": "0 mm",
+        "tau_max": "39.7887 MPa"
+      },
+      "solve_for": [
+        "d_o",
+        "theta",
+        "J"
+      ],
+      "expect": {
+        "d_o": "40 mm"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse of the case above: d = (16T/πτ)^(1/3) = (8000/(π·39.7887e6))^(1/3) = (6.4e-5)^(1/3) = 0.040 m"
+      }
+    },
+    {
+      "calc": "materials_mech.shaft_power",
+      "inputs": {
+        "T": "150 N*m",
+        "omega": "1500 rpm"
+      },
+      "expect": {
+        "P": "23.5619 kW"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P = Tω = 150·(1500·2π/60) = 150·157.08 = 23562 W"
+      }
+    },
+    {
+      "calc": "materials_mech.shaft_power",
+      "inputs": {
+        "P": "10 hp",
+        "omega": "1750 rpm"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expect": {
+        "T": "40.7055 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "10 hp = 7456.99 W; ω = 183.26 rad/s; T = 7456.99/183.26 = 40.706 N·m"
+      }
+    },
+    {
+      "calc": "materials_mech.torsion_thin_closed",
+      "inputs": {
+        "T": "2 kN*m",
+        "t": "3 mm",
+        "A_m": "0.005 m^2",
+        "s": "0.3 m",
+        "L": "2 m",
+        "G": "26 GPa"
+      },
+      "expect": {
+        "tau": "66.6667 MPa",
+        "theta": "0.153846 rad"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "100×50 mm mid-line box: τ = 2000/(2·0.003·0.005) = 66.67 MPa; θ = 2000·2·0.3/(4·0.005²·26e9·0.003) = 1200/7800 = 0.15385 rad"
+      }
+    },
+    {
+      "calc": "materials_mech.torsion_rectangle",
+      "inputs": {
+        "T": "10 N*m",
+        "w": "20 mm",
+        "t": "20 mm",
+        "L": "1 m",
+        "G": "79.3 GPa"
+      },
+      "expect": {
+        "tau_max": "6.0125 MPa"
+      },
+      "rel_tol": 0.005,
+      "source": {
+        "kind": "cited",
+        "ref": "Exact Saint-Venant square-bar result τmax = T/(0.208 a³) (Timoshenko & Goodier; recalled, not re-read); 10/(0.208·8e-6) = 6.0096 MPa. Roark approximation is stated within ~0.2% for a square, so 0.5% tolerance."
+      }
+    },
+    {
+      "calc": "materials_mech.torsion_rectangle",
+      "inputs": {
+        "T": "100 N*m",
+        "w": "50 mm",
+        "t": "20 mm",
+        "L": "1 m",
+        "G": "79.3 GPa"
+      },
+      "expect": {
+        "K_t": "9.9805e-8 m^4",
+        "tau_max": "18.6 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "t/w = 0.4: K = 0.05·0.02³(1/3 − 0.084(1 − 0.0256/12)) = 4e-7·(0.333333 − 0.083821) = 9.9805e-8; τ = 100(0.15 + 0.036)/(0.0025·0.0004) = 18.6 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.bending_stress",
+      "inputs": {
+        "M": "12 kN*m",
+        "y": "100 mm",
+        "I": "8e-5 m^4"
+      },
+      "expect": {
+        "sigma": "15 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ = 12000·0.1/8e-5 = 15 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.beam_shear_stress",
+      "inputs": {
+        "V": "30 kN",
+        "Q": "5e-4 m^3",
+        "I": "6.666667e-5 m^4",
+        "b": "100 mm"
+      },
+      "expect": {
+        "tau": "2.25 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "100×200 mm rectangle at the NA: Q = 0.1·0.1·0.05 = 5e-4, I = 0.1·0.2³/12 = 6.6667e-5; τ = VQ/Ib = 2.25 MPa = 1.5V/A = 1.5·30000/0.02 (landmark)"
+      }
+    },
+    {
+      "calc": "materials_mech.beam_shear_stress",
+      "inputs": {
+        "V": "20 kN",
+        "Q": "1.5e-4 m^3",
+        "I": "8e-5 m^4",
+        "b": "10 mm"
+      },
+      "expect": {
+        "q": "37500 N/m",
+        "tau": "3.75 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "q = 20000·1.5e-4/8e-5 = 37500 N/m; τ = q/b = 3.75 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.combined_axial_bending",
+      "inputs": {
+        "P": "40 kN",
+        "A": "4000 mm^2",
+        "M": "5 kN*m",
+        "c": "100 mm",
+        "I": "1.2e-5 m^4"
+      },
+      "expect": {
+        "sigma_max": "51.6667 MPa",
+        "sigma_min": "-31.6667 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P/A = 10 MPa; Mc/I = 500/1.2e-5 = 41.667 MPa → 51.667 and −31.667 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.stress_transform",
+      "inputs": {
+        "sx": "80 MPa",
+        "sy": "-40 MPa",
+        "txy": "25 MPa",
+        "theta": "30 deg"
+      },
+      "expect": {
+        "sx1": "71.6506 MPa",
+        "sy1": "-31.6506 MPa",
+        "txy1": "-39.4615 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "avg 20, half-diff 60, 2θ = 60°: σx' = 20 + 60·0.5 + 25·0.866025 = 71.651; σy' = 20 − 30 − 21.651 = −31.651; τ' = −60·0.866025 + 25·0.5 = −39.462 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.principal_stress",
+      "inputs": {
+        "sx": "80 MPa",
+        "sy": "-40 MPa",
+        "txy": "25 MPa"
+      },
+      "expect": {
+        "s1": "85 MPa",
+        "s2": "-45 MPa",
+        "tau_max": "65 MPa",
+        "theta_p": "11.3099 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = sqrt(60² + 25²) = 65 (5-12-13 triangle); σ1,2 = 20 ± 65; θp = ½ atan2(50, 120) = ½·22.62° = 11.31°"
+      }
+    },
+    {
+      "calc": "materials_mech.principal_stress_3d",
+      "inputs": {
+        "sx": "85 MPa",
+        "sy": "-45 MPa",
+        "sz": "10 MPa",
+        "txy": "0 MPa",
+        "tyz": "0 MPa",
+        "txz": "0 MPa"
+      },
+      "expect": {
+        "s1": "85 MPa",
+        "s2": "10 MPa",
+        "s3": "-45 MPa",
+        "tau_abs_max": "65 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Diagonal tensor: principal values are the diagonal, ordered 85 ≥ 10 ≥ −45; τabs = (85 + 45)/2 = 65 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.principal_stress_3d",
+      "inputs": {
+        "sx": "80 MPa",
+        "sy": "-40 MPa",
+        "sz": "0 MPa",
+        "txy": "25 MPa",
+        "tyz": "0 MPa",
+        "txz": "0 MPa"
+      },
+      "expect": {
+        "s1": "85 MPa",
+        "s2": "0 MPa",
+        "s3": "-45 MPa"
+      },
+      "abs_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Plane stress embedded in 3-D: in-plane principal 85/−45 (see principal_stress oracle) and σz = 0 as the middle value"
+      }
+    },
+    {
+      "calc": "materials_mech.principal_strain",
+      "inputs": {
+        "eps_x": 0.0006,
+        "eps_y": -0.0002,
+        "gamma_xy": 0.0004
+      },
+      "expect": {
+        "e1": 0.000647214,
+        "e2": -0.000247214,
+        "gamma_max": 0.000894427
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "center 200 µε; R = sqrt(400² + 200²) = 447.214 µε; ε1 = 647.21, ε2 = −247.21, γmax = 2R = 894.43 µε"
+      }
+    },
+    {
+      "calc": "materials_mech.rosette_rectangular",
+      "inputs": {
+        "eps_a": 0.0005,
+        "eps_b": 0.0003,
+        "eps_c": -0.0001
+      },
+      "expect": {
+        "eps_x": 0.0005,
+        "eps_y": -0.0001,
+        "gamma_xy": 0.0002
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "γxy = 2(300) − 500 − (−100) = 200 µε"
+      }
+    },
+    {
+      "calc": "materials_mech.rosette_delta",
+      "inputs": {
+        "eps_a": 0.0005,
+        "eps_b": 0.0003,
+        "eps_c": -0.0001
+      },
+      "expect": {
+        "eps_y": -3.33333e-05,
+        "gamma_xy": 0.00046188
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "εy = (600 − 200 − 500)/3 = −33.33 µε; γxy = 2(300 + 100)/√3 = 461.88 µε"
+      }
+    },
+    {
+      "calc": "materials_mech.von_mises_plane",
+      "inputs": {
+        "sx": "120 MPa",
+        "sy": "-30 MPa",
+        "txy": "45 MPa",
+        "S_y": "350 MPa"
+      },
+      "expect": {
+        "sigma_vm": "158.0348 MPa",
+        "n": 2.2147
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ' = sqrt(14400 + 3600 + 900 + 6075) = sqrt(24975) = 158.03 MPa; n = 350/158.03 = 2.2147"
+      }
+    },
+    {
+      "calc": "materials_mech.von_mises_plane",
+      "inputs": {
+        "sx": "0 MPa",
+        "sy": "0 MPa",
+        "txy": "100 MPa",
+        "S_y": "173.205 MPa"
+      },
+      "expect": {
+        "sigma_vm": "173.205 MPa",
+        "n": 1.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Pure shear landmark: σ' = √3 τ = 173.205 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.failure_criteria",
+      "inputs": {
+        "sA": "90 MPa",
+        "sB": "-150 MPa",
+        "S_y": "400 MPa",
+        "S_ut": "300 MPa",
+        "S_uc": "900 MPa"
+      },
+      "expect": {
+        "n_vm": 1.904762,
+        "n_tresca": 1.666667,
+        "n_rankine": 3.333333,
+        "n_cm": 2.142857,
+        "n_mm": 2.727273
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ' = sqrt(8100 + 13500 + 22500) = 210 → 400/210 = 1.9048; Tresca span 90 − (−150) = 240 → 1.6667; Rankine min(300/90, 900/150) = 3.3333; C–M: 1/(90/300 + 150/900) = 1/0.46667 = 2.1429; mod. Mohr (|σB| > σA): 1/((600·90)/(270000) + 150/900) = 1/(0.2 + 0.16667) = 2.7273"
+      }
+    },
+    {
+      "calc": "materials_mech.thin_cylinder",
+      "inputs": {
+        "p": "2 MPa",
+        "r": "500 mm",
+        "t": "10 mm"
+      },
+      "expect": {
+        "sigma_h": "100 MPa",
+        "sigma_l": "50 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σh = 2·500/10 = 100 MPa; σl = 50 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.thin_cylinder",
+      "inputs": {
+        "p": "2 MPa",
+        "r": "500 mm",
+        "sigma_h": "100 MPa"
+      },
+      "solve_for": [
+        "t",
+        "sigma_l"
+      ],
+      "expect": {
+        "t": "10 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "t = pr/σh = 2·500/100 = 10 mm"
+      }
+    },
+    {
+      "calc": "materials_mech.thin_sphere",
+      "inputs": {
+        "p": "2 MPa",
+        "r": "0.5 m",
+        "t": "8 mm"
+      },
+      "expect": {
+        "sigma": "62.5 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ = 2·500/(2·8) = 62.5 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.thick_cylinder",
+      "inputs": {
+        "p_i": "100 MPa",
+        "p_o": "0 MPa",
+        "r_i": "50 mm",
+        "r_o": "100 mm",
+        "r": "50 mm"
+      },
+      "expect": {
+        "sigma_t": "166.6667 MPa",
+        "sigma_r": "-100 MPa",
+        "sigma_a": "33.3333 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Bore landmark σt = p(ro² + ri²)/(ro² − ri²) = 100·0.0125/0.0075 = 166.67 MPa; σr = −p_i; σa = p ri²/(ro² − ri²) = 100·0.0025/0.0075 = 33.33 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.thick_cylinder",
+      "inputs": {
+        "p_i": "100 MPa",
+        "p_o": "0 MPa",
+        "r_i": "50 mm",
+        "r_o": "100 mm",
+        "r": "100 mm"
+      },
+      "expect": {
+        "sigma_t": "66.6667 MPa",
+        "sigma_r": "0 MPa"
+      },
+      "abs_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Outer surface: σt = 2 p ri²/(ro² − ri²) = 200·0.0025/0.0075 = 66.67 MPa; σr = 0 (free surface)"
+      }
+    },
+    {
+      "calc": "materials_mech.rotating_disk",
+      "inputs": {
+        "rho": "7850 kg/m^3",
+        "omega": "1000 rad/s",
+        "nu": 0.3,
+        "a": "20 mm",
+        "b": "150 mm",
+        "r": "20 mm"
+      },
+      "expect": {
+        "sigma_t": "146.2651 MPa",
+        "sigma_r": "0 MPa"
+      },
+      "abs_tol": 0.001,
+      "source": {
+        "kind": "cited",
+        "ref": "Annular disk bore stress σt,max = ρω²/4 [(3+ν)b² + (1−ν)a²] (Timoshenko, Strength of Materials II; recalled, not re-read) = 7850e6/4·(3.3·0.0225 + 0.7·0.0004) = 1.9625e9·0.07453 = 146.265 MPa; σr = 0 at the free bore"
+      }
+    },
+    {
+      "calc": "materials_mech.rotating_disk",
+      "inputs": {
+        "rho": "7850 kg/m^3",
+        "omega": "1000 rad/s",
+        "nu": 0.3,
+        "a": "0 mm",
+        "b": "150 mm",
+        "r": "0.001 mm"
+      },
+      "expect": {
+        "sigma_t": "72.8578 MPa",
+        "sigma_r": "72.8578 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Solid disk centre landmark: σt = σr = (3+ν)/8 ρω²b² = 0.4125·7850e6·0.0225 = 72.858 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.curved_beam",
+      "inputs": {
+        "M": "500 N*m",
+        "b": "20 mm",
+        "r_i": "50 mm",
+        "r_o": "90 mm"
+      },
+      "expect": {
+        "r_n": "68.0519 mm",
+        "e": "1.94810 mm",
+        "sigma_i": "115.830 MPa",
+        "sigma_o": "-78.239 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "h = 40 mm; rn = 40/ln(1.8) = 40/0.587787 = 68.0519 mm; e = 70 − 68.0519 = 1.9481 mm; A = 800 mm²; σi = 500(0.0180519)/(8e-4·0.0019481·0.05) = 115.83 MPa; σo = 500(−0.0219481)/(8e-4·0.0019481·0.09) = −78.24 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.composite_beam",
+      "inputs": {
+        "layers": [
+          [
+            0.1,
+            0.01,
+            200000000000.0
+          ],
+          [
+            0.1,
+            0.15,
+            10000000000.0
+          ]
+        ],
+        "M": "5 kN*m",
+        "E_ref": "10 GPa"
+      },
+      "expect": {
+        "y_na": "39.2857 mm",
+        "I_t": "8.31488e-5 m^4",
+        "sigma_max_abs": "47.2475 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "n = 20: steel → 2.0 m wide × 10 mm (A1 = 0.02 at y 5 mm); wood A2 = 0.015 at y 85 mm; ȳ = (1e-4 + 1.275e-3)/0.035 = 39.286 mm; I = 20·0.1·1e-6/12 + 0.02·0.034286² + 0.1·0.15³/12 + 0.015·0.045714² = 1.667e-7 + 2.3510e-5 + 2.8125e-5 + 3.1347e-5 = 8.3149e-5; steel bottom σ = 20·5000·0.039286/8.3149e-5 = 47.25 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.hertz_spheres",
+      "inputs": {
+        "F": "500 N",
+        "d1": "20 mm",
+        "d2": "30 mm",
+        "E1": "207 GPa",
+        "nu1": 0.3,
+        "E2": "207 GPa",
+        "nu2": 0.3
+      },
+      "expect": {
+        "a": "0.270455 mm",
+        "p_max": "3263.79 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Σ(1−ν²)/E = 2·0.91/207e9 = 8.7923e-12; 1/d1 + 1/d2 = 83.333; a³ = 187.5·8.7923e-12/83.333 = 1.97828e-11 → a = 2.70455e-4 m; pmax = 1500/(2π·7.3146e-8) = 3.2638 GPa"
+      }
+    },
+    {
+      "calc": "materials_mech.hertz_cylinders",
+      "inputs": {
+        "F": "5 kN",
+        "l": "20 mm",
+        "d1": "50 mm",
+        "d2": "100 mm",
+        "E1": "207 GPa",
+        "nu1": 0.3,
+        "E2": "207 GPa",
+        "nu2": 0.3
+      },
+      "expect": {
+        "b": "0.215973 mm",
+        "p_max": "736.920 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "b² = 2·5000/(π·0.02)·8.7923e-12/30 = 159154.9·2.93077e-13 = 4.66447e-8 → b = 2.15973e-4 m; pmax = 10000/(π·2.15973e-4·0.02) = 736.9 MPa"
+      }
+    },
+    {
+      "calc": "materials_mech.stress_concentration",
+      "inputs": {
+        "sigma_nom": "100 MPa",
+        "K_t": 2.2,
+        "q": 0.8
+      },
+      "expect": {
+        "sigma_max": "220 MPa",
+        "K_f": 1.96
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σmax = 2.2·100; Kf = 1 + 0.8·1.2 = 1.96"
+      }
+    },
+    {
+      "calc": "materials_mech.elliptical_hole",
+      "inputs": {
+        "a": "5 mm",
+        "b": "5 mm"
+      },
+      "expect": {
+        "K_t": 3.0
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "Kirsch/Inglis landmark: circular hole in an infinite plate under uniaxial tension, K_t = 3 (universal textbook result; recalled)"
+      }
+    },
+    {
+      "calc": "materials_mech.strain_energy",
+      "inputs": {
+        "P": "20 kN",
+        "T": "300 N*m",
+        "M": "500 N*m",
+        "L": "1 m",
+        "A": "300 mm^2",
+        "E": "200 GPa",
+        "G": "79 GPa",
+        "J": "2.5e-7 m^4",
+        "I": "1.25e-7 m^4"
+      },
+      "expect": {
+        "U_axial": "3.33333 J",
+        "U_torsion": "2.27848 J",
+        "U_bending": "5 J"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "4e8/(2·3e-4·2e11) = 4e8/1.2e8 = 3.333 J; 9e4/(2·79e9·2.5e-7) = 9e4/39500 = 2.2785 J; 2.5e5/(2·2e11·1.25e-7) = 2.5e5/5e4 = 5 J"
+      }
+    },
+    {
+      "calc": "materials_mech.resilience_toughness",
+      "inputs": {
+        "S_y": "350 MPa",
+        "S_u": "450 MPa",
+        "E": "200 GPa",
+        "eps_f": 0.25
+      },
+      "expect": {
+        "u_r": "306250 J/m^3",
+        "u_t": "100 MJ/m^3"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ur = 350e6²/(4e11) = 1.225e17/4e11 = 3.0625e5 J/m³; ut = 400e6·0.25 = 1e8 J/m³"
+      }
+    },
+    {
+      "calc": "materials_mech.impact_axial",
+      "inputs": {
+        "W": "100 N",
+        "h": "0 m",
+        "k": "2 MN/m"
+      },
+      "expect": {
+        "k_impact": 2.0,
+        "delta_max": "0.1 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Suddenly applied load landmark (h = 0): factor 2; δst = 100/2e6 = 0.05 mm → δmax = 0.1 mm"
+      }
+    },
+    {
+      "calc": "materials_mech.impact_axial",
+      "inputs": {
+        "W": "100 N",
+        "h": "50 mm",
+        "k": "2 MN/m"
+      },
+      "expect": {
+        "k_impact": 45.7325,
+        "delta_max": "2.28663 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "δst = 5e-5; 2h/δst = 2000; factor = 1 + sqrt(2001) = 1 + 44.7325 = 45.7325; δmax = 2.2866 mm"
+      }
+    },
+    {
+      "calc": "materials_mech.plastic_rectangle",
+      "inputs": {
+        "S_y": "250 MPa",
+        "b": "20 mm",
+        "h": "40 mm",
+        "y_e": "20 mm"
+      },
+      "expect": {
+        "M_y": "1333.333 N*m",
+        "M_p": "2000 N*m",
+        "M": "1333.333 N*m",
+        "sigma_res": "0 MPa"
+      },
+      "abs_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "My = 250e6·0.02·0.0016/6 = 1333.3; Mp = 2000 (shape factor 1.5 landmark); y_e = h/2 recovers M = My, and elastic unloading from first yield leaves zero residual stress (σ = Sy − My·c/I = 0). [Corrected 2026-09-15 02:30 MDT: first draft wrongly expected −125 MPa, which is the value after unloading from Mp.]"
+      }
+    },
+    {
+      "calc": "materials_mech.plastic_rectangle",
+      "inputs": {
+        "S_y": "250 MPa",
+        "b": "20 mm",
+        "h": "40 mm",
+        "y_e": "0 mm"
+      },
+      "expect": {
+        "M": "2000 N*m",
+        "sigma_res": "-125 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Fully plastic (y_e = 0): M = Mp = Sy b h²/4 = 2000 N·m; unloading elastically gives surface residual Sy − Mp c/I = Sy − 1.5 Sy = −125 MPa (landmark)"
+      }
+    },
+    {
+      "calc": "materials_mech.plastic_rectangle",
+      "inputs": {
+        "S_y": "250 MPa",
+        "b": "20 mm",
+        "h": "40 mm",
+        "y_e": "10 mm"
+      },
+      "expect": {
+        "M": "1833.333 N*m",
+        "sigma_res": "-93.75 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "M = 250e6·0.02(0.0004 − 0.0001/3) = 5e6·3.66667e-4 = 1833.3 N·m; I = 0.02·0.04³/12 = 1.06667e-7; σres = 250 − 1833.33·0.02/1.06667e-7 = 250 − 343.75 = −93.75 MPa"
+      }
+    }
+  ]
+}

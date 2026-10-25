@@ -1,0 +1,2127 @@
+{
+  "section": "bearings",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k bearings",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "bearings.rolling_load": {
+      "title": "Rolling-bearing equivalent dynamic load (P = X V Fr + Y Fa)",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "N",
+          "desc": "equivalent dynamic load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "X",
+          "unit": "",
+          "desc": "radial load factor (catalogue)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "",
+          "desc": "rotation factor: 1 rotating inner ring, 1.2 rotating outer ring",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Fr",
+          "unit": "N",
+          "desc": "radial load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Y",
+          "unit": "",
+          "desc": "axial load factor (catalogue)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Fa",
+          "unit": "N",
+          "desc": "axial load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P = X*V*Fr + Y*Fa"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P"
+      ],
+      "assumptions": [
+        "X, Y and V are catalogue values from the manufacturer (ISO 281): they depend on bearing type, the contact angle and the ratio Fa/Fr. V = 1 when the inner ring rotates, 1.2 when the outer ring rotates (shaft stationary)."
+      ],
+      "method_references": [
+        "Equivalent dynamic bearing load P = X V Fr + Y Fa (ISO 281; recalled)"
+      ],
+      "synthetic_example": {
+        "X": 0.56,
+        "V": 1.0,
+        "Fr": 5000.0,
+        "Y": 1.5,
+        "Fa": 2000.0
+      }
+    },
+    "bearings.bearing_life": {
+      "title": "Basic dynamic load rating: L10 life (millions of rev and hours)",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "N",
+          "desc": "basic dynamic load rating (catalogue)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "N",
+          "desc": "equivalent dynamic load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "",
+          "desc": "life exponent: 3 ball, 10/3 roller",
+          "lo": 1.0,
+          "hi": 5.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "Hz",
+          "desc": "shaft speed in rev/s (enter rpm/60 or \"1500 1/min\")",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L10",
+          "unit": "",
+          "desc": "rating life in millions of revolutions",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L10h",
+          "unit": "h",
+          "desc": "rating life in hours",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _bearing_life(values):\n    \"\"\"Rating life L10 (millions of rev) and L10h (hours) from C, equivalent load P, exponent a, speed n.\n\n    L10 = (C/P)^a with a = 3 (ball) or 10/3 (roller). L10h = L10 * 1e6 / (3600 * n) with n in rev/s (Hz).\n    \"\"\"\n    C, P, a, n = values['C'], values['P'], values['a'], values['n']\n    if P <= 0:\n        raise MechError('P (equivalent dynamic load) must be positive')\n    if n <= 0:\n        raise MechError('n (speed) must be positive to convert life to hours')\n    L10 = (C / P) ** a\n    # 3600 is the s->h conversion so the output carries its declared unit 'h' (life in hours, the\n    # engineering convention); n is rev/s (Hz), so L10*1e6/n is seconds.\n    L10h = L10 * 1e6 / (3600.0 * n)\n    return {'L10': L10, 'L10h': L10h}\n",
+        "source": "bearings.py",
+        "line": 35
+      },
+      "outputs": [
+        "L10",
+        "L10h"
+      ],
+      "assumptions": [
+        "L10 = (C/P)^a in millions of revolutions (a = 3 ball, 10/3 roller). L10h = L10*1e6/(3600*n) with n in rev/s. Feed P from rolling_load; solve for C (bearing selection) by giving a target L10h. C and P must be in the same units."
+      ],
+      "method_references": [
+        "Rating life L10 = (C/P)^a (ISO 281; recalled)"
+      ],
+      "synthetic_example": {
+        "C": 50000.0,
+        "P": 5000.0,
+        "a": 3.0,
+        "n": 30.0
+      }
+    },
+    "bearings.bearing_reliability_life": {
+      "title": "Reliability-adjusted life (L_na = a1 * L10)",
+      "variables": [
+        {
+          "name": "L_na",
+          "unit": "",
+          "desc": "reliability-adjusted life (millions of rev)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a1",
+          "unit": "",
+          "desc": "life adjustment factor for reliability (ISO 281 / catalogue)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L10",
+          "unit": "",
+          "desc": "rating life (millions of rev)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "L_na = a1*L10"
+      ],
+      "procedure": null,
+      "outputs": [
+        "L_na"
+      ],
+      "assumptions": [
+        "a1 is a tabulated input (ISO 281:2007, recalled): R = 90% -> 1, 95% -> 0.62, 96% -> 0.53, 97% -> 0.44, 98% -> 0.33, 99% -> 0.21. It is not built in."
+      ],
+      "method_references": [
+        "Reliability-adjusted life L_na = a1 L10 (ISO 281; recalled)"
+      ],
+      "synthetic_example": {
+        "a1": 0.62,
+        "L10": 1000.0
+      }
+    },
+    "bearings.weibull_reliability": {
+      "title": "Bearing reliability from three-parameter Weibull life distribution",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "",
+          "desc": "reliability (survival probability) fraction",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "",
+          "desc": "life of interest (millions of rev)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "x0",
+          "unit": "",
+          "desc": "guaranteed (minimum) life, x0 = f_x0 L10 (input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "",
+          "desc": "characteristic life (Weibull scale parameter, input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "desc": "Weibull shape (dispersion) parameter (input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _weibull(values):\n    \"\"\"Reliability R from the three-parameter Weibull bearing-life distribution.\n\n    R = exp(-((L - x0)/(theta - x0))^b). Requires theta > x0 (characteristic life above the guaranteed\n    life) and L >= x0 (life of interest at least the guaranteed life), and b > 0; raises MechError\n    otherwise, because the ratio (L - x0)/(theta - x0) must be a real fraction in [0, 1].\n    \"\"\"\n    L, x0, theta, b = values['L'], values['x0'], values['theta'], values['b']\n    if theta <= x0:\n        raise MechError('theta (characteristic life) must exceed x0 (guaranteed life)')\n    if L < x0:\n        raise MechError('L (life of interest) must be at least x0 (guaranteed life)')\n    if b <= 0:\n        raise MechError('b (Weibull shape parameter) must be positive')\n    return {'R': math.exp(-((L - x0) / (theta - x0)) ** b)}\n",
+        "source": "bearings.py",
+        "line": 52
+      },
+      "outputs": [
+        "R"
+      ],
+      "assumptions": [
+        "Three-parameter Weibull R = exp(-((L-x0)/(theta-x0))^b) for L >= x0 and theta > x0 (a MechError is raised otherwise, e.g. L = 1 with x0 = 2, theta = 1). x0, theta and b are INPUTS; commonly cited maker values are x0 = 0.02 L10, theta = 4.459 L10, b = 1.483 (recalled). At L = theta the reliability is e^-1 = 0.3679 for any b."
+      ],
+      "method_references": [
+        "Weibull reliability distribution for bearing life (recalled)"
+      ],
+      "synthetic_example": {
+        "L": 500.0,
+        "x0": 0.0,
+        "theta": 1000.0,
+        "b": 1.5
+      }
+    },
+    "bearings.static_load": {
+      "title": "Static load capacity and static safety factor (P0, s0 = C0/P0)",
+      "variables": [
+        {
+          "name": "P0",
+          "unit": "N",
+          "desc": "equivalent static load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s0",
+          "unit": "",
+          "desc": "static safety factor C0/P0",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "X0",
+          "unit": "",
+          "desc": "static radial load factor (catalogue)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Fr",
+          "unit": "N",
+          "desc": "radial load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Y0",
+          "unit": "",
+          "desc": "static axial load factor (catalogue)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Fa",
+          "unit": "N",
+          "desc": "axial load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C0",
+          "unit": "N",
+          "desc": "basic static load rating (catalogue)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P0 = Max(X0*Fr + Y0*Fa, Fr)",
+        "s0 = C0/P0"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P0",
+        "s0"
+      ],
+      "assumptions": [
+        "ISO 76 equivalent static load P0 = max(X0 Fr + Y0 Fa, Fr): the larger of the combined term and the radial load alone, so P0 is never less than Fr (this is the binding case when the axial load is small or zero). X0, Y0, C0 are catalogue values. s0 = C0/P0 > 1 (typically 2+) for smooth operation."
+      ],
+      "method_references": [
+        "Equivalent static bearing load P0 = max(X0 Fr + Y0 Fa, Fr) (ISO 76; recalled)"
+      ],
+      "synthetic_example": {
+        "X0": 0.6,
+        "Fr": 5000.0,
+        "Y0": 1.5,
+        "Fa": 2000.0,
+        "C0": 20000.0
+      }
+    },
+    "bearings.sommerfeld": {
+      "title": "Journal bearing Sommerfeld number (S = mu n (r/c)^2 / P)",
+      "variables": [
+        {
+          "name": "S",
+          "unit": "",
+          "desc": "Sommerfeld number",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "Pa*s",
+          "desc": "lubricant dynamic viscosity at operating temperature (input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "Hz",
+          "desc": "journal speed in rev/s (enter rpm/60)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "journal radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "radial clearance (bearing radius minus journal radius)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "bearing (axial) length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "journal load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "Pa",
+          "desc": "projected bearing pressure W/(2 r L)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P = W/(2*r*L)",
+        "S = mu*n*(r/c)**2/P"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P",
+        "S"
+      ],
+      "assumptions": [
+        "S is dimensionless. The relationship between S and the eccentricity ratio epsilon comes from the Raimondi\u2013Boyd charts (NOT built in \u2014 see journal_min_film). Light loads (large S) are valid for the Petroff friction model."
+      ],
+      "method_references": [
+        "Sommerfeld number S = (mu n/P)(r/c)^2 (recalled)"
+      ],
+      "synthetic_example": {
+        "mu": 0.03,
+        "n": 20.0,
+        "r": 0.025,
+        "c": 5e-05,
+        "L": 0.05,
+        "W": 5000.0
+      }
+    },
+    "bearings.petroff": {
+      "title": "Petroff friction coefficient and torque (light-load journal bearing)",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "Pa",
+          "desc": "projected bearing pressure W/(2 r L)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "",
+          "desc": "coefficient of friction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_f",
+          "unit": "N*m",
+          "desc": "friction torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "Pa*s",
+          "desc": "lubricant dynamic viscosity (input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "Hz",
+          "desc": "journal speed in rev/s (enter rpm/60)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "journal radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "radial clearance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "bearing (axial) length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "journal load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P = W/(2*r*L)",
+        "f = 2*pi**2*mu*n*(r/c)/P",
+        "T_f = f*W*r"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P",
+        "f",
+        "T_f"
+      ],
+      "assumptions": [
+        "Petroff applies to lightly loaded (concentric, epsilon ~ 0) bearings: f = 2 pi^2 (mu n / P)(r / c). Equivalent torque form T_f = 4 pi^2 mu n r^3 L / c. For significant eccentricity use the Raimondi\u2013Boyd friction variable (input)."
+      ],
+      "method_references": [
+        "Petroff equation for lightly loaded journal bearing friction (recalled)"
+      ],
+      "synthetic_example": {
+        "mu": 0.03,
+        "n": 20.0,
+        "r": 0.025,
+        "c": 5e-05,
+        "L": 0.05,
+        "W": 5000.0
+      }
+    },
+    "bearings.journal_min_film": {
+      "title": "Minimum film thickness and eccentricity ratio (h0 = c(1 - epsilon))",
+      "variables": [
+        {
+          "name": "eps",
+          "unit": "",
+          "desc": "eccentricity ratio e/c",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b5",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "e",
+          "unit": "m",
+          "desc": "eccentricity (journal centre offset)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "radial clearance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h0",
+          "unit": "m",
+          "desc": "minimum film thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eps = e/c",
+        "h0 = c - e"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eps",
+        "h0"
+      ],
+      "assumptions": [
+        "h0 = c - e = c(1 - epsilon) is the minimum film thickness at the point of closest approach. epsilon vs the Sommerfeld number S comes from the Raimondi\u2013Boyd charts (input \u2014 not built in). Require h0 >= surface roughness to avoid metal contact."
+      ],
+      "method_references": [
+        "Minimum film thickness h0 = c(1 - epsilon) (recalled)"
+      ],
+      "synthetic_example": {
+        "e": 3e-05,
+        "c": 5e-05
+      }
+    },
+    "bearings.journal_power_loss": {
+      "title": "Journal bearing friction power loss (H = f W 2 pi r n)",
+      "variables": [
+        {
+          "name": "H",
+          "unit": "W",
+          "desc": "friction power loss",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "",
+          "desc": "coefficient of friction (from Petroff or Raimondi\u2013Boyd input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "journal load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "journal radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "Hz",
+          "desc": "journal speed in rev/s (enter rpm/60)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "H = f*W*2*pi*r*n"
+      ],
+      "procedure": null,
+      "outputs": [
+        "H"
+      ],
+      "assumptions": [
+        "H = T_f omega with T_f = f W r and omega = 2 pi n. The coefficient f may come from Petroff (light load) or the Raimondi\u2013Boyd friction variable f (r/c) (input)."
+      ],
+      "method_references": [
+        "Power loss H = f W (2 pi r n) (recalled)"
+      ],
+      "synthetic_example": {
+        "f": 0.003,
+        "W": 5000.0,
+        "r": 0.025,
+        "n": 20.0
+      }
+    },
+    "bearings.journal_temp_rise": {
+      "title": "Oil temperature rise across a bearing (dT = H / (rho cp Q))",
+      "variables": [
+        {
+          "name": "dT",
+          "unit": "K",
+          "desc": "lubricant temperature rise (delta; enter in K or delta_degC)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "W",
+          "desc": "heat to be carried away (friction power loss)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "lubricant density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cp",
+          "unit": "J/(kg*K)",
+          "desc": "lubricant specific heat",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "lubricant (oil) volumetric flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "dT = H/(rho*cp*Q)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "dT"
+      ],
+      "assumptions": [
+        "Steady energy balance over the bearing: the heat generated is carried off by the oil flow, so dT = H/(rho cp Q). This form uses the total flow Q and neglects the side (leakage) flow; the Raimondi\u2013Boyd correction for side flow is dT = H/(rho cp (Q - 0.5 Qs)) with Qs the side flow (input) \u2014 apply it when Qs/Q is significant. Aim for dT ~ 10\u201320 K across a bearing."
+      ],
+      "method_references": [
+        "Energy balance H = rho cp Q dT (recalled)"
+      ],
+      "synthetic_example": {
+        "H": 47.1,
+        "rho": 850.0,
+        "cp": 1900.0,
+        "Q": 5e-05
+      }
+    },
+    "bearings.journal_oil_flow": {
+      "title": "Journal bearing oil flow (Q = q* r c n L)",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "oil volumetric flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "q_f",
+          "unit": "",
+          "desc": "dimensionless flow variable Q/(r c n L) (Raimondi\u2013Boyd chart input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "journal radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "radial clearance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "Hz",
+          "desc": "journal speed in rev/s (enter rpm/60)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "bearing (axial) length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q = q_f*r*c*n*L"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q"
+      ],
+      "assumptions": [
+        "q_f = Q/(r c n L) is the dimensionless flow variable read from the Raimondi\u2013Boyd charts at the operating S and L/D \u2014 an INPUT, not built in. The total flow feeds journal_temp_rise."
+      ],
+      "method_references": [
+        "Dimensionless flow Q/(r c n L) (Raimondi\u2013Boyd; recalled)"
+      ],
+      "synthetic_example": {
+        "q_f": 4.3,
+        "r": 0.025,
+        "c": 5e-05,
+        "n": 20.0,
+        "L": 0.05
+      }
+    },
+    "bearings.thrust_bearing_load": {
+      "title": "Thrust (collar/pivot) bearing load capacity (W = p_allow A)",
+      "variables": [
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "projected (bearing) area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "load capacity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_allow",
+          "unit": "Pa",
+          "desc": "allowable bearing pressure (material/application input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_o",
+          "unit": "m",
+          "desc": "outer diameter of the thrust surface",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_i",
+          "unit": "m",
+          "desc": "inner diameter (0 for a solid/pivot surface)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "A = pi*(d_o**2 - d_i**2)/4",
+        "W = p_allow*A"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A",
+        "W"
+      ],
+      "assumptions": [
+        "Uniform pressure over the annular thrust face; p_allow is a table value for the material pair and duty (input). For rolling thrust bearings use bearing_life with the axial dynamic rating C_a and a = 10/3 (roller) or 3 (ball)."
+      ],
+      "method_references": [
+        "Thrust bearing capacity W = p_allow A, A = pi/4 (d_o^2 - d_i^2) (recalled)"
+      ],
+      "synthetic_example": {
+        "p_allow": 2000000.0,
+        "d_o": 0.06,
+        "d_i": 0.02
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "bearings-001",
+      "calculator": "bearings.rolling_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "X": 0.56,
+        "V": 1,
+        "Fr": "5 kN",
+        "Y": 1.5,
+        "Fa": "2 kN"
+      },
+      "solve_for": [
+        "P"
+      ],
+      "expected_as_specified": {
+        "P": "5.8 kN"
+      },
+      "expected_SI": {
+        "P": 5800.0
+      },
+      "actual_SI": {
+        "P": {
+          "value": 5800.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bearings.rolling_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 11.6,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = X V Fr + Y Fa = 0.56*1*5000 + 1.5*2000 = 2800 + 3000 = 5800 N"
+      }
+    },
+    {
+      "id": "bearings-002",
+      "calculator": "bearings.rolling_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": "5.8 kN",
+        "X": 0.56,
+        "V": 1,
+        "Y": 1.5,
+        "Fa": "2 kN"
+      },
+      "solve_for": [
+        "Fr"
+      ],
+      "expected_as_specified": {
+        "Fr": "5 kN"
+      },
+      "expected_SI": {
+        "Fr": 5000.0
+      },
+      "actual_SI": {
+        "Fr": {
+          "value": 4999.999999999999,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bearings.rolling_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Fr": {
+          "absolute_error": 9.094947017729282e-13,
+          "relative_error": 1.8189894035458566e-16,
+          "allowed_absolute_error": 10.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Fr = (P - Y Fa)/(X V) = (5800 - 3000)/0.56 = 2800/0.56 = 5000 N"
+      }
+    },
+    {
+      "id": "bearings-003",
+      "calculator": "bearings.bearing_life",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": "50 kN",
+        "P": "5 kN",
+        "a": 3,
+        "n": "1800 1/min"
+      },
+      "solve_for": [
+        "L10",
+        "L10h"
+      ],
+      "expected_as_specified": {
+        "L10": 1000,
+        "L10h": "9259.259 h"
+      },
+      "expected_SI": {
+        "L10": 1000.0,
+        "L10h": 9259.259
+      },
+      "actual_SI": {
+        "L10": {
+          "value": 1000.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bearings.bearing_life (procedure)"
+        },
+        "L10h": {
+          "value": 9259.25925925926,
+          "unit": "h",
+          "kind": "derived",
+          "method": "mechcalc bearings.bearing_life (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "L10": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.0,
+          "passed": true
+        },
+        "L10h": {
+          "absolute_error": 0.0002592592591099674,
+          "relative_error": 2.80000007678765e-08,
+          "allowed_absolute_error": 18.518518,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L10 = (50000/5000)^3 = 10^3 = 1000 million rev. n = 1800/60 = 30 rev/s; L10h = 1000e6/(3600*30) = 1e9/108000 = 9259.259 h"
+      }
+    },
+    {
+      "id": "bearings-004",
+      "calculator": "bearings.bearing_life",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": "5 kN",
+        "a": 3,
+        "n": "1800 1/min",
+        "L10h": "9259.259 h"
+      },
+      "solve_for": [
+        "C"
+      ],
+      "expected_as_specified": {
+        "C": "50 kN"
+      },
+      "expected_SI": {
+        "C": 50000.0
+      },
+      "actual_SI": {
+        "C": {
+          "value": 49999.99953333333,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bearings.bearing_life (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "C": {
+          "absolute_error": 0.0004666666718549095,
+          "relative_error": 9.33333343709819e-09,
+          "allowed_absolute_error": 100.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: L10 = L10h*3600*n/1e6 = 9259.259*108000/1e6 = 1000; C = P*L10^(1/a) = 5000*10 = 50000 N"
+      }
+    },
+    {
+      "id": "bearings-005",
+      "calculator": "bearings.bearing_reliability_life",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a1": 0.62,
+        "L10": 1000
+      },
+      "solve_for": [
+        "L_na"
+      ],
+      "expected_as_specified": {
+        "L_na": 620
+      },
+      "expected_SI": {
+        "L_na": 620.0
+      },
+      "actual_SI": {
+        "L_na": {
+          "value": 620.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bearings.bearing_reliability_life (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "L_na": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.24,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L_na = a1*L10 = 0.62*1000 = 620 million rev (a1 = 0.62 is the ISO 281 factor for 95% reliability)"
+      }
+    },
+    {
+      "id": "bearings-006",
+      "calculator": "bearings.weibull_reliability",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "L": 1000,
+        "x0": 0,
+        "theta": 1000,
+        "b": 1.5
+      },
+      "solve_for": [
+        "R"
+      ],
+      "expected_as_specified": {
+        "R": 0.367879
+      },
+      "expected_SI": {
+        "R": 0.367879
+      },
+      "actual_SI": {
+        "R": {
+          "value": 0.36787944117144233,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bearings.weibull_reliability (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R": {
+          "absolute_error": 4.411714423224744e-07,
+          "relative_error": 1.1992297530505259e-06,
+          "allowed_absolute_error": 0.000735758,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: at L = theta (with x0 = 0) the Weibull survival probability is R = e^-1 = 0.36788 for ANY shape b, because (L/theta)^b = 1. Not re-read; standard Weibull result."
+      }
+    },
+    {
+      "id": "bearings-007",
+      "calculator": "bearings.weibull_reliability",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "R": 0.367879,
+        "x0": 0,
+        "theta": 1000,
+        "b": 1.5
+      },
+      "solve_for": [
+        "L"
+      ],
+      "expected_as_specified": {
+        "L": 1000
+      },
+      "expected_SI": {
+        "L": 1000.0
+      },
+      "actual_SI": {
+        "L": {
+          "value": 1000.000799485875,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bearings.weibull_reliability (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "L": {
+          "absolute_error": 0.0007994858749498235,
+          "relative_error": 7.994858749498235e-07,
+          "allowed_absolute_error": 2.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = e^-1 gives -ln R = 1, so (L - x0)/(theta - x0) = 1^(1/b) = 1 and L = theta = 1000"
+      }
+    },
+    {
+      "id": "bearings-008",
+      "calculator": "bearings.static_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "X0": 0.6,
+        "Fr": "5 kN",
+        "Y0": 0.5,
+        "Fa": "0 N",
+        "C0": "20 kN"
+      },
+      "solve_for": [
+        "P0",
+        "s0"
+      ],
+      "expected_as_specified": {
+        "P0": "5 kN",
+        "s0": 4
+      },
+      "expected_SI": {
+        "P0": 5000.0,
+        "s0": 4.0
+      },
+      "actual_SI": {
+        "P0": {
+          "value": 5000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bearings.static_load (symbolic)"
+        },
+        "s0": {
+          "value": 4.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bearings.static_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P0": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 10.0,
+          "passed": true
+        },
+        "s0": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.008,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "ISO 76 max: X0 Fr + Y0 Fa = 0.6*5000 + 0.5*0 = 3000 N < Fr = 5000 N, so P0 = max(3000, 5000) = 5000 N (the Fr branch of the max, the case the old formula got wrong); s0 = C0/P0 = 20000/5000 = 4"
+      }
+    },
+    {
+      "id": "bearings-009",
+      "calculator": "bearings.static_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P0": "6 kN",
+        "Fr": "5 kN",
+        "Y0": 1.5,
+        "Fa": "2 kN",
+        "C0": "20 kN"
+      },
+      "solve_for": [
+        "X0",
+        "s0"
+      ],
+      "expected_as_specified": {
+        "X0": 0.6,
+        "s0": 3.33333
+      },
+      "expected_SI": {
+        "X0": 0.6,
+        "s0": 3.33333
+      },
+      "actual_SI": {
+        "X0": {
+          "value": 0.6,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bearings.static_load (numeric)"
+        },
+        "s0": {
+          "value": 3.3333333333333335,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bearings.static_load (numeric)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "X0": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0012,
+          "passed": true
+        },
+        "s0": {
+          "absolute_error": 3.3333333333551707e-06,
+          "relative_error": 1.000001000007551e-06,
+          "allowed_absolute_error": 0.0066666600000000005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Combined branch: X0 Fr + Y0 Fa = 0.6*5000 + 1.5*2000 = 3000 + 3000 = 6000 N > Fr = 5000 N, so P0 = X0*5000 + 3000 = 6000 -> X0 = (6000 - 3000)/5000 = 0.6; s0 = C0/P0 = 20000/6000 = 3.3333"
+      }
+    },
+    {
+      "id": "bearings-010",
+      "calculator": "bearings.sommerfeld",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": "0.03 Pa*s",
+        "n": "1200 1/min",
+        "r": "25 mm",
+        "c": "50 um",
+        "L": "50 mm",
+        "W": "5 kN"
+      },
+      "solve_for": [
+        "P",
+        "S"
+      ],
+      "expected_as_specified": {
+        "P": "2 MPa",
+        "S": 0.075
+      },
+      "expected_SI": {
+        "P": 2000000.0,
+        "S": 0.075
+      },
+      "actual_SI": {
+        "P": {
+          "value": 1999999.9999999995,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc bearings.sommerfeld (symbolic)"
+        },
+        "S": {
+          "value": 0.07500000000000002,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bearings.sommerfeld (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P": {
+          "absolute_error": 4.656612873077393e-10,
+          "relative_error": 2.328306436538696e-16,
+          "allowed_absolute_error": 4000.0,
+          "passed": true
+        },
+        "S": {
+          "absolute_error": 2.7755575615628914e-17,
+          "relative_error": 3.7007434154171886e-16,
+          "allowed_absolute_error": 0.00015,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = 5000/(2*0.025*0.05) = 2e6 Pa; r/c = 0.025/5e-5 = 500; S = 0.03*20*500^2/2e6 = 0.03*20*250000/2e6 = 0.075"
+      }
+    },
+    {
+      "id": "bearings-011",
+      "calculator": "bearings.sommerfeld",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "S": 0.075,
+        "n": "1200 1/min",
+        "r": "25 mm",
+        "c": "50 um",
+        "L": "50 mm",
+        "W": "5 kN"
+      },
+      "solve_for": [
+        "mu",
+        "P"
+      ],
+      "expected_as_specified": {
+        "mu": "0.03 Pa*s",
+        "P": "2 MPa"
+      },
+      "expected_SI": {
+        "mu": 0.03,
+        "P": 2000000.0
+      },
+      "actual_SI": {
+        "mu": {
+          "value": 0.02999999999999999,
+          "unit": "Pa*s",
+          "kind": "derived",
+          "method": "mechcalc bearings.sommerfeld (symbolic)"
+        },
+        "P": {
+          "value": 1999999.9999999995,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc bearings.sommerfeld (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "mu": {
+          "absolute_error": 1.0408340855860843e-17,
+          "relative_error": 3.469446951953614e-16,
+          "allowed_absolute_error": 6e-05,
+          "passed": true
+        },
+        "P": {
+          "absolute_error": 4.656612873077393e-10,
+          "relative_error": 2.328306436538696e-16,
+          "allowed_absolute_error": 4000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = W/(2 r L) = 5000/(2*0.025*0.05) = 2e6 Pa; mu = S*P/(n*(r/c)^2) = 0.075*2e6/(20*500^2) = 150000/5e6 = 0.03 Pa.s"
+      }
+    },
+    {
+      "id": "bearings-012",
+      "calculator": "bearings.petroff",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": "0.03 Pa*s",
+        "n": "1200 1/min",
+        "r": "25 mm",
+        "c": "50 um",
+        "L": "50 mm",
+        "W": "5 kN"
+      },
+      "solve_for": [
+        "P",
+        "f",
+        "T_f"
+      ],
+      "expected_as_specified": {
+        "P": "2 MPa",
+        "f": 0.0029609,
+        "T_f": "0.37011 N*m"
+      },
+      "expected_SI": {
+        "P": 2000000.0,
+        "f": 0.0029609,
+        "T_f": 0.37011
+      },
+      "actual_SI": {
+        "P": {
+          "value": 1999999.9999999995,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc bearings.petroff (symbolic)"
+        },
+        "f": {
+          "value": 0.0029608813203268083,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bearings.petroff (symbolic)"
+        },
+        "T_f": {
+          "value": 0.37011016504085104,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc bearings.petroff (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "P": {
+          "absolute_error": 4.656612873077393e-10,
+          "relative_error": 2.328306436538696e-16,
+          "allowed_absolute_error": 1000.0,
+          "passed": true
+        },
+        "f": {
+          "absolute_error": 1.8679673191492746e-08,
+          "relative_error": 6.308782191729794e-06,
+          "allowed_absolute_error": 1.48045e-06,
+          "passed": true
+        },
+        "T_f": {
+          "absolute_error": 1.6504085104118715e-07,
+          "relative_error": 4.459237822301131e-07,
+          "allowed_absolute_error": 0.000185055,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "f = 2*pi^2*mu*n*(r/c)/P = 2*9.8696*0.03*20*500/2e6 = 19.7392*0.03*20*500/2e6 = 5921.76/2e6 = 0.0029609; T_f = f*W*r = 0.0029609*5000*0.025 = 0.37011 N.m (check 4*pi^2*0.03*20*0.025^3*0.05/5e-5)"
+      }
+    },
+    {
+      "id": "bearings-013",
+      "calculator": "bearings.journal_min_film",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "e": "30 um",
+        "c": "50 um"
+      },
+      "solve_for": [
+        "eps",
+        "h0"
+      ],
+      "expected_as_specified": {
+        "eps": 0.6,
+        "h0": "20 um"
+      },
+      "expected_SI": {
+        "eps": 0.6,
+        "h0": 1.9999999999999998e-05
+      },
+      "actual_SI": {
+        "eps": {
+          "value": 0.6,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc bearings.journal_min_film (symbolic)"
+        },
+        "h0": {
+          "value": 1.9999999999999998e-05,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc bearings.journal_min_film (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eps": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0012,
+          "passed": true
+        },
+        "h0": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 3.9999999999999994e-08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "eps = e/c = 30/50 = 0.6; h0 = c - e = 50 - 30 = 20 um"
+      }
+    },
+    {
+      "id": "bearings-014",
+      "calculator": "bearings.journal_power_loss",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f": 0.003,
+        "W": "5 kN",
+        "r": "25 mm",
+        "n": "1200 1/min"
+      },
+      "solve_for": [
+        "H"
+      ],
+      "expected_as_specified": {
+        "H": "47.124 W"
+      },
+      "expected_SI": {
+        "H": 47.124
+      },
+      "actual_SI": {
+        "H": {
+          "value": 47.12388980384691,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc bearings.journal_power_loss (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "H": {
+          "absolute_error": 0.00011019615309493247,
+          "relative_error": 2.3384295283705217e-06,
+          "allowed_absolute_error": 0.09424800000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "H = f*W*2*pi*r*n = 0.003*5000*2*pi*0.025*20 = 0.003*5000*pi = 15*pi = 47.124 W"
+      }
+    },
+    {
+      "id": "bearings-015",
+      "calculator": "bearings.journal_temp_rise",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "47.124 W",
+        "rho": "850 kg/m^3",
+        "cp": "1900 J/(kg*K)",
+        "Q": "50 mL/s"
+      },
+      "solve_for": [
+        "dT"
+      ],
+      "expected_as_specified": {
+        "dT": "0.58358 K"
+      },
+      "expected_SI": {
+        "dT": 0.58358
+      },
+      "actual_SI": {
+        "dT": {
+          "value": 0.583578947368421,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc bearings.journal_temp_rise (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dT": {
+          "absolute_error": 1.0526315790126972e-06,
+          "relative_error": 1.8037485503490476e-06,
+          "allowed_absolute_error": 0.00116716,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = 50e-6 m^3/s; dT = H/(rho*cp*Q) = 47.124/(850*1900*50e-6) = 47.124/80.75 = 0.58358 K"
+      }
+    },
+    {
+      "id": "bearings-016",
+      "calculator": "bearings.journal_oil_flow",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "q_f": 4.3,
+        "r": "25 mm",
+        "c": "50 um",
+        "n": "1200 1/min",
+        "L": "50 mm"
+      },
+      "solve_for": [
+        "Q"
+      ],
+      "expected_as_specified": {
+        "Q": "5.375e-6 m^3/s"
+      },
+      "expected_SI": {
+        "Q": 5.375e-06
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 5.374999999999999e-06,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc bearings.journal_oil_flow (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q": {
+          "absolute_error": 8.470329472543003e-22,
+          "relative_error": 1.575875250705675e-16,
+          "allowed_absolute_error": 1.075e-08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = q_f*r*c*n*L = 4.3*0.025*5e-5*20*0.05 = 4.3*1.25e-6 = 5.375e-6 m^3/s"
+      }
+    },
+    {
+      "id": "bearings-017",
+      "calculator": "bearings.thrust_bearing_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p_allow": "2 MPa",
+        "d_o": "60 mm",
+        "d_i": "20 mm"
+      },
+      "solve_for": [
+        "A",
+        "W"
+      ],
+      "expected_as_specified": {
+        "A": "0.0025133 m^2",
+        "W": "5026.55 N"
+      },
+      "expected_SI": {
+        "A": 0.0025133,
+        "W": 5026.55
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.0025132741228718345,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc bearings.thrust_bearing_load (symbolic)"
+        },
+        "W": {
+          "value": 5026.548245743669,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc bearings.thrust_bearing_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 2.587712816552387e-08,
+          "relative_error": 1.0296076141138692e-05,
+          "allowed_absolute_error": 5.0266e-06,
+          "passed": true
+        },
+        "W": {
+          "absolute_error": 0.0017542563309689285,
+          "relative_error": 3.489980863552394e-07,
+          "allowed_absolute_error": 10.0531,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = pi/4*(0.06^2 - 0.02^2) = pi/4*0.0032 = 0.0025133 m^2; W = p_allow*A = 2e6*0.0025133 = 5026.55 N"
+      }
+    },
+    {
+      "id": "bearings-018",
+      "calculator": "bearings.thrust_bearing_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p_allow": "2 MPa",
+        "d_i": "20 mm",
+        "W": "5026.55 N"
+      },
+      "solve_for": [
+        "d_o",
+        "A"
+      ],
+      "expected_as_specified": {
+        "d_o": "60 mm",
+        "A": "0.0025133 m^2"
+      },
+      "expected_SI": {
+        "d_o": 0.06,
+        "A": 0.0025133
+      },
+      "actual_SI": {
+        "d_o": {
+          "value": 0.06000000930661817,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc bearings.thrust_bearing_load (symbolic)"
+        },
+        "A": {
+          "value": 0.002513275,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc bearings.thrust_bearing_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "d_o": {
+          "absolute_error": 9.306618170557002e-09,
+          "relative_error": 1.551103028426167e-07,
+          "allowed_absolute_error": 0.00012,
+          "passed": true
+        },
+        "A": {
+          "absolute_error": 2.499999999985153e-08,
+          "relative_error": 9.947081526221116e-06,
+          "allowed_absolute_error": 5.0266e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = W/p_allow = 5026.55/2e6 = 0.0025133 m^2; d_o = sqrt(4*A/pi + d_i^2) = sqrt(4*0.0025133/pi + 0.0004) = sqrt(0.0032 + 0.0004) = 0.06 m"
+      }
+    }
+  ],
+  "passed": 18,
+  "failed": 0
+}

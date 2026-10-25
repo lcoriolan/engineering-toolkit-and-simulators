@@ -1,0 +1,221 @@
+{
+  "section": "kinematics",
+  "cases": [
+    {
+      "calc": "kinematics.rectilinear_constant_a",
+      "inputs": {
+        "v0": "10 m/s",
+        "a": "2 m/s^2",
+        "t": "5 s"
+      },
+      "expect": {
+        "v": "20 m/s",
+        "s": "75 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v = v0 + at = 10 + 2·5 = 20 m/s; s = v0t + ½at² = 10·5 + ½·2·25 = 50 + 25 = 75 m"
+      }
+    },
+    {
+      "calc": "kinematics.rectilinear_vsq",
+      "inputs": {
+        "v0": "10 m/s",
+        "a": "2 m/s^2",
+        "s": "75 m"
+      },
+      "expect": {
+        "v": "20 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v = √(v0² + 2as) = √(100 + 2·2·75) = √(100 + 300) = √400 = 20 m/s (same case as rectilinear_constant_a, solved without t)"
+      }
+    },
+    {
+      "calc": "kinematics.rectilinear_vsq",
+      "inputs": {
+        "v": "20 m/s",
+        "v0": "10 m/s",
+        "s": "75 m"
+      },
+      "solve_for": [
+        "a"
+      ],
+      "expect": {
+        "a": "2 m/s^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a = (v² − v0²)/(2s) = (400 − 100)/(2·75) = 300/150 = 2 m/s²"
+      }
+    },
+    {
+      "calc": "kinematics.normal_tangential",
+      "inputs": {
+        "v": "20 m/s",
+        "rho": "50 m",
+        "a_t": "6 m/s^2"
+      },
+      "expect": {
+        "a_n": "8 m/s^2",
+        "a": "10 m/s^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a_n = v²/ρ = 400/50 = 8 m/s²; a = √(a_n² + a_t²) = √(64 + 36) = √100 = 10 m/s² (3-4-5 landmark)"
+      }
+    },
+    {
+      "calc": "kinematics.polar_motion",
+      "inputs": {
+        "r": "2 m",
+        "rdot": "3 m/s",
+        "theta_dot": "0.5 rad/s",
+        "rddot": "1 m/s^2",
+        "theta_ddot": "0.2 rad/s^2"
+      },
+      "expect": {
+        "v_r": "3 m/s",
+        "v_theta": "1 m/s",
+        "a_r": "0.5 m/s^2",
+        "a_theta": "3.4 m/s^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v_r = ṙ = 3; v_θ = rθ̇ = 2·0.5 = 1; a_r = r̈ − rθ̇² = 1 − 2·0.25 = 0.5; a_θ = rθ̈ + 2ṙθ̇ = 2·0.2 + 2·3·0.5 = 0.4 + 3 = 3.4 m/s²"
+      }
+    },
+    {
+      "calc": "kinematics.projectile",
+      "inputs": {
+        "v0": "30 m/s",
+        "theta": "45 deg",
+        "g": "9.80665 m/s^2"
+      },
+      "expect": {
+        "R": "91.7745 m",
+        "H": "22.9436 m",
+        "t_flight": "4.32629 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = v0² sin(2θ)/g = 900·sin90°/9.80665 = 900/9.80665 = 91.7745 m; H = 900·sin²45°/(2·9.80665) = 450/19.6133 = 22.9436 m; t = 2·30·sin45°/9.80665 = 42.4264/9.80665 = 4.32629 s"
+      }
+    },
+    {
+      "calc": "kinematics.relative_velocity",
+      "inputs": {
+        "v_A": "30 m/s",
+        "v_B": "20 m/s",
+        "a_A": "2 m/s^2",
+        "a_B": "1 m/s^2"
+      },
+      "expect": {
+        "v_AB": "10 m/s",
+        "a_AB": "1 m/s^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v_A/B = v_A − v_B = 30 − 20 = 10 m/s; a_A/B = a_A − a_B = 2 − 1 = 1 m/s²"
+      }
+    },
+    {
+      "calc": "kinematics.rotation_fixed_axis",
+      "inputs": {
+        "omega": "10 rad/s",
+        "alpha": "2 rad/s^2",
+        "r": "0.5 m"
+      },
+      "expect": {
+        "v": "5 m/s",
+        "a_t": "1 m/s^2",
+        "a_n": "50 m/s^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v = ωr = 10·0.5 = 5 m/s; a_t = αr = 2·0.5 = 1 m/s²; a_n = ω²r = 100·0.5 = 50 m/s²"
+      }
+    },
+    {
+      "calc": "kinematics.instantaneous_center",
+      "inputs": {
+        "v": "6 m/s",
+        "omega": "2 rad/s"
+      },
+      "expect": {
+        "r_ic": "3 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r = v/ω = 6/2 = 3 m"
+      }
+    },
+    {
+      "calc": "kinematics.instantaneous_center",
+      "inputs": {
+        "r_ic": "3 m",
+        "v": "6 m/s"
+      },
+      "solve_for": [
+        "omega"
+      ],
+      "expect": {
+        "omega": "2 rad/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ω = v/r = 6/3 = 2 rad/s"
+      }
+    },
+    {
+      "calc": "kinematics.coriolis_accel",
+      "inputs": {
+        "omega": "5 rad/s",
+        "v_rel": "3 m/s"
+      },
+      "expect": {
+        "a_cor": "30 m/s^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a_cor = 2ω·v_rel = 2·5·3 = 30 m/s²"
+      }
+    },
+    {
+      "calc": "kinematics.rotating_frame_accel",
+      "inputs": {
+        "omega": "5 rad/s",
+        "v_r": "2 m/s",
+        "r": "0.4 m",
+        "rddot": "0 m/s^2"
+      },
+      "expect": {
+        "a_rad": "-10 m/s^2",
+        "a_cor": "20 m/s^2",
+        "a_total": "22.3607 m/s^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a_rad = r̈ − ω²r = 0 − 25·0.4 = −10 m/s²; a_cor = 2ω·v_r = 2·5·2 = 20 m/s²; a_total = √(10² + 20²) = √500 = 22.3607 m/s² [reviewer update 2026-09-15: calculator generalised with r̈]"
+      }
+    },
+    {
+      "calc": "kinematics.rotating_frame_accel",
+      "inputs": {
+        "omega": "5 rad/s",
+        "v_r": "2 m/s",
+        "r": "0.4 m",
+        "rddot": "3 m/s^2"
+      },
+      "expect": {
+        "a_rad": "-7 m/s^2",
+        "a_total": "21.1896 m/s^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "reviewer case: a_rad = 3 − 10 = −7 m/s²; a_total = √(49 + 400) = √449 = 21.1896 m/s²"
+      }
+    }
+  ]
+}

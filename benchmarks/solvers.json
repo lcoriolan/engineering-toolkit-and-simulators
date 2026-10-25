@@ -1,0 +1,441 @@
+{
+  "passed": 20,
+  "failed": 0,
+  "benchmarks": [
+    {
+      "name": "World free-fall position",
+      "equation": "z=z0-g*t^2/2",
+      "inputs": {
+        "z0_m": 10,
+        "g_m_s2": 9.80665,
+        "t_s": 0.2,
+        "dt_s": 0.001
+      },
+      "reference": 9.803867,
+      "actual": 9.802886009216309,
+      "absolute_error": 0.0009809907836917375,
+      "relative_error": 0.00010006161687951678,
+      "absolute_tolerance": 0.0015,
+      "unit": "m",
+      "passed": true,
+      "classification": "analytical",
+      "assumptions": "No drag/contact; semi-implicit Euler and float32 state, 200 CPU steps.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "World free-fall velocity",
+      "equation": "vz=-g*t",
+      "inputs": {
+        "g_m_s2": 9.80665,
+        "t_s": 0.2
+      },
+      "reference": -1.96133,
+      "actual": -1.9613277912139893,
+      "absolute_error": 2.208786010760022e-06,
+      "relative_error": 1.1261674530854177e-06,
+      "absolute_tolerance": 0.0002,
+      "unit": "m/s",
+      "passed": true,
+      "classification": "analytical",
+      "assumptions": "Synthetic inputs; idealized model only.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "US76 sea-level density",
+      "equation": "rho=p/(R*T)",
+      "inputs": {
+        "geopotential_altitude_m": 0,
+        "T_K": 288.15,
+        "p_Pa": 101325
+      },
+      "reference": 1.225,
+      "actual": 1.225000018124288,
+      "absolute_error": 1.8124287848308995e-08,
+      "relative_error": 1.479533701902775e-08,
+      "absolute_tolerance": 0.000245,
+      "unit": "kg/m^3",
+      "passed": true,
+      "classification": "published reference landmark",
+      "assumptions": "Dry US76 standard atmosphere; no weather deviation.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "US76 tropopause pressure",
+      "equation": "p=p0*(T/T0)^(-g/(L*R))",
+      "inputs": {
+        "geopotential_altitude_m": 11000,
+        "L_K_m": -0.0065
+      },
+      "reference": 22632.1,
+      "actual": 22632.040095007796,
+      "absolute_error": 0.05990499220206402,
+      "relative_error": 2.6469038313750836e-06,
+      "absolute_tolerance": 4.527,
+      "unit": "Pa",
+      "passed": true,
+      "classification": "published reference landmark",
+      "assumptions": "Synthetic inputs; idealized model only.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Freshwater density",
+      "equation": "temperature polynomial (UNESCO form in source)",
+      "inputs": {
+        "temperature_C": 20,
+        "salinity_PSU": 0
+      },
+      "reference": 998.21,
+      "actual": 998.2067455596167,
+      "absolute_error": 0.003254440383329893,
+      "relative_error": 3.260276277867275e-06,
+      "absolute_tolerance": 0.02,
+      "unit": "kg/m^3",
+      "passed": true,
+      "classification": "reference landmark",
+      "assumptions": "Synthetic inputs; idealized model only.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Finite-depth dispersion",
+      "equation": "omega^2=g*k*tanh(k*h)",
+      "inputs": {
+        "omega_rad_s": [
+          0.5,
+          1.0,
+          2.0,
+          4.0
+        ],
+        "depth_m": 5,
+        "g_m_s2": 9.80665
+      },
+      "reference": 0,
+      "actual": 2.220446049250313e-16,
+      "absolute_error": 2.220446049250313e-16,
+      "relative_error": null,
+      "absolute_tolerance": 1e-09,
+      "unit": "s^-2",
+      "passed": true,
+      "classification": "equation residual",
+      "assumptions": "Synthetic inputs; idealized model only.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Box displacement",
+      "equation": "V=L*B*draft",
+      "inputs": {
+        "length_m": 2,
+        "width_m": 1,
+        "draft_m": 0.3
+      },
+      "reference": 0.6,
+      "actual": 0.5999999999999999,
+      "absolute_error": 1.1102230246251565e-16,
+      "relative_error": 1.8503717077085943e-16,
+      "absolute_tolerance": 6e-05,
+      "unit": "m^3",
+      "passed": true,
+      "classification": "analytical",
+      "assumptions": "Synthetic inputs; idealized model only.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Two-body orbital energy drift",
+      "equation": "epsilon=v^2/2-mu/r=constant",
+      "inputs": {
+        "a_m": 7000000,
+        "e": 0.01,
+        "i_rad": 0.5,
+        "raan_rad": 0.2,
+        "argp_rad": 0.1,
+        "true_anomaly_rad": 0.3,
+        "dt_s": 10,
+        "steps": 600
+      },
+      "reference": 0,
+      "actual": 2.6648239170867782e-11,
+      "absolute_error": 2.6648239170867782e-11,
+      "relative_error": null,
+      "absolute_tolerance": 1e-09,
+      "unit": "1",
+      "passed": true,
+      "classification": "conservation invariant",
+      "assumptions": "Two-body point mass; no perturbations; host float64 RK4.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Sabine decay time",
+      "equation": "T60=24*ln(10)*V/(c*sum(alpha*S))",
+      "inputs": {
+        "volume_m3": 30,
+        "area_m2": 59,
+        "absorption": 0.2,
+        "c_m_s": 343
+      },
+      "reference": 0.40961142139539286,
+      "actual": 0.40961142139539286,
+      "absolute_error": 0.0,
+      "relative_error": 0.0,
+      "absolute_tolerance": 1e-12,
+      "unit": "s",
+      "passed": true,
+      "classification": "analytical",
+      "assumptions": "Diffuse energy field, uniform absorption; not a measured room.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Worst-case tolerance",
+      "equation": "sum(abs(sensitivity*tolerance))",
+      "inputs": {
+        "tolerances_mm": [
+          0.03,
+          0.04
+        ],
+        "sensitivities": [
+          1,
+          -1
+        ]
+      },
+      "reference": 0.07,
+      "actual": 0.07,
+      "absolute_error": 0.0,
+      "relative_error": 0.0,
+      "absolute_tolerance": 1e-14,
+      "unit": "mm",
+      "passed": true,
+      "classification": "analytical",
+      "assumptions": "Synthetic inputs; idealized model only.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "RSS tolerance",
+      "equation": "sqrt(sum((sensitivity*tolerance)^2))",
+      "inputs": {
+        "tolerances_mm": [
+          0.03,
+          0.04
+        ],
+        "sensitivities": [
+          1,
+          -1
+        ]
+      },
+      "reference": 0.05,
+      "actual": 0.05,
+      "absolute_error": 0.0,
+      "relative_error": 0.0,
+      "absolute_tolerance": 1e-14,
+      "unit": "mm",
+      "passed": true,
+      "classification": "analytical",
+      "assumptions": "Independent centered contributors on the same statistical basis; no process-capability claim.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Single revolute mobility",
+      "equation": "nullity=6*N-rank(C)",
+      "inputs": {
+        "bodies": 2,
+        "fixed_bodies": 1,
+        "revolute_joints": 1
+      },
+      "reference": 1,
+      "actual": 1.0,
+      "absolute_error": 0.0,
+      "relative_error": 0.0,
+      "absolute_tolerance": 0,
+      "unit": "DOF",
+      "passed": true,
+      "classification": "constraint-rank invariant",
+      "assumptions": "Synthetic inputs; idealized model only.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "NACA0012 thickness",
+      "equation": "yt=5*t*(.2969*sqrt(x)-.126*x-.3516*x^2+.2843*x^3-.1036*x^4)",
+      "inputs": {
+        "t_over_c": 0.12,
+        "n_per_side": 100,
+        "closed_TE": true
+      },
+      "reference": 0.12,
+      "actual": 0.12001259140209691,
+      "absolute_error": 1.2591402096917559e-05,
+      "relative_error": 0.00010492835080764633,
+      "absolute_tolerance": 0.0001,
+      "unit": "chord fraction",
+      "passed": true,
+      "classification": "geometric reference landmark",
+      "assumptions": "Closed trailing-edge coefficient differs from the original finite-gap NACA coefficient.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Rectangular section inertia",
+      "equation": "I=b*h^3/12",
+      "inputs": {
+        "b_m": 0.02,
+        "h_m": 0.03
+      },
+      "reference": 4.499999999999999e-08,
+      "actual": 4.499999999999999e-08,
+      "absolute_error": 0.0,
+      "relative_error": 0.0,
+      "absolute_tolerance": 1e-20,
+      "unit": "m^4",
+      "passed": true,
+      "classification": "analytical",
+      "assumptions": "Synthetic inputs; idealized model only.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Uniform beam deflection",
+      "equation": "delta=w*L^4/(8*EI)",
+      "inputs": {
+        "w_N_m": 10,
+        "L_m": 1,
+        "EI_N_m2": 1000
+      },
+      "reference": 0.00125,
+      "actual": 0.00125,
+      "absolute_error": 0.0,
+      "relative_error": 0.0,
+      "absolute_tolerance": 1e-15,
+      "unit": "m",
+      "passed": true,
+      "classification": "analytical",
+      "assumptions": "Synthetic inputs; idealized model only.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Slab cooling thickness scaling",
+      "equation": "t_crossing proportional to half_thickness^2/alpha",
+      "inputs": {
+        "T_initial_C": 100,
+        "T_wall_C": 0,
+        "T_threshold_C": 50,
+        "half_thickness_m": [
+          0.01,
+          0.02
+        ],
+        "alpha_m2_s": 1e-06,
+        "position_fraction": 0
+      },
+      "reference": 4,
+      "actual": 4.0,
+      "absolute_error": 0.0,
+      "relative_error": 0.0,
+      "absolute_tolerance": 1e-12,
+      "unit": "1",
+      "passed": true,
+      "classification": "scaling invariant",
+      "assumptions": "Fixed wall, constant properties, no latent heat or flow.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "VLM length-scale invariance",
+      "equation": "F(lambda*geometry)=lambda^2*F(geometry)",
+      "inputs": {
+        "chord_m": 1,
+        "span_m": 2,
+        "panels": 24,
+        "velocity_m_s": [
+          10,
+          0,
+          1
+        ],
+        "rho_kg_m3": 1.2,
+        "length_scale": 2
+      },
+      "reference": 4,
+      "actual": 4.0,
+      "absolute_error": 0.0,
+      "relative_error": 0.0,
+      "absolute_tolerance": 1e-09,
+      "unit": "1",
+      "passed": true,
+      "classification": "scaling invariant",
+      "assumptions": "Thin attached incompressible potential flow; core radius also scaled; no stall or viscous drag.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Manufactured Poisson L2 error",
+      "equation": "-laplacian(A)=2*pi^2*sin(pi*x)*sin(pi*y)",
+      "inputs": {
+        "domain": "unit square",
+        "reluctivity": 1,
+        "dirichlet_A": 0,
+        "maxh": 0.12,
+        "order": 3
+      },
+      "reference": 0,
+      "actual": 1.0042989166288351e-05,
+      "absolute_error": 1.0042989166288351e-05,
+      "relative_error": null,
+      "absolute_tolerance": 0.0001,
+      "unit": "normalized potential",
+      "passed": true,
+      "classification": "manufactured solution",
+      "assumptions": "Dimensionless unit-domain verification of the weak operator; not a motor field benchmark.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Manufactured magnetic energy",
+      "equation": "U=integral(|grad A|^2)/2=pi^2/4",
+      "inputs": {
+        "domain": "unit square",
+        "order": 3
+      },
+      "reference": 2.4674011002723395,
+      "actual": 2.4674006632593737,
+      "absolute_error": 4.370129658148869e-07,
+      "relative_error": 1.7711468385365134e-07,
+      "absolute_tolerance": 0.0024674011002723396,
+      "unit": "normalized energy per length",
+      "passed": true,
+      "classification": "manufactured solution",
+      "assumptions": "Synthetic inputs; idealized model only.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    },
+    {
+      "name": "Uniform elastic extension energy",
+      "equation": "u_x=(traction/E)*x; U=traction^2/(2E)",
+      "inputs": {
+        "domain": "unit square",
+        "E_Pa": 1000,
+        "nu": 0,
+        "traction_Pa": 10,
+        "maxh": 0.15,
+        "order": 2
+      },
+      "reference": 0.05,
+      "actual": 0.049999999999999684,
+      "absolute_error": 3.191891195797325e-16,
+      "relative_error": 6.38378239159465e-15,
+      "absolute_tolerance": 5e-10,
+      "unit": "J per unit thickness",
+      "passed": true,
+      "classification": "analytical",
+      "assumptions": "Small strain; unit thickness; lateral contraction suppressed by nu=0.",
+      "command": "python tools/benchmark_solvers.py --fea",
+      "backend_versions": "backend-versions.json"
+    }
+  ]
+}

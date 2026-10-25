@@ -1,0 +1,5244 @@
+{
+  "section": "mechanisms",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k mechanisms",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "mechanisms.dof_planar": {
+      "title": "Degrees of freedom of a planar mechanism (Gr\u00fcbler)",
+      "variables": [
+        {
+          "name": "F",
+          "unit": "",
+          "desc": "degrees of freedom",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of links (incl. ground)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "j1",
+          "unit": "",
+          "desc": "number of full (1-DOF) joints",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "j2",
+          "unit": "",
+          "desc": "number of half (2-DOF) joints",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F = 3*(n - 1) - 2*j1 - j2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F"
+      ],
+      "assumptions": [
+        "Planar Gr\u00fcbler equation. F = 1 is a constrained mechanism, F = 0 a structure, F < 0 over-constrained. Does not detect passive (redundant) DOF."
+      ],
+      "method_references": [
+        "Gr\u00fcbler mobility criterion for planar linkages (F = 3(n-1) - 2 j1 - j2)"
+      ],
+      "synthetic_example": {
+        "n": 4,
+        "j1": 4,
+        "j2": 0
+      }
+    },
+    "mechanisms.dof_spatial": {
+      "title": "Degrees of freedom of a spatial mechanism (Kutzbach)",
+      "variables": [
+        {
+          "name": "F",
+          "unit": "",
+          "desc": "degrees of freedom",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of links (incl. ground)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "j1",
+          "unit": "",
+          "desc": "joints with 1 DOF",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "j2",
+          "unit": "",
+          "desc": "joints with 2 DOF",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "j3",
+          "unit": "",
+          "desc": "joints with 3 DOF",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "j4",
+          "unit": "",
+          "desc": "joints with 4 DOF",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "j5",
+          "unit": "",
+          "desc": "joints with 5 DOF",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F = 6*(n - 1) - 5*j1 - 4*j2 - 3*j3 - 2*j4 - j5"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F"
+      ],
+      "assumptions": [
+        "Spatial (Kutzbach) mobility. A j1 joint is a 1-DOF joint (5 constraints), j5 a 5-DOF joint (1 constraint). Planar mechanisms give 0 here; use dof_planar."
+      ],
+      "method_references": [
+        "Kutzbach (Gr\u00fcbler) mobility criterion for spatial linkages"
+      ],
+      "synthetic_example": {
+        "n": 4,
+        "j1": 3,
+        "j2": 1,
+        "j3": 0,
+        "j4": 0,
+        "j5": 0
+      }
+    },
+    "mechanisms.grashof": {
+      "title": "Grashof condition and four-bar classification",
+      "variables": [
+        {
+          "name": "links",
+          "unit": "",
+          "desc": "[a, b, c, d] link lengths in m (crank, coupler, rocker, ground)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "shortest link length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l",
+          "unit": "m",
+          "desc": "longest link length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "m",
+          "desc": "one middle link length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "q",
+          "unit": "m",
+          "desc": "other middle link length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s_plus_l",
+          "unit": "m",
+          "desc": "shortest + longest",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_plus_q",
+          "unit": "m",
+          "desc": "sum of the two middle links",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "is_grashof",
+          "unit": "",
+          "desc": "1 if s + l <= p + q, else 0",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "type",
+          "unit": "",
+          "desc": "linkage class (string)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _grashof(values):\n    \"\"\"Grashof classification of a four-bar from its four link lengths (json [a, b, c, d]).\"\"\"\n    links = values['links']\n    if not isinstance(links, list) or len(links) != 4:\n        raise MechError('links: give [a, b, c, d] (crank, coupler, rocker, ground) in m')\n    a, b, c, d = (float(x) for x in links)\n    if min(a, b, c, d) <= 0.0:\n        raise MechError('link lengths must be positive')\n    s, l = min(a, b, c, d), max(a, b, c, d)\n    rest = sorted((a, b, c, d))\n    p, q = rest[1], rest[2]\n    s_plus_l = s + l\n    p_plus_q = p + q\n    if s_plus_l > p_plus_q + 1e-12:\n        isg, typ = 0.0, 'non-Grashof (double-rocker)'\n    elif abs(s_plus_l - p_plus_q) <= 1e-12:\n        isg, typ = 1.0, 'change-point'\n    else:\n        isg = 1.0\n        if s == a:\n            typ = 'crank-rocker'\n        elif s == c:\n            typ = 'rocker-crank'\n        elif s == b:\n            typ = 'double-rocker (Grashof)'\n        else:\n            typ = 'double-crank'\n    return {'s': s, 'l': l, 'p': p, 'q': q, 's_plus_l': s_plus_l, 'p_plus_q': p_plus_q,\n            'is_grashof': isg, 'type': typ}\n",
+        "source": "mechanisms.py",
+        "line": 56
+      },
+      "outputs": [
+        "s",
+        "l",
+        "p",
+        "q",
+        "s_plus_l",
+        "p_plus_q",
+        "is_grashof",
+        "type"
+      ],
+      "assumptions": [
+        "Class names use the convention a = input crank, b = coupler, c = output rocker, d = ground. Shortest link next to ground gives a crank-rocker (a) or rocker-crank (c); shortest ground gives double-crank; shortest coupler a Grashof double-rocker. Equal-length ties are ambiguous."
+      ],
+      "method_references": [
+        "Grashof condition s + l <= p + q and the resulting four-bar classes (recalled)"
+      ],
+      "synthetic_example": {
+        "links": [
+          2.0,
+          7.0,
+          9.0,
+          6.0
+        ]
+      }
+    },
+    "mechanisms.fourbar_transmission": {
+      "title": "Four-bar transmission angle and coupler-ground diagonal",
+      "variables": [
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "diagonal distance A-O4",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "rad",
+          "desc": "transmission angle (coupler vs rocker)",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "crank length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "coupler length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "rocker length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "ground length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "crank angle",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b82",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "s = sqrt(a**2 + d**2 - 2*a*d*cos(theta2))",
+        "mu = acos((b**2 + c**2 - s**2)/(2*b*c))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "s",
+        "mu"
+      ],
+      "assumptions": [
+        "mu is the angle between coupler and rocker at joint B; 90 deg is ideal. A value near 0 or 180 deg is a toggle (poor transmission). Requires the four-bar to assemble (cos(mu) within [-1, 1])."
+      ],
+      "method_references": [
+        "Law of cosines on the coupler-rocker triangle: cos(mu) = (b^2 + c^2 - s^2)/(2 b c)"
+      ],
+      "synthetic_example": {
+        "a": 2.0,
+        "b": 7.0,
+        "c": 9.0,
+        "d": 6.0,
+        "theta2": 1.0471975511965976
+      }
+    },
+    "mechanisms.fourbar_toggle": {
+      "title": "Four-bar toggle (dead-centre) crank angles and rocker extremes",
+      "variables": [
+        {
+          "name": "links",
+          "unit": "",
+          "desc": "[a, b, c, d] link lengths in m (crank, coupler, rocker, ground)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "theta_t1",
+          "unit": "rad",
+          "desc": "first toggle crank angle (rad)",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b8t1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_t2",
+          "unit": "rad",
+          "desc": "second toggle crank angle (rad)",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b8t2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta4_1",
+          "unit": "rad",
+          "desc": "rocker angle at toggle 1 (rad, [0, 2pi))",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b84,1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta4_2",
+          "unit": "rad",
+          "desc": "rocker angle at toggle 2 (rad, [0, 2pi))",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b84,2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "time_ratio",
+          "unit": "",
+          "desc": "quick-return time ratio (>= 1)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _fourbar_toggle(values):\n    \"\"\"Toggle (dead-centre) crank angles of a crank-rocker and the rocker's extreme angles.\n\n    The rocker reverses when the crank and coupler are collinear (sin(theta2 - theta3) = 0); the two\n    toggle crank angles are found by scanning a full crank revolution and refining each sign change.\n    The rocker extreme angles theta4_1/theta4_2 are reported for the crossed branch (theta4 = phi + beta).\n    Both assembly branches reach their rocker extremes at the SAME toggle crank angles; for the open branch\n    (theta4 = phi - beta) the extremes are the mirror values 2*pi - theta4 in this ground-frame convention.\n    \"\"\"\n    links = values['links']\n    if not isinstance(links, list) or len(links) != 4:\n        raise MechError('links: give [a, b, c, d] (crank, coupler, rocker, ground) in m')\n    a, b, c, d = (float(x) for x in links)\n    s, l = min(a, b, c, d), max(a, b, c, d)\n    rest = sorted((a, b, c, d))\n    p, q = rest[1], rest[2]\n    if s + l >= p + q - 1e-12 or not (a < b and a < c and a < d):\n        raise MechError('fourbar_toggle needs a crank-rocker linkage (Grashof, with the input crank a '\n                        'strictly the shortest link); this linkage has no two dead-centre toggle positions')\n    import scipy.optimize as opt\n\n    def f(t):\n        th3, _, _ = _theta3(a, b, c, d, t)\n        return math.sin(t - th3)\n\n    prev, prev_t = None, 0.0\n    roots = []\n    for i in range(1, 721):\n        t = TWOPI * i / 720.0\n        y = f(t)\n        if prev is not None and y * prev < 0.0:\n            roots.append(opt.brentq(f, prev_t, t))\n        prev, prev_t = y, t\n    if len(roots) != 2:\n        raise MechError('toggle scan found %d positions; this linkage is not a crank-rocker with two '\n                        'dead-centre positions (check the Grashof class)' % len(roots))\n    t1, t2 = sorted(roots)\n    th4_1 = _theta3(a, b, c, d, t1)[1] % TWOPI\n    th4_2 = _theta3(a, b, c, d, t2)[1] % TWOPI\n    arc = t2 - t1\n    time_ratio = max(arc, TWOPI - arc) / min(arc, TWOPI - arc)\n    return {'theta_t1': t1, 'theta_t2': t2, 'theta4_1': th4_1, 'theta4_2': th4_2,\n            'time_ratio': time_ratio}\n",
+        "source": "mechanisms.py",
+        "line": 112
+      },
+      "outputs": [
+        "theta_t1",
+        "theta_t2",
+        "theta4_1",
+        "theta4_2",
+        "time_ratio"
+      ],
+      "assumptions": [
+        "For a crank-rocker: the rocker reverses where the crank and coupler are collinear. The two toggle crank angles are found numerically; time_ratio = larger crank arc / smaller arc is the ratio of stroke times at constant crank speed."
+      ],
+      "method_references": [
+        "Toggle positions where the crank and coupler are collinear (found by root-finding sin(theta2 - theta3) = 0)"
+      ],
+      "synthetic_example": {
+        "links": [
+          2.0,
+          7.0,
+          9.0,
+          6.0
+        ]
+      }
+    },
+    "mechanisms.fourbar_position": {
+      "title": "Four-bar position (vector-loop closure), open or crossed branch",
+      "variables": [
+        {
+          "name": "links",
+          "unit": "",
+          "desc": "[a, b, c, d] link lengths in m (crank, coupler, rocker, ground)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "crank angle",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b82",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "branch",
+          "unit": "",
+          "desc": "assembly branch (open or crossed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "open",
+            "crossed"
+          ]
+        },
+        {
+          "name": "theta4",
+          "unit": "rad",
+          "desc": "rocker angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b84",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta3",
+          "unit": "rad",
+          "desc": "coupler angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b83",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "rad",
+          "desc": "transmission angle",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "diagonal distance A-O4",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _fourbar_position(values):\n    \"\"\"Four-bar vector-loop closure: coupler/rocker angles, transmission angle and diagonal at theta2.\"\"\"\n    links = values['links']\n    if not isinstance(links, list) or len(links) != 4:\n        raise MechError('links: give [a, b, c, d] (crank, coupler, rocker, ground) in m')\n    a, b, c, d = (float(x) for x in links)\n    th2 = values['theta2']\n    br = 1.0 if values['branch'] == 'crossed' else -1.0\n    s = math.sqrt(a * a + d * d - 2.0 * a * d * math.cos(th2))\n    if s <= 1e-300:\n        raise MechError('degenerate four-bar (crank and rocker pivots coincide at this angle)')\n    phi = math.atan2(a * math.sin(th2), a * math.cos(th2) - d)\n    cosb = (s * s + c * c - b * b) / (2.0 * s * c)\n    if cosb > 1.0 + 1e-12 or cosb < -1.0 - 1e-12:\n        raise MechError('four-bar cannot assemble at this crank angle (coupler/rocker length mismatch)')\n    cosb = max(-1.0, min(1.0, cosb))\n    beta = math.acos(cosb)\n    th4 = phi + br * beta\n    Ax, Ay = a * math.cos(th2), a * math.sin(th2)\n    Bx, By = d + c * math.cos(th4), c * math.sin(th4)\n    th3 = math.atan2(By - Ay, Bx - Ax)\n    mu = math.acos(max(-1.0, min(1.0, (b * b + c * c - s * s) / (2.0 * b * c))))\n    return {'theta4': th4, 'theta3': th3, 'mu': mu, 's': s}\n",
+        "source": "mechanisms.py",
+        "line": 87
+      },
+      "outputs": [
+        "theta4",
+        "theta3",
+        "mu",
+        "s"
+      ],
+      "assumptions": [
+        "Planar vector loop; branch \"open\" gives theta4 = phi - beta and \"crossed\" gives theta4 = phi + beta (Norton half-angle form). theta4/theta3 are signed angles (CCW from the ground line). Coupler-point trajectories are not computed."
+      ],
+      "method_references": [
+        "Four-bar vector-loop closure solved via the coupler-rocker triangle (law of cosines)"
+      ],
+      "synthetic_example": {
+        "links": [
+          2.0,
+          7.0,
+          9.0,
+          6.0
+        ],
+        "theta2": 1.0471975511965976,
+        "branch": "open"
+      }
+    },
+    "mechanisms.fourbar_velocity": {
+      "title": "Four-bar angular velocities of coupler and rocker",
+      "variables": [
+        {
+          "name": "omega3",
+          "unit": "rad/s",
+          "desc": "coupler angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c93",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega4",
+          "unit": "rad/s",
+          "desc": "rocker angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c94",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "crank length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "coupler length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "rocker length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "crank angle",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b82",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta3",
+          "unit": "rad",
+          "desc": "coupler angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b83",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta4",
+          "unit": "rad",
+          "desc": "rocker angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b84",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega2",
+          "unit": "rad/s",
+          "desc": "crank angular velocity (enter rad/s or rpm)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c92",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "omega3 = a*omega2*sin(theta4 - theta2)/(b*sin(theta3 - theta4))",
+        "omega4 = a*omega2*sin(theta2 - theta3)/(c*sin(theta4 - theta3))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "omega3",
+        "omega4"
+      ],
+      "assumptions": [
+        "theta3 and theta4 must be consistent with the position solution at theta2 (see fourbar_position); the example uses the open branch (theta4 = phi - beta). Velocities are signed; a rocker velocity of zero is a toggle."
+      ],
+      "method_references": [
+        "Four-bar velocity relations from differentiating the vector loop"
+      ],
+      "synthetic_example": {
+        "a": 2.0,
+        "b": 7.0,
+        "c": 9.0,
+        "theta2": 1.0471975511965976,
+        "theta3": 1.29134435,
+        "theta4": 1.918800123,
+        "omega2": 30.0
+      }
+    },
+    "mechanisms.fourbar_ma": {
+      "title": "Four-bar mechanical advantage and velocity ratio (ideal)",
+      "variables": [
+        {
+          "name": "MA",
+          "unit": "",
+          "desc": "mechanical advantage T4/T2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "VR",
+          "unit": "",
+          "desc": "velocity ratio omega2/omega4",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "crank length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "rocker length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "crank angle",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b82",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta3",
+          "unit": "rad",
+          "desc": "coupler angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b83",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta4",
+          "unit": "rad",
+          "desc": "rocker angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b84",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "VR = c*sin(theta4 - theta3)/(a*sin(theta2 - theta3))",
+        "MA = -c*sin(theta4 - theta3)/(a*sin(theta2 - theta3))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "MA",
+        "VR"
+      ],
+      "assumptions": [
+        "Ideal (lossless) linkage: MA = T4/T2 = -omega2/omega4. A magnitude |MA| > 1 means the linkage multiplies torque; the sign only gives the direction (output torque opposing or aiding). MA diverges near a toggle. Angles must match the position solution (the example uses the open branch)."
+      ],
+      "method_references": [
+        "Power balance T2 omega2 + T4 omega4 = 0 with the velocity relation"
+      ],
+      "synthetic_example": {
+        "a": 2.0,
+        "c": 9.0,
+        "theta2": 1.0471975511965976,
+        "theta3": 1.29134435,
+        "theta4": 1.918800123
+      }
+    },
+    "mechanisms.slider_crank": {
+      "title": "Slider-crank position, velocity and acceleration",
+      "variables": [
+        {
+          "name": "geometry",
+          "unit": "",
+          "desc": "[r, L, e] in m: crank radius, connecting-rod length, offset (0 = in-line)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "crank angle",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b82",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "crank angular velocity (enter rad/s or rpm)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "branch",
+          "unit": "",
+          "desc": "assembly branch (open or crossed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "open",
+            "crossed"
+          ]
+        },
+        {
+          "name": "x",
+          "unit": "m",
+          "desc": "slider position from the crank pivot",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "slider velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m/s^2",
+          "desc": "slider acceleration (constant crank speed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi",
+          "unit": "rad",
+          "desc": "connecting-rod angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_phi",
+          "unit": "rad/s",
+          "desc": "connecting-rod angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9\u03c6",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha_phi",
+          "unit": "rad/s^2",
+          "desc": "connecting-rod angular acceleration",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b1\u03c6",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _slider_crank(values):\n    \"\"\"In-line/offset slider-crank position, velocity and acceleration (constant crank speed).\n\n    geometry = [r, L, e]: crank radius r, connecting-rod length L, offset e (crank pivot to slider\n    axis; 0 for in-line). g = r sin(theta2) - e; h = L cos(phi) = +/-sqrt(L^2 - g^2), signed by the\n    branch (open: h > 0, crossed: h < 0); phi = atan2(g, h) so phi agrees with its omega_phi/alpha_phi.\n    \"\"\"\n    geom = values['geometry']\n    if not isinstance(geom, list) or len(geom) != 3:\n        raise MechError('geometry: give [r, L, e] (crank radius, conrod length, offset) in m')\n    r, L, e = (float(x) for x in geom)\n    th = values['theta2']\n    w = values['omega']\n    br = 1.0 if values['branch'] == 'open' else -1.0\n    g = r * math.sin(th) - e\n    if abs(g) > L:\n        raise MechError('slider-crank cannot assemble: |r sin(theta2) - e| = %.4g > L = %.4g' % (abs(g), L))\n    st = math.sqrt(L * L - g * g)\n    h = br * st                      # L cos(phi), signed by the branch\n    x = r * math.cos(th) + h\n    v = -r * w * math.sin(th) - r * w * math.cos(th) * g / h\n    a = (-r * w * w * math.cos(th) + r * w * w * math.sin(th) * g / h\n         - r * r * w * w * math.cos(th) ** 2 * L * L / (h ** 3))\n    phi = math.atan2(g, h)\n    wphi = r * w * math.cos(th) / h\n    aphi = r * w * w * (-math.sin(th) / h + r * g * math.cos(th) ** 2 / (h ** 3))\n    return {'x': x, 'v': v, 'a': a, 'phi': phi, 'omega_phi': wphi, 'alpha_phi': aphi}\n",
+        "source": "mechanisms.py",
+        "line": 187
+      },
+      "outputs": [
+        "x",
+        "v",
+        "a",
+        "phi",
+        "omega_phi",
+        "alpha_phi"
+      ],
+      "assumptions": [
+        "Constant crank speed (crank angular acceleration = 0). x is measured along the slider axis from the crank pivot; a positive v/a follow +x. branch \"open\" gives the rod leaning with h = L cos(phi) > 0, \"crossed\" the mirror assembly (h < 0); the rod angle is phi = atan2(g, h). Requires |r sin(theta2) - e| <= L."
+      ],
+      "method_references": [
+        "Exact slider-crank kinematics from the vector loop (position, velocity, acceleration)"
+      ],
+      "synthetic_example": {
+        "geometry": [
+          0.05,
+          0.2,
+          0.0
+        ],
+        "theta2": 0.5235987755982988,
+        "omega": 100.0,
+        "branch": "open"
+      }
+    },
+    "mechanisms.cam_profile": {
+      "title": "Cam follower motion: uniform, SHM, cycloidal or 3-4-5 polynomial rise",
+      "variables": [
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "follower lift over the rise",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta",
+          "unit": "rad",
+          "desc": "rise angle (cam rotation)",
+          "lo": 0.01,
+          "hi": 6.283185307179586,
+          "label": "\u03b2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "cam angle within the rise (0..beta)",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "cam angular velocity (enter rad/s or rpm)",
+          "lo": 0.0,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "law",
+          "unit": "",
+          "desc": "motion law: uniform, shm, cycloidal or poly345 (3-4-5 polynomial)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "uniform",
+            "shm",
+            "cycloidal",
+            "poly345"
+          ]
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "follower displacement",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "follower velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m/s^2",
+          "desc": "follower acceleration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "j",
+          "unit": "m/s^3",
+          "desc": "follower jerk",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _cam_profile(values):\n    \"\"\"Follower displacement/velocity/acceleration/jerk for a standard rise motion law.\n\n    law: 'uniform' (constant velocity), 'shm' (simple harmonic), 'cycloidal' or 'poly345' (3-4-5\n    polynomial). All laws act on the rise interval theta in [0, beta]; dwells are outside (not modelled).\n    \"\"\"\n    h, beta, th, w = values['h'], values['beta'], values['theta'], values['omega']\n    law = values['law']\n    if law not in ('uniform', 'shm', 'cycloidal', 'poly345'):\n        raise MechError('law must be uniform, shm (simple harmonic), cycloidal or poly345 (3-4-5 polynomial)')\n    k = {'uniform': 1, 'shm': 2, 'cycloidal': 3, 'poly345': 4}[law]\n    if th < -1e-12 or th > beta + 1e-12:\n        raise MechError('theta must lie within the rise interval [0, beta]')\n    y = th / beta\n    if k == 1:\n        s = h * y\n        v = h * w / beta\n        a = 0.0\n        j = 0.0\n    elif k == 2:\n        s = h / 2.0 * (1.0 - math.cos(PI * y))\n        v = PI * h * w / (2.0 * beta) * math.sin(PI * y)\n        a = PI ** 2 * h * w * w / (2.0 * beta ** 2) * math.cos(PI * y)\n        j = -PI ** 3 * h * w ** 3 / (2.0 * beta ** 3) * math.sin(PI * y)\n    elif k == 3:\n        s = h * (y - math.sin(TWOPI * y) / TWOPI)\n        v = h * w / beta * (1.0 - math.cos(TWOPI * y))\n        a = TWOPI * h * w * w / (beta ** 2) * math.sin(TWOPI * y)\n        j = 4.0 * PI ** 2 * h * w ** 3 / (beta ** 3) * math.cos(TWOPI * y)\n    else:\n        s = h * (10.0 * y ** 3 - 15.0 * y ** 4 + 6.0 * y ** 5)\n        v = h * w / beta * (30.0 * y ** 2 - 60.0 * y ** 3 + 30.0 * y ** 4)\n        a = h * w * w / (beta ** 2) * (60.0 * y - 180.0 * y ** 2 + 120.0 * y ** 3)\n        j = h * w ** 3 / (beta ** 3) * (60.0 - 360.0 * y + 360.0 * y ** 2)\n    return {'s': s, 'v': v, 'a': a, 'j': j}\n",
+        "source": "mechanisms.py",
+        "line": 216
+      },
+      "outputs": [
+        "s",
+        "v",
+        "a",
+        "j"
+      ],
+      "assumptions": [
+        "A rise from 0 to h over cam angle [0, beta]; dwells outside that interval are not modelled. The uniform law has an infinite acceleration/jerk impulse at the ends and is included for comparison, not for high-speed design. The 3-4-5 polynomial has finite (but non-zero at the ends) jerk; the cycloidal law has zero end acceleration."
+      ],
+      "method_references": [
+        "Standard cam motion laws: uniform velocity, SHM, cycloidal, 3-4-5 polynomial (recalled)"
+      ],
+      "synthetic_example": {
+        "h": 0.01,
+        "beta": 1.0471975511965976,
+        "theta": 0.3490658503988659,
+        "omega": 50.0,
+        "law": "shm"
+      }
+    },
+    "mechanisms.cam_pressure_angle": {
+      "title": "Cam pressure angle for a translating roller follower",
+      "variables": [
+        {
+          "name": "alpha",
+          "unit": "rad",
+          "desc": "pressure angle (0 is ideal, limit ~30 deg)",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ds_dtheta",
+          "unit": "m",
+          "desc": "slope ds/d(theta) at the contact point (m per rad)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_b",
+          "unit": "m",
+          "desc": "base circle radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_r",
+          "unit": "m",
+          "desc": "roller radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "follower displacement at the contact point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "alpha = atan(ds_dtheta/(R_b + R_r + s))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "alpha"
+      ],
+      "assumptions": [
+        "Translating roller follower with no offset. alpha = atan((ds/dtheta)/(R_b + R_r + s)). Keep alpha below about 30 deg to avoid jamming and excessive side thrust."
+      ],
+      "method_references": [
+        "tan(alpha) = (ds/dtheta)/(R_b + R_r + s) for a radial translating roller follower"
+      ],
+      "synthetic_example": {
+        "ds_dtheta": 0.008,
+        "R_b": 0.02,
+        "R_r": 0.01,
+        "s": 0.004
+      }
+    },
+    "mechanisms.cam_base_circle": {
+      "title": "Minimum cam base-circle radius for a pressure-angle limit",
+      "variables": [
+        {
+          "name": "R_b",
+          "unit": "m",
+          "desc": "minimum base circle radius (negative = no base circle needed)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ds_dtheta",
+          "unit": "m",
+          "desc": "slope ds/d(theta) at the worst point (m per rad)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha_max",
+          "unit": "rad",
+          "desc": "maximum allowed pressure angle",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b1max",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_r",
+          "unit": "m",
+          "desc": "roller radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "follower displacement at the worst point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "R_b = ds_dtheta/tan(alpha_max) - R_r - s"
+      ],
+      "procedure": null,
+      "outputs": [
+        "R_b"
+      ],
+      "assumptions": [
+        "Evaluate at the point of maximum ds/d(theta) for the worst case. A negative R_b means the chosen roller/slope already satisfies the limit with a zero base circle."
+      ],
+      "method_references": [
+        "R_b = (ds/dtheta)/tan(alpha_max) - R_r - s, from the pressure-angle relation"
+      ],
+      "synthetic_example": {
+        "ds_dtheta": 0.02,
+        "alpha_max": 0.5235987755982988,
+        "R_r": 0.01,
+        "s": 0.004
+      }
+    },
+    "mechanisms.gear_pair": {
+      "title": "Simple gear pair speed ratio",
+      "variables": [
+        {
+          "name": "omega_out",
+          "unit": "rad/s",
+          "desc": "driven gear angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9out",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_in",
+          "unit": "rad/s",
+          "desc": "driving gear angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9in",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_in",
+          "unit": "",
+          "desc": "driving gear teeth",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_out",
+          "unit": "",
+          "desc": "driven gear teeth",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "omega_out = -omega_in*T_in/T_out"
+      ],
+      "procedure": null,
+      "outputs": [
+        "omega_out"
+      ],
+      "assumptions": [
+        "External gear pair (reverses direction). Internal mesh drops the minus sign. Tooth geometry and stress are in the gears section."
+      ],
+      "method_references": [
+        "omega_out/omega_in = -T_in/T_out for an external gear pair"
+      ],
+      "synthetic_example": {
+        "omega_in": 157.07963267948966,
+        "T_in": 20,
+        "T_out": 40
+      }
+    },
+    "mechanisms.gear_train_value": {
+      "title": "Gear train value of a simple or compound train",
+      "variables": [
+        {
+          "name": "drivers",
+          "unit": "",
+          "desc": "tooth counts of the driving gears",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "driven",
+          "unit": "",
+          "desc": "tooth counts of the driven gears",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "external_meshes",
+          "unit": "",
+          "desc": "number of external (reversing) meshes",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        },
+        {
+          "name": "train_value",
+          "unit": "",
+          "desc": "signed train value e = omega_out/omega_in",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _gear_train_value(values):\n    \"\"\"Signed train value of a simple or compound gear train (Willis-free; planetary uses its own calc).\"\"\"\n    drivers = values['drivers']\n    driven = values['driven']\n    ext = int(values['external_meshes'])\n    if not isinstance(drivers, list) or not drivers or not isinstance(driven, list) or not driven:\n        raise MechError('drivers and driven need a non-empty list of tooth counts each')\n    num, den = 1.0, 1.0\n    for z in drivers:\n        num *= float(z)\n    for z in driven:\n        den *= float(z)\n    sign = -1.0 if ext % 2 else 1.0\n    return {'train_value': sign * num / den}\n",
+        "source": "mechanisms.py",
+        "line": 253
+      },
+      "outputs": [
+        "train_value"
+      ],
+      "assumptions": [
+        "Train value e = (product of driver teeth)/(product of driven teeth), sign = (-1)^(number of external meshes). An internal mesh does not reverse. Planetary (epicyclic) trains use planetary_trains (Willis)."
+      ],
+      "method_references": [
+        "Gear train value e = prod(Z_driver)/prod(Z_driven) * (-1)^(external meshes)"
+      ],
+      "synthetic_example": {
+        "drivers": [
+          20,
+          30
+        ],
+        "driven": [
+          40,
+          50
+        ],
+        "external_meshes": "2"
+      }
+    },
+    "mechanisms.planetary_trains": {
+      "title": "Planetary (epicyclic) gear train (Willis equation)",
+      "variables": [
+        {
+          "name": "omega_S",
+          "unit": "rad/s",
+          "desc": "sun angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9S",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_R",
+          "unit": "rad/s",
+          "desc": "ring angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9R",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_C",
+          "unit": "rad/s",
+          "desc": "carrier (arm) angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9C",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Z_S",
+          "unit": "",
+          "desc": "sun gear teeth",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Z_R",
+          "unit": "",
+          "desc": "ring gear teeth",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "omega_S - omega_C = -(Z_R/Z_S)*(omega_R - omega_C)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "omega_S"
+      ],
+      "assumptions": [
+        "Willis equation for a sun-ring-carrier train (one internal ring mesh, one external sun-planet mesh). Hold one member fixed (set its speed to 0) to get the two remaining speeds. Sign convention: sun and ring counter-rotate relative to the carrier."
+      ],
+      "method_references": [
+        "Willis equation (omega_S - omega_C)/(omega_R - omega_C) = -Z_R/Z_S (recalled)"
+      ],
+      "synthetic_example": {
+        "omega_R": 0.0,
+        "omega_C": 0.0,
+        "Z_S": 20,
+        "Z_R": 60
+      }
+    },
+    "mechanisms.geneva": {
+      "title": "Geneva mechanism indexing geometry",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of slots in the Geneva wheel",
+          "lo": 3.0,
+          "hi": 18.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_index",
+          "unit": "rad",
+          "desc": "wheel index angle per cycle",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b8idx",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "crank_angle",
+          "unit": "rad",
+          "desc": "crank rotation during indexing",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03c6idx",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dwell_angle",
+          "unit": "rad",
+          "desc": "crank rotation during dwell",
+          "lo": 3.141592653589793,
+          "hi": 6.283185307179586,
+          "label": "\u03c6dwell",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "time_ratio",
+          "unit": "",
+          "desc": "fraction of each cycle spent indexing",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "theta_index = 2*pi/n",
+        "crank_angle = pi - 2*pi/n",
+        "dwell_angle = 2*pi - crank_angle",
+        "time_ratio = crank_angle/(2*pi)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "theta_index",
+        "crank_angle",
+        "dwell_angle",
+        "time_ratio"
+      ],
+      "assumptions": [
+        "External Geneva wheel. The wheel indexes 2*pi/n per cycle while the crank turns pi - 2*pi/n; the rest is dwell. n >= 3 slots (4 and 6 are common)."
+      ],
+      "method_references": [
+        "Geneva indexing geometry: crank angle of action = pi - 2*pi/n"
+      ],
+      "synthetic_example": {
+        "n": 4
+      }
+    },
+    "mechanisms.quick_return": {
+      "title": "Quick-return time ratio",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "",
+          "desc": "quick-return ratio (cutting/return time, >= 1)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi_cut",
+          "unit": "rad",
+          "desc": "crank angle swept during the cutting (slow) stroke",
+          "lo": null,
+          "hi": 6.283185307179586,
+          "label": "\u03c6cut",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phi_return",
+          "unit": "rad",
+          "desc": "crank angle swept during the return (fast) stroke",
+          "lo": null,
+          "hi": 6.283185307179586,
+          "label": "\u03c6ret",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q = phi_cut/phi_return",
+        "phi_cut + phi_return = 2*pi"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q",
+        "phi_return"
+      ],
+      "assumptions": [
+        "Constant crank speed: Q = phi_cut/phi_return with phi_cut + phi_return = 2*pi. For a slotted-lever (Whitworth) mechanism feed the two crank arcs from fourbar_toggle."
+      ],
+      "method_references": [
+        "Quick-return time ratio Q = phi_cut/phi_return"
+      ],
+      "synthetic_example": {
+        "phi_cut": 3.839724354387525
+      }
+    },
+    "mechanisms.fourbar_acceleration": {
+      "title": "Four-bar angular accelerations of coupler and rocker",
+      "variables": [
+        {
+          "name": "alpha3",
+          "unit": "rad/s^2",
+          "desc": "coupler angular acceleration",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b13",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha4",
+          "unit": "rad/s^2",
+          "desc": "rocker angular acceleration",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b14",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "crank length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "coupler length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "rocker length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "crank angle",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b82",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta3",
+          "unit": "rad",
+          "desc": "coupler angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b83",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta4",
+          "unit": "rad",
+          "desc": "rocker angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b84",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega2",
+          "unit": "rad/s",
+          "desc": "crank angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c92",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega3",
+          "unit": "rad/s",
+          "desc": "coupler angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c93",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega4",
+          "unit": "rad/s",
+          "desc": "rocker angular velocity",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c94",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha2",
+          "unit": "rad/s^2",
+          "desc": "crank angular acceleration (0 for constant crank speed)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b12",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _fourbar_accel(values):\n    \"\"\"Four-bar coupler and rocker angular accelerations alpha3, alpha4 (vector-loop acceleration).\n\n    Differentiating the four-bar velocity loop once more and separating real/imaginary parts gives the\n    linear system\n        b cos(theta3) alpha3 - c cos(theta4) alpha4 = A\n        b sin(theta3) alpha3 - c sin(theta4) alpha4 = B\n    with\n        A = -a alpha2 cos(theta2) + a omega2^2 sin(theta2) + b omega3^2 sin(theta3) - c omega4^2 sin(theta4)\n        B = -a alpha2 sin(theta2) - a omega2^2 cos(theta2) - b omega3^2 cos(theta3) + c omega4^2 cos(theta4)\n    solved for\n        alpha3 = (B cos(theta4) - A sin(theta4))/(b sin(theta3 - theta4))\n        alpha4 = (B cos(theta3) - A sin(theta3))/(c sin(theta3 - theta4)).\n    \"\"\"\n    a, b, c = values['a'], values['b'], values['c']\n    th2, th3, th4 = values['theta2'], values['theta3'], values['theta4']\n    w2, w3, w4 = values['omega2'], values['omega3'], values['omega4']\n    al2 = values['alpha2']\n    A = (-a * al2 * math.cos(th2) + a * w2 * w2 * math.sin(th2)\n         + b * w3 * w3 * math.sin(th3) - c * w4 * w4 * math.sin(th4))\n    B = (-a * al2 * math.sin(th2) - a * w2 * w2 * math.cos(th2)\n         - b * w3 * w3 * math.cos(th3) + c * w4 * w4 * math.cos(th4))\n    den = math.sin(th3 - th4)\n    if abs(den) < 1e-12:\n        raise MechError('toggle position: sin(theta3 - theta4) = 0, the acceleration is singular')\n    al3 = (B * math.cos(th4) - A * math.sin(th4)) / (b * den)\n    al4 = (B * math.cos(th3) - A * math.sin(th3)) / (c * den)\n    return {'alpha3': al3, 'alpha4': al4}\n",
+        "source": "mechanisms.py",
+        "line": 157
+      },
+      "outputs": [
+        "alpha3",
+        "alpha4"
+      ],
+      "assumptions": [
+        "Position and velocity inputs must be mutually consistent (from fourbar_position and fourbar_velocity); the example uses the open branch. alpha2 is the crank angular acceleration (0 for constant crank speed). Singular at a toggle (sin(theta3 - theta4) = 0)."
+      ],
+      "method_references": [
+        "Four-bar acceleration relations from differentiating the vector loop twice"
+      ],
+      "synthetic_example": {
+        "a": 2.0,
+        "b": 7.0,
+        "c": 9.0,
+        "theta2": 1.0471975511965976,
+        "theta3": 1.291344350340649,
+        "theta4": 1.9188001232638396,
+        "omega2": 30.0,
+        "omega3": -11.17422032596634,
+        "omega4": -2.7449480217310938,
+        "alpha2": 0.0
+      }
+    },
+    "mechanisms.fourbar_static_force": {
+      "title": "Four-bar static input torque from output torque (virtual work)",
+      "variables": [
+        {
+          "name": "T2",
+          "unit": "N*m",
+          "desc": "input (crank) torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T4",
+          "unit": "N*m",
+          "desc": "output (rocker) torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "crank length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "rocker length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "crank angle",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b82",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta3",
+          "unit": "rad",
+          "desc": "coupler angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b83",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta4",
+          "unit": "rad",
+          "desc": "rocker angle",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b84",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T2 = -T4*a*sin(theta2 - theta3)/(c*sin(theta4 - theta3))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T2"
+      ],
+      "assumptions": [
+        "Static equilibrium by virtual work (T2\u00b7\u03c92 + T4\u00b7\u03c94 = 0), no friction or inertia, so T2 = -T4\u00b7(\u03c94/\u03c92) = -T4\u00b7a\u00b7sin(\u03b82 - \u03b83)/(c\u00b7sin(\u03b84 - \u03b83)). Consistent with fourbar_ma (T2 = T4/MA). Angles must match the position solution (the example uses the open branch)."
+      ],
+      "method_references": [
+        "Virtual work: T2\u00b7\u03c92 + T4\u00b7\u03c94 = 0, i.e. T2 = -T4\u00b7(\u03c94/\u03c92) with the four-bar velocity relation"
+      ],
+      "synthetic_example": {
+        "T4": 20.0,
+        "a": 2.0,
+        "c": 9.0,
+        "theta2": 1.0471975511965976,
+        "theta3": 1.29134435,
+        "theta4": 1.918800123
+      }
+    },
+    "mechanisms.balance_one_plane": {
+      "title": "Single-plane balancing: resultant unbalance of rotating masses",
+      "variables": [
+        {
+          "name": "masses",
+          "unit": "",
+          "desc": "rows [m (kg), r (m), theta (deg)] of each unbalance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "U",
+          "unit": "kg*m",
+          "desc": "resultant unbalance m*r",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_U",
+          "unit": "rad",
+          "desc": "resultant unbalance angle (rad, [0, 2pi))",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8U",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _balance_one_plane(values):\n    \"\"\"Resultant unbalance (m*r and angle) of rotating masses in one plane.\"\"\"\n    masses = values['masses']\n    if not isinstance(masses, list) or not masses:\n        raise MechError('masses: give [[m (kg), r (m), theta (deg)], ...]')\n    Fx = Fy = 0.0\n    for row in masses:\n        if len(row) != 3:\n            raise MechError('each mass row must be [m_kg, r_m, theta_deg]')\n        m, r, th = float(row[0]), float(row[1]), math.radians(float(row[2]))\n        Fx += m * r * math.cos(th)\n        Fy += m * r * math.sin(th)\n    return {'U': math.hypot(Fx, Fy), 'theta_U': math.atan2(Fy, Fx) % TWOPI}\n",
+        "source": "mechanisms.py",
+        "line": 269
+      },
+      "outputs": [
+        "U",
+        "theta_U"
+      ],
+      "assumptions": [
+        "All masses in one plane: add a counterweight with m_b r_b = U at theta_U + 180 deg to achieve static balance. Angle convention CCW from the reference. The centrifugal force of a rotating unbalance is in kinetics.centripetal_force."
+      ],
+      "method_references": [
+        "Static balance: vector sum of m*r terms equals zero"
+      ],
+      "synthetic_example": {
+        "masses": [
+          [
+            0.4,
+            0.1,
+            0
+          ],
+          [
+            0.4,
+            0.1,
+            120
+          ]
+        ]
+      }
+    },
+    "mechanisms.balance_two_plane": {
+      "title": "Two-plane (dynamic) balancing corrections",
+      "variables": [
+        {
+          "name": "masses",
+          "unit": "",
+          "desc": "rows [m (kg), r (m), theta (deg), z (m)] of each unbalance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "planes",
+          "unit": "",
+          "desc": "axial positions [z_A, z_B] of the two correction planes (m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "uA_mag",
+          "unit": "kg*m",
+          "desc": "correction m*r magnitude in plane A",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "uA_ang",
+          "unit": "rad",
+          "desc": "correction angle in plane A (rad, [0, 2pi))",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8A",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "uB_mag",
+          "unit": "kg*m",
+          "desc": "correction m*r magnitude in plane B",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "uB_ang",
+          "unit": "rad",
+          "desc": "correction angle in plane B (rad, [0, 2pi))",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8B",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _balance_two_plane(values):\n    \"\"\"Two-plane (dynamic) balancing correction masses.\n\n    masses = [[m (kg), r (m), theta (deg), z (m)], ...] with z the axial position; planes = [z_A, z_B].\n    Solves force balance (sum u + u_A + u_B = 0) and moment balance (sum z*u + z_A*u_A + z_B*u_B = 0)\n    in complex form for the correction m*r products u_A, u_B.\n    \"\"\"\n    masses = values['masses']\n    planes = values['planes']\n    if not isinstance(masses, list) or not masses or not isinstance(planes, list) or len(planes) != 2:\n        raise MechError('masses [[m,r,theta_deg,z], ...] and planes [z_A, z_B] required')\n    zA, zB = float(planes[0]), float(planes[1])\n    if abs(zB - zA) < 1e-12:\n        raise MechError('correction planes must have distinct axial positions')\n    F = 0j\n    M = 0j\n    for row in masses:\n        if len(row) != 4:\n            raise MechError('each mass row must be [m_kg, r_m, theta_deg, z_m]')\n        m, r, th, z = float(row[0]), float(row[1]), math.radians(float(row[2])), float(row[3])\n        u = m * r * complex(math.cos(th), math.sin(th))\n        F += u\n        M += z * u\n    uA = (M - zB * F) / (zB - zA)\n    uB = -F - uA\n    return {'uA_mag': abs(uA), 'uA_ang': math.atan2(uA.imag, uA.real) % TWOPI,\n            'uB_mag': abs(uB), 'uB_ang': math.atan2(uB.imag, uB.real) % TWOPI}\n",
+        "source": "mechanisms.py",
+        "line": 284
+      },
+      "outputs": [
+        "uA_mag",
+        "uA_ang",
+        "uB_mag",
+        "uB_ang"
+      ],
+      "assumptions": [
+        "Corrects both force and moment unbalance with two correction planes at axial positions z_A and z_B. Results are m*r products; pick a correction radius to get the mass. The centrifugal force of a rotating unbalance is in kinetics.centripetal_force."
+      ],
+      "method_references": [
+        "Dynamic balance: force and moment equilibrium in complex form (sum u = 0, sum z u = 0)"
+      ],
+      "synthetic_example": {
+        "masses": [
+          [
+            0.3,
+            0.1,
+            0,
+            0.0
+          ],
+          [
+            0.3,
+            0.1,
+            90,
+            0.3
+          ]
+        ],
+        "planes": [
+          0.1,
+          0.2
+        ]
+      }
+    },
+    "mechanisms.reciprocating_unbalance": {
+      "title": "Shaking force of a reciprocating mass (slider-crank)",
+      "variables": [
+        {
+          "name": "F_x",
+          "unit": "N",
+          "desc": "inertia (shaking) force along the slider axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg",
+          "desc": "reciprocating mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "crank radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "connecting-rod length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "crank angular velocity (enter rad/s or rpm)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "crank angle",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F_x = m*r*omega**2*(cos(theta) + (r/L)*cos(2*theta))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F_x"
+      ],
+      "assumptions": [
+        "Approximate (small r/L) primary + secondary inertia force of the reciprocating mass. The exact expression uses the rod angle; the r/L cos(2 theta) term is the first-order secondary correction."
+      ],
+      "method_references": [
+        "Primary and secondary reciprocating unbalance force (recalled small r/L form)"
+      ],
+      "synthetic_example": {
+        "m": 0.5,
+        "r": 0.05,
+        "L": 0.2,
+        "omega": 314.1592653589793,
+        "theta": 0.5235987755982988
+      }
+    },
+    "mechanisms.crank_effort": {
+      "title": "Engine crank effort (turning moment on the crankshaft)",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "turning moment (crank effort)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_p",
+          "unit": "N",
+          "desc": "piston (gas) force along the cylinder axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "crank radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "connecting-rod length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "crank angle",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = F_p*r*sin(theta)*(1 + r*cos(theta)/sqrt(L**2 - r**2*sin(theta)**2))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T"
+      ],
+      "assumptions": [
+        "Exact turning moment for an in-line slider-crank from the tangential connecting-rod force at the crank pin; T is positive when the gas force drives the crank in the direction of increasing theta (the power-stroke half-revolution). The turning-moment diagram is T vs theta over 2*pi."
+      ],
+      "method_references": [
+        "Crank effort T = F_p r sin(theta) (1 + r cos(theta)/sqrt(L^2 - r^2 sin^2(theta)))"
+      ],
+      "synthetic_example": {
+        "F_p": 5000.0,
+        "r": 0.05,
+        "L": 0.2,
+        "theta": 0.5235987755982988
+      }
+    },
+    "mechanisms.slider_crank_dynamic": {
+      "title": "Slider-crank dynamic crank torque and pin/bearing forces",
+      "variables": [
+        {
+          "name": "geometry",
+          "unit": "",
+          "desc": "[r, L, e] in m: crank radius, connecting-rod length, offset (0 = in-line)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "theta2",
+          "unit": "rad",
+          "desc": "crank angle",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b82",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "crank angular velocity (enter rad/s or rpm)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_gas",
+          "unit": "N",
+          "desc": "gas force on the piston, positive pushing toward the crank",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_piston",
+          "unit": "kg",
+          "desc": "piston (reciprocating) mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_rod",
+          "unit": "kg",
+          "desc": "connecting-rod mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "l_cg",
+          "unit": "m",
+          "desc": "rod centre-of-mass distance from the crank pin (toward the piston)",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_crankpin",
+          "unit": "kg",
+          "desc": "rotating mass at the crank pin radius (crank unbalance + pin)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "turning moment delivered to the crank by the rod (same sign as crank_effort; shaft load torque = \u2212T)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_rod",
+          "unit": "N",
+          "desc": "connecting-rod axial force (+ = compression)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_wall",
+          "unit": "N",
+          "desc": "cylinder wall side thrust on the piston (+y)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "O2x",
+          "unit": "N",
+          "desc": "crank-pivot bearing reaction, x component",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "O2y",
+          "unit": "N",
+          "desc": "crank-pivot bearing reaction, y component",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_recip",
+          "unit": "kg",
+          "desc": "total reciprocating mass (piston + rod CG share)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_rot",
+          "unit": "kg",
+          "desc": "total rotating mass at the crank pin (crankpin + rod CG share)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _slider_crank_dynamic(values):\n    \"\"\"Dynamic (inertia + gas) crank torque and pin/bearing forces of a slider-crank.\n\n    geometry = [r, L, e] (m); omega (rad/s, signed); F_gas (N) is the gas force on the piston, positive\n    pushing the piston TOWARD the crank (so the quasi-static limit matches ``crank_effort``); m_piston,\n    m_rod (kg) with its CG at l_cg (m) from the crank pin, and m_crankpin (kg) the rotating mass lumped\n    at the crank radius. The rod is replaced by two lumped end masses that preserve its total mass and CG\n    (piston side m_rod l_cg/L reciprocates, crank side m_rod(1 - l_cg/L) rotates). Piston net force in +x\n    is F_gas + m_recip*a toward the crank (a positive in +x, away from the crank) with the exact slider\n    acceleration a, and the crank torque follows from the power\n    balance T*omega = (net piston force)*(piston velocity), i.e. T = F_rod r (g cos(theta2) + h sin(theta2))/L.\n    \"\"\"\n    geom = values['geometry']\n    if not isinstance(geom, list) or len(geom) != 3:\n        raise MechError('geometry: give [r, L, e] (crank radius, conrod length, offset) in m')\n    r, L, e = (float(x) for x in geom)\n    th = values['theta2']\n    w = values['omega']\n    F_gas = values['F_gas']\n    m_piston = values['m_piston']\n    m_rod = values['m_rod']\n    l_cg = values['l_cg']\n    m_crankpin = values['m_crankpin']\n    if not (0.0 <= l_cg <= L):\n        raise MechError('l_cg (rod CG distance from the crank pin) must lie in [0, L]')\n    g = r * math.sin(th) - e\n    if abs(g) > L:\n        raise MechError('slider-crank cannot assemble: |r sin(theta2) - e| > L')\n    h = math.sqrt(L * L - g * g)               # open branch (h = L cos(phi) > 0)\n    a = (-r * w * w * math.cos(th) + r * w * w * math.sin(th) * g / h\n         - r * r * w * w * math.cos(th) ** 2 * L * L / (h ** 3))\n    m_recip = m_piston + m_rod * (l_cg / L)\n    m_rot = m_crankpin + m_rod * (1.0 - l_cg / L)\n    F_rod = (m_recip * a + F_gas) * L / h      # rod axial force, + = compression\n    F_wall = F_rod * g / L                     # cylinder wall side thrust on the piston (+y)\n    O2x = F_rod * h / L - m_rot * r * w * w * math.cos(th)\n    O2y = -F_rod * g / L - m_rot * r * w * w * math.sin(th)\n    T = F_rod * r * (g * math.cos(th) + h * math.sin(th)) / L\n    return {'T': T, 'F_rod': F_rod, 'F_wall': F_wall, 'O2x': O2x, 'O2y': O2y,\n            'm_recip': m_recip, 'm_rot': m_rot}\n",
+        "source": "mechanisms.py",
+        "line": 313
+      },
+      "outputs": [
+        "T",
+        "F_rod",
+        "F_wall",
+        "O2x",
+        "O2y",
+        "m_recip",
+        "m_rot"
+      ],
+      "assumptions": [
+        "Constant crank speed; the connecting rod is replaced by two lumped end masses that preserve its total mass and CG position (piston side m_rod l_cg/L reciprocates, crank side m_rod(1 - l_cg/L) rotates). Effective force toward the crank F = F_gas + m_recip\u00b7a (a positive in +x, away from the crank) uses the exact slider acceleration; the crank torque is T = F dx/d(theta2) from the power balance. Quasi-static limit (masses -> 0) reproduces crank_effort. Open (h > 0) branch; requires r + |e| <= L to assemble. Bearing reactions include the crank-pin centrifugal force m_rot r omega^2."
+      ],
+      "method_references": [
+        "Dynamic force analysis of a slider-crank: two-mass rod model and power balance (T = F dx/d(theta2); recalled)"
+      ],
+      "synthetic_example": {
+        "geometry": [
+          0.05,
+          0.2,
+          0.0
+        ],
+        "theta2": 0.5235987755982988,
+        "omega": 100.0,
+        "F_gas": 5000.0,
+        "m_piston": 0.5,
+        "m_rod": 0.4,
+        "l_cg": 0.1,
+        "m_crankpin": 0.2
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "mechanisms-001",
+      "calculator": "mechanisms.dof_planar",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 4,
+        "j1": 4,
+        "j2": 0
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expected_as_specified": {
+        "F": 1
+      },
+      "expected_SI": {
+        "F": 1.0
+      },
+      "actual_SI": {
+        "F": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.dof_planar (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 3(4-1) - 2*4 - 0 = 9 - 8 = 1 (a four-bar has one degree of freedom)"
+      }
+    },
+    {
+      "id": "mechanisms-002",
+      "calculator": "mechanisms.dof_planar",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": 1,
+        "j1": 4,
+        "j2": 0
+      },
+      "solve_for": [
+        "n"
+      ],
+      "expected_as_specified": {
+        "n": 4
+      },
+      "expected_SI": {
+        "n": 4.0
+      },
+      "actual_SI": {
+        "n": {
+          "value": 4.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.dof_planar (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.008,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "n = (F + 2*j1 + j2 + 3)/3 = (1 + 8 + 0 + 3)/3 = 12/3 = 4 links"
+      }
+    },
+    {
+      "id": "mechanisms-003",
+      "calculator": "mechanisms.dof_spatial",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 5,
+        "j1": 3,
+        "j2": 2,
+        "j3": 0,
+        "j4": 0,
+        "j5": 0
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expected_as_specified": {
+        "F": 1
+      },
+      "expected_SI": {
+        "F": 1.0
+      },
+      "actual_SI": {
+        "F": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.dof_spatial (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 6(5-1) - 5*3 - 4*2 - 3*0 - 2*0 - 0 = 24 - 15 - 8 = 1"
+      }
+    },
+    {
+      "id": "mechanisms-004",
+      "calculator": "mechanisms.grashof",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "links": [
+          2,
+          7,
+          9,
+          6
+        ]
+      },
+      "solve_for": [
+        "s",
+        "l",
+        "p",
+        "q",
+        "s_plus_l",
+        "p_plus_q",
+        "is_grashof",
+        "type"
+      ],
+      "expected_as_specified": {
+        "s": 2,
+        "l": 9,
+        "p": 6,
+        "q": 7,
+        "s_plus_l": 11,
+        "p_plus_q": 13,
+        "is_grashof": 1,
+        "type": "crank-rocker"
+      },
+      "expected_SI": {
+        "s": 2.0,
+        "l": 9.0,
+        "p": 6.0,
+        "q": 7.0,
+        "s_plus_l": 11.0,
+        "p_plus_q": 13.0,
+        "is_grashof": 1.0,
+        "type": "crank-rocker"
+      },
+      "actual_SI": {
+        "s": {
+          "value": 2.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "l": {
+          "value": 9.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "p": {
+          "value": 6.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "q": {
+          "value": 7.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "s_plus_l": {
+          "value": 11.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "p_plus_q": {
+          "value": 13.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "is_grashof": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "type": {
+          "value": "crank-rocker",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "s": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "l": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.018000000000000002,
+          "passed": true
+        },
+        "p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.012,
+          "passed": true
+        },
+        "q": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.014,
+          "passed": true
+        },
+        "s_plus_l": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.022,
+          "passed": true
+        },
+        "p_plus_q": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.026000000000000002,
+          "passed": true
+        },
+        "is_grashof": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "type": {
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Sorted lengths [2,6,7,9]: s+l = 2+9 = 11 <= p+q = 6+7 = 13, so Grashof. Shortest link (2) is the input crank a adjacent to ground -> crank-rocker"
+      }
+    },
+    {
+      "id": "mechanisms-005",
+      "calculator": "mechanisms.grashof",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "links": [
+          3,
+          10,
+          4,
+          5
+        ]
+      },
+      "solve_for": [
+        "s",
+        "l",
+        "p",
+        "q",
+        "s_plus_l",
+        "p_plus_q",
+        "is_grashof",
+        "type"
+      ],
+      "expected_as_specified": {
+        "s": 3,
+        "l": 10,
+        "s_plus_l": 13,
+        "p_plus_q": 9,
+        "is_grashof": 0,
+        "type": "non-Grashof (double-rocker)"
+      },
+      "expected_SI": {
+        "s": 3.0,
+        "l": 10.0,
+        "s_plus_l": 13.0,
+        "p_plus_q": 9.0,
+        "is_grashof": 0.0,
+        "type": "non-Grashof (double-rocker)"
+      },
+      "actual_SI": {
+        "s": {
+          "value": 3.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "l": {
+          "value": 10.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "s_plus_l": {
+          "value": 13.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "p_plus_q": {
+          "value": 9.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "is_grashof": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)"
+        },
+        "type": {
+          "value": "non-Grashof (double-rocker)",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.grashof (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "s": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.006,
+          "passed": true
+        },
+        "l": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.02,
+          "passed": true
+        },
+        "s_plus_l": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.026000000000000002,
+          "passed": true
+        },
+        "p_plus_q": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.018000000000000002,
+          "passed": true
+        },
+        "is_grashof": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "type": {
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s+l = 3+10 = 13 > p+q = 4+5 = 9, so no link can make a full revolution"
+      }
+    },
+    {
+      "id": "mechanisms-006",
+      "calculator": "mechanisms.fourbar_transmission",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a": 2,
+        "b": 7,
+        "c": 9,
+        "d": 6,
+        "theta2": "60 deg"
+      },
+      "solve_for": [
+        "s",
+        "mu"
+      ],
+      "expected_as_specified": {
+        "s": "5.291502622 m",
+        "mu": "35.9505676 deg"
+      },
+      "expected_SI": {
+        "s": 5.291502622,
+        "mu": 0.6274557725807958
+      },
+      "actual_SI": {
+        "s": {
+          "value": 5.2915026221291805,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_transmission (symbolic)"
+        },
+        "mu": {
+          "value": 0.6274557729231908,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_transmission (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "s": {
+          "absolute_error": 1.2918022207486501e-10,
+          "relative_error": 2.4412767280466635e-11,
+          "allowed_absolute_error": 0.010583005244,
+          "passed": true
+        },
+        "mu": {
+          "absolute_error": 3.4239500124044753e-10,
+          "relative_error": 5.45687865508255e-10,
+          "allowed_absolute_error": 0.0012549115451615915,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s = sqrt(a^2+d^2-2ad cos60) = sqrt(4+36-12) = sqrt(28) = 5.29150 m; cos(mu) = (b^2+c^2-s^2)/(2bc) = (49+81-28)/126 = 102/126 = 0.80952 -> mu = 35.9506 deg"
+      }
+    },
+    {
+      "id": "mechanisms-007",
+      "calculator": "mechanisms.fourbar_toggle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "links": [
+          2,
+          7,
+          9,
+          6
+        ]
+      },
+      "solve_for": [
+        "theta_t1",
+        "theta_t2",
+        "theta4_1",
+        "theta4_2",
+        "time_ratio"
+      ],
+      "expected_as_specified": {
+        "theta_t1": "1.230959417 rad",
+        "theta_t2": "5.052225890 rad",
+        "theta4_1": "3.692878252 rad",
+        "theta4_2": "4.372552071 rad",
+        "time_ratio": 1.5521497
+      },
+      "expected_SI": {
+        "theta_t1": 1.230959417,
+        "theta_t2": 5.05222589,
+        "theta4_1": 3.692878252,
+        "theta4_2": 4.372552071,
+        "time_ratio": 1.5521497
+      },
+      "actual_SI": {
+        "theta_t1": {
+          "value": 1.2309594173407752,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_toggle (procedure)"
+        },
+        "theta_t2": {
+          "value": 5.0522258898388115,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_toggle (procedure)"
+        },
+        "theta4_1": {
+          "value": 3.6928782520223242,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_toggle (procedure)"
+        },
+        "theta4_2": {
+          "value": 4.372552070930568,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_toggle (procedure)"
+        },
+        "time_ratio": {
+          "value": 1.5521496560597696,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_toggle (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "theta_t1": {
+          "absolute_error": 3.407751858475194e-10,
+          "relative_error": 2.7683705989108123e-10,
+          "allowed_absolute_error": 0.0001230959417,
+          "passed": true
+        },
+        "theta_t2": {
+          "absolute_error": 1.6118839596401813e-10,
+          "relative_error": 3.190443172445287e-11,
+          "allowed_absolute_error": 0.000505222589,
+          "passed": true
+        },
+        "theta4_1": {
+          "absolute_error": 2.2324364579162648e-11,
+          "relative_error": 6.045247922016425e-12,
+          "allowed_absolute_error": 0.0003692878252,
+          "passed": true
+        },
+        "theta4_2": {
+          "absolute_error": 6.943245978163759e-11,
+          "relative_error": 1.5879161335123544e-11,
+          "allowed_absolute_error": 0.00043725520710000007,
+          "passed": true
+        },
+        "time_ratio": {
+          "absolute_error": 4.394023034315353e-08,
+          "relative_error": 2.8309273482547162e-08,
+          "allowed_absolute_error": 0.00015521497,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Toggle where crank and coupler are collinear (sin(theta2-theta3)=0). Extended: triangle O2-O4-B with O2B = a+b = 9 gives cos(theta2) = (d^2+(a+b)^2-c^2)/(2d(a+b)) = (36+81-81)/108 = 1/3 -> theta2 = acos(1/3) = 1.2309594 rad; the other toggle is at 2*pi - acos(1/3) = 5.0522259 rad. Rocker extremes from the crossed branch (theta4 = phi + beta) at each toggle: 3.6928783 and 4.3725521 rad (the open branch phi - beta gives different, non-extreme rocker angles there). Crank arc = 5.0522259-1.2309594 = 3.8212665 rad, return = 2.4619188 rad -> time ratio 1.5521"
+      }
+    },
+    {
+      "id": "mechanisms-008",
+      "calculator": "mechanisms.fourbar_position",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "links": [
+          2,
+          7,
+          9,
+          6
+        ],
+        "theta2": "60 deg",
+        "branch": "open"
+      },
+      "solve_for": [
+        "theta4",
+        "theta3",
+        "mu",
+        "s"
+      ],
+      "expected_as_specified": {
+        "theta4": "1.918800123 rad",
+        "theta3": "1.291344350 rad",
+        "mu": "35.9505676 deg",
+        "s": "5.291502622 m"
+      },
+      "expected_SI": {
+        "theta4": 1.918800123,
+        "theta3": 1.29134435,
+        "mu": 0.6274557725807958,
+        "s": 5.291502622
+      },
+      "actual_SI": {
+        "theta4": {
+          "value": 1.9188001232638396,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_position (procedure)"
+        },
+        "theta3": {
+          "value": 1.291344350340649,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_position (procedure)"
+        },
+        "mu": {
+          "value": 0.6274557729231908,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_position (procedure)"
+        },
+        "s": {
+          "value": 5.2915026221291805,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_position (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "theta4": {
+          "absolute_error": 2.638396168208601e-10,
+          "relative_error": 1.3750239728375298e-10,
+          "allowed_absolute_error": 0.003837600246,
+          "passed": true
+        },
+        "theta3": {
+          "absolute_error": 3.40649064511922e-10,
+          "relative_error": 2.637941340061015e-10,
+          "allowed_absolute_error": 0.0025826887,
+          "passed": true
+        },
+        "mu": {
+          "absolute_error": 3.4239500124044753e-10,
+          "relative_error": 5.45687865508255e-10,
+          "allowed_absolute_error": 0.0012549115451615915,
+          "passed": true
+        },
+        "s": {
+          "absolute_error": 1.2918022207486501e-10,
+          "relative_error": 2.4412767280466635e-11,
+          "allowed_absolute_error": 0.010583005244,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s = sqrt(28) = 5.2915026 m; phi = atan2(2 sin60, 2 cos60 - 6) = atan2(1.73205, -5) = 2.8081195 rad; cos(beta) = (s^2+c^2-b^2)/(2sc) = (28+81-49)/(2*5.29150*9) = 60/95.24705 = 0.6299417 -> beta = 0.8893194 rad; OPEN branch theta4 = phi - beta = 1.9188001 rad; B = (6+9cos(theta4), 9sin(theta4)); theta3 = atan2(By-Ay, Bx-Ax) = 1.2913444 rad; mu = acos((b^2+c^2-s^2)/(2bc)) = 35.9506 deg"
+      }
+    },
+    {
+      "id": "mechanisms-009",
+      "calculator": "mechanisms.fourbar_position",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "links": [
+          2,
+          7,
+          9,
+          6
+        ],
+        "theta2": "60 deg",
+        "branch": "crossed"
+      },
+      "solve_for": [
+        "theta4",
+        "theta3",
+        "mu",
+        "s"
+      ],
+      "expected_as_specified": {
+        "theta4": "3.697438839 rad",
+        "theta3": "-1.958290695 rad",
+        "mu": "35.9505676 deg",
+        "s": "5.291502622 m"
+      },
+      "expected_SI": {
+        "theta4": 3.697438839,
+        "theta3": -1.958290695,
+        "mu": 0.6274557725807958,
+        "s": 5.291502622
+      },
+      "actual_SI": {
+        "theta4": {
+          "value": 3.6974388394120825,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_position (procedure)"
+        },
+        "theta3": {
+          "value": -1.9582906948443133,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_position (procedure)"
+        },
+        "mu": {
+          "value": 0.6274557729231908,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_position (procedure)"
+        },
+        "s": {
+          "value": 5.2915026221291805,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_position (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "theta4": {
+          "absolute_error": 4.1208236822853905e-10,
+          "relative_error": 1.1145075988328986e-10,
+          "allowed_absolute_error": 0.007394877678,
+          "passed": true
+        },
+        "theta3": {
+          "absolute_error": 1.5568679678779063e-10,
+          "relative_error": 7.950137187767755e-11,
+          "allowed_absolute_error": 0.00391658139,
+          "passed": true
+        },
+        "mu": {
+          "absolute_error": 3.4239500124044753e-10,
+          "relative_error": 5.45687865508255e-10,
+          "allowed_absolute_error": 0.0012549115451615915,
+          "passed": true
+        },
+        "s": {
+          "absolute_error": 1.2918022207486501e-10,
+          "relative_error": 2.4412767280466635e-11,
+          "allowed_absolute_error": 0.010583005244,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Same s, phi, beta as the open case: CROSSED branch theta4 = phi + beta = 2.8081195 + 0.8893194 = 3.6974388 rad; B = (6+9cos(theta4), 9sin(theta4)); theta3 = atan2(By-Ay, Bx-Ax) = -1.9582907 rad (negative coupler angle); mu and s are branch-independent: 35.9506 deg and 5.2915026 m"
+      }
+    },
+    {
+      "id": "mechanisms-010",
+      "calculator": "mechanisms.fourbar_velocity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a": 2,
+        "b": 7,
+        "c": 9,
+        "theta2": "60 deg",
+        "theta3": "1.291344350 rad",
+        "theta4": "1.918800123 rad",
+        "omega2": 30
+      },
+      "solve_for": [
+        "omega3",
+        "omega4"
+      ],
+      "expected_as_specified": {
+        "omega3": "-11.1742203 rad/s",
+        "omega4": "-2.74494802 rad/s"
+      },
+      "expected_SI": {
+        "omega3": -11.1742203,
+        "omega4": -2.74494802
+      },
+      "actual_SI": {
+        "omega3": {
+          "value": -11.174220322303688,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_velocity (symbolic)"
+        },
+        "omega4": {
+          "value": -2.7449480176868506,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_velocity (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "omega3": {
+          "absolute_error": 2.230368778555203e-08,
+          "relative_error": 1.9959949944384067e-09,
+          "allowed_absolute_error": 0.0055871101500000004,
+          "passed": true
+        },
+        "omega4": {
+          "absolute_error": 2.313149227717304e-09,
+          "relative_error": 8.426932717353621e-10,
+          "allowed_absolute_error": 0.00137247401,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta3, theta4 are the open-branch position solution (theta4 = phi-beta = 1.9188001 rad). omega3 = a omega2 sin(theta4-theta2)/(b sin(theta3-theta4)) = 2*30*sin(0.8716027)/(7*sin(-0.6274558)) = 45.91836/(-4.3921906) = -11.17422 rad/s; omega4 = a omega2 sin(theta2-theta3)/(c sin(theta4-theta3)) = 2*30*sin(-0.2441461)/(9*sin(0.6274558)) = -14.50370/5.28351 = -2.74495 rad/s"
+      }
+    },
+    {
+      "id": "mechanisms-011",
+      "calculator": "mechanisms.fourbar_ma",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a": 2,
+        "c": 9,
+        "theta2": "60 deg",
+        "theta3": "1.291344350 rad",
+        "theta4": "1.918800123 rad"
+      },
+      "solve_for": [
+        "MA",
+        "VR"
+      ],
+      "expected_as_specified": {
+        "MA": 10.9291687,
+        "VR": -10.9291687
+      },
+      "expected_SI": {
+        "MA": 10.9291687,
+        "VR": -10.9291687
+      },
+      "actual_SI": {
+        "MA": {
+          "value": 10.929168715289844,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_ma (symbolic)"
+        },
+        "VR": {
+          "value": -10.929168715289844,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_ma (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "MA": {
+          "absolute_error": 1.5289844057519986e-08,
+          "relative_error": 1.3989942398382035e-09,
+          "allowed_absolute_error": 0.00546458435,
+          "passed": true
+        },
+        "VR": {
+          "absolute_error": 1.5289844057519986e-08,
+          "relative_error": 1.3989942398382035e-09,
+          "allowed_absolute_error": 0.00546458435,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "VR = c sin(theta4-theta3)/(a sin(theta2-theta3)) = 9*sin(0.6274558)/(2*sin(-0.2441461)) = 5.28351/(-0.48346) = -10.92917; MA = T4/T2 = -omega2/omega4 = -VR = +10.92917"
+      }
+    },
+    {
+      "id": "mechanisms-012",
+      "calculator": "mechanisms.slider_crank",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "geometry": [
+          0.05,
+          0.2,
+          0.0
+        ],
+        "theta2": "30 deg",
+        "omega": 100,
+        "branch": "open"
+      },
+      "solve_for": [
+        "x",
+        "v",
+        "a",
+        "phi",
+        "omega_phi",
+        "alpha_phi"
+      ],
+      "expected_as_specified": {
+        "x": "0.2417326185 m",
+        "v": "-3.045544726 m/s",
+        "a": "-497.5066397 m/s^2",
+        "phi": "7.18075578 deg",
+        "omega_phi": "21.82178902 rad/s",
+        "alpha_phi": "-1199.887216 rad/s^2"
+      },
+      "expected_SI": {
+        "x": 0.2417326185,
+        "v": -3.045544726,
+        "a": -497.5066397,
+        "phi": 0.1253278311426136,
+        "omega_phi": 21.82178902,
+        "alpha_phi": -1199.887216
+      },
+      "actual_SI": {
+        "x": {
+          "value": 0.24173261851906627,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        },
+        "v": {
+          "value": -3.0455447255899806,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        },
+        "a": {
+          "value": -497.50663974696846,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        },
+        "phi": {
+          "value": 0.12532783116806537,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        },
+        "omega_phi": {
+          "value": 21.821789023599237,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        },
+        "alpha_phi": {
+          "value": -1199.8872159023083,
+          "unit": "rad/s^2",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "x": {
+          "absolute_error": 1.9066276335522048e-11,
+          "relative_error": 7.887341168036058e-11,
+          "allowed_absolute_error": 0.00012086630925,
+          "passed": true
+        },
+        "v": {
+          "absolute_error": 4.100195738487855e-10,
+          "relative_error": 1.3462930632685298e-10,
+          "allowed_absolute_error": 0.0015227723630000002,
+          "passed": true
+        },
+        "a": {
+          "absolute_error": 4.6968466449470725e-08,
+          "relative_error": 9.440771781014428e-11,
+          "allowed_absolute_error": 0.24875331985000002,
+          "passed": true
+        },
+        "phi": {
+          "absolute_error": 2.5451779572804867e-11,
+          "relative_error": 2.030816247337965e-10,
+          "allowed_absolute_error": 6.266391557130679e-05,
+          "passed": true
+        },
+        "omega_phi": {
+          "absolute_error": 3.5992364644243935e-09,
+          "relative_error": 1.6493773544990461e-10,
+          "allowed_absolute_error": 0.010910894510000001,
+          "passed": true
+        },
+        "alpha_phi": {
+          "absolute_error": 9.769178177521098e-08,
+          "relative_error": 8.141747030265133e-11,
+          "allowed_absolute_error": 0.599943608,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "In-line (e=0): g = r sin30 = 0.025; h = sqrt(L^2-g^2) = sqrt(0.04-0.000625) = 0.1984313 m; x = r cos30 + h = 0.0433013+0.1984313 = 0.2417326 m; v = -r w sin30 - r w cos30 g/h = -2.5 - 100*0.0433013*0.025/0.1984313 = -2.5 - 0.545545 = -3.045545 m/s; a = -r w^2 cos30 + r w^2 sin30 g/h - r^2 w^2 cos^2 30 L^2/h^3 = -433.013 + 6.301 - 70.795 = -497.507 m/s^2; phi = atan2(g, h) = atan2(0.025, 0.1984313) = 7.1808 deg; omega_phi = r w cos30/h = 21.8218 rad/s"
+      }
+    },
+    {
+      "id": "mechanisms-013",
+      "calculator": "mechanisms.slider_crank",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "geometry": [
+          0.05,
+          0.2,
+          0.0
+        ],
+        "theta2": "30 deg",
+        "omega": 100,
+        "branch": "crossed"
+      },
+      "solve_for": [
+        "x",
+        "v",
+        "a",
+        "phi",
+        "omega_phi",
+        "alpha_phi"
+      ],
+      "expected_as_specified": {
+        "x": "-0.155130078 m",
+        "v": "-1.954455274 m/s",
+        "a": "-368.5187640 m/s^2",
+        "phi": "172.8192442 deg",
+        "omega_phi": "-21.82178902 rad/s",
+        "alpha_phi": "1199.887216 rad/s^2"
+      },
+      "expected_SI": {
+        "x": -0.155130078,
+        "v": -1.954455274,
+        "a": -368.518764,
+        "phi": 3.016264822098114,
+        "omega_phi": -21.82178902,
+        "alpha_phi": 1199.887216
+      },
+      "actual_SI": {
+        "x": {
+          "value": -0.15513007814062238,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        },
+        "v": {
+          "value": -1.9544552744100185,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        },
+        "a": {
+          "value": -368.51876403747025,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        },
+        "phi": {
+          "value": 3.0162648224217277,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        },
+        "omega_phi": {
+          "value": -21.821789023599237,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        },
+        "alpha_phi": {
+          "value": 1199.8872159023083,
+          "unit": "rad/s^2",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "x": {
+          "absolute_error": 1.4062237485568119e-10,
+          "relative_error": 9.064803980546002e-10,
+          "allowed_absolute_error": 7.7565039e-05,
+          "passed": true
+        },
+        "v": {
+          "absolute_error": 4.100184636257609e-10,
+          "relative_error": 2.0978656768472098e-10,
+          "allowed_absolute_error": 0.000977227637,
+          "passed": true
+        },
+        "a": {
+          "absolute_error": 3.747027221834287e-08,
+          "relative_error": 1.016780578867427e-10,
+          "allowed_absolute_error": 0.184259382,
+          "passed": true
+        },
+        "phi": {
+          "absolute_error": 3.236135803774687e-10,
+          "relative_error": 1.0728951185140404e-10,
+          "allowed_absolute_error": 0.0015081324110490571,
+          "passed": true
+        },
+        "omega_phi": {
+          "absolute_error": 3.5992364644243935e-09,
+          "relative_error": 1.6493773544990461e-10,
+          "allowed_absolute_error": 0.010910894510000001,
+          "passed": true
+        },
+        "alpha_phi": {
+          "absolute_error": 9.769178177521098e-08,
+          "relative_error": 8.141747030265133e-11,
+          "allowed_absolute_error": 0.599943608,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Crossed branch: h = -sqrt(L^2-g^2) = -0.1984313 m. x = r cos30 + h = 0.0433013 - 0.1984313 = -0.1551301 m; v = -r w sin30 - r w cos30 g/h = -2.5 - 4.330127*(-0.125988) = -2.5 + 0.545545 = -1.954455 m/s; a = -433.013 + 500*0.5*(-0.125988) - 0.75/(-0.00781335) = -433.013 - 31.497 + 95.989 = -368.519 m/s^2; phi = atan2(g, h) = atan2(0.025, -0.1984313) = 172.8192 deg (second-quadrant rod angle, NOT asin(g/L)); omega_phi = r w cos30/h = 4.330127/(-0.1984313) = -21.8218 rad/s (opposite sign to the open branch)"
+      }
+    },
+    {
+      "id": "mechanisms-014",
+      "calculator": "mechanisms.cam_profile",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h": 0.01,
+        "beta": "60 deg",
+        "theta": "20 deg",
+        "omega": 50,
+        "law": "shm"
+      },
+      "solve_for": [
+        "s",
+        "v",
+        "a",
+        "j"
+      ],
+      "expected_as_specified": {
+        "s": "0.0025 m",
+        "v": "0.64951905 m/s",
+        "a": "56.25 m/s^2",
+        "j": "-14614.17869 m/s^3"
+      },
+      "expected_SI": {
+        "s": 0.0025,
+        "v": 0.64951905,
+        "a": 56.25,
+        "j": -14614.17869
+      },
+      "actual_SI": {
+        "s": {
+          "value": 0.0025000000000000005,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        },
+        "v": {
+          "value": 0.6495190528383291,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        },
+        "a": {
+          "value": 56.24999999999999,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        },
+        "j": {
+          "value": -14614.178688862406,
+          "unit": "m/s^3",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "s": {
+          "absolute_error": 4.336808689942018e-19,
+          "relative_error": 1.734723475976807e-16,
+          "allowed_absolute_error": 1.25e-06,
+          "passed": true
+        },
+        "v": {
+          "absolute_error": 2.838329127285988e-09,
+          "relative_error": 4.369893580928824e-09,
+          "allowed_absolute_error": 0.000324759525,
+          "passed": true
+        },
+        "a": {
+          "absolute_error": 7.105427357601002e-15,
+          "relative_error": 1.2631870857957337e-16,
+          "allowed_absolute_error": 0.028125,
+          "passed": true
+        },
+        "j": {
+          "absolute_error": 1.137594153988175e-06,
+          "relative_error": 7.784181226459159e-11,
+          "allowed_absolute_error": 7.3070893450000005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "SHM rise, y = theta/beta = 1/3: s = h/2 (1-cos(pi/3)) = 0.005*(1-0.5) = 0.0025 m; v = pi h w/(2 beta) sin(pi/3) = pi*0.01*50/(2*pi/3)*0.866025 = 0.75*0.866025 = 0.649519 m/s; a = pi^2 h w^2/(2 beta^2) cos(pi/3) = (pi^2*0.01*2500)/(2*(pi/3)^2)*0.5 = 56.25 m/s^2; j = -pi^3 h w^3/(2 beta^3) sin(pi/3) = -14614.18 m/s^3"
+      }
+    },
+    {
+      "id": "mechanisms-015",
+      "calculator": "mechanisms.cam_profile",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h": 0.008,
+        "beta": "90 deg",
+        "theta": "30 deg",
+        "omega": 40,
+        "law": "cycloidal"
+      },
+      "solve_for": [
+        "s",
+        "v",
+        "a",
+        "j"
+      ],
+      "expected_as_specified": {
+        "s": "0.0015640089 m",
+        "v": "0.30557749 m/s",
+        "a": "28.22803945 m/s^2",
+        "j": "-2607.594588 m/s^3"
+      },
+      "expected_SI": {
+        "s": 0.0015640089,
+        "v": 0.30557749,
+        "a": 28.22803945,
+        "j": -2607.594588
+      },
+      "actual_SI": {
+        "s": {
+          "value": 0.0015640088758230824,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        },
+        "v": {
+          "value": 0.30557749073643903,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        },
+        "a": {
+          "value": 28.228039445595755,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        },
+        "j": {
+          "value": -2607.594587617612,
+          "unit": "m/s^3",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "s": {
+          "absolute_error": 2.4176917629362138e-11,
+          "relative_error": 1.545829926502473e-08,
+          "allowed_absolute_error": 7.8200445e-07,
+          "passed": true
+        },
+        "v": {
+          "absolute_error": 7.364390208763893e-10,
+          "relative_error": 2.4099910660186042e-09,
+          "allowed_absolute_error": 0.000152788745,
+          "passed": true
+        },
+        "a": {
+          "absolute_error": 4.404245856903799e-09,
+          "relative_error": 1.5602379558470535e-10,
+          "allowed_absolute_error": 0.014114019725000001,
+          "passed": true
+        },
+        "j": {
+          "absolute_error": 3.8238795241340995e-07,
+          "relative_error": 1.4664394310877053e-10,
+          "allowed_absolute_error": 1.303797294,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Cycloidal, y = 1/3: s = h(y - sin(2 pi y)/(2 pi)) = 0.008*(1/3 - sin(2pi/3)/(2pi)) = 0.008*(0.333333 - 0.866025/6.283185) = 0.008*0.195501 = 0.0015640 m; v = h w/beta (1-cos(2 pi y)) = 0.008*40/(pi/2)*(1-cos(2pi/3)) = 0.203718*(1+0.5) = 0.305577 m/s; a = 2 pi h w^2/beta^2 sin(2 pi y) = 2 pi*0.008*1600/(pi^2/4)*0.866025 = 28.2280 m/s^2; j = 4 pi^2 h w^3/beta^3 cos(2 pi y) = 4 pi^2*0.008*64000/(pi^3/8)*(-0.5) = -2607.59 m/s^3"
+      }
+    },
+    {
+      "id": "mechanisms-016",
+      "calculator": "mechanisms.cam_profile",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h": 0.01,
+        "beta": "60 deg",
+        "theta": "20 deg",
+        "omega": 50,
+        "law": "poly345"
+      },
+      "solve_for": [
+        "s",
+        "v",
+        "a",
+        "j"
+      ],
+      "expected_as_specified": {
+        "s": "0.0020987654 m",
+        "v": "0.70735530 m/s",
+        "a": "101.321184 m/s^2",
+        "j": "-21769.78574 m/s^3"
+      },
+      "expected_SI": {
+        "s": 0.0020987654,
+        "v": 0.7073553,
+        "a": 101.321184,
+        "j": -21769.78574
+      },
+      "actual_SI": {
+        "s": {
+          "value": 0.0020987654320987655,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        },
+        "v": {
+          "value": 0.7073553026306462,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        },
+        "a": {
+          "value": 101.32118364233781,
+          "unit": "m/s^2",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        },
+        "j": {
+          "value": -21769.78574240967,
+          "unit": "m/s^3",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_profile (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "s": {
+          "absolute_error": 3.209876548587731e-11,
+          "relative_error": 1.529411790659276e-08,
+          "allowed_absolute_error": 1.0493827e-06,
+          "passed": true
+        },
+        "v": {
+          "absolute_error": 2.6306461453629026e-09,
+          "relative_error": 3.7189883858407546e-09,
+          "allowed_absolute_error": 0.00035367765,
+          "passed": true
+        },
+        "a": {
+          "absolute_error": 3.5766218786648096e-07,
+          "relative_error": 3.529984291009479e-09,
+          "allowed_absolute_error": 0.050660592000000004,
+          "passed": true
+        },
+        "j": {
+          "absolute_error": 2.4096698325593024e-06,
+          "relative_error": 1.1068872525151929e-10,
+          "allowed_absolute_error": 10.88489287,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "3-4-5 polynomial, y = 1/3: s = h(10y^3 - 15y^4 + 6y^5) = 0.01*(10/27 - 15/81 + 6/243) = 0.01*0.2098765 = 0.00209877 m; v = (h w/beta)(30y^2 - 60y^3 + 30y^4) = (0.5/(pi/3))*(30/9 - 60/27 + 30/81) = 0.477465*1.481481 = 0.707355 m/s; a = (h w^2/beta^2)(60y - 180y^2 + 120y^3) = (25/(pi/3)^2)*(20 - 20 + 120/27) = 22.79726*4.444444 = 101.321 m/s^2; j = (h w^3/beta^3)(60 - 360y + 360y^2) = (1250/(pi/3)^3)*(60 - 120 + 40) = 1088.49*(-20) = -21769.8 m/s^3"
+      }
+    },
+    {
+      "id": "mechanisms-017",
+      "calculator": "mechanisms.cam_pressure_angle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "ds_dtheta": 0.008,
+        "R_b": 0.02,
+        "R_r": 0.01,
+        "s": 0.004
+      },
+      "solve_for": [
+        "alpha"
+      ],
+      "expected_as_specified": {
+        "alpha": "13.2405199 deg"
+      },
+      "expected_SI": {
+        "alpha": 0.23109066693083036
+      },
+      "actual_SI": {
+        "alpha": {
+          "value": 0.23109066719589708,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_pressure_angle (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "alpha": {
+          "absolute_error": 2.6506671857440267e-10,
+          "relative_error": 1.1470247677884021e-09,
+          "allowed_absolute_error": 0.00011554533346541519,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "alpha = atan((ds/dtheta)/(R_b + R_r + s)) = atan(0.008/0.034) = atan(0.2352941) = 13.2405 deg"
+      }
+    },
+    {
+      "id": "mechanisms-018",
+      "calculator": "mechanisms.cam_base_circle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "ds_dtheta": 0.02,
+        "alpha_max": "30 deg",
+        "R_r": 0.01,
+        "s": 0.004
+      },
+      "solve_for": [
+        "R_b"
+      ],
+      "expected_as_specified": {
+        "R_b": "0.020641016 m"
+      },
+      "expected_SI": {
+        "R_b": 0.020641016
+      },
+      "actual_SI": {
+        "R_b": {
+          "value": 0.020641016151377548,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_base_circle (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "R_b": {
+          "absolute_error": 1.5137754591498798e-10,
+          "relative_error": 7.33382242012641e-09,
+          "allowed_absolute_error": 1.0320508e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R_b = (ds/dtheta)/tan(alpha_max) - R_r - s = 0.02/tan(30 deg) - 0.01 - 0.004 = 0.0346410 - 0.014 = 0.0206410 m"
+      }
+    },
+    {
+      "id": "mechanisms-019",
+      "calculator": "mechanisms.cam_base_circle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "ds_dtheta": 0.005,
+        "alpha_max": "30 deg",
+        "R_r": 0.01,
+        "s": 0.004
+      },
+      "solve_for": [
+        "R_b"
+      ],
+      "expected_as_specified": {
+        "R_b": "-0.005339745 m"
+      },
+      "expected_SI": {
+        "R_b": -0.005339745
+      },
+      "actual_SI": {
+        "R_b": {
+          "value": -0.005339745962155613,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.cam_base_circle (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "R_b": {
+          "absolute_error": 9.621556129948972e-10,
+          "relative_error": 1.8018755820641196e-07,
+          "allowed_absolute_error": 2.6698725e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Negative case: R_b = 0.005/tan(30 deg) - 0.01 - 0.004 = 0.00866025 - 0.014 = -0.00533975 m (the chosen roller/slope already meets the pressure-angle limit with a zero base circle, so the required base radius is negative)"
+      }
+    },
+    {
+      "id": "mechanisms-020",
+      "calculator": "mechanisms.gear_pair",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega_in": "1500 rpm",
+        "T_in": 20,
+        "T_out": 40
+      },
+      "solve_for": [
+        "omega_out"
+      ],
+      "expected_as_specified": {
+        "omega_out": "-750 rpm"
+      },
+      "expected_SI": {
+        "omega_out": -78.53981633974483
+      },
+      "actual_SI": {
+        "omega_out": {
+          "value": -78.53981633974483,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.gear_pair (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "omega_out": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.039269908169872414,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_out = -omega_in T_in/T_out = -1500*20/40 = -750 rpm (external pair reverses)"
+      }
+    },
+    {
+      "id": "mechanisms-021",
+      "calculator": "mechanisms.gear_train_value",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "drivers": [
+          20,
+          30
+        ],
+        "driven": [
+          40,
+          50
+        ],
+        "external_meshes": "2"
+      },
+      "solve_for": [
+        "train_value"
+      ],
+      "expected_as_specified": {
+        "train_value": 0.3
+      },
+      "expected_SI": {
+        "train_value": 0.3
+      },
+      "actual_SI": {
+        "train_value": {
+          "value": 0.3,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.gear_train_value (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "train_value": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0006,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "e = (20*30)/(40*50) * (-1)^2 = 600/2000 = 0.3 (two external meshes keep the sign positive)"
+      }
+    },
+    {
+      "id": "mechanisms-022",
+      "calculator": "mechanisms.planetary_trains",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega_R": 0,
+        "omega_C": "375 rpm",
+        "Z_S": 20,
+        "Z_R": 60
+      },
+      "solve_for": [
+        "omega_S"
+      ],
+      "expected_as_specified": {
+        "omega_S": "1500 rpm"
+      },
+      "expected_SI": {
+        "omega_S": 157.07963267948966
+      },
+      "actual_SI": {
+        "omega_S": {
+          "value": 157.07963267948966,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.planetary_trains (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "omega_S": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.07853981633974483,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Ring fixed (omega_R = 0): omega_S - omega_C = -(60/20)(0 - omega_C) = 3 omega_C, so omega_S = 4 omega_C = 4*375 = 1500 rpm (the 1 + Z_R/Z_S = 4 overdrive ratio with ring fixed)"
+      }
+    },
+    {
+      "id": "mechanisms-023",
+      "calculator": "mechanisms.geneva",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 4
+      },
+      "solve_for": [
+        "theta_index",
+        "crank_angle",
+        "dwell_angle",
+        "time_ratio"
+      ],
+      "expected_as_specified": {
+        "theta_index": "90 deg",
+        "crank_angle": "90 deg",
+        "dwell_angle": "270 deg",
+        "time_ratio": 0.25
+      },
+      "expected_SI": {
+        "theta_index": 1.5707963267948966,
+        "crank_angle": 1.5707963267948966,
+        "dwell_angle": 4.71238898038469,
+        "time_ratio": 0.25
+      },
+      "actual_SI": {
+        "theta_index": {
+          "value": 1.5707963267948966,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.geneva (symbolic)"
+        },
+        "crank_angle": {
+          "value": 1.5707963267948966,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.geneva (symbolic)"
+        },
+        "dwell_angle": {
+          "value": 4.71238898038469,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.geneva (symbolic)"
+        },
+        "time_ratio": {
+          "value": 0.25,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.geneva (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "theta_index": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0031415926535897933,
+          "passed": true
+        },
+        "crank_angle": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0031415926535897933,
+          "passed": true
+        },
+        "dwell_angle": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00942477796076938,
+          "passed": true
+        },
+        "time_ratio": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "4-slot Geneva: index angle = 2*pi/4 = 90 deg; crank angle of action = pi - 2*pi/4 = 90 deg; dwell = 360 - 90 = 270 deg; indexing fraction = 90/360 = 0.25"
+      }
+    },
+    {
+      "id": "mechanisms-024",
+      "calculator": "mechanisms.quick_return",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "phi_cut": "220 deg"
+      },
+      "solve_for": [
+        "Q",
+        "phi_return"
+      ],
+      "expected_as_specified": {
+        "Q": 1.5714286,
+        "phi_return": "140 deg"
+      },
+      "expected_SI": {
+        "Q": 1.5714286,
+        "phi_return": 2.443460952792061
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 1.5714285714285716,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.quick_return (symbolic)"
+        },
+        "phi_return": {
+          "value": 2.443460952792061,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.quick_return (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q": {
+          "absolute_error": 2.8571428334345228e-08,
+          "relative_error": 1.818181770036846e-08,
+          "allowed_absolute_error": 0.0031428572,
+          "passed": true
+        },
+        "phi_return": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004886921905584122,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "phi_return = 360 - 220 = 140 deg; Q = 220/140 = 1.5714"
+      }
+    },
+    {
+      "id": "mechanisms-025",
+      "calculator": "mechanisms.quick_return",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Q": 1.5
+      },
+      "solve_for": [
+        "phi_cut",
+        "phi_return"
+      ],
+      "expected_as_specified": {
+        "phi_cut": "216 deg"
+      },
+      "expected_SI": {
+        "phi_cut": 3.7699111843077517
+      },
+      "actual_SI": {
+        "phi_cut": {
+          "value": 3.7699111843077517,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.quick_return (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "phi_cut": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0018849555921538759,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "phi_cut = 2 pi Q/(1+Q) = 2 pi*1.5/2.5 = 216 deg"
+      }
+    },
+    {
+      "id": "mechanisms-026",
+      "calculator": "mechanisms.fourbar_acceleration",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a": 2,
+        "b": 7,
+        "c": 9,
+        "theta2": "60 deg",
+        "theta3": "1.291344350340649 rad",
+        "theta4": "1.9188001232638396 rad",
+        "omega2": 30,
+        "omega3": "-11.17422032596634 rad/s",
+        "omega4": "-2.7449480217310938 rad/s",
+        "alpha2": 0
+      },
+      "solve_for": [
+        "alpha3",
+        "alpha4"
+      ],
+      "expected_as_specified": {
+        "alpha3": "437.5664008 rad/s^2",
+        "alpha4": "485.5924794 rad/s^2"
+      },
+      "expected_SI": {
+        "alpha3": 437.5664008,
+        "alpha4": 485.5924794
+      },
+      "actual_SI": {
+        "alpha3": {
+          "value": 437.5664007879193,
+          "unit": "rad/s^2",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_acceleration (procedure)"
+        },
+        "alpha4": {
+          "value": 485.5924794121582,
+          "unit": "rad/s^2",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_acceleration (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "alpha3": {
+          "absolute_error": 1.2080704436812084e-08,
+          "relative_error": 2.7608848427861475e-11,
+          "allowed_absolute_error": 0.21878320040000002,
+          "passed": true
+        },
+        "alpha4": {
+          "absolute_error": 1.2158182016719365e-08,
+          "relative_error": 2.5037830140495715e-11,
+          "allowed_absolute_error": 0.2427962397,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Independent finite-difference check (not the closed form): with omega2 = 30 rad/s and alpha2 = 0, alpha3 = omega2^2 dg3/dtheta2 where g3 = a sin(theta4-theta2)/(b sin(theta3-theta4)). Solving the position loop at theta2 = 60 deg +/- 1e-6 rad (open branch) gives g3 = -0.372474011 and dg3/dtheta2 = 0.48618489, so alpha3 = 30^2*0.48618489 = 437.5664 rad/s^2; likewise g4 = a sin(theta2-theta3)/(c sin(theta4-theta3)) = -0.091498267, dg4/dtheta2 = 0.53954720, alpha4 = 30^2*0.53954720 = 485.5925 rad/s^2."
+      }
+    },
+    {
+      "id": "mechanisms-027",
+      "calculator": "mechanisms.fourbar_static_force",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T4": 20,
+        "a": 2,
+        "c": 9,
+        "theta2": "60 deg",
+        "theta3": "1.291344350 rad",
+        "theta4": "1.918800123 rad"
+      },
+      "solve_for": [
+        "T2"
+      ],
+      "expected_as_specified": {
+        "T2": "1.82996535 N*m"
+      },
+      "expected_SI": {
+        "T2": 1.82996535
+      },
+      "actual_SI": {
+        "T2": {
+          "value": 1.8299653451245668,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.fourbar_static_force (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T2": {
+          "absolute_error": 4.8754331682943075e-09,
+          "relative_error": 2.664221575722353e-09,
+          "allowed_absolute_error": 0.000914982675,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Virtual work T2*omega2 + T4*omega4 = 0 gives T2 = -T4*(omega4/omega2) = -T4*a*sin(theta2-theta3)/(c*sin(theta4-theta3)) = -20*2*sin(-0.2441461)/(9*sin(0.6274558)) = -40*(-0.241728)/5.28351 = +1.82997 N*m (the input and output torques share a sign here because the open-branch rocker rotates opposite the crank)."
+      }
+    },
+    {
+      "id": "mechanisms-028",
+      "calculator": "mechanisms.balance_one_plane",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "masses": [
+          [
+            0.4,
+            0.1,
+            0
+          ],
+          [
+            0.4,
+            0.1,
+            120
+          ]
+        ]
+      },
+      "solve_for": [
+        "U",
+        "theta_U"
+      ],
+      "expected_as_specified": {
+        "U": "0.04 kg*m",
+        "theta_U": "60 deg"
+      },
+      "expected_SI": {
+        "U": 0.04,
+        "theta_U": 1.0471975511965976
+      },
+      "actual_SI": {
+        "U": {
+          "value": 0.040000000000000015,
+          "unit": "kg*m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.balance_one_plane (procedure)"
+        },
+        "theta_U": {
+          "value": 1.0471975511965976,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.balance_one_plane (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "U": {
+          "absolute_error": 1.3877787807814457e-17,
+          "relative_error": 3.469446951953614e-16,
+          "allowed_absolute_error": 2e-05,
+          "passed": true
+        },
+        "theta_U": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005235987755982988,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two equal 0.04 kg*m unbalances at 0 and 120 deg: sum = 0.04(1 + e^{i120}) = 0.04*(0.5 + 0.866025i); |U| = 0.04*1.0 = 0.04 kg*m at 60 deg (equilateral triangle)"
+      }
+    },
+    {
+      "id": "mechanisms-029",
+      "calculator": "mechanisms.balance_two_plane",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "masses": [
+          [
+            0.3,
+            0.1,
+            0,
+            0.0
+          ],
+          [
+            0.3,
+            0.1,
+            90,
+            0.3
+          ]
+        ],
+        "planes": [
+          0.1,
+          0.2
+        ]
+      },
+      "solve_for": [
+        "uA_mag",
+        "uA_ang",
+        "uB_mag",
+        "uB_ang"
+      ],
+      "expected_as_specified": {
+        "uA_mag": "0.067082039 kg*m",
+        "uA_ang": "153.4349488 deg",
+        "uB_mag": "0.067082039 kg*m",
+        "uB_ang": "296.5650512 deg"
+      },
+      "expected_SI": {
+        "uA_mag": 0.067082039,
+        "uA_ang": 2.6779450441889225,
+        "uB_mag": 0.067082039,
+        "uB_ang": 5.176036589785561
+      },
+      "actual_SI": {
+        "uA_mag": {
+          "value": 0.06708203932499368,
+          "unit": "kg*m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.balance_two_plane (procedure)"
+        },
+        "uA_ang": {
+          "value": 2.6779450445889874,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.balance_two_plane (procedure)"
+        },
+        "uB_mag": {
+          "value": 0.06708203932499368,
+          "unit": "kg*m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.balance_two_plane (procedure)"
+        },
+        "uB_ang": {
+          "value": 5.176036589385496,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.balance_two_plane (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "uA_mag": {
+          "absolute_error": 3.249936847415924e-10,
+          "relative_error": 4.84471983240689e-09,
+          "allowed_absolute_error": 3.35410195e-05,
+          "passed": true
+        },
+        "uA_ang": {
+          "absolute_error": 4.000648701207865e-10,
+          "relative_error": 1.4939248697015564e-10,
+          "allowed_absolute_error": 0.0013389725220944613,
+          "passed": true
+        },
+        "uB_mag": {
+          "absolute_error": 3.249936847415924e-10,
+          "relative_error": 4.84471983240689e-09,
+          "allowed_absolute_error": 3.35410195e-05,
+          "passed": true
+        },
+        "uB_ang": {
+          "absolute_error": 4.000648701207865e-10,
+          "relative_error": 7.729173918713757e-11,
+          "allowed_absolute_error": 0.0025880182948927804,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "u1 = 0.03, u2 = 0.03j. F = 0.03+0.03j, M = 0*0.03 + 0.3*0.03j = 0.009j. uA = (M - z_B F)/(z_B - z_A) = (0.009j - 0.2(0.03+0.03j))/0.1 = -0.06 + 0.03j (mag 0.0670820, ang 153.435 deg); uB = -F - uA = 0.03 - 0.06j (mag 0.0670820, ang 296.565 deg)"
+      }
+    },
+    {
+      "id": "mechanisms-030",
+      "calculator": "mechanisms.reciprocating_unbalance",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": 0.5,
+        "r": "50 mm",
+        "L": "0.2 m",
+        "omega": "3000 rpm",
+        "theta": "30 deg"
+      },
+      "solve_for": [
+        "F_x"
+      ],
+      "expected_as_specified": {
+        "F_x": "2445.25717 N"
+      },
+      "expected_SI": {
+        "F_x": 2445.25717
+      },
+      "actual_SI": {
+        "F_x": {
+          "value": 2445.2571716955645,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.reciprocating_unbalance (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "F_x": {
+          "absolute_error": 1.6955646060523577e-06,
+          "relative_error": 6.934095222599257e-10,
+          "allowed_absolute_error": 1.222628585,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = 314.1593 rad/s; F_x = m r omega^2 (cos(theta) + (r/L) cos(2 theta)) = 0.5*0.05*98696.0*(0.866025 + 0.25*0.5) = 2467.40*0.991025 = 2445.26 N"
+      }
+    },
+    {
+      "id": "mechanisms-031",
+      "calculator": "mechanisms.crank_effort",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F_p": 5000,
+        "r": "50 mm",
+        "L": "0.2 m",
+        "theta": "30 deg"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expected_as_specified": {
+        "T": "152.27724 N*m"
+      },
+      "expected_SI": {
+        "T": 152.27724
+      },
+      "actual_SI": {
+        "T": {
+          "value": 152.27723627949902,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.crank_effort (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T": {
+          "absolute_error": 3.720500984627506e-06,
+          "relative_error": 2.443241671984274e-08,
+          "allowed_absolute_error": 0.07613862,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = F_p r sin(theta) (1 + r cos(theta)/sqrt(L^2 - r^2 sin^2(theta))) = 5000*0.025*(1 + 0.0433013/sqrt(0.039375)) = 125*(1 + 0.0433013/0.1984313) = 125*1.218218 = 152.277 N*m"
+      }
+    },
+    {
+      "id": "mechanisms-032",
+      "calculator": "mechanisms.slider_crank_dynamic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "geometry": [
+          0.05,
+          0.2,
+          0.0
+        ],
+        "theta2": "30 deg",
+        "omega": 100,
+        "F_gas": 5000,
+        "m_piston": 0.0,
+        "m_rod": 0.0,
+        "l_cg": 0.1,
+        "m_crankpin": 0.0
+      },
+      "solve_for": [
+        "T",
+        "F_rod",
+        "F_wall",
+        "O2x",
+        "O2y",
+        "m_recip",
+        "m_rot"
+      ],
+      "expected_as_specified": {
+        "T": "152.2772363 N*m",
+        "F_rod": "5039.526307 N",
+        "F_wall": "629.9407883 N",
+        "O2x": "5000.0 N",
+        "O2y": "-629.9407883 N",
+        "m_recip": 0.0,
+        "m_rot": 0.0
+      },
+      "expected_SI": {
+        "T": 152.2772363,
+        "F_rod": 5039.526307,
+        "F_wall": 629.9407883,
+        "O2x": 5000.0,
+        "O2y": -629.9407883,
+        "m_recip": 0.0,
+        "m_rot": 0.0
+      },
+      "actual_SI": {
+        "T": {
+          "value": 152.27723627949905,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "F_rod": {
+          "value": 5039.526306789696,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "F_wall": {
+          "value": 629.9407883487119,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "O2x": {
+          "value": 5000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "O2y": {
+          "value": -629.9407883487119,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "m_recip": {
+          "value": 0.0,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "m_rot": {
+          "value": 0.0,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T": {
+          "absolute_error": 2.0500948494373006e-08,
+          "relative_error": 1.3462910801706614e-10,
+          "allowed_absolute_error": 0.07613861815,
+          "passed": true
+        },
+        "F_rod": {
+          "absolute_error": 2.1030427888035774e-07,
+          "relative_error": 4.1730961616023516e-11,
+          "allowed_absolute_error": 2.5197631535,
+          "passed": true
+        },
+        "F_wall": {
+          "absolute_error": 4.871185410593171e-08,
+          "relative_error": 7.732767112507312e-11,
+          "allowed_absolute_error": 0.31497039415,
+          "passed": true
+        },
+        "O2x": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.5,
+          "passed": true
+        },
+        "O2y": {
+          "absolute_error": 4.871185410593171e-08,
+          "relative_error": 7.732767112507312e-11,
+          "allowed_absolute_error": 0.31497039415,
+          "passed": true
+        },
+        "m_recip": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "m_rot": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Quasi-static landmark (all masses zero, omega irrelevant): the crank torque must equal crank_effort. g = 0.025 m, h = sqrt(0.04-0.000625) = 0.1984313 m. Two-force rod in compression: F_rod = F_gas L/h = 5000*0.2/0.1984313 = 5039.5263 N; side thrust F_wall = F_rod g/L = 5039.5263*0.025/0.2 = 629.9408 N; bearing O2x = F_rod h/L = 5000.0 N, O2y = -F_rod g/L = -629.9408 N (m_rot = 0); T = F_rod r (g cos30 + h sin30)/L = 5039.5263*0.05*(0.0216506+0.0992157)/0.2 = 152.2772 N*m = crank_effort at F_p = 5000."
+      }
+    },
+    {
+      "id": "mechanisms-033",
+      "calculator": "mechanisms.slider_crank_dynamic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "geometry": [
+          0.05,
+          0.2,
+          0.0
+        ],
+        "theta2": "30 deg",
+        "omega": 100,
+        "F_gas": 5000,
+        "m_piston": 0.5,
+        "m_rod": 0.4,
+        "l_cg": 0.1,
+        "m_crankpin": 0.2
+      },
+      "solve_for": [
+        "T",
+        "F_rod",
+        "F_wall",
+        "O2x",
+        "O2y",
+        "m_recip",
+        "m_rot"
+      ],
+      "expected_as_specified": {
+        "T": "141.6709852 N*m",
+        "F_rod": "4688.518615 N",
+        "F_wall": "586.0648269 N",
+        "O2x": "4478.540271 N",
+        "O2y": "-686.0648269 N",
+        "m_recip": "0.7 kg",
+        "m_rot": "0.4 kg"
+      },
+      "expected_SI": {
+        "T": 141.6709852,
+        "F_rod": 4688.518615,
+        "F_wall": 586.0648269,
+        "O2x": 4478.540271,
+        "O2y": -686.0648269,
+        "m_recip": 0.7,
+        "m_rot": 0.4
+      },
+      "actual_SI": {
+        "T": {
+          "value": 141.6709852211074,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "F_rod": {
+          "value": 4688.518614956661,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "F_wall": {
+          "value": 586.0648268695825,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "O2x": {
+          "value": 4478.540271420235,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "O2y": {
+          "value": -686.0648268695825,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "m_recip": {
+          "value": 0.7,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        },
+        "m_rot": {
+          "value": 0.4,
+          "unit": "kg",
+          "kind": "derived",
+          "method": "mechcalc mechanisms.slider_crank_dynamic (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T": {
+          "absolute_error": 2.1107410930198967e-08,
+          "relative_error": 1.4898894717504208e-10,
+          "allowed_absolute_error": 0.0708354926,
+          "passed": true
+        },
+        "F_rod": {
+          "absolute_error": 4.3339241528883576e-08,
+          "relative_error": 9.243696162414315e-12,
+          "allowed_absolute_error": 2.3442593075000002,
+          "passed": true
+        },
+        "F_wall": {
+          "absolute_error": 3.041748186660698e-08,
+          "relative_error": 5.1901224012198056e-11,
+          "allowed_absolute_error": 0.29303241345,
+          "passed": true
+        },
+        "O2x": {
+          "absolute_error": 4.202347554382868e-07,
+          "relative_error": 9.383297458760014e-11,
+          "allowed_absolute_error": 2.2392701355,
+          "passed": true
+        },
+        "O2y": {
+          "absolute_error": 3.041748186660698e-08,
+          "relative_error": 4.4336162814305876e-11,
+          "allowed_absolute_error": 0.34303241344999996,
+          "passed": true
+        },
+        "m_recip": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00035,
+          "passed": true
+        },
+        "m_rot": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two-mass rod model with masses. m_recip = m_piston + m_rod l_cg/L = 0.5 + 0.4*0.1/0.2 = 0.7 kg; m_rot = m_crankpin + m_rod(1-l_cg/L) = 0.2 + 0.4*0.5 = 0.4 kg. Exact slider acceleration (open branch, omega = 100) a = -497.50664 m/s^2 (from slider_crank). Effective force toward the crank = F_gas + m_recip a = 5000 + 0.7*(-497.50664) = 4651.7454 N -> F_rod = (m_recip a + F_gas) L/h = 4651.7454*0.2/0.1984313 = 4688.5186 N; F_wall = 4688.5186*0.025/0.2 = 586.0648 N; O2x = F_rod h/L - m_rot r w^2 cos30 = 4651.7454 - 0.4*0.05*10000*0.866025 = 4478.5403 N; O2y = -F_wall - m_rot r w^2 sin30 = -586.0648 - 100 = -686.0648 N; T = F_rod r (g cos30 + h sin30)/L = 4688.5186*0.05*0.1208663/0.2 = 141.6710 N*m (inertia reduces the crank torque below the static 152.28 N*m)."
+      }
+    }
+  ],
+  "passed": 33,
+  "failed": 0
+}

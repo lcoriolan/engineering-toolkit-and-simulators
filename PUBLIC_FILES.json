@@ -1,0 +1,2073 @@
+{
+  "audit_date": "2026-10-24",
+  "files": [
+    {
+      "bytes": 213,
+      "path": ".gitignore",
+      "sha256": "be5d6eea21b200f8311b8e677dd4be94dcd8536fe47f1255a2304ad821076d1c"
+    },
+    {
+      "bytes": 1966,
+      "path": "COMMERCIAL_LICENSE.md",
+      "sha256": "d4a29931e7a4891200a1393224e72a07ba5d2de9201d26fc82370b70db9467f6"
+    },
+    {
+      "bytes": 4563,
+      "path": "LICENSE",
+      "sha256": "ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8"
+    },
+    {
+      "bytes": 2493,
+      "path": "LICENSE_STATUS.md",
+      "sha256": "1b3ca13569e32b2d92375864be434f6308f7b29104a405470ebb414ba01ffa58"
+    },
+    {
+      "bytes": 1094,
+      "path": "NOTICE",
+      "sha256": "95ba2043968d65a286239c1041797f4cab273f36aecd740bad7d33d387d07d41"
+    },
+    {
+      "bytes": 5740,
+      "path": "README.md",
+      "sha256": "3b096df8714017db50ac6cab6b912c6acd471e5276edf965320604dd0b91a4f8"
+    },
+    {
+      "bytes": 8332,
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "a894b76facd699e847849c652715afecd9157cc40ee2c08e1481cc770fd35100"
+    },
+    {
+      "bytes": 4138,
+      "path": "benchmarks/README.md",
+      "sha256": "051d1d879c6eef0b7a9cc35d0da281fd5d7dadbb54aa1ad9c35b8d4dd7e6f3a6"
+    },
+    {
+      "bytes": 593,
+      "path": "benchmarks/backend-versions.json",
+      "sha256": "bed67a265e1bfcd0de59ff3675cc5a53e08bb6d36f4aeb50d612fcfffdae1b94"
+    },
+    {
+      "bytes": 6493,
+      "path": "benchmarks/calculator-summary.json",
+      "sha256": "aecac4066fd3ae3fbf41e23f00f9198a52bb912df03ebe4f24eb99f7d45ba9e7"
+    },
+    {
+      "bytes": 52438,
+      "path": "benchmarks/calculators/acoustics.json",
+      "sha256": "1c13a69a9ee4cffc104167d7b25fb09dfeb862629d47820e6da986e296c12381"
+    },
+    {
+      "bytes": 58902,
+      "path": "benchmarks/calculators/aerospace.json",
+      "sha256": "526eb7d19ebb4c6099ffe1802021fe4c4e5b2397552030b4bf96443929c7d66d"
+    },
+    {
+      "bytes": 102459,
+      "path": "benchmarks/calculators/automotive.json",
+      "sha256": "3b96418e497cf8578afc47dc625ae2479616cab7f20ca7d1ab3571a81ec2875a"
+    },
+    {
+      "bytes": 79287,
+      "path": "benchmarks/calculators/beams.json",
+      "sha256": "c7508815897404ecb8e5293bf36730e0b75e9b63d327811115013b629e8dc533"
+    },
+    {
+      "bytes": 58879,
+      "path": "benchmarks/calculators/bearings.json",
+      "sha256": "b10808d93e9f57a2c1951f5cc2f1d8fb2bbbd1e546c2e1a683c536f86dfeb039"
+    },
+    {
+      "bytes": 59413,
+      "path": "benchmarks/calculators/belts_chains.json",
+      "sha256": "04bd013d276cdb1899a7deb52c48674a15d46e61a43d411a830847a1e09cf887"
+    },
+    {
+      "bytes": 93613,
+      "path": "benchmarks/calculators/bolted.json",
+      "sha256": "6e0f43475bc211c846ddf34046703d7f21276e31b1fe7c111bce225f18608eb1"
+    },
+    {
+      "bytes": 96714,
+      "path": "benchmarks/calculators/clutches_brakes.json",
+      "sha256": "a4a40ea21905c63a95f76ece1b82199e1bc0ea94dd99393cb191eb114758538b"
+    },
+    {
+      "bytes": 47754,
+      "path": "benchmarks/calculators/columns.json",
+      "sha256": "a92dd200d98a9ac925478286930a17f8311cdee95b71f70556d782d9d61644e1"
+    },
+    {
+      "bytes": 85113,
+      "path": "benchmarks/calculators/combustion.json",
+      "sha256": "69fd2030ed3a775a5c6768680a5e65036017479f33f3fad578814ec321d6eb83"
+    },
+    {
+      "bytes": 68982,
+      "path": "benchmarks/calculators/compressible.json",
+      "sha256": "15c662d9311d62bcef9dd8e26124017e041955413a6bc80b59bf1c5c6106a060"
+    },
+    {
+      "bytes": 114833,
+      "path": "benchmarks/calculators/controls.json",
+      "sha256": "4c5f52973aba3b64f88b7574ce8d48290f9e831172a4c1e6de49409cba733604"
+    },
+    {
+      "bytes": 135414,
+      "path": "benchmarks/calculators/cycles.json",
+      "sha256": "78113ed4c4b7529bea5360b0c43c665a1162551fc5fd134a7a7585ca8c9d39ea"
+    },
+    {
+      "bytes": 44314,
+      "path": "benchmarks/calculators/design_fund.json",
+      "sha256": "854bac7a1e3bf1d4cf443be0e12be2b4ba805a0bf3aa50511b0f27ecd17e588b"
+    },
+    {
+      "bytes": 91242,
+      "path": "benchmarks/calculators/economics.json",
+      "sha256": "a9110ee355664a1c7315734da58c9fafc05931f6235a5cd96a7e2ad499882814"
+    },
+    {
+      "bytes": 70749,
+      "path": "benchmarks/calculators/electrical.json",
+      "sha256": "7b23d3a2fc9188ba0048baefc60bcc0ad8701cb63fe4061feb47e0c7cd8c9871"
+    },
+    {
+      "bytes": 43073,
+      "path": "benchmarks/calculators/ergonomics.json",
+      "sha256": "173585242d8f70ebbde5106af8cd915168f130d3d3a1b0cd5a93eae62154bf2a"
+    },
+    {
+      "bytes": 73578,
+      "path": "benchmarks/calculators/fatigue.json",
+      "sha256": "38c19822a5755d9f48635d45cf8e743dac9ebe6be65924140012db8f2a40dd80"
+    },
+    {
+      "bytes": 151672,
+      "path": "benchmarks/calculators/fea.json",
+      "sha256": "3c4efc1d651a81349a9c92004b4a3c03fc3a08999b386c332bc7b90a39f3a17e"
+    },
+    {
+      "bytes": 154698,
+      "path": "benchmarks/calculators/fluid_dynamics.json",
+      "sha256": "4fea75074c489b6b4f3dc52f438f19cef10ba326087dcb56e5914eeec597d701"
+    },
+    {
+      "bytes": 60004,
+      "path": "benchmarks/calculators/fluid_statics.json",
+      "sha256": "455a47a14288dc45793fb729eabbae7ba5baedb176c397a4765cf78ead20be8d"
+    },
+    {
+      "bytes": 45690,
+      "path": "benchmarks/calculators/fracture.json",
+      "sha256": "76fc321865a928cf160cac326d2d976437daa5c28bb0e639a829db3249a79045"
+    },
+    {
+      "bytes": 109725,
+      "path": "benchmarks/calculators/gears.json",
+      "sha256": "53cd82f930d1a912a222857fc11cc8b786af2199baa16f0d96a50126f185607b"
+    },
+    {
+      "bytes": 300511,
+      "path": "benchmarks/calculators/heat_transfer.json",
+      "sha256": "87302fc8dc4f527bb9e98c0cb64da6ca4b42571568c05b7ab67b9e38efc33582"
+    },
+    {
+      "bytes": 94988,
+      "path": "benchmarks/calculators/hvac.json",
+      "sha256": "7eaa96201e5bffdb7d2a3625d7f87a0f72b3390484a2efc92c92b14f8579ae68"
+    },
+    {
+      "bytes": 67186,
+      "path": "benchmarks/calculators/hydraulics.json",
+      "sha256": "bf3e18b85fcfd4cf8149ca0eaa6b03a16a3554ba44d62c0e1c34a1a3c68ae029"
+    },
+    {
+      "bytes": 48401,
+      "path": "benchmarks/calculators/ic_engines.json",
+      "sha256": "46cfbf8038809bd59597a20db058d4e23514a820a9bc0f066957c3332422c3c9"
+    },
+    {
+      "bytes": 78964,
+      "path": "benchmarks/calculators/instrumentation.json",
+      "sha256": "df11cb708daf7a7cc4483f07903cd9f1cdf59424a6d6c0fabdbe653130d71a84"
+    },
+    {
+      "bytes": 45842,
+      "path": "benchmarks/calculators/kinematics.json",
+      "sha256": "9c26c5f62fc57fda562fe95189d78c7a365157a62f6d28d2a3bfbe9808812377"
+    },
+    {
+      "bytes": 63005,
+      "path": "benchmarks/calculators/kinetics.json",
+      "sha256": "8ed815ed55756fb87060e89618179ece4afa0197317bf99c097330fa3eb27b28"
+    },
+    {
+      "bytes": 170753,
+      "path": "benchmarks/calculators/manufacturing.json",
+      "sha256": "609f8f215cf77729c76b47f6f8af1fdcca09d3e92187894880b486aff833ae7c"
+    },
+    {
+      "bytes": 198154,
+      "path": "benchmarks/calculators/materials_mech.json",
+      "sha256": "ee3c9812c07821a883f942c6cfc837a6fedcad153546de0a1affbe33bf3393a0"
+    },
+    {
+      "bytes": 130616,
+      "path": "benchmarks/calculators/materials_sci.json",
+      "sha256": "8c02c055b8024dd075bbebb3009c350077e3c13066ff401d5e6cdd15cd456d1c"
+    },
+    {
+      "bytes": 101927,
+      "path": "benchmarks/calculators/math.json",
+      "sha256": "e5cfec24b0584752ddd126242d7027754df6e29a6c3da765d1fa02c5a12efe82"
+    },
+    {
+      "bytes": 164052,
+      "path": "benchmarks/calculators/mechanisms.json",
+      "sha256": "b182bc4b4f5c2cb0056ac89946915780fb2d44e9a6c6d3b8bc0253c5ff628182"
+    },
+    {
+      "bytes": 105158,
+      "path": "benchmarks/calculators/metrology.json",
+      "sha256": "0319b324316d1ae300ad59e0c4ef1bcffd0c67378c05d10bc219dc9f10fcfef6"
+    },
+    {
+      "bytes": 27267,
+      "path": "benchmarks/calculators/power_screws.json",
+      "sha256": "c29b2beb72dfe153dfe6274cbfb7a3e986c85753315051335f494c093b95aeb7"
+    },
+    {
+      "bytes": 72343,
+      "path": "benchmarks/calculators/pressure_vessels.json",
+      "sha256": "b9053d5761df21853eec1d182ff7bf5f0235b350bfc07961faf57aadef91c7ab"
+    },
+    {
+      "bytes": 48775,
+      "path": "benchmarks/calculators/reliability.json",
+      "sha256": "440bc261d291e3d57ad534c6599156211f950c9422b40b8b115e662d7cda61e6"
+    },
+    {
+      "bytes": 97476,
+      "path": "benchmarks/calculators/renewables.json",
+      "sha256": "215aba60d29fad6efb5b7247a521b5b08630fd96f96a1af074aeb51e2d950946"
+    },
+    {
+      "bytes": 122514,
+      "path": "benchmarks/calculators/robotics.json",
+      "sha256": "c0afaf57bd474c3423e86a9fd9f991a515dc2bffeeeed977d16776a9fba1aa9e"
+    },
+    {
+      "bytes": 148769,
+      "path": "benchmarks/calculators/section_props.json",
+      "sha256": "ef42f0e535f58420b30768cb28f813f7c1bcea622f514a70725a551580c538ea"
+    },
+    {
+      "bytes": 82884,
+      "path": "benchmarks/calculators/shafts.json",
+      "sha256": "4e4b18989563a1cd086ea62f9e9eedd3634d350ab308304aa12e0b5af9c21ad6"
+    },
+    {
+      "bytes": 111814,
+      "path": "benchmarks/calculators/springs.json",
+      "sha256": "f978551e83ee369a9f37f8686e522d7875cb609d328e249a01219ac2f1436e76"
+    },
+    {
+      "bytes": 84993,
+      "path": "benchmarks/calculators/statics.json",
+      "sha256": "bf45012339e8c24d11ff9e928304b65165af08142b3fc7aa526a416529c88c89"
+    },
+    {
+      "bytes": 139151,
+      "path": "benchmarks/calculators/thermo.json",
+      "sha256": "ae36a0e63377bf174232a559b4ace8da60c447dc0cfe674858415d67c6928542"
+    },
+    {
+      "bytes": 46013,
+      "path": "benchmarks/calculators/tribology.json",
+      "sha256": "1eba296c9fe5fedc153891ea0751482d5c33a71efc66fc1af5ae72a2e668c611"
+    },
+    {
+      "bytes": 106037,
+      "path": "benchmarks/calculators/turbomachinery.json",
+      "sha256": "66b8951102d8b6b987231b405de720ed3766ecb986cf7a8439a6d47d406e7aad"
+    },
+    {
+      "bytes": 111066,
+      "path": "benchmarks/calculators/vibrations.json",
+      "sha256": "bb3cb64f974237d773c32719eb744fd5cbbee4679ffab5464ebcff25507de77d"
+    },
+    {
+      "bytes": 34848,
+      "path": "benchmarks/calculators/welded.json",
+      "sha256": "5b6603e382b96a4132a40ca1fdb7815830034e16aaa509f291c39bd7c568b14c"
+    },
+    {
+      "bytes": 13860,
+      "path": "benchmarks/solvers.json",
+      "sha256": "6e00058dad6e0027feefa94ab99092540f797a17bc9fa46b301bcf28d919345f"
+    },
+    {
+      "bytes": 2161,
+      "path": "docs/architecture.md",
+      "sha256": "83716b6382a4647089b605487ac5c7de04aff367387d9961e84996e3771c059d"
+    },
+    {
+      "bytes": 2189,
+      "path": "docs/cad-python-contracts.md",
+      "sha256": "0cc25be2906b2f82a1ebd264610251ccafa9a3c04090d181f54fbdf3a043a6a0"
+    },
+    {
+      "bytes": 1150,
+      "path": "docs/capability-inventory.md",
+      "sha256": "28f02db05403458da21ec11cf956fcc508cb2a4d5b63d83df2e06af27c508db4"
+    },
+    {
+      "bytes": 3101,
+      "path": "docs/checkers.md",
+      "sha256": "5fe7392cd4547d5803e88c578aec26c3a4352b4849725c7cf7612536b3b727cb"
+    },
+    {
+      "bytes": 4110,
+      "path": "docs/coverage.md",
+      "sha256": "dad58c2246d1c39236a3018ba3d1c957a1af2d6e84dcc1dc4e76965f336bfc55"
+    },
+    {
+      "bytes": 3370,
+      "path": "docs/dependencies.md",
+      "sha256": "5431aeae7586802801defd5b85d19c958bdd529d93c432b9eb2b0a213ecc88b1"
+    },
+    {
+      "bytes": 7550,
+      "path": "docs/methodology.md",
+      "sha256": "f88ea18bfdf88d7a917fe65e402a0a8298c4c7f3837c744702b782970adc480c"
+    },
+    {
+      "bytes": 1163,
+      "path": "docs/release-policy.md",
+      "sha256": "089240f2930a586d5bff61c2ffde1e2edec49da7e71f8116764b1adec94574ba"
+    },
+    {
+      "bytes": 1038,
+      "path": "docs/simulation-integration.md",
+      "sha256": "02bccf1ab9a740e877fdac739f8d0a3160f52c585259ed78f17b101756c26075"
+    },
+    {
+      "bytes": 5276,
+      "path": "docs/validation.md",
+      "sha256": "f4efadcb9ba5a5e34da4dfbc32a3a04f57a890eaa0b930493ea6d4fcccebfc6f"
+    },
+    {
+      "bytes": 691397,
+      "path": "evidence/api-inventory.json",
+      "sha256": "e836f168aa636669aa5eb907bbd8342681e3ecc772997c1c6c4bd152a4d54540"
+    },
+    {
+      "bytes": 16266,
+      "path": "evidence/dependency-license-review.json",
+      "sha256": "40d2c5b8b3ebd1c5384929e05c0697fc0d23a53954c76ebb672b097e63e31ceb"
+    },
+    {
+      "bytes": 847,
+      "path": "evidence/gpu-validation.json",
+      "sha256": "a56829e70201b6e3fbb86b6abe2e83f158a836b291b02fb36e9ebb2a632066c3"
+    },
+    {
+      "bytes": 23698,
+      "path": "evidence/installed-module-check.json",
+      "sha256": "a19f7a881e39c802532bcd613abe1a53380c1e8c9e0267019560161995b71470"
+    },
+    {
+      "bytes": 724,
+      "path": "evidence/public-browser-validation.json",
+      "sha256": "0e2d9e1a042c52a5495c6d2259821bc98c8e47489a511b2b5ff6ec33de2b26c0"
+    },
+    {
+      "bytes": 3097,
+      "path": "evidence/validation-summary.json",
+      "sha256": "2ef47592b01f71e96b38c397e311bfb3c9b6ac541a181f1443e4c14924640628"
+    },
+    {
+      "bytes": 36,
+      "path": "examples/atmosphere.json",
+      "sha256": "d0740d00c1639c001e48f6a2ac0e9580212c7715a5e040761cd1660496267ec6"
+    },
+    {
+      "bytes": 143,
+      "path": "examples/magnetic_field.json",
+      "sha256": "7c9facb9cf2d9ed3fb8029ecdf5e82d01202185b266e1354d67970f91e87d427"
+    },
+    {
+      "bytes": 284,
+      "path": "examples/parametric_solid.json",
+      "sha256": "aba8afdb0d466774dc98d5190344d4699fd831e20d8027fc731488eb6815f2ed"
+    },
+    {
+      "bytes": 76,
+      "path": "examples/room.json",
+      "sha256": "27d9992e16eb65e2fef394dffa2c3c1b87dba0e089d6ea0e8894008c7034ee7e"
+    },
+    {
+      "bytes": 2996,
+      "path": "examples/synthetic_box.py",
+      "sha256": "94d4479e98e5a47e271ec10bfc95ee7860ebf13b6b614b5afc1a02749b8db366"
+    },
+    {
+      "bytes": 55,
+      "path": "examples/water_molecule.json",
+      "sha256": "e694aedff8d8fd7737456fd3737c65fe8d91a3e57a458f66e17e5f60c1de63b2"
+    },
+    {
+      "bytes": 1434,
+      "path": "pyproject.toml",
+      "sha256": "17907eab649868b7bc2a331157b349bd8f0603a04f23b29409de663701c494b7"
+    },
+    {
+      "bytes": 85,
+      "path": "src/engineering_sim/__init__.py",
+      "sha256": "b67d13c7756cd73b0822e08e8a8efe6e3af4307bb0fe8d013ef20540a7001b35"
+    },
+    {
+      "bytes": 53,
+      "path": "src/engineering_sim/__main__.py",
+      "sha256": "b81b8ecce8688957bb71d64ff5cfacc078014dd3e065b3ad26986ac4695f1d54"
+    },
+    {
+      "bytes": 2003,
+      "path": "src/engineering_sim/api.py",
+      "sha256": "fde57a7223df517d4d4054d70fd17560c21b8c922d11b60f6930826545701e72"
+    },
+    {
+      "bytes": 91,
+      "path": "src/engineering_sim/cad/__init__.py",
+      "sha256": "7b113085f042c13dd7c3c818f98a4778d6237e4f21e6d2f9d1150a9319424784"
+    },
+    {
+      "bytes": 4227,
+      "path": "src/engineering_sim/cad/builder.py",
+      "sha256": "d4ade8f52c768c3a4af7202e6a347f4252a1b5c83849d9d059ba57d69642c523"
+    },
+    {
+      "bytes": 966,
+      "path": "src/engineering_sim/cad/common.py",
+      "sha256": "50ac9de329a46842cdce774d200f6789ab724582c28ce88aa365722852142f20"
+    },
+    {
+      "bytes": 560,
+      "path": "src/engineering_sim/cad/features/__init__.py",
+      "sha256": "64f7110c6027fb61b040bac8bca3fd880673e6362ac62edc396db359cb281d7e"
+    },
+    {
+      "bytes": 3544,
+      "path": "src/engineering_sim/cad/features/air_scoop.py",
+      "sha256": "2916adb9e8594087161999d644c2495725b6bdcf978ab395f66ae27d9ba29fad"
+    },
+    {
+      "bytes": 505,
+      "path": "src/engineering_sim/cad/features/body_tube.py",
+      "sha256": "08819556497ce124a91304b134ccd144f15ffa0fb57b9e59f6cfafdb12524a5d"
+    },
+    {
+      "bytes": 1566,
+      "path": "src/engineering_sim/cad/features/camera_dome.py",
+      "sha256": "f3a04bb665fc3bb9be792d1b31d4afc12aa75d300d3928dd6d9f23ad3aa89cfb"
+    },
+    {
+      "bytes": 505,
+      "path": "src/engineering_sim/cad/features/chamfer.py",
+      "sha256": "0d70d4e1a30908552993b1b089f038dc20416caea50deac53d97a1add51dc920"
+    },
+    {
+      "bytes": 1607,
+      "path": "src/engineering_sim/cad/features/control_fin.py",
+      "sha256": "6ea610d568529630e18349c83efe8e5dd669c1ac2e56fe1d5d2be9bd46d4984f"
+    },
+    {
+      "bytes": 5538,
+      "path": "src/engineering_sim/cad/features/edf_duct.py",
+      "sha256": "b77431fa28e61de5fea8184577c8c76ebfde3ec257618e0067a19f4c904071b6"
+    },
+    {
+      "bytes": 1155,
+      "path": "src/engineering_sim/cad/features/fillet.py",
+      "sha256": "ce9ee36804a1edc7a2d9154d3586e309a2ad19eb8adaa1251f85480a4fd3a016"
+    },
+    {
+      "bytes": 1046,
+      "path": "src/engineering_sim/cad/features/fin_set.py",
+      "sha256": "46b1177526e906f1ee44a47c12ca3e19e2ce94c93e3d385fa89559a9d2e61f02"
+    },
+    {
+      "bytes": 579,
+      "path": "src/engineering_sim/cad/features/flange.py",
+      "sha256": "67b92977de00da203324f0aaf17091655f7a120031aaf6da6faa0224d667e44b"
+    },
+    {
+      "bytes": 1256,
+      "path": "src/engineering_sim/cad/features/gusset.py",
+      "sha256": "8e177950dfbf5cf0685045b0468e9778321c0aad7383486a6ce80362fdffd90c"
+    },
+    {
+      "bytes": 963,
+      "path": "src/engineering_sim/cad/features/hole_array.py",
+      "sha256": "fd0bb8799e12d18726a78cbefb66a08481259170234de952a7325ef2f2fd4025"
+    },
+    {
+      "bytes": 547,
+      "path": "src/engineering_sim/cad/features/import_step.py",
+      "sha256": "0ed690e49439de7d93d17eb5f385906e23af2cab6cc6d139f34e289496d55683"
+    },
+    {
+      "bytes": 1087,
+      "path": "src/engineering_sim/cad/features/inner_duct.py",
+      "sha256": "3341ed7b0017597222513684c9966c22dfd99cfc31473fe7be3c0b21b2e4f975"
+    },
+    {
+      "bytes": 945,
+      "path": "src/engineering_sim/cad/features/motor_mount.py",
+      "sha256": "12c42b49606ee033037aeca6c95d37d444af1f9801e7d24387d448c8bba9fa49"
+    },
+    {
+      "bytes": 1190,
+      "path": "src/engineering_sim/cad/features/nose_cone.py",
+      "sha256": "449d102f4d98744488e2cb1a5a4d4ba1705671eb31a313ed6c5c4d465d6fbeef"
+    },
+    {
+      "bytes": 268,
+      "path": "src/engineering_sim/cad/features/pad.py",
+      "sha256": "4bdf0836b533b8181c531c6cdd13e8fb87b770ef02d6f1a42c976fb983cf3c70"
+    },
+    {
+      "bytes": 249,
+      "path": "src/engineering_sim/cad/features/plate.py",
+      "sha256": "bc38b4267190ac1b83ec2608d533135c2ffd283da8c22950900651a43dfb9fa3"
+    },
+    {
+      "bytes": 1015,
+      "path": "src/engineering_sim/cad/features/pocket.py",
+      "sha256": "9ed7e4d781a54e3fe52967d8a58ba8337aa6b551209e9a4e7ac95abedcd3b0d3"
+    },
+    {
+      "bytes": 990,
+      "path": "src/engineering_sim/cad/features/servo_bay.py",
+      "sha256": "33ddd76b6e85aba6cfd2e132b86c6838acfd620aedb98e9fa76d9b80da69f2ac"
+    },
+    {
+      "bytes": 1203,
+      "path": "src/engineering_sim/cad/features/slot.py",
+      "sha256": "4e0d57836dd215f5f0fbe30841b03318d9d0eeb2ee84950f60641f50a6bd769a"
+    },
+    {
+      "bytes": 3647,
+      "path": "src/engineering_sim/cad/gears.py",
+      "sha256": "c8284cb17ede1fde950a651ada9e5a552f724e970c4594f8709ba582173709e5"
+    },
+    {
+      "bytes": 1896,
+      "path": "src/engineering_sim/cad/hydrostatics.py",
+      "sha256": "807d55e6484495efa74e8352381693a1f5a2d8c47805cbadb7be25dc8106a31d"
+    },
+    {
+      "bytes": 23773,
+      "path": "src/engineering_sim/cad/importer.py",
+      "sha256": "c265e7b2d66f5357524c00826fee554e9ff3154a9834c995ebaba71e7445b53f"
+    },
+    {
+      "bytes": 12106,
+      "path": "src/engineering_sim/cad/rebuild_template.py.txt",
+      "sha256": "33c3bc7cd11ef0c6854679b75c2830e6fffda0463d7f0a921e2b55d4c1178e98"
+    },
+    {
+      "bytes": 82,
+      "path": "src/engineering_sim/checks/__init__.py",
+      "sha256": "ba960d8844dcf005d5951512853bc64eaa983e584aa17cec736af4c7635632db"
+    },
+    {
+      "bytes": 9583,
+      "path": "src/engineering_sim/checks/assembly.py",
+      "sha256": "615aba4ecb86718f454f7fff1d84cd44f5779f95a263030ffa48df4cad8f08ba"
+    },
+    {
+      "bytes": 10564,
+      "path": "src/engineering_sim/checks/flexures.py",
+      "sha256": "c334fa28bb4aa9b583a785dfdd6c22fd2af93153e071f1d4df11f8aea8652714"
+    },
+    {
+      "bytes": 7990,
+      "path": "src/engineering_sim/checks/joints.py",
+      "sha256": "165cd407b7952dd28f97ff84e7a03405a546859d89e9b701965b99d83ecf31af"
+    },
+    {
+      "bytes": 10989,
+      "path": "src/engineering_sim/checks/mechanisms.py",
+      "sha256": "b33e64e1fec7ea58fb8786e354936c1fab1934fb8c6c000ee86718f41e175861"
+    },
+    {
+      "bytes": 19625,
+      "path": "src/engineering_sim/checks/mold_geometry.py",
+      "sha256": "27b5e50746798d8172499bc187e53e0ce9d7902245fee6f4ed6704135b24ddef"
+    },
+    {
+      "bytes": 11229,
+      "path": "src/engineering_sim/checks/mold_routing.py",
+      "sha256": "83be38e2a4fab2c337b1d44728366335ccb419903890b150f8a9176731320a95"
+    },
+    {
+      "bytes": 15239,
+      "path": "src/engineering_sim/checks/mold_routing_study.py",
+      "sha256": "1c0ab4173fb324d29d8914e38ce86ea5ebc3b9082f5ced3c17b4900f70f52445"
+    },
+    {
+      "bytes": 2063,
+      "path": "src/engineering_sim/checks/molding.py",
+      "sha256": "a8ef205fad965d41de2997a3681b2c3a6bc65f37983528ac59a3ba29c1231757"
+    },
+    {
+      "bytes": 14935,
+      "path": "src/engineering_sim/checks/mounted_fit.py",
+      "sha256": "b9f647b5f22aba02f8c87300bc8f060dfbcaffd7028b94b030b8e3670fb4effa"
+    },
+    {
+      "bytes": 9865,
+      "path": "src/engineering_sim/checks/rules.py",
+      "sha256": "f22e313aa9cffd640cbcb47f63493475fc5ff38432ae03913a2c59e7550dc2a5"
+    },
+    {
+      "bytes": 2153,
+      "path": "src/engineering_sim/checks/seals.py",
+      "sha256": "0590c5c1cb421d59e15a174ab06205bfe916d186a1d95d0d3999471e87f70081"
+    },
+    {
+      "bytes": 705,
+      "path": "src/engineering_sim/checks/tolerances.py",
+      "sha256": "94382b1d9a26c9475f171a7a69cfc242b1082927ded11e51bb78e421ae403763"
+    },
+    {
+      "bytes": 700,
+      "path": "src/engineering_sim/checks/transforms.py",
+      "sha256": "cbb0053864255af42688620375b8ca06514f5eda96060a3d418fe2543eae1a89"
+    },
+    {
+      "bytes": 2170,
+      "path": "src/engineering_sim/cli.py",
+      "sha256": "4e23add30460de756170de1c31bc8f9f075e220108a91165ce68dbd33318649c"
+    },
+    {
+      "bytes": 12147,
+      "path": "src/engineering_sim/cooling.py",
+      "sha256": "88ff0e05cfd28076abd30bc00ac49ce30b6887f2f867c7e15613e83a378f35fe"
+    },
+    {
+      "bytes": 394,
+      "path": "src/engineering_sim/core/__init__.py",
+      "sha256": "fc04e7713e0b1787a8b8db2995de55ec2f6a4b733adedb8723d189a24c6315c3"
+    },
+    {
+      "bytes": 7072,
+      "path": "src/engineering_sim/core/aero.py",
+      "sha256": "40fd80d1acc94477ceb6581e9d662051992a8f78c66852ba2266fb14d68e177b"
+    },
+    {
+      "bytes": 23459,
+      "path": "src/engineering_sim/core/air_np.py",
+      "sha256": "6c2074322821b41183bc051208636b1c8817c8b52479d06e65d7d121cab6d13b"
+    },
+    {
+      "bytes": 13845,
+      "path": "src/engineering_sim/core/atmos.py",
+      "sha256": "255d720d000d99518c17f268fdc708fb061c0ee444b148d12557b04f41c0a03c"
+    },
+    {
+      "bytes": 10033,
+      "path": "src/engineering_sim/core/beam.py",
+      "sha256": "83c973fae6f38b8a7d79434b7022c12478395bb32995bca8e606631dd2bd702e"
+    },
+    {
+      "bytes": 15969,
+      "path": "src/engineering_sim/core/bodies.py",
+      "sha256": "10ea17765967562c1ef9abd2f91fc3cfa48ef3b39e8e192a75c60c7b33c8f73c"
+    },
+    {
+      "bytes": 3299,
+      "path": "src/engineering_sim/core/constants.py",
+      "sha256": "9ef953d9257721a634ffd1a75168427da75850a95b369954e77b3da52c268418"
+    },
+    {
+      "bytes": 55557,
+      "path": "src/engineering_sim/core/contact.py",
+      "sha256": "24d28ae6d6374a0d7f5bd19e80c78d563ece899db0e75a83cbcf3766abacb8d3"
+    },
+    {
+      "bytes": 3468,
+      "path": "src/engineering_sim/core/env.py",
+      "sha256": "ccd628160a1e106da442e0cdab671f028eb20225dfaf484bc1d133abf5de5a3b"
+    },
+    {
+      "bytes": 8050,
+      "path": "src/engineering_sim/core/rigid6.py",
+      "sha256": "562d420c868631f1baa9ce485ad6e264517dc265a6eb6f659122c566b77eed41"
+    },
+    {
+      "bytes": 6719,
+      "path": "src/engineering_sim/core/statelog.py",
+      "sha256": "a10f98e7b622453ff1d0b0130c861bdc3ca91a7707811c4918e1c13e7126cee7"
+    },
+    {
+      "bytes": 18578,
+      "path": "src/engineering_sim/core/terrain.py",
+      "sha256": "f094e3e75ae2b3955bffd47ef1678cdc36dd23b125067d56d9ba334228b30ac6"
+    },
+    {
+      "bytes": 19463,
+      "path": "src/engineering_sim/core/wind.py",
+      "sha256": "99e1f98a3a3767c2a0d425500ec0c9166ebdd446541ee2e07156f01d004ed1cf"
+    },
+    {
+      "bytes": 15866,
+      "path": "src/engineering_sim/core/world.py",
+      "sha256": "08afa1897715e2115ff192d2480db06848163199d1455d7137b5c76322ddfd49"
+    },
+    {
+      "bytes": 4475,
+      "path": "src/engineering_sim/correlations.py",
+      "sha256": "3b672620086d621165bf489bcc7818c96dbcb72ab5171f7fae0964e8c807a34e"
+    },
+    {
+      "bytes": 1041,
+      "path": "src/engineering_sim/demo.py",
+      "sha256": "1c1d38e257d18e9cc45d8f1dd3bc7c61c3a79bcf616cb53d435b1f97d2b7711a"
+    },
+    {
+      "bytes": 83,
+      "path": "src/engineering_sim/domains/__init__.py",
+      "sha256": "e7543bff96a8f83ac12f9088ad8ee65d0e990bce6e3ab97d3aadf0c3ba024e85"
+    },
+    {
+      "bytes": 346,
+      "path": "src/engineering_sim/domains/acoustic_prop/__init__.py",
+      "sha256": "3f247aa270c210587cb4009e2992fd084bc50337a7bf40fd351e0e3977b1cbc8"
+    },
+    {
+      "bytes": 1357,
+      "path": "src/engineering_sim/domains/acoustic_prop/absorption.py",
+      "sha256": "ff232b799891566316cc0b1696fc438d9b0048080c809ef85c12391ed92ca0ff"
+    },
+    {
+      "bytes": 4903,
+      "path": "src/engineering_sim/domains/acoustic_prop/ground.py",
+      "sha256": "7430569c79b4ff2efea90bf7111fd35eb094db24111b42453033f9e37605bb5f"
+    },
+    {
+      "bytes": 25575,
+      "path": "src/engineering_sim/domains/acoustic_prop/pe.py",
+      "sha256": "3a4fdbc47ae6a47706991a4ac0048448935afc3cf234d2d3e2fd1b53936311fe"
+    },
+    {
+      "bytes": 28141,
+      "path": "src/engineering_sim/domains/acoustic_prop/propagate.py",
+      "sha256": "073f63631c94e019aa14ddc114d13e1345770915d1898c6d4fa0c7e380d11ed1"
+    },
+    {
+      "bytes": 8521,
+      "path": "src/engineering_sim/domains/acoustic_prop/raytrace.py",
+      "sha256": "0bdd73639d5695278cc55247a13157bb522ba828f8efdc945b56b324abacffe8"
+    },
+    {
+      "bytes": 4579,
+      "path": "src/engineering_sim/domains/acoustic_prop/sound_profile.py",
+      "sha256": "c5b99d30c5b9d4101084fbd489b751e4e9db87fa76c54ed519d73f978a356445"
+    },
+    {
+      "bytes": 0,
+      "path": "src/engineering_sim/domains/fc_vision/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3120,
+      "path": "src/engineering_sim/domains/fc_vision/camera.py",
+      "sha256": "25f7a7c8b4d6314db4fe4ab621a6f39b1430aa752901dba69c3dffa21239a3c2"
+    },
+    {
+      "bytes": 4464,
+      "path": "src/engineering_sim/domains/fc_vision/multirotor.py",
+      "sha256": "ee4e9f8b150a7c6410aa3bbb298643e7a4ada084b1da7bbcdbba6bff44b1c523"
+    },
+    {
+      "bytes": 110,
+      "path": "src/engineering_sim/domains/land/__init__.py",
+      "sha256": "a333387858b83c8719e5c6115c7cb7f020e044b123edba3de24f45bb4fceaddc"
+    },
+    {
+      "bytes": 8604,
+      "path": "src/engineering_sim/domains/land/contact.py",
+      "sha256": "812772a52d3a2f167bea61c469f608aff54eb36ad62cda2328b21686cdc41eec"
+    },
+    {
+      "bytes": 362,
+      "path": "src/engineering_sim/domains/land/rigid.py",
+      "sha256": "3487fcfe2f8b49a660bc495351c1fe86d3378652282263de24e222551fecea34"
+    },
+    {
+      "bytes": 10014,
+      "path": "src/engineering_sim/domains/land/scene.py",
+      "sha256": "1ac605567ff32ceb70e833839aecfbbf3d2acdc4fdb5a4e9135b9103eb56589b"
+    },
+    {
+      "bytes": 2390,
+      "path": "src/engineering_sim/domains/land/tyre.py",
+      "sha256": "cc5a37661ee5e5cf381b94a7d293a2d1a03c7bca7bbab344bf2f84e5d7ed0ecd"
+    },
+    {
+      "bytes": 35521,
+      "path": "src/engineering_sim/domains/land/vehicles.py",
+      "sha256": "052d90240a12c9b2f2424b4bd75a59090b4096d2188ff6a4c0fe6f62901bb8d3"
+    },
+    {
+      "bytes": 0,
+      "path": "src/engineering_sim/domains/motion_control/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 557,
+      "path": "src/engineering_sim/domains/motion_control/calibration.py",
+      "sha256": "22f07c4483e90faa44baf27fba0cf15fe4c46d5cf134f3922c41a8974d80c172"
+    },
+    {
+      "bytes": 13009,
+      "path": "src/engineering_sim/domains/motion_control/core_gimbal.py",
+      "sha256": "3d795b50f049cdaa1820c2c3c002b346fe6e73ed36b043101295b3f7097ebe65"
+    },
+    {
+      "bytes": 125,
+      "path": "src/engineering_sim/domains/rocket_design/__init__.py",
+      "sha256": "b6a3774ba086e53bee7a125962d9b15e45e8dbbd5b1803ce44e1b8df648800bc"
+    },
+    {
+      "bytes": 17060,
+      "path": "src/engineering_sim/domains/rocket_design/aero.py",
+      "sha256": "f65b36a50fcc5a01f657ff09a4faa1dc0215301b65338f1278ebaac965ca2c52"
+    },
+    {
+      "bytes": 18714,
+      "path": "src/engineering_sim/domains/rocket_design/airframe.py",
+      "sha256": "a8277e0ce8bf5f4ab2b3b2a86b79b12883f8187ab892295a6ce0b7d375eb5724"
+    },
+    {
+      "bytes": 10328,
+      "path": "src/engineering_sim/domains/rocket_design/batch.py",
+      "sha256": "76f381963e7daa502153eb98708cba23f0f216406c8ec8f4e15f1a6ae68422da"
+    },
+    {
+      "bytes": 5539,
+      "path": "src/engineering_sim/domains/rocket_design/dispersion.py",
+      "sha256": "1265a63647c57d7fe1c9665402079898886c989b464eaf73aa4726d8a6dc6d9f"
+    },
+    {
+      "bytes": 2389,
+      "path": "src/engineering_sim/domains/rocket_design/era5_profile.py",
+      "sha256": "c2b5a11ec2cfb551a42e1cdc22f9d84ef53bd8aea37b44691903f9316528c147"
+    },
+    {
+      "bytes": 35224,
+      "path": "src/engineering_sim/domains/rocket_design/flight.py",
+      "sha256": "7e0f76e8a0a5fa2282f34141b18ce5bac7c427b2cacbcd59604c17ca1e6d799a"
+    },
+    {
+      "bytes": 8388,
+      "path": "src/engineering_sim/domains/rocket_design/loads.py",
+      "sha256": "54af3439046627310dc97e8ad3eb794d3f305491c89352ddb83ab9dd8c7cfb1f"
+    },
+    {
+      "bytes": 3028,
+      "path": "src/engineering_sim/domains/rocket_design/materials.py",
+      "sha256": "9d33b3ca0f39393df350cc8002bf5e6dbb39c834df1178cce606650a01ab36c8"
+    },
+    {
+      "bytes": 13506,
+      "path": "src/engineering_sim/domains/rocket_design/motors.py",
+      "sha256": "23984d651774de669f28e18a30a602bc430b1fe76641ecdb973cff3f1d725c6d"
+    },
+    {
+      "bytes": 10225,
+      "path": "src/engineering_sim/domains/rocket_design/optimise.py",
+      "sha256": "210b5271013f3bd0458ae13bcb9073b2a874068088df95b7ab1f1e6395c168d4"
+    },
+    {
+      "bytes": 3138,
+      "path": "src/engineering_sim/domains/rocket_design/plots.py",
+      "sha256": "45237871554be24dbfd50a0fb5d8c32dd074628cbd91256b89c273d454461115"
+    },
+    {
+      "bytes": 4216,
+      "path": "src/engineering_sim/domains/rocket_design/rules.py",
+      "sha256": "9d325f5671ff90cff0add06f2151fb05b44c135600f1963e248852bb9ee93039"
+    },
+    {
+      "bytes": 4019,
+      "path": "src/engineering_sim/domains/rocket_design/world_domain.py",
+      "sha256": "790875e3d8ec30b5ca496bc216fc4f67a8d3d457a65504b818ee815ad95d3867"
+    },
+    {
+      "bytes": 0,
+      "path": "src/engineering_sim/domains/room_acoustics/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 5834,
+      "path": "src/engineering_sim/domains/room_acoustics/room.py",
+      "sha256": "f270ea1b54f0d88591a18f383612424ec5bf62955affcf21cf6b9e4bc2471845"
+    },
+    {
+      "bytes": 671,
+      "path": "src/engineering_sim/domains/space/__init__.py",
+      "sha256": "6ff20b3fd847831f5184df8f21f861d86342eca0dfa706aa7020bf2a7a94236b"
+    },
+    {
+      "bytes": 26907,
+      "path": "src/engineering_sim/domains/space/ascent.py",
+      "sha256": "1491d242df1a6cb82b7e6a67af373c9bf5a7ff2c973927550898908c349e5185"
+    },
+    {
+      "bytes": 7994,
+      "path": "src/engineering_sim/domains/space/attitude.py",
+      "sha256": "e4df3360cd91920e08867ed58a2d8c9c390368e961f34b8209ccffb421eab154"
+    },
+    {
+      "bytes": 1656,
+      "path": "src/engineering_sim/domains/space/constants.py",
+      "sha256": "fb74f2afed5cf58b11611b153969c19a36bedbbcf4436fc9a681c3ff1f649425"
+    },
+    {
+      "bytes": 6433,
+      "path": "src/engineering_sim/domains/space/density.py",
+      "sha256": "550035576c2c58d49cc3a8001acea78ba5f7c6f49ececd17223cf905742f6568"
+    },
+    {
+      "bytes": 2034,
+      "path": "src/engineering_sim/domains/space/ephem.py",
+      "sha256": "908b8f4d5872a700f7f7a1fc8906a0b7a3557e2a04a2434c5b1660a4f84cc998"
+    },
+    {
+      "bytes": 5798,
+      "path": "src/engineering_sim/domains/space/forces.py",
+      "sha256": "98a78c3f8aaccd7bef52efd042c28b4374339de1aa901020566e86592f6d7e0c"
+    },
+    {
+      "bytes": 5523,
+      "path": "src/engineering_sim/domains/space/frames.py",
+      "sha256": "48c5f7d4e2d01ab659420961ff20ce0611d967f0fb353a4e5b537976efc9872d"
+    },
+    {
+      "bytes": 12782,
+      "path": "src/engineering_sim/domains/space/propagate.py",
+      "sha256": "44a12b7b8c6127acd09f367cf64ecf574b05240ee21871ea083210cb946dab65"
+    },
+    {
+      "bytes": 18958,
+      "path": "src/engineering_sim/domains/space/thermosphere.py",
+      "sha256": "cab73767496f31969fa12846c5bc5e2330414020adee6bcf73e85ef413e41d2c"
+    },
+    {
+      "bytes": 815,
+      "path": "src/engineering_sim/domains/space/tle.py",
+      "sha256": "db8ddb4059d68bedcbda10edb7c29409bc3268a9bcd453e120dd0a9faec3433b"
+    },
+    {
+      "bytes": 1,
+      "path": "src/engineering_sim/domains/water/__init__.py",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "bytes": 7006,
+      "path": "src/engineering_sim/domains/water/hull.py",
+      "sha256": "32edd67e7fcfbfe1da24059580e201b1b386656e0aa31363ba0b2e5b0d31079e"
+    },
+    {
+      "bytes": 3977,
+      "path": "src/engineering_sim/domains/water/props.py",
+      "sha256": "48c5f65dd9043f31bc534db821879dfe6edad2afb786ba6762474fe12099cd85"
+    },
+    {
+      "bytes": 3365,
+      "path": "src/engineering_sim/domains/water/savitsky.py",
+      "sha256": "3d3ca80d36eae2c0dedc036db413c95056f471653f884b6e1de2d1d3778cd487"
+    },
+    {
+      "bytes": 22172,
+      "path": "src/engineering_sim/domains/water/stability.py",
+      "sha256": "5ac6bea76fcf5bc75b2ae2d5a34946bdeb36ef4c5793432bec4e1b8287aec3ab"
+    },
+    {
+      "bytes": 1955,
+      "path": "src/engineering_sim/domains/water/surface.py",
+      "sha256": "ab7fe7704a7aa5497dc5ac62e979164fa993f8707829001f14d9bf0f6958eb3e"
+    },
+    {
+      "bytes": 41495,
+      "path": "src/engineering_sim/domains/water/vessel.py",
+      "sha256": "09de34bea225c8ea27854b257c1d975fea2bd2253b8b82ea5b7169063b6f93c4"
+    },
+    {
+      "bytes": 10151,
+      "path": "src/engineering_sim/domains/water/waves.py",
+      "sha256": "e4204cbbe37f0876ddac3f603b2830b198e87b3b71b3bfb74fd1d883a238117e"
+    },
+    {
+      "bytes": 0,
+      "path": "src/engineering_sim/domains/wind_tunnel/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2238,
+      "path": "src/engineering_sim/domains/wind_tunnel/air_props.py",
+      "sha256": "a02be678a6e759d7c741d6c9715042063dd7fe753757a958b2fad018f9acaa1f"
+    },
+    {
+      "bytes": 16175,
+      "path": "src/engineering_sim/domains/wind_tunnel/fin_aero.py",
+      "sha256": "bce09191a218107053dd36d017876616baf7e947555fe06562a1f7150f5030fa"
+    },
+    {
+      "bytes": 0,
+      "path": "src/engineering_sim/electromagnetics/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 13768,
+      "path": "src/engineering_sim/electromagnetics/magnetic_bearing.py",
+      "sha256": "99bae359d77896b15d145f23f96dd2378c288fbc5c1f5f79d4855835713b56dc"
+    },
+    {
+      "bytes": 7265,
+      "path": "src/engineering_sim/electromagnetics/permanent_magnet.py",
+      "sha256": "25528ddfdda103befc41287bc4ff8f16ad257ac11af15041ce1cd5651afb1dce"
+    },
+    {
+      "bytes": 10637,
+      "path": "src/engineering_sim/electromagnetics/reluctance_drive.py",
+      "sha256": "53cb1e47c44f5eab1d354aa2f3369834981f0eb021225282776229cd13207c3f"
+    },
+    {
+      "bytes": 13139,
+      "path": "src/engineering_sim/execution.py",
+      "sha256": "6800b9a2392b03825128327ee5140ced15de4b3a61bff86bad9c5bd1b7fe7e6b"
+    },
+    {
+      "bytes": 2559,
+      "path": "src/engineering_sim/fea.py",
+      "sha256": "d2a018283b35041f0d244329a9de0a154cecf0775cf810da41457d229f2b2f00"
+    },
+    {
+      "bytes": 23491,
+      "path": "src/engineering_sim/flight_dynamics.py",
+      "sha256": "f0d4dd6bac942bfffeaaf58ba5c98007f9d7eb5dd027ac5e4a09a7fe6968208c"
+    },
+    {
+      "bytes": 0,
+      "path": "src/engineering_sim/flow/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 27530,
+      "path": "src/engineering_sim/flow/aero.py",
+      "sha256": "ce7473b7c2ddebb43f119a0c092503d76aaa6c19d499bf278c7c2fcddef2a584"
+    },
+    {
+      "bytes": 5754,
+      "path": "src/engineering_sim/flow/manifold_fluids.py",
+      "sha256": "2526d83a1cff4f27d8f029398d748d75054fe922788ae2e75bd5c8adc7f83383"
+    },
+    {
+      "bytes": 25010,
+      "path": "src/engineering_sim/flow/stability.py",
+      "sha256": "429c2386e8772fc8732262d00acd94b47bc3be9ff9a0d3157388135009e8e6fb"
+    },
+    {
+      "bytes": 18028,
+      "path": "src/engineering_sim/flow/su2.py",
+      "sha256": "9d97f04e727f9e23e70553f71f278540deb643db5da132d688c3cdd7d33b069d"
+    },
+    {
+      "bytes": 5230,
+      "path": "src/engineering_sim/flow/vlm.py",
+      "sha256": "25f3cba35dcb96b9d74586b05e052775f41360030464049b46229da42e865c8c"
+    },
+    {
+      "bytes": 73,
+      "path": "src/engineering_sim/geometry/__init__.py",
+      "sha256": "30da2a76b726a15cb4d366c13e749951cfb312c5167e1edcbd90ffcb011b8d5d"
+    },
+    {
+      "bytes": 7186,
+      "path": "src/engineering_sim/geometry/airfoil.py",
+      "sha256": "75255fec73759b4da7af21dc71df40f3199cc10666c5609385ff505b1e227892"
+    },
+    {
+      "bytes": 5781,
+      "path": "src/engineering_sim/geometry/measure.py",
+      "sha256": "3c39001302521f2e0cdb8e8f725a059c65726d1571d7e597d209166b8b244d9d"
+    },
+    {
+      "bytes": 5008,
+      "path": "src/engineering_sim/geometry/planform.py",
+      "sha256": "c1dfc3b809798fd3d6374514146593c54756c1a1baaca7e92f468937266fe51d"
+    },
+    {
+      "bytes": 10086,
+      "path": "src/engineering_sim/geometry/stl.py",
+      "sha256": "a7b732b2bc1f841d771c2ef45eca7d7c941536010431e06088570c282e207868"
+    },
+    {
+      "bytes": 2621,
+      "path": "src/engineering_sim/grilles.py",
+      "sha256": "f546b03cd62d6f622750f744d2bb199d0aa219ac50ee3df388c793377d1f8c57"
+    },
+    {
+      "bytes": 14422,
+      "path": "src/engineering_sim/molding_process.py",
+      "sha256": "990ef0b3aad3cfb29823b1ed40f8a1acbd5ada48069e0decd5de41f544b45fca"
+    },
+    {
+      "bytes": 5138,
+      "path": "src/engineering_sim/operating_points.py",
+      "sha256": "8d08221bc55961fd55f99d7029b82482e1978805ccc444afa014fbc8acc54de7"
+    },
+    {
+      "bytes": 279,
+      "path": "src/engineering_sim/portable_bridge.py",
+      "sha256": "51a08c1d7cd9cca631bbd486fc8b47e6de4fcbee43d967d3bc0ef29d75aa08dc"
+    },
+    {
+      "bytes": 701,
+      "path": "src/engineering_sim/science/__init__.py",
+      "sha256": "9dfd94c25e9159eb830feb966e092c304cdaa64182fceaf2c6704ae843d33029"
+    },
+    {
+      "bytes": 6598,
+      "path": "src/engineering_sim/science/api.py",
+      "sha256": "cd64395a551c148869fdad2e75ee48a2036a1c03064a6d285bcded043023332c"
+    },
+    {
+      "bytes": 17158,
+      "path": "src/engineering_sim/science/bench.py",
+      "sha256": "4293c64563cd140ef127db789bd0e542f35af5598a21444f433b5f9076b0c221"
+    },
+    {
+      "bytes": 21166,
+      "path": "src/engineering_sim/science/biochem_buffers.py",
+      "sha256": "46929d6be09eba24a7a1c4d09134bb62dc935cd94e3b4a7903de1e2c48963e98"
+    },
+    {
+      "bytes": 15296,
+      "path": "src/engineering_sim/science/biochem_enzyme.py",
+      "sha256": "b6866834aa2292c88d7756890a9616dbbeaaec704648871a31a928cbbf5ea569"
+    },
+    {
+      "bytes": 23649,
+      "path": "src/engineering_sim/science/biochem_nucleic.py",
+      "sha256": "6975af31990ddba6b122fdb8e5775addad08a8cf454629e79015894a4c3b4165"
+    },
+    {
+      "bytes": 25117,
+      "path": "src/engineering_sim/science/chem.py",
+      "sha256": "2c48677d486dc2daf03c4b2c129a13e02f1fc83a25afbe99fc443202e9be8459"
+    },
+    {
+      "bytes": 10275,
+      "path": "src/engineering_sim/science/chem_input.py",
+      "sha256": "0f36c5aa2a604a41de62a34f422fd296c653594c85821859fe2552a35408d606"
+    },
+    {
+      "bytes": 50946,
+      "path": "src/engineering_sim/science/chemcalc.py",
+      "sha256": "3f5e8cb364a869447205b42af7784d24beb56831b48535b1ce10c11f59690f94"
+    },
+    {
+      "bytes": 6230,
+      "path": "src/engineering_sim/science/chemcalc_cli.py",
+      "sha256": "807451143b114cdec015963a17ce53d472d8d9bb2be60df942a5962eac56fada"
+    },
+    {
+      "bytes": 11660,
+      "path": "src/engineering_sim/science/chemeng_balance.py",
+      "sha256": "c34918a5330ebd611894643a7c8098cd534d58f1918238804ef68418cf2ad179"
+    },
+    {
+      "bytes": 29689,
+      "path": "src/engineering_sim/science/chemeng_kinetics.py",
+      "sha256": "2a57a758ec6b27e92d577ec755724d0310979eee1d0b6dc3e05114631feded09"
+    },
+    {
+      "bytes": 9009,
+      "path": "src/engineering_sim/science/chemeng_props.py",
+      "sha256": "c2e11b28b671973bd1360ffbccd5e416a40358aefae3d9574e50d0d303fb02fb"
+    },
+    {
+      "bytes": 26743,
+      "path": "src/engineering_sim/science/chemphys_qm.py",
+      "sha256": "b82dff0c330277a86dadb2076f17f5608407b1b3fab72c97d23bc907bb763361"
+    },
+    {
+      "bytes": 20378,
+      "path": "src/engineering_sim/science/chemphys_spectra.py",
+      "sha256": "23141a48bb57936a7e086d6dc7a4a717c5fd27e7e5d1c40d51cda42a68d32b49"
+    },
+    {
+      "bytes": 19547,
+      "path": "src/engineering_sim/science/chemphys_statmech.py",
+      "sha256": "c1f4d6bf6e2b9ec310ed629a766b84c68a7ef47f7599510cf2628b8570abee80"
+    },
+    {
+      "bytes": 2171,
+      "path": "src/engineering_sim/science/cite.py",
+      "sha256": "cfae5c6e0253f0875aac16bb1a19b88ccf6dc46ee6b37e85c3ebca336b11e12d"
+    },
+    {
+      "bytes": 24910,
+      "path": "src/engineering_sim/science/compound.py",
+      "sha256": "31d1a7e06eddbbaa4cb673c8ff7241aa47b41a8d7ba3bca60bb64bc67c6a581e"
+    },
+    {
+      "bytes": 103974,
+      "path": "src/engineering_sim/science/data/additives.json",
+      "sha256": "37e512e0ff06272d5152c21572a8e93ebd0de2d5d606dbd3156c223fe8ab37a2"
+    },
+    {
+      "bytes": 16138,
+      "path": "src/engineering_sim/science/data/biochem_pka.json",
+      "sha256": "290fee8c740a131e61b035a9b8d5c690f1cc2a4d24d81c8dcc13b93c40326cdb"
+    },
+    {
+      "bytes": 12918,
+      "path": "src/engineering_sim/science/data/fillers.json",
+      "sha256": "5865999f7c16e87494302c19924a58383f2e18bece01c9eb955e42fe28d4f93e"
+    },
+    {
+      "bytes": 7902,
+      "path": "src/engineering_sim/science/data/oracles/acoustics.json",
+      "sha256": "ee3016b81255541a7944981b0f27e82b76207d510b202875b3f749a5f61d5ca7"
+    },
+    {
+      "bytes": 8026,
+      "path": "src/engineering_sim/science/data/oracles/aerospace.json",
+      "sha256": "c1a5d0446f73ac5e38cf0c70e560a79d1dd462d0008bfb6008791bf3bbc8ccc8"
+    },
+    {
+      "bytes": 14504,
+      "path": "src/engineering_sim/science/data/oracles/automotive.json",
+      "sha256": "c3c2fe79e75b5f1165b7be7a2808ae8eefb84baf650e13c319e735c4b39f3cdd"
+    },
+    {
+      "bytes": 11150,
+      "path": "src/engineering_sim/science/data/oracles/beams.json",
+      "sha256": "16c7c6750303bdf93d9d14f7df9683cba8a298845dd33d9db3e7078bf2377bc1"
+    },
+    {
+      "bytes": 8025,
+      "path": "src/engineering_sim/science/data/oracles/bearings.json",
+      "sha256": "96433c6cddd98f7828dcef2c5edd65b3689aa7534143bd3e00fff3ca55a2838a"
+    },
+    {
+      "bytes": 8624,
+      "path": "src/engineering_sim/science/data/oracles/belts_chains.json",
+      "sha256": "333465f427a04cc2e0c465b764a0048438ad1ccdb894aeea6d919b38bad539e4"
+    },
+    {
+      "bytes": 12913,
+      "path": "src/engineering_sim/science/data/oracles/bolted.json",
+      "sha256": "996b7e96cac5826f1417794340f10dca0ceeedc30e16601250c7f9914c5b090f"
+    },
+    {
+      "bytes": 14743,
+      "path": "src/engineering_sim/science/data/oracles/clutches_brakes.json",
+      "sha256": "39bc7b2fe1d4ae8e4c9c6791dd5946d9b38cf8d784f41c60830baa8bd2db809c"
+    },
+    {
+      "bytes": 6385,
+      "path": "src/engineering_sim/science/data/oracles/columns.json",
+      "sha256": "c48c1c0e87f12c5ff5b8f54f346e1ca93015a5504a63de9c211839b01d35345a"
+    },
+    {
+      "bytes": 11249,
+      "path": "src/engineering_sim/science/data/oracles/combustion.json",
+      "sha256": "90c0276d7712ba41eb084e53385cf70067e3eee96cd3b1972ee7243e54d3be5c"
+    },
+    {
+      "bytes": 8267,
+      "path": "src/engineering_sim/science/data/oracles/compressible.json",
+      "sha256": "700ec1206b7a98f51d440c6b6073adcc00bdbec0007afcf42af0d642e14b4dc1"
+    },
+    {
+      "bytes": 17317,
+      "path": "src/engineering_sim/science/data/oracles/controls.json",
+      "sha256": "a51d6ead3ee383139775553b1320570628acb725b4c7e3135d844d77832fc43d"
+    },
+    {
+      "bytes": 15544,
+      "path": "src/engineering_sim/science/data/oracles/cycles.json",
+      "sha256": "a4948ff36227d530e733f8878c0390dc261398747b35a977cf06a69e80c8f1be"
+    },
+    {
+      "bytes": 5672,
+      "path": "src/engineering_sim/science/data/oracles/design_fund.json",
+      "sha256": "a3af7c824f5fb0f3daccbc092eac29435b0940797195d109def49abfa5e5f3f0"
+    },
+    {
+      "bytes": 13598,
+      "path": "src/engineering_sim/science/data/oracles/economics.json",
+      "sha256": "3586c5b6942e91c42e3145c7b910adf4b6d7e6c94632dd0941dc9a5b98ff900c"
+    },
+    {
+      "bytes": 9099,
+      "path": "src/engineering_sim/science/data/oracles/electrical.json",
+      "sha256": "ed6c38e4f1e2f8fbf114f26b6aeb6d91d43422bbfdd0cf0666b0affa4bfc3640"
+    },
+    {
+      "bytes": 6702,
+      "path": "src/engineering_sim/science/data/oracles/ergonomics.json",
+      "sha256": "3be8e97668aea8b0fa97a4fcf3ba6faf0787cc06723ad65cbea689fa0d308fc9"
+    },
+    {
+      "bytes": 10446,
+      "path": "src/engineering_sim/science/data/oracles/fatigue.json",
+      "sha256": "d377766a92bcf06233a90128d54107e83182b6bdabc4388911cef9f0badac8cb"
+    },
+    {
+      "bytes": 22275,
+      "path": "src/engineering_sim/science/data/oracles/fea.json",
+      "sha256": "e6b494ef700f4e7702dde944a56f5d29707138e806b252d12fde197019956e13"
+    },
+    {
+      "bytes": 19684,
+      "path": "src/engineering_sim/science/data/oracles/fluid_dynamics.json",
+      "sha256": "5b4f1e89d6ba91a2c45a60dfbf756b4cf3dcf4c50c1d1bb880a2396cdacca023"
+    },
+    {
+      "bytes": 7797,
+      "path": "src/engineering_sim/science/data/oracles/fluid_statics.json",
+      "sha256": "402abd05536e1b1dd36d127489b4dd52640b1ffbf53a3ce05d7dcbd23dd97c77"
+    },
+    {
+      "bytes": 7326,
+      "path": "src/engineering_sim/science/data/oracles/fracture.json",
+      "sha256": "fa3cd8e934351b617245f5c4fe60b757575ea02637a682ce51bdba789f1537cd"
+    },
+    {
+      "bytes": 12092,
+      "path": "src/engineering_sim/science/data/oracles/gears.json",
+      "sha256": "e8efd246a25c8b1fa24256d9ac35291900cfcdf90c77f1fb230696d878785188"
+    },
+    {
+      "bytes": 41476,
+      "path": "src/engineering_sim/science/data/oracles/heat_transfer.json",
+      "sha256": "b31c63b601260621f861b0f8fd936d9e9b4a82ff425ae981841df49f3db835aa"
+    },
+    {
+      "bytes": 12155,
+      "path": "src/engineering_sim/science/data/oracles/hvac.json",
+      "sha256": "735e327862a13b5b8c812dcdd252d625691709791bd30989dba39308d60b5954"
+    },
+    {
+      "bytes": 9412,
+      "path": "src/engineering_sim/science/data/oracles/hydraulics.json",
+      "sha256": "39613f007f3ba96b9f77ac75edf5fd172d603dde7a9c9b9124330f4bb53f8725"
+    },
+    {
+      "bytes": 6596,
+      "path": "src/engineering_sim/science/data/oracles/ic_engines.json",
+      "sha256": "90679284f545e2eacce4d8df220e8e5bce0ad1dfd9c390cbf8eb1a4f541e6084"
+    },
+    {
+      "bytes": 11628,
+      "path": "src/engineering_sim/science/data/oracles/instrumentation.json",
+      "sha256": "3df5e04816f7c13644b1da7823f8f66118f8a82af217a92657b2ed9cd09b2f1c"
+    },
+    {
+      "bytes": 5582,
+      "path": "src/engineering_sim/science/data/oracles/kinematics.json",
+      "sha256": "2976d4dad5d9529ddec7ce88bc3befb3f1fcf56783283475d508e2f2e0bebde3"
+    },
+    {
+      "bytes": 7429,
+      "path": "src/engineering_sim/science/data/oracles/kinetics.json",
+      "sha256": "928af749f772a69d6f30a6746f9f838e165fa16393d44f3a99e4b80e1aa8e448"
+    },
+    {
+      "bytes": 23705,
+      "path": "src/engineering_sim/science/data/oracles/manufacturing.json",
+      "sha256": "5c27a274e46926da7afb64cb3ef947240dcac2bcad89a4925dd3f18ffdb48062"
+    },
+    {
+      "bytes": 24959,
+      "path": "src/engineering_sim/science/data/oracles/materials_mech.json",
+      "sha256": "8758c61ebe6e7702e79faddf9bfacc1a722f79cc2bebdb5ab124781d828521b6"
+    },
+    {
+      "bytes": 17959,
+      "path": "src/engineering_sim/science/data/oracles/materials_sci.json",
+      "sha256": "36df31d7b47e4d2241bcfedb8ebefa8f6b7524d6291d2d9f00f9384bd045ece4"
+    },
+    {
+      "bytes": 12253,
+      "path": "src/engineering_sim/science/data/oracles/math.json",
+      "sha256": "74b3edf9bfd6b09ac8080e4e5bd68e0671f28a8745eada460621a2ccbe32ddf8"
+    },
+    {
+      "bytes": 22214,
+      "path": "src/engineering_sim/science/data/oracles/mechanisms.json",
+      "sha256": "4d47c287aa22e04e13e4470f5817726390c2afbae243fa44649284da3641dd61"
+    },
+    {
+      "bytes": 13868,
+      "path": "src/engineering_sim/science/data/oracles/metrology.json",
+      "sha256": "ee84bdc4457f76634d84c2ab756eafb7aad94866117991f7b3a78d75fb32e9ec"
+    },
+    {
+      "bytes": 4053,
+      "path": "src/engineering_sim/science/data/oracles/power_screws.json",
+      "sha256": "3dcc95eea65581531c64d8c5958d39781a0d43b1b4e0ea261c82494b8ae038af"
+    },
+    {
+      "bytes": 9138,
+      "path": "src/engineering_sim/science/data/oracles/pressure_vessels.json",
+      "sha256": "8256c01008110e86c72db822c5a8f34ed687b116fce62b87278c8dfb9c840c65"
+    },
+    {
+      "bytes": 6105,
+      "path": "src/engineering_sim/science/data/oracles/reliability.json",
+      "sha256": "34df25cfa63ca1f2ca96ba46cbafda8a953bf78fd01c11645151157a05d8cfa4"
+    },
+    {
+      "bytes": 17344,
+      "path": "src/engineering_sim/science/data/oracles/renewables.json",
+      "sha256": "e8f02c5555fa029487853d9205dc941cdc81199cc4649ae2dce354895642703a"
+    },
+    {
+      "bytes": 16177,
+      "path": "src/engineering_sim/science/data/oracles/robotics.json",
+      "sha256": "90dec72665fddc5c1752712ae54f51f93027429d0283bbd20b98978e2d73cf69"
+    },
+    {
+      "bytes": 13435,
+      "path": "src/engineering_sim/science/data/oracles/section_props.json",
+      "sha256": "72810350c1c78531abce1586fefd4bbbd4874d23ae9a7e181ebb3bf6d11e0eb1"
+    },
+    {
+      "bytes": 11531,
+      "path": "src/engineering_sim/science/data/oracles/shafts.json",
+      "sha256": "da185b0f3f334c7ef0b44e0d3f6ebac2e5f3c4eb32d933c84b48a27c6d928617"
+    },
+    {
+      "bytes": 16428,
+      "path": "src/engineering_sim/science/data/oracles/springs.json",
+      "sha256": "9c265150e9735e11e84cf96787a79e4f4868b118597b2237294bea48e716276d"
+    },
+    {
+      "bytes": 10700,
+      "path": "src/engineering_sim/science/data/oracles/statics.json",
+      "sha256": "0bc1270fc7cb661de03b73bff672fd6a92253b4c5f61722217ee13f661f6f6cf"
+    },
+    {
+      "bytes": 18253,
+      "path": "src/engineering_sim/science/data/oracles/thermo.json",
+      "sha256": "69cdb5f79d157dca9bed33211afa2430b0f40b7ba693adfe496dfa146081a0dc"
+    },
+    {
+      "bytes": 6161,
+      "path": "src/engineering_sim/science/data/oracles/tribology.json",
+      "sha256": "72ca0715e331635932eecc032b2bb8ea7315ea6fe752cb574dd2977a65744a65"
+    },
+    {
+      "bytes": 12480,
+      "path": "src/engineering_sim/science/data/oracles/turbomachinery.json",
+      "sha256": "bf59a893a047d88ca4cf76dc46a82cf3f561df2e14f543ac188a1dd7d6a33143"
+    },
+    {
+      "bytes": 15375,
+      "path": "src/engineering_sim/science/data/oracles/vibrations.json",
+      "sha256": "ddaf85ba3664163731e27ad6fcd6151da9ae3e746d970251a42d91bcd669a4a6"
+    },
+    {
+      "bytes": 4785,
+      "path": "src/engineering_sim/science/data/oracles/welded.json",
+      "sha256": "8d4dff21718f93e0608b29c0946e5e86c6f4f790312803d1c5cc9855677ad90f"
+    },
+    {
+      "bytes": 52505,
+      "path": "src/engineering_sim/science/data/resins.json",
+      "sha256": "5111acfc9673f1d0473fd3a8e7a1784f93b6cf9bb4fc29cf513ace07d3b93bef"
+    },
+    {
+      "bytes": 961,
+      "path": "src/engineering_sim/science/data/tdb/alzn_mey.json",
+      "sha256": "016ef20ba07c5387fd0aac4a067323c8ecf2a09a7281e1b3f6b0370c6c52e4fb"
+    },
+    {
+      "bytes": 81702,
+      "path": "src/engineering_sim/science/data/thermo_species.json",
+      "sha256": "166a644b69886a8c137aa5db7f716b51d0b6552d1df4210e7ff84533c3df1f17"
+    },
+    {
+      "bytes": 20711,
+      "path": "src/engineering_sim/science/data/thermosets.json",
+      "sha256": "5b5e99d3345ff6757c5116d2b14f16ccafebc6404b23da6cd77bfc4bdfd16b3f"
+    },
+    {
+      "bytes": 18865,
+      "path": "src/engineering_sim/science/docking.py",
+      "sha256": "2a7abf3383bdfb6ec4ee783a423eae64ea24ae2ba8d7aba401631c376da5157e"
+    },
+    {
+      "bytes": 9215,
+      "path": "src/engineering_sim/science/documents.py",
+      "sha256": "0c25ad63d87c0bd52ecbf81a580e186ca2961c185068b10f8eb63a4ad1776a58"
+    },
+    {
+      "bytes": 23746,
+      "path": "src/engineering_sim/science/materials_crystal.py",
+      "sha256": "070ab38b253c23e63a8463f0b3c5a17c023e4aba4ba5681c46053334298a00ba"
+    },
+    {
+      "bytes": 13201,
+      "path": "src/engineering_sim/science/materials_phase.py",
+      "sha256": "f4e16c5875dba6469290756539e65c82612ab1533c5471d6d435e771cdb29f8f"
+    },
+    {
+      "bytes": 18703,
+      "path": "src/engineering_sim/science/materials_props.py",
+      "sha256": "3929e45ea6efd0960410e4e50357968811f76eb4cc83db4c1e4b795d2df9b96a"
+    },
+    {
+      "bytes": 10960,
+      "path": "src/engineering_sim/science/md.py",
+      "sha256": "e7eed8c511b72860e528d07b1ca37bfe63a50ade2de9d3b05f93c2ea2f9ab3b3"
+    },
+    {
+      "bytes": 204,
+      "path": "src/engineering_sim/science/mech/__init__.py",
+      "sha256": "49eed998c072f33600dcd3187b98b8c047cba5797274009dcf6659cab1cc86c6"
+    },
+    {
+      "bytes": 13857,
+      "path": "src/engineering_sim/science/mech/acoustics.py",
+      "sha256": "e22c7f8910d3ada8ade292b55ed52951bc7c161657c955332f7a54c23de5b42a"
+    },
+    {
+      "bytes": 15237,
+      "path": "src/engineering_sim/science/mech/aerospace.py",
+      "sha256": "af4800987262c8ebd375a33f9fc4c6a70ab1b4e12c3063c38297702ec6bd88f0"
+    },
+    {
+      "bytes": 27931,
+      "path": "src/engineering_sim/science/mech/automotive.py",
+      "sha256": "8edac6ca4f5bb74db32db2438bba004e453afbd6ed723aaab9d0e0a5e680771e"
+    },
+    {
+      "bytes": 25317,
+      "path": "src/engineering_sim/science/mech/beams.py",
+      "sha256": "5edf11a21ac05fae81fadb7f30592fcff6debbcf6755da0cef73f05f161a03d7"
+    },
+    {
+      "bytes": 16859,
+      "path": "src/engineering_sim/science/mech/bearings.py",
+      "sha256": "66fc27635189dcb93805eb4bb948d205f73696ae6d6b88d06597a9ace39e35e2"
+    },
+    {
+      "bytes": 17913,
+      "path": "src/engineering_sim/science/mech/belts_chains.py",
+      "sha256": "22a1e4588b97fa17d34a11fb429f42e2295a576709ec2b3e98cc0e4f02396c4a"
+    },
+    {
+      "bytes": 22626,
+      "path": "src/engineering_sim/science/mech/bolted.py",
+      "sha256": "4ae5f318560b9351d0d179c54df0eb85f9ee220c9b510b61c3c659dcaa3d189b"
+    },
+    {
+      "bytes": 1525,
+      "path": "src/engineering_sim/science/mech/charts.py",
+      "sha256": "fbe25c25066224f967297a7ae35d69f30b0bc59666849c136263324c7e152345"
+    },
+    {
+      "bytes": 24296,
+      "path": "src/engineering_sim/science/mech/clutches_brakes.py",
+      "sha256": "32c46ba5ff93af4d4396d21e817b6750c8e43c8135c2898aebcc29e07c5e12a8"
+    },
+    {
+      "bytes": 13180,
+      "path": "src/engineering_sim/science/mech/columns.py",
+      "sha256": "402ce3527511e07957d7ac911f66bec11ace63f08d41d6b7d8e30c24f2b67351"
+    },
+    {
+      "bytes": 22360,
+      "path": "src/engineering_sim/science/mech/combustion.py",
+      "sha256": "b9de8199bf3c633aba610de96c4bc6d39ea9e7d7f4482fb85436a3af58a4b4b5"
+    },
+    {
+      "bytes": 6637,
+      "path": "src/engineering_sim/science/mech/common.py",
+      "sha256": "808dc3a611622553263f067b7208fd6e11182c2b42fda2539b3bc81afd38d916"
+    },
+    {
+      "bytes": 24208,
+      "path": "src/engineering_sim/science/mech/compressible.py",
+      "sha256": "251eaeba8115611192e499a1ad20b97785fbece531ce0b9b3ff75ae941f5dfb6"
+    },
+    {
+      "bytes": 31174,
+      "path": "src/engineering_sim/science/mech/controls.py",
+      "sha256": "9f8e1a9c28570a211de09abcffb7ebf48cd81dd6f5620a36636d8afaf691204b"
+    },
+    {
+      "bytes": 58643,
+      "path": "src/engineering_sim/science/mech/core.py",
+      "sha256": "5cb21a6ba740b0d9431cfbc6a853c3e16bdd43b0f385c93d2cb3b6386cc16d39"
+    },
+    {
+      "bytes": 43042,
+      "path": "src/engineering_sim/science/mech/cycles.py",
+      "sha256": "2cbe8ed84f1ae40f0d410f9be85274f5a17d0639e0ba73640d318c5a066f66f0"
+    },
+    {
+      "bytes": 11302,
+      "path": "src/engineering_sim/science/mech/design_fund.py",
+      "sha256": "786f444c097a856860f20757e64cffcb569b07a4998d968c1f9b2eb79476ef99"
+    },
+    {
+      "bytes": 22395,
+      "path": "src/engineering_sim/science/mech/economics.py",
+      "sha256": "b5c5919cde0dd05b563736d83aa68e233e9ecac7fe4a47f0bb78b031490b06c8"
+    },
+    {
+      "bytes": 15837,
+      "path": "src/engineering_sim/science/mech/electrical.py",
+      "sha256": "f94f086acd886e40526ee47706b5424d229a5e42969b128d6a1dc93fa39f5838"
+    },
+    {
+      "bytes": 8764,
+      "path": "src/engineering_sim/science/mech/ergonomics.py",
+      "sha256": "92588b9434e9a827b10df99f1fdaaba32818045934a49e7bf1facde076934a80"
+    },
+    {
+      "bytes": 22112,
+      "path": "src/engineering_sim/science/mech/fatigue.py",
+      "sha256": "3c4bf573b8a4b9a289d3aa9d5cbdfc7b3316a70a2f95e1b34fb961234fb81a9f"
+    },
+    {
+      "bytes": 32934,
+      "path": "src/engineering_sim/science/mech/fea.py",
+      "sha256": "46e7cf0454b5f48f17ad78e9ad81c31467b99a2d261ad89f656af5eb698599b2"
+    },
+    {
+      "bytes": 38563,
+      "path": "src/engineering_sim/science/mech/fluid_dynamics.py",
+      "sha256": "e7240507ad9016581cbc487ea390cf348c4a4eba98c4f46307fdd18710ecac9b"
+    },
+    {
+      "bytes": 15386,
+      "path": "src/engineering_sim/science/mech/fluid_statics.py",
+      "sha256": "00aa813eb22e7916bed682434f081a1a8dbee65e7e2e87b2a3dc62dea170d873"
+    },
+    {
+      "bytes": 12757,
+      "path": "src/engineering_sim/science/mech/fracture.py",
+      "sha256": "39635eca77b8e1374f34b689dd25e10ca98763a8b41ce519963ad7c5bcf8224f"
+    },
+    {
+      "bytes": 30112,
+      "path": "src/engineering_sim/science/mech/gears.py",
+      "sha256": "74643151a49bb84fbfdfac9a568b0d216c75ffbd8aef220ee9ff4f69caa256b2"
+    },
+    {
+      "bytes": 70212,
+      "path": "src/engineering_sim/science/mech/heat_transfer.py",
+      "sha256": "d92068312fecb5c63d231c303a014e486a3f439ed6f397a49f89146c5bdca3b7"
+    },
+    {
+      "bytes": 27645,
+      "path": "src/engineering_sim/science/mech/hvac.py",
+      "sha256": "9ad1368165417630842b19d321143146f023c0fc115ee22935a2bbb58277d3b7"
+    },
+    {
+      "bytes": 13712,
+      "path": "src/engineering_sim/science/mech/hydraulics.py",
+      "sha256": "e854346f5b15dc3999d0be5c4dc58558e5c73c7b2c296d447f43c19e94ffce47"
+    },
+    {
+      "bytes": 13058,
+      "path": "src/engineering_sim/science/mech/ic_engines.py",
+      "sha256": "48c3cf7f71adc8eaf01cac1062d17d297d110eecf94f7bca39fc73a72c45e7db"
+    },
+    {
+      "bytes": 21590,
+      "path": "src/engineering_sim/science/mech/instrumentation.py",
+      "sha256": "0905af203d9e5e53f63bacbb0f851ea51f744b761ea138346c511b4394ee81f8"
+    },
+    {
+      "bytes": 11438,
+      "path": "src/engineering_sim/science/mech/kinematics.py",
+      "sha256": "6431f7e3c98e4396322435182568cab569a95bd5b7e57c228f8058c98b76c281"
+    },
+    {
+      "bytes": 16518,
+      "path": "src/engineering_sim/science/mech/kinetics.py",
+      "sha256": "7825ce24464d9396ce7d4373e17c67d0b387a6d7c5776698a58277ec62e1e005"
+    },
+    {
+      "bytes": 40266,
+      "path": "src/engineering_sim/science/mech/manufacturing.py",
+      "sha256": "cbf69532f12defff0109af5a4c8161181cef2406ca7a27c67e278ee246b3442a"
+    },
+    {
+      "bytes": 37701,
+      "path": "src/engineering_sim/science/mech/materials_mech.py",
+      "sha256": "06e5e8e356be11c466fbb4bc78757f116463bd601bfcb8d7730558f45152c071"
+    },
+    {
+      "bytes": 29271,
+      "path": "src/engineering_sim/science/mech/materials_sci.py",
+      "sha256": "155ed160aec576e7e1e87003f74ff7fbd911e2e8ce33287eb8e17b468fed5f6c"
+    },
+    {
+      "bytes": 31607,
+      "path": "src/engineering_sim/science/mech/math.py",
+      "sha256": "91e9950fb4afc03e03dfdc3077dbc1235868383110b4cc67b2c41b6470b22bf2"
+    },
+    {
+      "bytes": 55838,
+      "path": "src/engineering_sim/science/mech/mechanisms.py",
+      "sha256": "3b82c3a6543304191a16a0a968008afd070b3f176dd2c8774be89bfd2009a5d6"
+    },
+    {
+      "bytes": 26604,
+      "path": "src/engineering_sim/science/mech/metrology.py",
+      "sha256": "a3152d35e2573820d90011a52307175df15edb296013edc176c57bb2a53cbcf7"
+    },
+    {
+      "bytes": 5008,
+      "path": "src/engineering_sim/science/mech/oracles.py",
+      "sha256": "c691d175f063bbdf502159dceb2234f8aba86ec0440cf2da9f6b120526de4517"
+    },
+    {
+      "bytes": 7413,
+      "path": "src/engineering_sim/science/mech/power_screws.py",
+      "sha256": "92e0ea9f2d37750809338d599abf1c72e866060f0a09255c3d3f99433602dced"
+    },
+    {
+      "bytes": 22413,
+      "path": "src/engineering_sim/science/mech/pressure_vessels.py",
+      "sha256": "f9516bd79d3a1b11c57affd486a22903a41534d3967b5fd334cb1821cf1f2159"
+    },
+    {
+      "bytes": 15967,
+      "path": "src/engineering_sim/science/mech/reliability.py",
+      "sha256": "383f8f0da7d7433b100a8f51e3aee62bfa7af79cf6957f1a107576f3e56e6635"
+    },
+    {
+      "bytes": 24875,
+      "path": "src/engineering_sim/science/mech/renewables.py",
+      "sha256": "99778fbe2b483ab8fed6e5673ce371641acb40858b470dd1b8e7cdef265fc7c5"
+    },
+    {
+      "bytes": 36748,
+      "path": "src/engineering_sim/science/mech/robotics.py",
+      "sha256": "a25702f4eefffc0356bf06a9aa89d7e21b919875e1d5003096b266b5b1cfa587"
+    },
+    {
+      "bytes": 28414,
+      "path": "src/engineering_sim/science/mech/section_props.py",
+      "sha256": "ca2670395015e0bd4cf8bbb7b10aef64c4810caf3a5fb31b2128984a42cd4aeb"
+    },
+    {
+      "bytes": 22575,
+      "path": "src/engineering_sim/science/mech/shafts.py",
+      "sha256": "fe6697c01c08a5cd091c81be63f34745214da5143a6e30e82f4b51a6bad7ec09"
+    },
+    {
+      "bytes": 27489,
+      "path": "src/engineering_sim/science/mech/springs.py",
+      "sha256": "907aff38332b530f14c1830e40f93f53608039849fd524e41fcfcfb7de127575"
+    },
+    {
+      "bytes": 21637,
+      "path": "src/engineering_sim/science/mech/statics.py",
+      "sha256": "0c31a381be921dc7f75dada2baf5cd0ded955dc3d56803bf186e1f2835489784"
+    },
+    {
+      "bytes": 37063,
+      "path": "src/engineering_sim/science/mech/thermo.py",
+      "sha256": "5a1b67ce69496560fd4b2d089e086ef281d444b49c756a59f5f42df9c21ff92d"
+    },
+    {
+      "bytes": 13065,
+      "path": "src/engineering_sim/science/mech/tribology.py",
+      "sha256": "162bbd9c44e46b71176779f88d79d4088c4e2de34b388cf6db845cdf035c5c13"
+    },
+    {
+      "bytes": 32606,
+      "path": "src/engineering_sim/science/mech/turbomachinery.py",
+      "sha256": "49c4ef82708bcde8826b20bfcf8cfdd5f868e3bb5eb67e5d58e28cfe04add0e9"
+    },
+    {
+      "bytes": 31048,
+      "path": "src/engineering_sim/science/mech/vibrations.py",
+      "sha256": "4bb83337acf5dcba5786f148201b13419c20cad384d2320bac1c379b4783c01e"
+    },
+    {
+      "bytes": 10740,
+      "path": "src/engineering_sim/science/mech/welded.py",
+      "sha256": "e4077396c5417299ce5f6ee9dc588473e42892e22cad32d5d4691d74417fbb13"
+    },
+    {
+      "bytes": 9225,
+      "path": "src/engineering_sim/science/mech_cli.py",
+      "sha256": "79a87644ea6b29bca060ab0a45ffaf35b220d76645b5ddb44ef959cacea3ad18"
+    },
+    {
+      "bytes": 8196,
+      "path": "src/engineering_sim/science/ops_biochem.py",
+      "sha256": "ea158133eee64ff49d5ca96eeb3374050cb49f41dd63bddfc46379518c53802c"
+    },
+    {
+      "bytes": 1672,
+      "path": "src/engineering_sim/science/ops_chemcalc.py",
+      "sha256": "befdc7f959014818f5409f4287875386c11995ee934a4fa8f50b75663240418e"
+    },
+    {
+      "bytes": 4818,
+      "path": "src/engineering_sim/science/ops_chemeng.py",
+      "sha256": "78e8e4a9c64bcd540e85d85fa6de70bb176f4584f30362058701489cc609986d"
+    },
+    {
+      "bytes": 4416,
+      "path": "src/engineering_sim/science/ops_chemphys.py",
+      "sha256": "0bef4f6d838bc56c55a2f559f31d47da8d5df21dda02f3cfb5849bcbf0179b72"
+    },
+    {
+      "bytes": 28454,
+      "path": "src/engineering_sim/science/ops_concoct.py",
+      "sha256": "adce6ee516e5a65ad48ce190a3706696e631d70e403ffe031ba4013c041d0a93"
+    },
+    {
+      "bytes": 5075,
+      "path": "src/engineering_sim/science/ops_materials.py",
+      "sha256": "7c2476a370f0519d033337f855a50432c7ddd563742ecaeee4411c192afc0b29"
+    },
+    {
+      "bytes": 3061,
+      "path": "src/engineering_sim/science/ops_mech.py",
+      "sha256": "9b6cdc62c85548864d7d3fea63094d592c19a69c2cc7322b81d736a9134ebbad"
+    },
+    {
+      "bytes": 6321,
+      "path": "src/engineering_sim/science/ops_stability.py",
+      "sha256": "5560bd007dbe8a7e3d43f0c3472213477d7080fd2873a04ddd52c685c9c80b9a"
+    },
+    {
+      "bytes": 1741,
+      "path": "src/engineering_sim/science/paths.py",
+      "sha256": "bf3ff14596899c0627f69cb54650a39de1d9e688fc216ca77b226f27bffdfa44"
+    },
+    {
+      "bytes": 25258,
+      "path": "src/engineering_sim/science/protein.py",
+      "sha256": "1c57c6de0a51ec2314c6a7bf92b8aaae3c700d925475896f1f042c81a483153b"
+    },
+    {
+      "bytes": 12763,
+      "path": "src/engineering_sim/science/records.py",
+      "sha256": "7f53d821c108ddab2cfb724b4ac819beb5553bbe7ee9327cd1072acef1f6f6b0"
+    },
+    {
+      "bytes": 22052,
+      "path": "src/engineering_sim/science/rpet.py",
+      "sha256": "8c15b5815b24c1b8354817a1212f45468636d3d4962d2084a3323c88c64fa3d9"
+    },
+    {
+      "bytes": 56241,
+      "path": "src/engineering_sim/science/stability.py",
+      "sha256": "eaeb291bd89f2c2bfc5d84b5657ab2fbb7052ff61274cfd7b678d0b068dc0fda"
+    },
+    {
+      "bytes": 3651,
+      "path": "src/engineering_sim/science/stability_retro.py",
+      "sha256": "379ace2a4defe3253ca61134f9ee93a781bd622c782f73becc24beaa81f19b41"
+    },
+    {
+      "bytes": 15603,
+      "path": "src/engineering_sim/science/thermo.py",
+      "sha256": "ef21d914c7121fcc9937d732946789f61d44f4c9195d373c69869e86af3bfe7b"
+    },
+    {
+      "bytes": 7618,
+      "path": "src/engineering_sim/science/thermoset.py",
+      "sha256": "e020fc751d44851f6238190b4536f8df5f64de1f00e435086131da3f4c252e60"
+    },
+    {
+      "bytes": 10851,
+      "path": "src/engineering_sim/science/volatility.py",
+      "sha256": "b20c9eee97d67629fc7fd55d47e2d920e5fcfd3348dbcbf425529c710a315953"
+    },
+    {
+      "bytes": 8947,
+      "path": "src/engineering_sim/science/worker.py",
+      "sha256": "342262320c28a95d13ab93850a8cebff6a40841d759468f0409a1e0865a25b4b"
+    },
+    {
+      "bytes": 7727,
+      "path": "src/engineering_sim/science/xtb.py",
+      "sha256": "500b0611bbe276a6a71e86e949fa2cd9586a9266965fc7bd1c4e94ca82c44bf9"
+    },
+    {
+      "bytes": 16193,
+      "path": "src/engineering_sim/structures.py",
+      "sha256": "fb6eff35e02c49f87d7cd6f303947233078ab1f18d2ea60e07c9169ab128eff9"
+    },
+    {
+      "bytes": 6881,
+      "path": "src/engineering_sim/thermal.py",
+      "sha256": "a3cfcef909e57bec4eb5a2d1c63e57627b81f1ec35969cf98c7dc8f2efa8fb62"
+    },
+    {
+      "bytes": 107,
+      "path": "src/engineering_sim/vision/__init__.py",
+      "sha256": "6d3a7cc6031dd933c72a1ec816928a7147848bf86f6f2ce148887be07f6efc2f"
+    },
+    {
+      "bytes": 4867,
+      "path": "src/engineering_sim/vision/dimensions.py",
+      "sha256": "403b91cead70cb0374482694487d0f002e1744c27f93e3f44069420891259a33"
+    },
+    {
+      "bytes": 10017,
+      "path": "src/engineering_sim/vision/spec.py",
+      "sha256": "1ff457654488f9f5645c9566a51d7ecf7a0ed128e002ca286748bfaa1dafa433"
+    },
+    {
+      "bytes": 3400,
+      "path": "src/engineering_sim/web/index.html",
+      "sha256": "f00bc715c32313d0f5f6a72771262fcee9d74aa620a8d5541f432585ac041620"
+    },
+    {
+      "bytes": 10457,
+      "path": "src/engineering_sim/web/lbm.js",
+      "sha256": "59171d58ed73804e7ef403408b82c0976b61579ad0b8bfec12718c9f15842b6c"
+    },
+    {
+      "bytes": 16293,
+      "path": "src/engineering_sim/web/lbm3d.js",
+      "sha256": "2d7f20a407a3c9fa2c6938c767ed000bd5437e583eea3769b5889cf6f3721e12"
+    },
+    {
+      "bytes": 4610,
+      "path": "src/engineering_sim/web/simulation-engine.js",
+      "sha256": "89910b68802a621dd0131022caec961e2eba2cf8ee0f12a4d2af16fa44db7e40"
+    },
+    {
+      "bytes": 2258,
+      "path": "src/engineering_sim/web_server.py",
+      "sha256": "2b60091e42c30b8be2895c7f299b2de892078c55881537513711779a6c9ea8dd"
+    },
+    {
+      "bytes": 3877,
+      "path": "tests/cad_checks.py",
+      "sha256": "59b998aefdf98cb2599ed2d04ee38d86fa71f209ee2af0fad201b98d5f6aec5d"
+    },
+    {
+      "bytes": 2659,
+      "path": "tests/checker_cad_checks.py",
+      "sha256": "fa5406a93d14169d9ceeb8fa5eed465df7618954e3f1b3948a0fa6e75efb4a5a"
+    },
+    {
+      "bytes": 1235,
+      "path": "tests/feature_cad_checks.py",
+      "sha256": "2015e764cc00fa10f02fcb8033c68fa7f90fb5806b5cfcd6121771293238794b"
+    },
+    {
+      "bytes": 5255,
+      "path": "tests/test_browser_workers.py",
+      "sha256": "50de0c425470b1090933f0c01a548f404c4486584bd69345c832c1bc821fc7e7"
+    },
+    {
+      "bytes": 4624,
+      "path": "tests/test_execution.py",
+      "sha256": "35b937d090c1a7260372aa6d93a32c9ff062f0e20265701f25ba4acb2cd643e9"
+    },
+    {
+      "bytes": 5768,
+      "path": "tests/test_extended_algorithms.py",
+      "sha256": "62424e6702a76fb913bda79c2222488b5736ccdc885d472b9ac62bac60b7a078"
+    },
+    {
+      "bytes": 1432,
+      "path": "tests/test_fea.py",
+      "sha256": "48e7627ab9cd8f5c8785c896ff25dfc49291e46cea9be1672b5f393f22c62cf1"
+    },
+    {
+      "bytes": 1811,
+      "path": "tests/test_http.py",
+      "sha256": "ad79596cd9e364b224d1fd17df85dfb187f42c7149dcd01e00d42e1ac4df78d1"
+    },
+    {
+      "bytes": 1103,
+      "path": "tests/test_mechanics_oracles.py",
+      "sha256": "a19bd9862d913404fd6f6a4b057f6916174559bacca4b477a15db7429c7961d7"
+    },
+    {
+      "bytes": 5244,
+      "path": "tests/test_numerics.py",
+      "sha256": "6a1631a827844858f59e89ae5e800cba817cb49b3f8379d90a63cf757093a87c"
+    },
+    {
+      "bytes": 2866,
+      "path": "tests/test_parametric_checks.py",
+      "sha256": "439721c3c0e5b174f623b3498a9658744c003e0dcf781eaa73772bfddf706062"
+    },
+    {
+      "bytes": 2957,
+      "path": "tests/test_privacy_boundaries.py",
+      "sha256": "2dd2daba4914ad9b7bb0e040aef2ba1b8491cdd771c32a548a56d8db53460bee"
+    },
+    {
+      "bytes": 7402,
+      "path": "tests/test_science_biochem.py",
+      "sha256": "2b04886521879ee7b199296299bd2cc552f58ff927f3db7b3bbb7fc9b399ca25"
+    },
+    {
+      "bytes": 9711,
+      "path": "tests/test_science_chemeng.py",
+      "sha256": "ca8df2b6b49284611bf3bbfa7097fdeb6d9ddbb531681aad3184b3eac089a37a"
+    },
+    {
+      "bytes": 5938,
+      "path": "tests/test_science_chemphys.py",
+      "sha256": "bd0e665641f580e20abaeee540dad48f935bf551df54d7612e08ff82eb78b79f"
+    },
+    {
+      "bytes": 6054,
+      "path": "tests/test_science_thermo.py",
+      "sha256": "7365658e27bf9e9e81ef22cdda1567130779479dafb05955b8660ccf14172669"
+    },
+    {
+      "bytes": 7634,
+      "path": "tools/benchmark_report.py",
+      "sha256": "7c7a7920c5e3d4fb0831f908bbdfeb37ee645e36e442b80c83c9af1a5a0b1f81"
+    },
+    {
+      "bytes": 8029,
+      "path": "tools/benchmark_solvers.py",
+      "sha256": "1b7120ae4ac435461e361e1d71ce57123305fa9e1319b7d127c460028b77366c"
+    },
+    {
+      "bytes": 1138,
+      "path": "tools/check_installation.py",
+      "sha256": "6062129e880d6563062f1f7a24050690c152350f0c9779f692c798b0a0daff65"
+    },
+    {
+      "bytes": 3491,
+      "path": "tools/check_release.py",
+      "sha256": "dcc7627c623b42b362849003215fe29d0d22ea0cebb3b1194aa131ce629d3a86"
+    }
+  ],
+  "package_scope": "reviewed-runnable-source-synthetic-tests-benchmarks-and-documentation",
+  "schema": "public-release-files/1",
+  "self_hash": "manifest excludes its own digest to avoid a circular reference"
+}

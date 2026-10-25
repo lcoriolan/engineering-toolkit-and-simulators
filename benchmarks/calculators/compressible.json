@@ -1,0 +1,2448 @@
+{
+  "section": "compressible",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k compressible",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "compressible.speed_of_sound": {
+      "title": "Speed of sound (a = sqrt(gamma R T))",
+      "variables": [
+        {
+          "name": "a",
+          "unit": "m/s",
+          "desc": "speed of sound",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "J/(kg*K)",
+          "desc": "specific gas constant",
+          "lo": 1.0,
+          "hi": 10000.0,
+          "label": "R",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "static temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "a = sqrt(gamma*R*T)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "a"
+      ],
+      "assumptions": [
+        "Ideal gas, constant gamma. For air at sea level (gamma = 1.4, R = 287 J/(kg K), T = 15 degC) this gives a ~ 340 m/s."
+      ],
+      "method_references": [
+        "a = sqrt(gamma R T) (ideal gas)"
+      ],
+      "synthetic_example": {
+        "gamma": 1.4,
+        "R": 287.0,
+        "T": 288.15
+      }
+    },
+    "compressible.mach_number": {
+      "title": "Mach number (M = V/a)",
+      "variables": [
+        {
+          "name": "M",
+          "unit": "",
+          "desc": "Mach number",
+          "lo": 0.0,
+          "hi": 50.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m/s",
+          "desc": "flow velocity",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m/s",
+          "desc": "local speed of sound",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "M = V/a"
+      ],
+      "procedure": null,
+      "outputs": [
+        "M"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "M = V/a"
+      ],
+      "synthetic_example": {
+        "V": 680.0,
+        "a": 340.0
+      }
+    },
+    "compressible.mach_angle": {
+      "title": "Mach angle (mu = asin(1/M))",
+      "variables": [
+        {
+          "name": "mu",
+          "unit": "rad",
+          "desc": "Mach angle",
+          "lo": 0.0,
+          "hi": 1.5707963267948966,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M",
+          "unit": "",
+          "desc": "Mach number (>= 1)",
+          "lo": 1.0,
+          "hi": 50.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "mu = asin(1/M)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "mu"
+      ],
+      "assumptions": [
+        "Only defined for M >= 1 (supersonic); mu is the half-angle of the Mach cone."
+      ],
+      "method_references": [
+        "sin(mu) = 1/M"
+      ],
+      "synthetic_example": {
+        "M": 2.0
+      }
+    },
+    "compressible.stagnation_ratios": {
+      "title": "Isentropic stagnation property ratios",
+      "variables": [
+        {
+          "name": "T0_T",
+          "unit": "",
+          "desc": "T0/T",
+          "lo": 1.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P0_P",
+          "unit": "",
+          "desc": "P0/P",
+          "lo": 1.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho0_rho",
+          "unit": "",
+          "desc": "rho0/rho",
+          "lo": 1.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M",
+          "unit": "",
+          "desc": "Mach number",
+          "lo": 0.0,
+          "hi": 50.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T0_T = 1 + (gamma - 1)/2*M**2",
+        "P0_P = (1 + (gamma - 1)/2*M**2)**(gamma/(gamma - 1))",
+        "rho0_rho = (1 + (gamma - 1)/2*M**2)**(1/(gamma - 1))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T0_T",
+        "P0_P",
+        "rho0_rho"
+      ],
+      "assumptions": [
+        "Isentropic (adiabatic, reversible) stagnation. Multiply by the static value to get the stagnation value: T0 = T (T0/T), etc."
+      ],
+      "method_references": [
+        "Isentropic stagnation relations T0/T = 1 + (gamma-1)/2 M^2, P0/P = (...)^(gamma/(gamma-1))"
+      ],
+      "synthetic_example": {
+        "M": 2.0,
+        "gamma": 1.4
+      }
+    },
+    "compressible.isentropic_area_ratio": {
+      "title": "Isentropic area ratio A/A*",
+      "variables": [
+        {
+          "name": "A_Astar",
+          "unit": "",
+          "desc": "area ratio A/A*",
+          "lo": 1.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M",
+          "unit": "",
+          "desc": "Mach number",
+          "lo": 0.0,
+          "hi": 50.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "A_Astar = (1/M)*((2/(gamma + 1))*(1 + (gamma - 1)/2*M**2))**((gamma + 1)/(2*(gamma - 1)))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A_Astar"
+      ],
+      "assumptions": [
+        "A* is the throat (sonic) area. Two Mach numbers share one A/A* > 1; the subsonic root is returned when inverting unless the example favours the supersonic one (use area_ratio_inverse for both branches)."
+      ],
+      "method_references": [
+        "Isentropic area-Mach relation (recalled form)"
+      ],
+      "synthetic_example": {
+        "M": 2.0,
+        "gamma": 1.4
+      }
+    },
+    "compressible.area_ratio_inverse": {
+      "title": "Inverse area-Mach: both Mach numbers for a given A/A*",
+      "variables": [
+        {
+          "name": "A_Astar",
+          "unit": "",
+          "desc": "area ratio A/A*",
+          "lo": 1.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M_sub",
+          "unit": "",
+          "desc": "subsonic Mach number (<= 1)",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M_super",
+          "unit": "",
+          "desc": "supersonic Mach number (>= 1)",
+          "lo": 1.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _area_ratio_inverse(values):\n    \"\"\"Inverse area-Mach: both Mach numbers whose isentropic A/A* equals the given value.\"\"\"\n    gamma = values['gamma']\n    A_Astar = values['A_Astar']\n    if gamma <= 1.0:\n        raise MechError('gamma must be > 1')\n    M_sub, M_super = _area_mach(A_Astar, gamma)\n    return {'M_sub': M_sub, 'M_super': M_super}\n",
+        "source": "compressible.py",
+        "line": 129
+      },
+      "outputs": [
+        "M_sub",
+        "M_super"
+      ],
+      "assumptions": [
+        "A/A* >= 1; A/A* = 1 gives M = 1. Solves by bisection on the isentropic area-Mach relation, so it is only as accurate as that ideal-gas model."
+      ],
+      "method_references": [
+        "Inverse of the isentropic area-Mach relation (bisection)"
+      ],
+      "synthetic_example": {
+        "A_Astar": 1.6875,
+        "gamma": 1.4
+      }
+    },
+    "compressible.choked_mass_flow": {
+      "title": "Choked (sonic throat) mass flow rate",
+      "variables": [
+        {
+          "name": "mdot",
+          "unit": "kg/s",
+          "desc": "mass flow rate",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_star",
+          "unit": "m^2",
+          "desc": "throat area",
+          "lo": 0.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P0",
+          "unit": "Pa",
+          "desc": "stagnation pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T0",
+          "unit": "K",
+          "desc": "stagnation temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "J/(kg*K)",
+          "desc": "specific gas constant",
+          "lo": 1.0,
+          "hi": 10000.0,
+          "label": "R",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "mdot = A_star*P0/sqrt(T0)*sqrt(gamma/R)*(2/(gamma + 1))**((gamma + 1)/(2*(gamma - 1)))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "mdot"
+      ],
+      "assumptions": [
+        "Choked flow at a sonic throat (M = 1). At the choked condition mdot is the maximum for the given stagnation state; gamma = 1.4 gives the constant (2/(gamma+1))^((gamma+1)/(2(gamma-1))) sqrt(gamma/R)."
+      ],
+      "method_references": [
+        "mdot = A* P0 / sqrt(T0) * sqrt(gamma/R) * (2/(gamma+1))^((gamma+1)/(2(gamma-1))) (recalled form)"
+      ],
+      "synthetic_example": {
+        "A_star": 0.01,
+        "P0": 500000.0,
+        "T0": 300.0,
+        "gamma": 1.4,
+        "R": 287.0
+      }
+    },
+    "compressible.normal_shock": {
+      "title": "Normal shock property ratios",
+      "variables": [
+        {
+          "name": "M2",
+          "unit": "",
+          "desc": "downstream Mach number",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P2_P1",
+          "unit": "",
+          "desc": "pressure ratio P2/P1",
+          "lo": 1.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho2_rho1",
+          "unit": "",
+          "desc": "density ratio rho2/rho1",
+          "lo": 1.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2_T1",
+          "unit": "",
+          "desc": "temperature ratio T2/T1",
+          "lo": 1.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p02_p01",
+          "unit": "",
+          "desc": "stagnation (total) pressure ratio P02/P01",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M1",
+          "unit": "",
+          "desc": "upstream Mach number (>= 1)",
+          "lo": 1.0,
+          "hi": 50.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "M2 = sqrt(((gamma - 1)*M1**2 + 2)/(2*gamma*M1**2 - (gamma - 1)))",
+        "P2_P1 = (2*gamma*M1**2 - (gamma - 1))/(gamma + 1)",
+        "rho2_rho1 = (gamma + 1)*M1**2/((gamma - 1)*M1**2 + 2)",
+        "T2_T1 = P2_P1/rho2_rho1",
+        "p02_p01 = ((gamma + 1)*M1**2/(2 + (gamma - 1)*M1**2))**(gamma/(gamma - 1))*((gamma + 1)/(2*gamma*M1**2 - (gamma - 1)))**(1/(gamma - 1))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "M2",
+        "P2_P1",
+        "rho2_rho1",
+        "T2_T1",
+        "p02_p01"
+      ],
+      "assumptions": [
+        "Stationary normal shock; the upstream is supersonic (M1 >= 1) and the downstream subsonic (M2 <= 1). Entropy rises across the shock, so the stagnation pressure ratio P02/P01 <= 1."
+      ],
+      "method_references": [
+        "Rankine-Hugoniot normal-shock relations (recalled forms)"
+      ],
+      "synthetic_example": {
+        "M1": 2.0,
+        "gamma": 1.4
+      }
+    },
+    "compressible.oblique_shock_theta": {
+      "title": "Oblique shock: deflection angle from M and shock angle (theta-beta-M)",
+      "variables": [
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "flow deflection angle",
+          "lo": 0.0,
+          "hi": 1.5707963267948966,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta",
+          "unit": "rad",
+          "desc": "shock (wave) angle",
+          "lo": 0.0,
+          "hi": 1.5707963267948966,
+          "label": "\u03b2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M",
+          "unit": "",
+          "desc": "Mach number",
+          "lo": 0.0,
+          "hi": 50.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "theta = atan(2/tan(beta)*(M**2*sin(beta)**2 - 1)/(M**2*(gamma + cos(2*beta)) + 2))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "theta"
+      ],
+      "assumptions": [
+        "Supersonic upstream. A real shock needs M sin(beta) >= 1 (beta >= Mach angle); the relation then gives theta from 0 at the Mach angle back to 0 at a normal shock, with a maximum in between."
+      ],
+      "method_references": [
+        "theta-beta-M relation, tan(theta) = 2 cot(beta) (M^2 sin^2(beta) - 1)/(M^2(gamma + cos 2beta) + 2)"
+      ],
+      "synthetic_example": {
+        "M": 2.0,
+        "beta": 0.6981317007977318,
+        "gamma": 1.4
+      }
+    },
+    "compressible.oblique_shock": {
+      "title": "Oblique shock: weak and strong shock angles and downstream properties",
+      "variables": [
+        {
+          "name": "M",
+          "unit": "",
+          "desc": "Mach number",
+          "lo": 0.0,
+          "hi": 50.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "flow deflection angle",
+          "lo": 0.0,
+          "hi": 1.5707963267948966,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta_weak",
+          "unit": "rad",
+          "desc": "weak shock angle",
+          "lo": 0.0,
+          "hi": 1.5707963267948966,
+          "label": "\u03b2w",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta_strong",
+          "unit": "rad",
+          "desc": "strong shock angle",
+          "lo": 0.0,
+          "hi": 1.5707963267948966,
+          "label": "\u03b2s",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M2_weak",
+          "unit": "",
+          "desc": "downstream Mach, weak branch",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M2_strong",
+          "unit": "",
+          "desc": "downstream Mach, strong branch",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P2_P1_weak",
+          "unit": "",
+          "desc": "P2/P1, weak branch",
+          "lo": 1.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P2_P1_strong",
+          "unit": "",
+          "desc": "P2/P1, strong branch",
+          "lo": 1.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2_T1_weak",
+          "unit": "",
+          "desc": "T2/T1, weak branch",
+          "lo": 1.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2_T1_strong",
+          "unit": "",
+          "desc": "T2/T1, strong branch",
+          "lo": 1.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho2_rho1_weak",
+          "unit": "",
+          "desc": "rho2/rho1, weak branch",
+          "lo": 1.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho2_rho1_strong",
+          "unit": "",
+          "desc": "rho2/rho1, strong branch",
+          "lo": 1.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _oblique_shock(values):\n    \"\"\"Oblique shock from (M, theta, gamma): weak and strong shock angles plus downstream properties.\"\"\"\n    M, theta, gamma = values['M'], values['theta'], values['gamma']\n    beta_w, beta_s = _beta_weak_strong(M, theta, gamma)\n    out = {}\n    for tag, beta in (('weak', beta_w), ('strong', beta_s)):\n        M1n = M * math.sin(beta)\n        M2n, P2_P1, rho2_rho1, T2_T1 = _shock_ratios(M1n, gamma)\n        out[f'beta_{tag}'] = beta\n        out[f'M2_{tag}'] = M2n / math.sin(beta - theta)\n        out[f'P2_P1_{tag}'] = P2_P1\n        out[f'T2_T1_{tag}'] = T2_T1\n        out[f'rho2_rho1_{tag}'] = rho2_rho1\n    return out\n",
+        "source": "compressible.py",
+        "line": 139
+      },
+      "outputs": [
+        "beta_weak",
+        "beta_strong",
+        "M2_weak",
+        "M2_strong",
+        "P2_P1_weak",
+        "P2_P1_strong",
+        "T2_T1_weak",
+        "T2_T1_strong",
+        "rho2_rho1_weak",
+        "rho2_rho1_strong"
+      ],
+      "assumptions": [
+        "Attached oblique shock (theta below the detachment maximum; otherwise the shock is detached and this calculator raises). Weak solution is the one usually observed; the strong solution keeps M2 < 1. Downstream values use the normal shock on M1n = M sin(beta)."
+      ],
+      "method_references": [
+        "theta-beta-M weak/strong solution; normal-shock relations on the normal component"
+      ],
+      "synthetic_example": {
+        "M": 2.0,
+        "theta": 0.3490658503988659,
+        "gamma": 1.4
+      }
+    },
+    "compressible.prandtl_meyer": {
+      "title": "Prandtl-Meyer expansion function",
+      "variables": [
+        {
+          "name": "nu",
+          "unit": "rad",
+          "desc": "Prandtl-Meyer angle",
+          "lo": 0.0,
+          "hi": 3.141592653589793,
+          "label": "\u03bd",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M",
+          "unit": "",
+          "desc": "Mach number (>= 1)",
+          "lo": 1.0,
+          "hi": 50.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "nu = sqrt((gamma + 1)/(gamma - 1))*atan(sqrt((gamma - 1)/(gamma + 1)*(M**2 - 1))) - atan(sqrt(M**2 - 1))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "nu"
+      ],
+      "assumptions": [
+        "nu(M) = 0 at M = 1 and rises to nu_max = pi/2 (sqrt((gamma+1)/(gamma-1)) - 1) as M -> inf. Across a centered expansion fan the turning is nu2 - nu1."
+      ],
+      "method_references": [
+        "Prandtl-Meyer function (recalled form)"
+      ],
+      "synthetic_example": {
+        "M": 2.0,
+        "gamma": 1.4
+      }
+    },
+    "compressible.fanno_flow": {
+      "title": "Fanno flow (adiabatic constant-area duct with friction)",
+      "variables": [
+        {
+          "name": "T_Tstar",
+          "unit": "",
+          "desc": "T/T*",
+          "lo": 1e-06,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_Pstar",
+          "unit": "",
+          "desc": "P/P*",
+          "lo": 1e-06,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho_rhostar",
+          "unit": "",
+          "desc": "rho/rho*",
+          "lo": 1e-06,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P0_P0star",
+          "unit": "",
+          "desc": "P0/P0*",
+          "lo": 1e-06,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "fDL_D",
+          "unit": "",
+          "desc": "f_D L*/D (Darcy-friction sonic length parameter)",
+          "lo": 0.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M",
+          "unit": "",
+          "desc": "Mach number",
+          "lo": 0.01,
+          "hi": 20.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T_Tstar = (gamma + 1)/(2 + (gamma - 1)*M**2)",
+        "P_Pstar = (1/M)*sqrt((gamma + 1)/(2 + (gamma - 1)*M**2))",
+        "rho_rhostar = (1/M)*sqrt((2 + (gamma - 1)*M**2)/(gamma + 1))",
+        "P0_P0star = (1/M)*((2 + (gamma - 1)*M**2)/(gamma + 1))**((gamma + 1)/(2*(gamma - 1)))",
+        "fDL_D = (1 - M**2)/(gamma*M**2) + (gamma + 1)/(2*gamma)*log((gamma + 1)*M**2/(2 + (gamma - 1)*M**2))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T_Tstar",
+        "P_Pstar",
+        "rho_rhostar",
+        "P0_P0star",
+        "fDL_D"
+      ],
+      "assumptions": [
+        "Adiabatic, constant-area duct with constant Darcy friction factor f_D; * is the sonic (M = 1) reference state. The friction parameter f_D L*/D uses the Darcy factor (f_D = 4 f, with f the Fanning factor); the duct length needed to reach M = 1 from state M is L* = (f_D L*/D) D / f_D."
+      ],
+      "method_references": [
+        "Fanno flow reference ratios (recalled forms)"
+      ],
+      "synthetic_example": {
+        "M": 0.5,
+        "gamma": 1.4
+      }
+    },
+    "compressible.rayleigh_flow": {
+      "title": "Rayleigh flow (frictionless constant-area duct with heat addition)",
+      "variables": [
+        {
+          "name": "T_Tstar",
+          "unit": "",
+          "desc": "T/T*",
+          "lo": 1e-06,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_Pstar",
+          "unit": "",
+          "desc": "P/P*",
+          "lo": 1e-06,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho_rhostar",
+          "unit": "",
+          "desc": "rho/rho*",
+          "lo": 1e-06,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T0_T0star",
+          "unit": "",
+          "desc": "T0/T0*",
+          "lo": 1e-06,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P0_P0star",
+          "unit": "",
+          "desc": "P0/P0*",
+          "lo": 1e-06,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "M",
+          "unit": "",
+          "desc": "Mach number",
+          "lo": 0.01,
+          "hi": 20.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T_Tstar = (gamma + 1)**2*M**2/(1 + gamma*M**2)**2",
+        "P_Pstar = (gamma + 1)/(1 + gamma*M**2)",
+        "rho_rhostar = (1 + gamma*M**2)/((gamma + 1)*M**2)",
+        "T0_T0star = (gamma + 1)*M**2*(2 + (gamma - 1)*M**2)/(1 + gamma*M**2)**2",
+        "P0_P0star = (gamma + 1)/(1 + gamma*M**2)*((2 + (gamma - 1)*M**2)/(gamma + 1))**(gamma/(gamma - 1))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T_Tstar",
+        "P_Pstar",
+        "rho_rhostar",
+        "T0_T0star",
+        "P0_P0star"
+      ],
+      "assumptions": [
+        "Frictionless, constant-area duct with heat addition; * is the sonic reference. Heat addition drives M toward 1 (thermal choking): subsonic flow speeds up, supersonic slows down."
+      ],
+      "method_references": [
+        "Rayleigh flow reference ratios (recalled forms)"
+      ],
+      "synthetic_example": {
+        "M": 0.5,
+        "gamma": 1.4
+      }
+    },
+    "compressible.nozzle_exit_velocity": {
+      "title": "Nozzle exit velocity (isentropic expansion from stagnation)",
+      "variables": [
+        {
+          "name": "V_e",
+          "unit": "m/s",
+          "desc": "exit velocity",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Te",
+          "unit": "K",
+          "desc": "exit static temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T0",
+          "unit": "K",
+          "desc": "stagnation temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_e",
+          "unit": "Pa",
+          "desc": "exit static pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P0",
+          "unit": "Pa",
+          "desc": "stagnation pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "J/(kg*K)",
+          "desc": "specific gas constant",
+          "lo": 1.0,
+          "hi": 10000.0,
+          "label": "R",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Te = T0*(P_e/P0)**((gamma - 1)/gamma)",
+        "V_e = sqrt(2*gamma/(gamma - 1)*R*(T0 - Te))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "V_e",
+        "Te"
+      ],
+      "assumptions": [
+        "Isentropic, adiabatic expansion from stagnation; P_e <= P0 (choked or unchoked as given). Equivalent to V_e = sqrt(2 gamma/(gamma-1) R T0 (1 - (P_e/P0)^((gamma-1)/gamma)))."
+      ],
+      "method_references": [
+        "Isentropic nozzle exit velocity from the steady-flow energy equation"
+      ],
+      "synthetic_example": {
+        "T0": 300.0,
+        "P_e": 101325.0,
+        "P0": 500000.0,
+        "gamma": 1.4,
+        "R": 287.0
+      }
+    },
+    "compressible.nozzle_thrust": {
+      "title": "Rocket/nozzle thrust (momentum plus pressure term)",
+      "variables": [
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "thrust",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mdot",
+          "unit": "kg/s",
+          "desc": "mass flow rate",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_e",
+          "unit": "m/s",
+          "desc": "exit velocity",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_e",
+          "unit": "Pa",
+          "desc": "exit static pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_a",
+          "unit": "Pa",
+          "desc": "ambient (back) pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_e",
+          "unit": "m^2",
+          "desc": "exit area",
+          "lo": 0.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F = mdot*V_e + (P_e - P_a)*A_e"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F"
+      ],
+      "assumptions": [
+        "Steady one-dimensional exit plane; the pressure term (P_e - P_a) A_e vanishes for a perfectly expanded nozzle (P_e = P_a)."
+      ],
+      "method_references": [
+        "F = mdot V_e + (P_e - P_a) A_e (steady momentum equation)"
+      ],
+      "synthetic_example": {
+        "mdot": 50.0,
+        "V_e": 2000.0,
+        "P_e": 101325.0,
+        "P_a": 0.0,
+        "A_e": 0.5
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "compressible-001",
+      "calculator": "compressible.speed_of_sound",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "gamma": 1.4,
+        "R": "287 J/(kg*K)",
+        "T": "15 degC"
+      },
+      "solve_for": [
+        "a"
+      ],
+      "expected_as_specified": {
+        "a": "340.2626 m/s"
+      },
+      "expected_SI": {
+        "a": 340.2626
+      },
+      "actual_SI": {
+        "a": {
+          "value": 340.2626485525556,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc compressible.speed_of_sound (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "a": {
+          "absolute_error": 4.855255559732541e-05,
+          "relative_error": 1.4269142596725413e-07,
+          "allowed_absolute_error": 0.1701313,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = sqrt(1.4 x 287 x 288.15) = sqrt(115775.7) = 340.263 m/s"
+      }
+    },
+    {
+      "id": "compressible-002",
+      "calculator": "compressible.mach_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V": "680 m/s",
+        "a": "340 m/s"
+      },
+      "solve_for": [
+        "M"
+      ],
+      "expected_as_specified": {
+        "M": 2.0
+      },
+      "expected_SI": {
+        "M": 2.0
+      },
+      "actual_SI": {
+        "M": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.mach_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "M": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "M = V/a = 680/340 = 2.0"
+      }
+    },
+    {
+      "id": "compressible-003",
+      "calculator": "compressible.mach_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "M": 2.5,
+        "a": "340 m/s"
+      },
+      "solve_for": [
+        "V"
+      ],
+      "expected_as_specified": {
+        "V": "850 m/s"
+      },
+      "expected_SI": {
+        "V": 850.0
+      },
+      "actual_SI": {
+        "V": {
+          "value": 850.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc compressible.mach_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.7,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = M a = 2.5 x 340 = 850 m/s"
+      }
+    },
+    {
+      "id": "compressible-004",
+      "calculator": "compressible.mach_angle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "M": 2.0
+      },
+      "solve_for": [
+        "mu"
+      ],
+      "expected_as_specified": {
+        "mu": "30 deg"
+      },
+      "expected_SI": {
+        "mu": 0.5235987755982988
+      },
+      "actual_SI": {
+        "mu": {
+          "value": 0.5235987755982989,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc compressible.mach_angle (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "mu": {
+          "absolute_error": 1.1102230246251565e-16,
+          "relative_error": 2.1203697876423447e-16,
+          "allowed_absolute_error": 0.0010471975511965976,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "mu = asin(1/2) = 30 deg (Mach angle at M = 2)"
+      }
+    },
+    {
+      "id": "compressible-005",
+      "calculator": "compressible.stagnation_ratios",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "M": 2.0,
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "T0_T",
+        "P0_P",
+        "rho0_rho"
+      ],
+      "expected_as_specified": {
+        "T0_T": 1.8,
+        "P0_P": 7.82445,
+        "rho0_rho": 4.34692
+      },
+      "expected_SI": {
+        "T0_T": 1.8,
+        "P0_P": 7.82445,
+        "rho0_rho": 4.34692
+      },
+      "actual_SI": {
+        "T0_T": {
+          "value": 1.7999999999999998,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.stagnation_ratios (symbolic)"
+        },
+        "P0_P": {
+          "value": 7.824449066867264,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.stagnation_ratios (symbolic)"
+        },
+        "rho0_rho": {
+          "value": 4.3469161482595915,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.stagnation_ratios (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T0_T": {
+          "absolute_error": 2.220446049250313e-16,
+          "relative_error": 1.2335811384723962e-16,
+          "allowed_absolute_error": 0.0009000000000000001,
+          "passed": true
+        },
+        "P0_P": {
+          "absolute_error": 9.331327355255326e-07,
+          "relative_error": 1.1925857223517725e-07,
+          "allowed_absolute_error": 0.003912225,
+          "passed": true
+        },
+        "rho0_rho": {
+          "absolute_error": 3.851740408400417e-06,
+          "relative_error": 8.860849540365171e-07,
+          "allowed_absolute_error": 0.00217346,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T0/T = 1 + 0.2 x 4 = 1.8; P0/P = 1.8^3.5 = 7.82445; rho0/rho = 1.8^2.5 = 4.34692"
+      }
+    },
+    {
+      "id": "compressible-006",
+      "calculator": "compressible.isentropic_area_ratio",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "M": 2.0,
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "A_Astar"
+      ],
+      "expected_as_specified": {
+        "A_Astar": 1.6875
+      },
+      "expected_SI": {
+        "A_Astar": 1.6875
+      },
+      "actual_SI": {
+        "A_Astar": {
+          "value": 1.6875,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.isentropic_area_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A_Astar": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.003375,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Compressible-flow table landmark: A/A* = 1.688 at M = 2, gamma = 1.4 (recalled; not re-read). Arithmetic check: (1/2) x ((2/2.4) x 1.8)^3 = 0.5 x 1.5^3 = 1.6875"
+      }
+    },
+    {
+      "id": "compressible-007",
+      "calculator": "compressible.area_ratio_inverse",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A_Astar": 1.6875,
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "M_sub",
+        "M_super"
+      ],
+      "expected_as_specified": {
+        "M_sub": 0.372244,
+        "M_super": 2.0
+      },
+      "expected_SI": {
+        "M_sub": 0.372244,
+        "M_super": 2.0
+      },
+      "actual_SI": {
+        "M_sub": {
+          "value": 0.3722444862027502,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.area_ratio_inverse (procedure)"
+        },
+        "M_super": {
+          "value": 1.9999999999999996,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.area_ratio_inverse (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "M_sub": {
+          "absolute_error": 4.862027501717492e-07,
+          "relative_error": 1.3061399248120834e-06,
+          "allowed_absolute_error": 0.00018612200000000002,
+          "passed": true
+        },
+        "M_super": {
+          "absolute_error": 4.440892098500626e-16,
+          "relative_error": 2.220446049250313e-16,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Solve (1/M)((2/2.4)(1 + 0.2 M^2))^3 = 1.6875 by bisection in plain math: subsonic root 0.37224, supersonic root 2.0"
+      }
+    },
+    {
+      "id": "compressible-008",
+      "calculator": "compressible.choked_mass_flow",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A_star": "100 cm^2",
+        "P0": "500 kPa",
+        "T0": "300 K",
+        "gamma": 1.4,
+        "R": "287 J/(kg*K)"
+      },
+      "solve_for": [
+        "mdot"
+      ],
+      "expected_as_specified": {
+        "mdot": "11.6678 kg/s"
+      },
+      "expected_SI": {
+        "mdot": 11.6678
+      },
+      "actual_SI": {
+        "mdot": {
+          "value": 11.667792803031134,
+          "unit": "kg/s",
+          "kind": "derived",
+          "method": "mechcalc compressible.choked_mass_flow (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "mdot": {
+          "absolute_error": 7.196968866196585e-06,
+          "relative_error": 6.168231257132095e-07,
+          "allowed_absolute_error": 0.0058339,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "mdot = 0.01 x 5e5 / sqrt(300) x sqrt(1.4/287) x (2/2.4)^3 = 288.675 x 0.069843 x 0.578704 = 11.6678 kg/s"
+      }
+    },
+    {
+      "id": "compressible-009",
+      "calculator": "compressible.normal_shock",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "M1": 2.0,
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "M2",
+        "P2_P1",
+        "rho2_rho1",
+        "T2_T1",
+        "p02_p01"
+      ],
+      "expected_as_specified": {
+        "M2": 0.57735,
+        "P2_P1": 4.5,
+        "rho2_rho1": 2.66667,
+        "T2_T1": 1.6875,
+        "p02_p01": 0.72087
+      },
+      "expected_SI": {
+        "M2": 0.57735,
+        "P2_P1": 4.5,
+        "rho2_rho1": 2.66667,
+        "T2_T1": 1.6875,
+        "p02_p01": 0.72087
+      },
+      "actual_SI": {
+        "M2": {
+          "value": 0.5773502691896257,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.normal_shock (symbolic)"
+        },
+        "P2_P1": {
+          "value": 4.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.normal_shock (symbolic)"
+        },
+        "rho2_rho1": {
+          "value": 2.666666666666667,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.normal_shock (symbolic)"
+        },
+        "T2_T1": {
+          "value": 1.6874999999999998,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.normal_shock (symbolic)"
+        },
+        "p02_p01": {
+          "value": 0.7208738614847453,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.normal_shock (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "M2": {
+          "absolute_error": 2.6918962570121607e-07,
+          "relative_error": 4.6625032597422024e-07,
+          "allowed_absolute_error": 0.000288675,
+          "passed": true
+        },
+        "P2_P1": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0022500000000000003,
+          "passed": true
+        },
+        "rho2_rho1": {
+          "absolute_error": 3.3333333329110815e-06,
+          "relative_error": 1.249998437343609e-06,
+          "allowed_absolute_error": 0.001333335,
+          "passed": true
+        },
+        "T2_T1": {
+          "absolute_error": 2.220446049250313e-16,
+          "relative_error": 1.3158198810372225e-16,
+          "allowed_absolute_error": 0.00084375,
+          "passed": true
+        },
+        "p02_p01": {
+          "absolute_error": 3.861484745293353e-06,
+          "relative_error": 5.3567005774874156e-06,
+          "allowed_absolute_error": 0.000360435,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Compressible-flow table landmark at M1 = 2, gamma = 1.4: P2/P1 = 4.50, M2 = 0.5774 (recalled; not re-read). Check: M2^2 = (0.4 x 4 + 2)/(2.8 x 4 - 0.4) = 3.6/10.8 = 1/3; rho2/rho1 = 2.4 x 4/3.6 = 2.6667; T2/T1 = 4.5/2.6667 = 1.6875. p02/p01 = (2.4 x 4/3.6)^3.5 x (2.4/10.8)^2.5 = 2.66667^3.5 x 0.222222^2.5 = 30.9686 x 0.023281 = 0.72087"
+      }
+    },
+    {
+      "id": "compressible-010",
+      "calculator": "compressible.normal_shock",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P2_P1": 4.5,
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "M1",
+        "M2",
+        "rho2_rho1",
+        "T2_T1",
+        "p02_p01"
+      ],
+      "expected_as_specified": {
+        "M1": 2.0,
+        "p02_p01": 0.72087
+      },
+      "expected_SI": {
+        "M1": 2.0,
+        "p02_p01": 0.72087
+      },
+      "actual_SI": {
+        "M1": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.normal_shock (numeric)"
+        },
+        "p02_p01": {
+          "value": 0.7208738614847455,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.normal_shock (numeric)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "M1": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "p02_p01": {
+          "absolute_error": 3.861484745515398e-06,
+          "relative_error": 5.356700577795438e-06,
+          "allowed_absolute_error": 0.000360435,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "M1^2 = ((gamma+1)(P2/P1) + (gamma-1))/(2 gamma) = (2.4 x 4.5 + 0.4)/2.8 = 11.2/2.8 = 4 -> M1 = 2; p02/p01 = (2.4 x 4/3.6)^3.5 x (2.4/10.8)^2.5 = 0.72087"
+      }
+    },
+    {
+      "id": "compressible-011",
+      "calculator": "compressible.oblique_shock_theta",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "M": 2.0,
+        "beta": "40 deg",
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "theta"
+      ],
+      "expected_as_specified": {
+        "theta": "10.6229 deg"
+      },
+      "expected_SI": {
+        "theta": 0.18540458111010563
+      },
+      "actual_SI": {
+        "theta": {
+          "value": 0.18540474909716562,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc compressible.oblique_shock_theta (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "theta": {
+          "absolute_error": 1.6798705998466446e-07,
+          "relative_error": 9.06056684138255e-07,
+          "allowed_absolute_error": 9.270229055505282e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sin40 = 0.64279, M^2 sin^2 beta - 1 = 4 x 0.41318 - 1 = 0.65272; denom = 4(1.4 + cos80) + 2 = 4 x 1.57365 + 2 = 8.2946; tan(theta) = (2/tan40)(0.65272/8.2946) = 2.3835 x 0.078692 = 0.18756 -> theta = 10.623 deg"
+      }
+    },
+    {
+      "id": "compressible-012",
+      "calculator": "compressible.oblique_shock",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "M": 2.0,
+        "theta": "20 deg",
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "beta_weak",
+        "beta_strong",
+        "M2_weak",
+        "M2_strong",
+        "P2_P1_weak",
+        "P2_P1_strong",
+        "T2_T1_weak",
+        "T2_T1_strong",
+        "rho2_rho1_weak",
+        "rho2_rho1_strong"
+      ],
+      "expected_as_specified": {
+        "beta_weak": "53.4229 deg",
+        "beta_strong": "74.2701 deg",
+        "M2_weak": 1.21022,
+        "P2_P1_weak": 2.84286
+      },
+      "expected_SI": {
+        "beta_weak": 0.9324055009636787,
+        "beta_strong": 1.2962577807854405,
+        "M2_weak": 1.21022,
+        "P2_P1_weak": 2.84286
+      },
+      "actual_SI": {
+        "beta_weak": {
+          "value": 0.9324062082972553,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc compressible.oblique_shock (procedure)"
+        },
+        "beta_strong": {
+          "value": 1.2962584273068658,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc compressible.oblique_shock (procedure)"
+        },
+        "M2_weak": {
+          "value": 1.2102184008268033,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.oblique_shock (procedure)"
+        },
+        "P2_P1_weak": {
+          "value": 2.8428627050361577,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.oblique_shock (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "beta_weak": {
+          "absolute_error": 7.07333576599467e-07,
+          "relative_error": 7.586115438705684e-07,
+          "allowed_absolute_error": 0.0009324055009636787,
+          "passed": true
+        },
+        "beta_strong": {
+          "absolute_error": 6.465214252848739e-07,
+          "relative_error": 4.987599186429782e-07,
+          "allowed_absolute_error": 0.0012962577807854405,
+          "passed": true
+        },
+        "M2_weak": {
+          "absolute_error": 1.5991731967535117e-06,
+          "relative_error": 1.3213904883025496e-06,
+          "allowed_absolute_error": 0.0012102200000000001,
+          "passed": true
+        },
+        "P2_P1_weak": {
+          "absolute_error": 2.7050361577352078e-06,
+          "relative_error": 9.515193001889674e-07,
+          "allowed_absolute_error": 0.00284286,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Solve tan(theta) = 2 cot(beta)(M^2 sin^2 beta - 1)/(M^2(gamma + cos 2beta) + 2) for beta by bisection in plain math (weak and strong branches): 53.4229 deg and 74.2701 deg. Weak M1n = 2 sin(53.4229) = 1.6060 -> M2n = 0.66845, M2 = M2n/sin(beta - theta) = 0.66845/sin(33.4229) = 1.21022; P2/P1 = (2.8 x 1.6060^2 - 0.4)/2.4 = 2.84286"
+      }
+    },
+    {
+      "id": "compressible-013",
+      "calculator": "compressible.prandtl_meyer",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "M": 2.0,
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "nu"
+      ],
+      "expected_as_specified": {
+        "nu": "26.3798 deg"
+      },
+      "expected_SI": {
+        "nu": 0.46041436601760016
+      },
+      "actual_SI": {
+        "nu": {
+          "value": 0.46041368208269473,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc compressible.prandtl_meyer (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "nu": {
+          "absolute_error": 6.839349054321708e-07,
+          "relative_error": 1.4854769006187487e-06,
+          "allowed_absolute_error": 0.0009208287320352003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Compressible-flow table landmark: nu = 26.38 deg at M = 2, gamma = 1.4 (recalled; not re-read). Check: sqrt6 atan(sqrt(0.5)) - atan(sqrt3) = 2.4495 x 0.61548 - 1.04720 = 0.46036 rad = 26.380 deg"
+      }
+    },
+    {
+      "id": "compressible-014",
+      "calculator": "compressible.fanno_flow",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "M": 0.5,
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "T_Tstar",
+        "P_Pstar",
+        "rho_rhostar",
+        "P0_P0star",
+        "fDL_D"
+      ],
+      "expected_as_specified": {
+        "T_Tstar": 1.14286,
+        "P_Pstar": 2.13809,
+        "rho_rhostar": 1.87083,
+        "P0_P0star": 1.33984,
+        "fDL_D": 1.06906
+      },
+      "expected_SI": {
+        "T_Tstar": 1.14286,
+        "P_Pstar": 2.13809,
+        "rho_rhostar": 1.87083,
+        "P0_P0star": 1.33984,
+        "fDL_D": 1.06906
+      },
+      "actual_SI": {
+        "T_Tstar": {
+          "value": 1.1428571428571428,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.fanno_flow (symbolic)"
+        },
+        "P_Pstar": {
+          "value": 2.138089935299395,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.fanno_flow (symbolic)"
+        },
+        "rho_rhostar": {
+          "value": 1.8708286933869707,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.fanno_flow (symbolic)"
+        },
+        "P0_P0star": {
+          "value": 1.3398437500000004,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.fanno_flow (symbolic)"
+        },
+        "fDL_D": {
+          "value": 1.069060312718256,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.fanno_flow (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T_Tstar": {
+          "absolute_error": 2.8571428571932955e-06,
+          "relative_error": 2.4999937500597584e-06,
+          "allowed_absolute_error": 0.00057143,
+          "passed": true
+        },
+        "P_Pstar": {
+          "absolute_error": 6.47006048737353e-08,
+          "relative_error": 3.026093610359494e-08,
+          "allowed_absolute_error": 0.001069045,
+          "passed": true
+        },
+        "rho_rhostar": {
+          "absolute_error": 1.3066130293282185e-06,
+          "relative_error": 6.984135540525962e-07,
+          "allowed_absolute_error": 0.000935415,
+          "passed": true
+        },
+        "P0_P0star": {
+          "absolute_error": 3.7500000005241674e-06,
+          "relative_error": 2.7988416531258716e-06,
+          "allowed_absolute_error": 0.00066992,
+          "passed": true
+        },
+        "fDL_D": {
+          "absolute_error": 3.1271825617906757e-07,
+          "relative_error": 2.925170300816302e-07,
+          "allowed_absolute_error": 0.00053453,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T/T* = 2.4/2.1 = 1.14286; P/P* = (1/0.5)sqrt(2.4/2.1) = 2 x 1.06904 = 2.13809; rho/rho* = 2 x sqrt(2.1/2.4) = 1.87083; P0/P0* = 2 x 0.875^3 = 1.33984; f_D L*/D = 0.75/0.35 + (2.4/2.8)ln(0.6/2.1) = 2.14286 - 1.07380 = 1.06906 (Darcy form; equals 4fL*/D with the Fanning factor f_D = 4f)"
+      }
+    },
+    {
+      "id": "compressible-015",
+      "calculator": "compressible.rayleigh_flow",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "M": 0.5,
+        "gamma": 1.4
+      },
+      "solve_for": [
+        "T_Tstar",
+        "P_Pstar",
+        "rho_rhostar",
+        "T0_T0star",
+        "P0_P0star"
+      ],
+      "expected_as_specified": {
+        "T_Tstar": 0.790123,
+        "P_Pstar": 1.77778,
+        "rho_rhostar": 2.25,
+        "T0_T0star": 0.691358,
+        "P0_P0star": 1.11405
+      },
+      "expected_SI": {
+        "T_Tstar": 0.790123,
+        "P_Pstar": 1.77778,
+        "rho_rhostar": 2.25,
+        "T0_T0star": 0.691358,
+        "P0_P0star": 1.11405
+      },
+      "actual_SI": {
+        "T_Tstar": {
+          "value": 0.7901234567901235,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.rayleigh_flow (symbolic)"
+        },
+        "P_Pstar": {
+          "value": 1.7777777777777777,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.rayleigh_flow (symbolic)"
+        },
+        "rho_rhostar": {
+          "value": 2.2500000000000004,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.rayleigh_flow (symbolic)"
+        },
+        "T0_T0star": {
+          "value": 0.691358024691358,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.rayleigh_flow (symbolic)"
+        },
+        "P0_P0star": {
+          "value": 1.1140525031800887,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc compressible.rayleigh_flow (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T_Tstar": {
+          "absolute_error": 4.5679012350419157e-07,
+          "relative_error": 5.781253342887014e-07,
+          "allowed_absolute_error": 0.0003950615,
+          "passed": true
+        },
+        "P_Pstar": {
+          "absolute_error": 2.2222222222367805e-06,
+          "relative_error": 1.2499984375101422e-06,
+          "allowed_absolute_error": 0.0008888899999999999,
+          "passed": true
+        },
+        "rho_rhostar": {
+          "absolute_error": 4.440892098500626e-16,
+          "relative_error": 1.9737298215558337e-16,
+          "allowed_absolute_error": 0.0011250000000000001,
+          "passed": true
+        },
+        "T0_T0star": {
+          "absolute_error": 2.4691357958239735e-08,
+          "relative_error": 3.571428689367843e-08,
+          "allowed_absolute_error": 0.000345679,
+          "passed": true
+        },
+        "P0_P0star": {
+          "absolute_error": 2.5031800887642675e-06,
+          "relative_error": 2.246918979187889e-06,
+          "allowed_absolute_error": 0.0005570250000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T/T* = 2.4^2 x 0.25/1.35^2 = 1.44/1.8225 = 0.79012; P/P* = 2.4/1.35 = 1.77778; rho/rho* = 1.35/0.6 = 2.25; T0/T0* = 0.6 x 2.1/1.8225 = 0.69136; P0/P0* = 1.77778 x (2.1/2.4)^3.5 = 1.77778 x 0.62674 = 1.11405"
+      }
+    },
+    {
+      "id": "compressible-016",
+      "calculator": "compressible.nozzle_exit_velocity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T0": "300 K",
+        "P_e": "101.325 kPa",
+        "P0": "500 kPa",
+        "gamma": 1.4,
+        "R": "287 J/(kg*K)"
+      },
+      "solve_for": [
+        "V_e",
+        "Te"
+      ],
+      "expected_as_specified": {
+        "V_e": "469.82 m/s",
+        "Te": "190.129 K"
+      },
+      "expected_SI": {
+        "V_e": 469.82,
+        "Te": 190.129
+      },
+      "actual_SI": {
+        "V_e": {
+          "value": 469.81954553836016,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc compressible.nozzle_exit_velocity (symbolic)"
+        },
+        "Te": {
+          "value": 190.12921584376747,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc compressible.nozzle_exit_velocity (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "V_e": {
+          "absolute_error": 0.0004544616398334256,
+          "relative_error": 9.673101184143409e-07,
+          "allowed_absolute_error": 0.23491,
+          "passed": true
+        },
+        "Te": {
+          "absolute_error": 0.0002158437674779634,
+          "relative_error": 1.1352490544733493e-06,
+          "allowed_absolute_error": 0.0950645,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Te = 300 x (101.325/500)^(0.4/1.4) = 300 x 0.20265^0.285714 = 300 x 0.633764 = 190.129 K; V_e = sqrt(7 x 287 x (300 - 190.129)) = sqrt(7 x 287 x 109.871) = sqrt(220731) = 469.82 m/s"
+      }
+    },
+    {
+      "id": "compressible-017",
+      "calculator": "compressible.nozzle_thrust",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mdot": "50 kg/s",
+        "V_e": "2000 m/s",
+        "P_e": "101.325 kPa",
+        "P_a": "0 Pa",
+        "A_e": "0.5 m^2"
+      },
+      "solve_for": [
+        "F"
+      ],
+      "expected_as_specified": {
+        "F": "150.6625 kN"
+      },
+      "expected_SI": {
+        "F": 150662.5
+      },
+      "actual_SI": {
+        "F": {
+          "value": 150662.5,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc compressible.nozzle_thrust (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 301.325,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 50 x 2000 + (101325 - 0) x 0.5 = 100000 + 50662.5 = 150662.5 N = 150.6625 kN"
+      }
+    }
+  ],
+  "passed": 17,
+  "failed": 0
+}

@@ -1,0 +1,225 @@
+{
+  "section": "columns",
+  "cases": [
+    {
+      "calc": "columns.euler_critical_load",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "1e6 mm^4",
+        "K": 1,
+        "L": "2 m"
+      },
+      "expect": {
+        "P_cr": "493.480 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P = π²EI/(KL)² = 9.869604·200e9·1e-6/(1·2)² = 1.9739208e12·1e-6/4 = 493480 N = 493.480 kN"
+      }
+    },
+    {
+      "calc": "columns.euler_critical_load",
+      "inputs": {
+        "P_cr": "493.480 kN",
+        "E": "200 GPa",
+        "K": 1,
+        "L": "2 m"
+      },
+      "solve_for": [
+        "I"
+      ],
+      "expect": {
+        "I": "1e6 mm^4"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "I = P_cr·(KL)²/(π²E) = 493480·4/(9.869604·200e9) = 1.9739208e6/1.9739208e12 = 1e-6 m^4 = 1e6 mm^4"
+      }
+    },
+    {
+      "calc": "columns.slenderness_ratio",
+      "inputs": {
+        "K": 1,
+        "L": "2 m",
+        "I": "1e6 mm^4",
+        "A": "1000 mm^2"
+      },
+      "expect": {
+        "r": "31.6228 mm",
+        "lam": 63.2456
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r = √(I/A) = √(1e-6/1e-3) = √0.001 = 0.0316228 m = 31.6228 mm; λ = KL/r = 2/0.0316228 = 63.2456"
+      }
+    },
+    {
+      "calc": "columns.euler_critical_stress",
+      "inputs": {
+        "E": "200 GPa",
+        "lam": 100
+      },
+      "expect": {
+        "sigma_cr": "197.392 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ_cr = π²E/λ² = 9.869604·200e9/10000 = 1.9739208e12/1e4 = 197.392 MPa"
+      }
+    },
+    {
+      "calc": "columns.johnson_column",
+      "inputs": {
+        "Sy": "250 MPa",
+        "E": "200 GPa",
+        "lam": 50
+      },
+      "expect": {
+        "sigma_cr": "230.211 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ_cr = Sy − Sy²λ²/(4π²E) = 250e6 − (250e6)²·2500/(4·9.869604·200e9) = 250e6 − 1.5625e20/7.8956832e12 = 250e6 − 19.7893e6 = 230.211 MPa"
+      }
+    },
+    {
+      "calc": "columns.column_critical",
+      "inputs": {
+        "E": "200 GPa",
+        "Sy": "250 MPa",
+        "K": 1,
+        "L": "2 m",
+        "I": "1e6 mm^4",
+        "A": "1000 mm^2"
+      },
+      "expect": {
+        "r": "31.6228 mm",
+        "lam": 63.2456,
+        "lam_t": 125.6637,
+        "sigma_cr": "218.337 MPa",
+        "P_cr": "218.337 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 0.0316228 m, λ = 63.2456. λ_t = π√(2E/Sy) = π√(2·200e9/250e6) = π√1600 = 125.6637. λ < λ_t so Johnson: σ_cr = 250e6 − (250e6)²·63.2456²/(4π²·200e9) = 250e6 − 6.25e16·4000/7.8956832e12 = 250e6 − 31.6629e6 = 218.337 MPa; P_cr = σ_cr·A = 218.337e6·1e-3 = 218.337 kN"
+      }
+    },
+    {
+      "calc": "columns.secant_column",
+      "inputs": {
+        "P": "50 kN",
+        "A": "2000 mm^2",
+        "e": "10 mm",
+        "c": "20 mm",
+        "r": "25 mm",
+        "E": "200 GPa",
+        "K": 1,
+        "L": "1.5 m"
+      },
+      "expect": {
+        "sigma_max": "33.4721 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "arg = KL/(2r)·√(P/(EA)) = 1.5/0.05·√(50000/(200e9·0.002)) = 30·√1.25e-4 = 30·0.0111803 = 0.335410 rad; cos = 0.944481; σ_max = (P/A)(1 + ec/(r²cos)) = 25e6·(1 + 0.0002/(0.000625·0.944481)) = 25e6·(1 + 0.338812) = 33.4721 MPa"
+      }
+    },
+    {
+      "calc": "columns.secant_column",
+      "inputs": {
+        "sigma_max": "33.4721 MPa",
+        "P": "50 kN",
+        "A": "2000 mm^2",
+        "c": "20 mm",
+        "r": "25 mm",
+        "E": "200 GPa",
+        "K": 1,
+        "L": "1.5 m"
+      },
+      "solve_for": [
+        "e"
+      ],
+      "expect": {
+        "e": "10 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ_max = (P/A)(1 + ec/(r²cos arg)) → Aσ/P − 1 = ec/(r²cos arg) → e = (r²/c)(Aσ/P − 1)cos(arg). Aσ/P = 0.002·33.4721e6/50000 = 1.338884; cos(arg) = 0.944481; e = (0.000625/0.02)·0.338884·0.944481 = 0.03125·0.338884·0.944481 = 0.010005 m = 10 mm"
+      }
+    },
+    {
+      "calc": "columns.lateral_torsional_buckling",
+      "inputs": {
+        "C_b": 1,
+        "E": "200 GPa",
+        "G": "77 GPa",
+        "I_y": "1e6 mm^4",
+        "J": "1e5 mm^4",
+        "C_w": "1e-9 m^6",
+        "L": "4 m"
+      },
+      "expect": {
+        "M_cr": "31.0672 kN*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "M_cr = C_b·(π/L)·√(E·I_y·G·J)·√(1 + π²E·C_w/(G·J·L²)). E·I_y·G·J = 200e9·1e-6·77e9·1e-7 = 1.54e9, √ = 39242.85; π/L = 0.785398; inner = 9.869604·200e9·1e-9/(77e9·1e-7·16) = 1973.92/123200 = 0.016022, √(1.016022) = 1.00798; M_cr = 0.785398·39242.85·1.00798 = 31067.2 N·m = 31.0672 kN·m"
+      }
+    },
+    {
+      "calc": "columns.plate_buckling",
+      "inputs": {
+        "k": 4,
+        "E": "200 GPa",
+        "nu": 0.3,
+        "t": "10 mm",
+        "b": "500 mm"
+      },
+      "expect": {
+        "sigma_cr": "289.219 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ_cr = kπ²E/(12(1−ν²))·(t/b)² = 4·9.869604·200e9/(12·0.91)·(0.02)² = 7.8956832e12/10.92·4e-4 = 7.230845e11·4e-4 = 289.219 MPa"
+      }
+    },
+    {
+      "calc": "columns.plate_buckling",
+      "inputs": {
+        "sigma_cr": "289.219 MPa",
+        "k": 4,
+        "E": "200 GPa",
+        "nu": 0.3,
+        "b": "500 mm"
+      },
+      "solve_for": [
+        "t"
+      ],
+      "expect": {
+        "t": "10 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "t = b·√(σ_cr·12(1−ν²)/(kπ²E)) = 0.5·√(289.219e6·10.92/7.8956832e12) = 0.5·√(3.158271e9/7.8956832e12) = 0.5·√4e-4 = 0.5·0.02 = 0.010 m = 10 mm"
+      }
+    },
+    {
+      "calc": "columns.shell_buckling_axial",
+      "inputs": {
+        "gamma": 0.5,
+        "E": "200 GPa",
+        "nu": 0.3,
+        "t": "2 mm",
+        "r": "200 mm"
+      },
+      "expect": {
+        "sigma_cr": "1.21046 GPa",
+        "sigma_des": "605.228 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "σ_cr = Et/(r√(3(1−ν²))) = 200e9·0.002/(0.2·√(2.73)) = 4e8/(0.2·1.652271) = 4e8/0.330454 = 1210.46 MPa; σ_des = γσ_cr = 0.5·1210.46 = 605.23 MPa"
+      }
+    }
+  ]
+}

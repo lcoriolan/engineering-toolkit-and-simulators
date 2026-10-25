@@ -1,0 +1,3601 @@
+{
+  "section": "metrology",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k metrology",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "metrology.measurement_stats": {
+      "title": "Summary statistics of repeated measurements (repeatability)",
+      "variables": [
+        {
+          "name": "measurements",
+          "unit": "",
+          "desc": "list of repeated measurements in the same unit (m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "mean",
+          "unit": "m",
+          "desc": "arithmetic mean",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sd",
+          "unit": "m",
+          "desc": "sample standard deviation (n \u2212 1)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "range",
+          "unit": "m",
+          "desc": "max \u2212 min",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of measurements",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "min",
+          "unit": "m",
+          "desc": "minimum",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "max",
+          "unit": "m",
+          "desc": "maximum",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _measurement_stats(values):\n    \"\"\"Summary statistics of repeated measurements (repeatability basis).\"\"\"\n    data = values['measurements']\n    if not isinstance(data, list) or len(data) < 2:\n        raise MechError('measurements: give a list of at least two numbers')\n    xs = [float(x) for x in data]\n    n = len(xs)\n    mean = sum(xs) / n\n    var = sum((x - mean) ** 2 for x in xs) / (n - 1)\n    return {'mean': mean, 'sd': math.sqrt(var), 'range': max(xs) - min(xs),\n            'n': n, 'min': min(xs), 'max': max(xs)}\n",
+        "source": "metrology.py",
+        "line": 72
+      },
+      "outputs": [
+        "mean",
+        "sd",
+        "range",
+        "n",
+        "min",
+        "max"
+      ],
+      "assumptions": [
+        "Sample standard deviation with the n \u2212 1 denominator."
+      ],
+      "method_references": [
+        "Sample mean, standard deviation and range"
+      ],
+      "synthetic_example": {
+        "measurements": [
+          0.01002,
+          0.01005,
+          0.00999,
+          0.01003,
+          0.01001
+        ]
+      }
+    },
+    "metrology.measurement_uncertainty": {
+      "title": "Combined and expanded measurement uncertainty",
+      "variables": [
+        {
+          "name": "u_c",
+          "unit": "m",
+          "desc": "combined standard uncertainty",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "U",
+          "unit": "m",
+          "desc": "expanded uncertainty k\u00b7u_c",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u_A",
+          "unit": "m",
+          "desc": "type A (random) standard uncertainty",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u_B",
+          "unit": "m",
+          "desc": "type B (systematic) standard uncertainty",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "desc": "coverage factor (k = 2 for ~95%)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "u_c = sqrt(u_A**2 + u_B**2)",
+        "U = k*u_c"
+      ],
+      "procedure": null,
+      "outputs": [
+        "u_c",
+        "U"
+      ],
+      "assumptions": [
+        "Independent contributions combined in quadrature; k = 2 gives ~95% coverage for a normal distribution."
+      ],
+      "method_references": [
+        "GUM combined uncertainty u_c = \u221a(u_A\u00b2 + u_B\u00b2); U = k\u00b7u_c (recalled)"
+      ],
+      "synthetic_example": {
+        "u_A": 0.0005,
+        "u_B": 0.0003,
+        "k": 2.0
+      }
+    },
+    "metrology.gauge_rr": {
+      "title": "Gauge R&R study (AIAG method, K-constants from computed d2/d2*)",
+      "variables": [
+        {
+          "name": "n_trials",
+          "unit": "",
+          "desc": "number of repeated trials per appraiser per part",
+          "lo": 2.0,
+          "hi": 10.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_appraisers",
+          "unit": "",
+          "desc": "number of appraisers (operators)",
+          "lo": 2.0,
+          "hi": 10.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_parts",
+          "unit": "",
+          "desc": "number of parts",
+          "lo": 2.0,
+          "hi": 25.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_sigma",
+          "unit": "",
+          "desc": "sigma-spread multiplier for the range (5.15 for 99 %, 6 for 99.73 %)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_bar",
+          "unit": "m",
+          "desc": "average of the trial ranges (over all appraisers and parts)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "X_bar_diff",
+          "unit": "m",
+          "desc": "range of the appraiser part-averages (max \u2212 min)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_p",
+          "unit": "m",
+          "desc": "range of the part averages",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tol",
+          "unit": "m",
+          "desc": "tolerance (USL \u2212 LSL) or process spread for %Tolerance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "EV",
+          "unit": "m",
+          "desc": "equipment variation (repeatability)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "AV",
+          "unit": "m",
+          "desc": "appraiser variation (reproducibility)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "GRR",
+          "unit": "m",
+          "desc": "gauge repeatability & reproducibility (EV\u00b2 + AV\u00b2)^\u00bd",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "PV",
+          "unit": "m",
+          "desc": "part variation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "TV",
+          "unit": "m",
+          "desc": "total study variation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "pct_GRR_TV",
+          "unit": "",
+          "desc": "GRR as % of total variation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "pct_GRR_Tol",
+          "unit": "",
+          "desc": "GRR as % of tolerance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ndc",
+          "unit": "",
+          "desc": "number of distinct categories (1.41\u00b7PV/GRR)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _gauge_rr(values):\n    r = int(values['n_trials'])\n    a = int(values['n_appraisers'])\n    p_ = int(values['n_parts'])\n    k = values['k_sigma']\n    # K1 uses the plain d2 (R\u0304 is an average of many trial ranges, g = appraisers \u00d7 parts).\n    K1 = k / _d2_d3(r)[0]\n    # K2 and K3 come from a SINGLE range (the appraiser-average range and the part-average range, g = 1),\n    # so they use d2* = \u221a(d2\u00b2 + d3\u00b2).\n    K2 = k / _d2_star(a)\n    K3 = k / _d2_star(p_)\n    Rbar = values['R_bar']\n    EV = Rbar * K1\n    # Reproducibility: appraiser variation, corrected for the repeatability embedded in X\u0304_diff.\n    AV2 = (values['X_bar_diff'] * K2) ** 2 - EV ** 2 / (r * p_)\n    AV = math.sqrt(max(0.0, AV2))\n    GRR = math.sqrt(EV ** 2 + AV ** 2)\n    PV = values['R_p'] * K3\n    TV = math.sqrt(GRR ** 2 + PV ** 2)\n    tol = values['tol']\n    if tol <= 0:\n        raise MechError('tol must be positive')\n    return {'EV': EV, 'AV': AV, 'GRR': GRR, 'PV': PV, 'TV': TV,\n            'pct_GRR_TV': 100.0 * GRR / TV, 'pct_GRR_Tol': 100.0 * GRR / tol,\n            'ndc': 1.41 * PV / GRR}\n",
+        "source": "metrology.py",
+        "line": 105
+      },
+      "outputs": [
+        "EV",
+        "AV",
+        "GRR",
+        "PV",
+        "TV",
+        "pct_GRR_TV",
+        "pct_GRR_Tol",
+        "ndc"
+      ],
+      "assumptions": [
+        "AIAG method: K1 = k_sigma/d2(trials) uses the plain d2 (R\u0304 averages many ranges), while K2 = k_sigma/d2*(appraisers) and K3 = k_sigma/d2*(parts) use d2* = \u221a(d2\u00b2 + d3\u00b2) because X\u0304_diff and R_p are each a single range (g = 1). d2 and d3 are computed by numeric integration of the range distribution. AV is corrected for the repeatability embedded in X\u0304_diff. %GRR < 10% acceptable, 10\u201330% marginal, >30% unacceptable."
+      ],
+      "method_references": [
+        "AIAG Measurement Systems Analysis (MSA), gauge R&R (recalled)"
+      ],
+      "synthetic_example": {
+        "n_trials": 2,
+        "n_appraisers": 3,
+        "n_parts": 5,
+        "k_sigma": 5.15,
+        "R_bar": 5e-06,
+        "X_bar_diff": 1e-05,
+        "R_p": 5e-05,
+        "tol": 0.0005
+      }
+    },
+    "metrology.cp_cpk": {
+      "title": "Process capability Cp and Cpk (short-term sigma)",
+      "variables": [
+        {
+          "name": "mu",
+          "unit": "m",
+          "desc": "process mean",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "m",
+          "desc": "within-subgroup (short-term) standard deviation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "USL",
+          "unit": "m",
+          "desc": "upper specification limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "LSL",
+          "unit": "m",
+          "desc": "lower specification limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Cp",
+          "unit": "",
+          "desc": "process capability (potential) Cp = (USL \u2212 LSL)/(6\u03c3)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Cpk",
+          "unit": "",
+          "desc": "process capability index Cpk = min(USL \u2212 \u03bc, \u03bc \u2212 LSL)/(3\u03c3)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _cp_cpk(values):\n    mu, sigma, USL, LSL = values['mu'], values['sigma'], values['USL'], values['LSL']\n    if USL <= LSL:\n        raise MechError('USL must be greater than LSL')\n    if sigma <= 0:\n        raise MechError('sigma must be positive')\n    return {'Cpk': min(USL - mu, mu - LSL) / (3.0 * sigma), 'Cp': (USL - LSL) / (6.0 * sigma)}\n",
+        "source": "metrology.py",
+        "line": 132
+      },
+      "outputs": [
+        "Cpk",
+        "Cp"
+      ],
+      "assumptions": [
+        "Cp measures potential (centered); Cpk reflects the nearer limit and is NEGATIVE when the process mean falls outside the specification (a signed index). Requires USL > LSL."
+      ],
+      "method_references": [
+        "Cp = (USL \u2212 LSL)/(6\u03c3); Cpk = min(USL \u2212 \u03bc, \u03bc \u2212 LSL)/(3\u03c3) (recalled)"
+      ],
+      "synthetic_example": {
+        "mu": 0.01,
+        "sigma": 0.0001,
+        "USL": 0.0104,
+        "LSL": 0.0096
+      }
+    },
+    "metrology.pp_ppk": {
+      "title": "Process performance Pp and Ppk (overall sigma)",
+      "variables": [
+        {
+          "name": "mu",
+          "unit": "m",
+          "desc": "process mean",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_total",
+          "unit": "m",
+          "desc": "overall (long-term) standard deviation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "USL",
+          "unit": "m",
+          "desc": "upper specification limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "LSL",
+          "unit": "m",
+          "desc": "lower specification limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Pp",
+          "unit": "",
+          "desc": "process performance (potential) Pp = (USL \u2212 LSL)/(6\u03c3_t)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ppk",
+          "unit": "",
+          "desc": "process performance index Ppk = min(USL \u2212 \u03bc, \u03bc \u2212 LSL)/(3\u03c3_t)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _pp_ppk(values):\n    mu, sigma_t, USL, LSL = values['mu'], values['sigma_total'], values['USL'], values['LSL']\n    if USL <= LSL:\n        raise MechError('USL must be greater than LSL')\n    if sigma_t <= 0:\n        raise MechError('sigma_total must be positive')\n    return {'Ppk': min(USL - mu, mu - LSL) / (3.0 * sigma_t), 'Pp': (USL - LSL) / (6.0 * sigma_t)}\n",
+        "source": "metrology.py",
+        "line": 141
+      },
+      "outputs": [
+        "Ppk",
+        "Pp"
+      ],
+      "assumptions": [
+        "Pp/Ppk use the overall (long-term) sigma; Cp/Cpk use the within-subgroup sigma. Ppk is signed (negative when the mean is outside the specification)."
+      ],
+      "method_references": [
+        "Pp = (USL \u2212 LSL)/(6\u03c3_t); Ppk = min(USL \u2212 \u03bc, \u03bc \u2212 LSL)/(3\u03c3_t) (recalled)"
+      ],
+      "synthetic_example": {
+        "mu": 0.01,
+        "sigma_total": 0.00015,
+        "USL": 0.0104,
+        "LSL": 0.0096
+      }
+    },
+    "metrology.control_chart_constants": {
+      "title": "Control chart constants A2, D3, D4, d2, d3 (computed from the range distribution)",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "subgroup (sample) size",
+          "lo": 2.0,
+          "hi": 25.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d2",
+          "unit": "",
+          "desc": "mean of the range of n standard normals (E[R])",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d3",
+          "unit": "",
+          "desc": "standard deviation of the range of n standard normals",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A2",
+          "unit": "",
+          "desc": "X\u0304-chart factor 3/(d2\u00b7\u221an)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D3",
+          "unit": "",
+          "desc": "R-chart lower factor max(0, 1 \u2212 3\u00b7d3/d2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D4",
+          "unit": "",
+          "desc": "R-chart upper factor 1 + 3\u00b7d3/d2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _control_constants(values):\n    n = int(values['n'])\n    d2, d3 = _d2_d3(n)\n    A2 = 3.0 / (d2 * math.sqrt(n))\n    D3 = max(0.0, 1.0 - 3.0 * d3 / d2)\n    D4 = 1.0 + 3.0 * d3 / d2\n    return {'d2': d2, 'd3': d3, 'A2': A2, 'D3': D3, 'D4': D4}\n",
+        "source": "metrology.py",
+        "line": 85
+      },
+      "outputs": [
+        "d2",
+        "d3",
+        "A2",
+        "D3",
+        "D4"
+      ],
+      "assumptions": [
+        "d2 and d3 are computed by numeric integration of the range distribution of n iid standard normals (not from a recalled table): d2(2) = 2/\u221a\u03c0 exactly."
+      ],
+      "method_references": [
+        "Statistical definitions d2 = E[R], d3 = \u221aVar[R]; A2 = 3/(d2\u221an), D3/D4 = 1 \u2213 3d3/d2 (recalled)"
+      ],
+      "synthetic_example": {
+        "n": 5
+      }
+    },
+    "metrology.control_limits_xbar_r": {
+      "title": "X\u0304 and R chart control limits (from computed A2/D3/D4)",
+      "variables": [
+        {
+          "name": "X_bar_bar",
+          "unit": "m",
+          "desc": "grand mean (center of the X\u0304 chart)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_bar",
+          "unit": "m",
+          "desc": "average range (center of the R chart)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "subgroup size",
+          "lo": 2.0,
+          "hi": 25.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "UCL_x",
+          "unit": "m",
+          "desc": "X\u0304-chart upper control limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "LCL_x",
+          "unit": "m",
+          "desc": "X\u0304-chart lower control limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "CL_x",
+          "unit": "m",
+          "desc": "X\u0304-chart center line",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "UCL_R",
+          "unit": "m",
+          "desc": "R-chart upper control limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "LCL_R",
+          "unit": "m",
+          "desc": "R-chart lower control limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "CL_R",
+          "unit": "m",
+          "desc": "R-chart center line",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _xbar_r_limits(values):\n    n = int(values['n'])\n    d2, d3 = _d2_d3(n)\n    A2 = 3.0 / (d2 * math.sqrt(n))\n    D3 = max(0.0, 1.0 - 3.0 * d3 / d2)\n    D4 = 1.0 + 3.0 * d3 / d2\n    Xbb, Rbar = values['X_bar_bar'], values['R_bar']\n    return {'UCL_x': Xbb + A2 * Rbar, 'LCL_x': Xbb - A2 * Rbar, 'CL_x': Xbb,\n            'UCL_R': D4 * Rbar, 'LCL_R': D3 * Rbar, 'CL_R': Rbar}\n",
+        "source": "metrology.py",
+        "line": 94
+      },
+      "outputs": [
+        "UCL_x",
+        "LCL_x",
+        "CL_x",
+        "UCL_R",
+        "LCL_R",
+        "CL_R"
+      ],
+      "assumptions": [
+        "UCL_x = X\u0304\u0304 + A2\u00b7R\u0304, LCL_x = X\u0304\u0304 \u2212 A2\u00b7R\u0304; R chart UCL/LCL = D4\u00b7R\u0304 / D3\u00b7R\u0304. A2, D3, D4 are computed (see control_chart_constants). A negative LCL_x means no lower limit."
+      ],
+      "method_references": [
+        "Shewhart X\u0304 and R chart limits (recalled)"
+      ],
+      "synthetic_example": {
+        "X_bar_bar": 0.01,
+        "R_bar": 0.0005,
+        "n": 5
+      }
+    },
+    "metrology.control_limits_p": {
+      "title": "p-chart (fraction nonconforming) control limits",
+      "variables": [
+        {
+          "name": "p_bar",
+          "unit": "",
+          "desc": "average fraction nonconforming",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "subgroup size",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "UCL",
+          "unit": "",
+          "desc": "upper control limit (capped at 1)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "LCL",
+          "unit": "",
+          "desc": "lower control limit (floored at 0)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "CL",
+          "unit": "",
+          "desc": "center line (= p\u0304)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _control_limits_p(values):\n    p_bar, n = values['p_bar'], values['n']\n    if n <= 0:\n        raise MechError('subgroup size n must be positive')\n    sigma = math.sqrt(p_bar * (1.0 - p_bar) / n)\n    UCL = min(1.0, p_bar + 3.0 * sigma)\n    LCL = max(0.0, p_bar - 3.0 * sigma)\n    return {'UCL': UCL, 'LCL': LCL, 'CL': p_bar}\n",
+        "source": "metrology.py",
+        "line": 171
+      },
+      "outputs": [
+        "UCL",
+        "LCL",
+        "CL"
+      ],
+      "assumptions": [
+        "Control limits p\u0304 \u00b1 3\u221a(p\u0304(1\u2212p\u0304)/n), with LCL = max(0, \u2026) and UCL = min(1, \u2026) \u2014 a p-chart cannot have a negative lower limit or an upper limit above 1."
+      ],
+      "method_references": [
+        "p-chart control limits (recalled)"
+      ],
+      "synthetic_example": {
+        "p_bar": 0.1,
+        "n": 100.0
+      }
+    },
+    "metrology.dpmo": {
+      "title": "Defects per million opportunities (DPMO)",
+      "variables": [
+        {
+          "name": "dpmo",
+          "unit": "",
+          "desc": "defects per million opportunities",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "",
+          "desc": "number of defects",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "",
+          "desc": "number of units inspected",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "O",
+          "unit": "",
+          "desc": "opportunities per unit",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "dpmo = D/(N*O)*1e6"
+      ],
+      "procedure": null,
+      "outputs": [
+        "dpmo"
+      ],
+      "assumptions": [
+        "DPMO = (defects/(units \u00d7 opportunities)) \u00d7 10\u2076."
+      ],
+      "method_references": [
+        "DPMO definition (recalled)"
+      ],
+      "synthetic_example": {
+        "D": 5.0,
+        "N": 1000.0,
+        "O": 10.0
+      }
+    },
+    "metrology.sigma_level": {
+      "title": "Process sigma level from long-term yield (Z_lt and Z_st)",
+      "variables": [
+        {
+          "name": "yield",
+          "unit": "",
+          "desc": "first-pass yield of LONG-TERM (shifted) data (fraction conforming, 0..1)",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Z_lt",
+          "unit": "",
+          "desc": "long-term sigma level Z_lt = \u03a6\u207b\u00b9(yield)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Z_st",
+          "unit": "",
+          "desc": "short-term sigma level (Z_lt + 1.5)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _sigma_level(values):\n    from scipy import stats\n    y = values['yield']\n    if not (0.0 < y < 1.0):\n        raise MechError('yield must be strictly between 0 and 1')\n    # The yield of long-term (shifted) data gives the long-term sigma level directly; the short-term\n    # level removes the conventional 1.5\u03c3 shift (3.4 DPMO \u2192 Z_lt = 4.5 \u2192 Z_st = 6.0).\n    Z_lt = float(stats.norm.ppf(y))\n    return {'Z_lt': Z_lt, 'Z_st': Z_lt + 1.5}\n",
+        "source": "metrology.py",
+        "line": 150
+      },
+      "outputs": [
+        "Z_lt",
+        "Z_st"
+      ],
+      "assumptions": [
+        "The yield of long-term (shifted) process data gives the long-term sigma level directly, Z_lt = \u03a6\u207b\u00b9(yield); the short-term level removes the conventional 1.5\u03c3 shift, Z_st = Z_lt + 1.5. Landmark: yield = 0.99865 (1350 DPMO) \u2192 Z_lt = 3, Z_st = 4.5."
+      ],
+      "method_references": [
+        "Z_lt = \u03a6\u207b\u00b9(yield); Z_st = Z_lt + 1.5 (Six Sigma convention, recalled)"
+      ],
+      "synthetic_example": {
+        "yield": 0.9986501
+      }
+    },
+    "metrology.sigma_level_dpmo": {
+      "title": "Process sigma level from DPMO (Z_lt and Z_st)",
+      "variables": [
+        {
+          "name": "dpmo",
+          "unit": "",
+          "desc": "defects per million opportunities",
+          "lo": 0.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Z_lt",
+          "unit": "",
+          "desc": "long-term sigma level Z_lt = \u03a6\u207b\u00b9(1 \u2212 dpmo/1e6)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Z_st",
+          "unit": "",
+          "desc": "short-term sigma level (Z_lt + 1.5)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _sigma_level_dpmo(values):\n    from scipy import stats\n    dpmo = values['dpmo']\n    if not (0.0 < dpmo < 1e6):\n        raise MechError('dpmo must be strictly between 0 and 1e6')\n    y = 1.0 - dpmo / 1e6\n    Z_lt = float(stats.norm.ppf(y))\n    return {'Z_lt': Z_lt, 'Z_st': Z_lt + 1.5}\n",
+        "source": "metrology.py",
+        "line": 161
+      },
+      "outputs": [
+        "Z_lt",
+        "Z_st"
+      ],
+      "assumptions": [
+        "DPMO \u2192 yield = 1 \u2212 dpmo/10\u2076, then Z_lt = \u03a6\u207b\u00b9(yield) and Z_st = Z_lt + 1.5. Landmark: 3.4 DPMO \u2192 Z_lt = 4.5, Z_st = 6.0."
+      ],
+      "method_references": [
+        "DPMO \u2192 sigma level; Z_st = Z_lt + 1.5 (Six Sigma convention, recalled)"
+      ],
+      "synthetic_example": {
+        "dpmo": 1350.0
+      }
+    },
+    "metrology.acceptance_sampling": {
+      "title": "Acceptance probability and AOQ for a single sampling plan (finite lot, hypergeometric)",
+      "variables": [
+        {
+          "name": "N",
+          "unit": "",
+          "desc": "lot size",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "sample size",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "",
+          "desc": "acceptance number",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "",
+          "desc": "fraction nonconforming in the lot",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_a",
+          "unit": "",
+          "desc": "probability of acceptance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "AOQ",
+          "unit": "",
+          "desc": "average outgoing quality (with rectification)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _acceptance(values):\n    \"\"\"Probability of acceptance for a single sampling plan, hypergeometric (finite lot).\"\"\"\n    from scipy import stats\n    N, n, c = int(values['N']), int(values['n']), int(values['c'])\n    p = values['p']\n    if not (0 <= c <= n <= N):\n        raise MechError('need 0 <= c <= n <= N')\n    if not (0.0 <= p <= 1.0):\n        raise MechError('p must be between 0 and 1')\n    D = int(round(p * N))\n    Pa = float(stats.hypergeom(N, D, n).cdf(c))\n    return {'P_a': Pa, 'AOQ': p * Pa * (N - n) / N}\n",
+        "source": "metrology.py",
+        "line": 181
+      },
+      "outputs": [
+        "P_a",
+        "AOQ"
+      ],
+      "assumptions": [
+        "Hypergeometric model (sampling without replacement); D = round(p\u00b7N). AOQ assumes rejected lots are 100% inspected (rectification)."
+      ],
+      "method_references": [
+        "Hypergeometric operating-characteristic (OC) curve (recalled)"
+      ],
+      "synthetic_example": {
+        "N": 1000,
+        "n": 80,
+        "c": 3,
+        "p": 0.05
+      }
+    },
+    "metrology.oc_binomial": {
+      "title": "Acceptance probability for a single sampling plan (infinite lot, binomial)",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "sample size",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "",
+          "desc": "acceptance number",
+          "lo": 0.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "",
+          "desc": "fraction nonconforming",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_a",
+          "unit": "",
+          "desc": "probability of acceptance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _oc_binomial(values):\n    \"\"\"Probability of acceptance, binomial (infinite lot / with replacement).\"\"\"\n    from scipy import stats\n    n, c, p = int(values['n']), int(values['c']), values['p']\n    if not (0 <= c <= n):\n        raise MechError('need 0 <= c <= n')\n    if not (0.0 <= p <= 1.0):\n        raise MechError('p must be between 0 and 1')\n    return {'P_a': float(stats.binom(n, p).cdf(c))}\n",
+        "source": "metrology.py",
+        "line": 195
+      },
+      "outputs": [
+        "P_a"
+      ],
+      "assumptions": [
+        "Binomial model (large/infinite lot or sampling with replacement)."
+      ],
+      "method_references": [
+        "Binomial operating-characteristic (OC) curve (recalled)"
+      ],
+      "synthetic_example": {
+        "n": 80,
+        "c": 3,
+        "p": 0.05
+      }
+    },
+    "metrology.sine_bar": {
+      "title": "Sine bar angle from gauge-block stack height",
+      "variables": [
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "angle set by the sine bar",
+          "lo": null,
+          "hi": 1.5707963267948966,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "m",
+          "desc": "gauge-block stack height (difference between the roll supports)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "centre distance between the sine-bar rolls",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "theta = asin(H/L)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "theta"
+      ],
+      "assumptions": [
+        "Requires H \u2264 L. The stack height H is the difference between the two roll supports."
+      ],
+      "method_references": [
+        "sin \u03b8 = H/L (sine bar, recalled)"
+      ],
+      "synthetic_example": {
+        "H": 0.025,
+        "L": 0.1
+      }
+    },
+    "metrology.gauge_blocks": {
+      "title": "Gauge-block combination for a target length (minimum block count)",
+      "variables": [
+        {
+          "name": "target",
+          "unit": "m",
+          "desc": "target length to build",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "blocks",
+          "unit": "",
+          "desc": "available gauge-block sizes in m (e.g. [0.020, 0.001001])",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "selected",
+          "unit": "",
+          "desc": "block sizes that sum to the target, in m (largest first)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "residual",
+          "unit": "m",
+          "desc": "residual (0 for an exact combination)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_blocks",
+          "unit": "",
+          "desc": "number of blocks used",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _gauge_blocks(values):\n    \"\"\"Gauge-block combination by minimum-block-count dynamic programming.\n\n    Sizes are scaled to 0.5 \u00b5m so 0.0005 mm blocks are representable exactly. The 0/1 knapsack DP stores\n    the fewest blocks that reach each length, so among several exact stacks the one using the fewest\n    blocks is returned (e.g. target 5 mm from {1..5} mm \u2192 {5}, not {3+2}).\n    \"\"\"\n    import numpy as np\n    target = values['target']\n    if target < 0:\n        raise MechError('target must be non-negative')\n    scale = 2e6  # 0.5 um per unit\n    T = int(round(target * scale))\n    if T > 4_000_000:\n        raise MechError('target too large for an exact combination (limit 2 m)')\n    raw = [float(b) for b in values['blocks'] if float(b) > 0]\n    if not raw:\n        raise MechError('blocks: give a non-empty list of positive block sizes')\n    # Largest blocks first: a DP stage only claims a length when it strictly improves it, so on ties between equally\n    # short stacks the larger blocks win (conventional wringing practice, e.g. 6 mm \u2192 {5, 1} rather than {4, 2}).\n    blocks = sorted(set(int(round(b * scale)) for b in raw), reverse=True)\n    INF = 1 << 30\n    dp = np.full(T + 1, INF, dtype=np.int64)\n    dp[0] = 0\n    # 0/1 knapsack: the right-hand side is evaluated from the previous stage before assignment, so each block is\n    # used at most once. For reconstruction keep, per block stage, a bit-packed mask of the lengths that stage\n    \n    # could reuse a block, e.g. {1,2,3,4} \u2192 9 gave [4, 4, 1].]\n    improved = []\n    for b in blocks:\n        cand = np.full(T + 1, INF, dtype=np.int64)\n        if b <= T:\n            cand[b:] = dp[:-b] + 1\n        better = cand < dp\n        improved.append(np.packbits(better))\n        dp = np.where(better, cand, dp)\n    if dp[T] >= INF:\n        raise MechError('no exact combination of the given blocks reaches the target')\n    selected = []\n    r = T\n    for i in range(len(blocks) - 1, -1, -1):\n        if r == 0:\n            break\n        if np.unpackbits(improved[i], count=T + 1)[r]:\n            selected.append(blocks[i] / scale)\n            r -= blocks[i]\n    if r != 0:\n        raise MechError('internal reconstruction error')\n    return {'selected': sorted(selected, reverse=True), 'residual': r / scale, 'n_blocks': len(selected)}\n",
+        "source": "metrology.py",
+        "line": 206
+      },
+      "outputs": [
+        "selected",
+        "residual",
+        "n_blocks"
+      ],
+      "assumptions": [
+        "Each block used at most once; sizes resolved to 0.5 \u00b5m. Among the exact stacks, the one using the FEWEST blocks is returned (target 5 mm from {1..5} mm \u2192 {5}, not {3+2}). Raises an error when no exact combination exists."
+      ],
+      "method_references": [
+        "Gauge-block stacking by minimum-count subset-sum dynamic programming"
+      ],
+      "synthetic_example": {
+        "target": 0.025231,
+        "blocks": [
+          0.02,
+          0.01,
+          0.005,
+          0.002,
+          0.0012,
+          0.00103,
+          0.001001
+        ]
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "metrology-001",
+      "calculator": "metrology.measurement_stats",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "measurements": [
+          0.01,
+          0.011,
+          0.012
+        ]
+      },
+      "solve_for": [
+        "mean",
+        "sd",
+        "range",
+        "n",
+        "min",
+        "max"
+      ],
+      "expected_as_specified": {
+        "mean": "11 mm",
+        "sd": "1 mm",
+        "range": "2 mm",
+        "n": 3,
+        "min": "10 mm",
+        "max": "12 mm"
+      },
+      "expected_SI": {
+        "mean": 0.011,
+        "sd": 0.001,
+        "range": 0.002,
+        "n": 3.0,
+        "min": 0.01,
+        "max": 0.012
+      },
+      "actual_SI": {
+        "mean": {
+          "value": 0.011000000000000001,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.measurement_stats (procedure)"
+        },
+        "sd": {
+          "value": 0.001,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.measurement_stats (procedure)"
+        },
+        "range": {
+          "value": 0.002,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.measurement_stats (procedure)"
+        },
+        "n": {
+          "value": 3.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.measurement_stats (procedure)"
+        },
+        "min": {
+          "value": 0.01,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.measurement_stats (procedure)"
+        },
+        "max": {
+          "value": 0.012,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.measurement_stats (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "mean": {
+          "absolute_error": 1.734723475976807e-18,
+          "relative_error": 1.5770213417970976e-16,
+          "allowed_absolute_error": 2.2e-05,
+          "passed": true
+        },
+        "sd": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2e-06,
+          "passed": true
+        },
+        "range": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4e-06,
+          "passed": true
+        },
+        "n": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.006,
+          "passed": true
+        },
+        "min": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2e-05,
+          "passed": true
+        },
+        "max": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.4e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "mean = 0.011; deviations \u22121, 0, +1 mm; var = 2e-6/2 = 1e-6 \u2192 sd = 1e-3 m; range = 0.002; n = 3"
+      }
+    },
+    {
+      "id": "metrology-002",
+      "calculator": "metrology.measurement_uncertainty",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "u_A": "0.5 mm",
+        "u_B": "0.3 mm",
+        "k": 2.0
+      },
+      "solve_for": [
+        "u_c",
+        "U"
+      ],
+      "expected_as_specified": {
+        "u_c": "0.583095 mm",
+        "U": "1.16619 mm"
+      },
+      "expected_SI": {
+        "u_c": 0.0005830950000000001,
+        "U": 0.0011661900000000001
+      },
+      "actual_SI": {
+        "u_c": {
+          "value": 0.00058309518948453,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.measurement_uncertainty (symbolic)"
+        },
+        "U": {
+          "value": 0.00116619037896906,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.measurement_uncertainty (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "u_c": {
+          "absolute_error": 1.8948452995461856e-10,
+          "relative_error": 3.24963393537277e-07,
+          "allowed_absolute_error": 2.915475e-07,
+          "passed": true
+        },
+        "U": {
+          "absolute_error": 3.7896905990923713e-10,
+          "relative_error": 3.24963393537277e-07,
+          "allowed_absolute_error": 5.83095e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "u_c = \u221a(0.5\u00b2 + 0.3\u00b2) = \u221a0.34 = 0.583095 mm; U = 2\u00b70.583095 = 1.16619 mm"
+      }
+    },
+    {
+      "id": "metrology-003",
+      "calculator": "metrology.measurement_uncertainty",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "u_c": "0.583095 mm",
+        "u_B": "0.3 mm",
+        "k": 2.0
+      },
+      "solve_for": [
+        "u_A",
+        "U"
+      ],
+      "expected_as_specified": {
+        "u_A": "0.5 mm",
+        "U": "1.16619 mm"
+      },
+      "expected_SI": {
+        "u_A": 0.0005,
+        "U": 0.0011661900000000001
+      },
+      "actual_SI": {
+        "u_A": {
+          "value": 0.0004999997790249512,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.measurement_uncertainty (symbolic)"
+        },
+        "U": {
+          "value": 0.0011661900000000001,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.measurement_uncertainty (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "u_A": {
+          "absolute_error": 2.2097504880601304e-10,
+          "relative_error": 4.419500976120261e-07,
+          "allowed_absolute_error": 2.5e-07,
+          "passed": true
+        },
+        "U": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5.83095e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "u_A = \u221a(u_c\u00b2 \u2212 u_B\u00b2) = \u221a(0.34 \u2212 0.09) = 0.5 mm; U = k\u00b7u_c = 2\u00b70.583095 = 1.16619 mm"
+      }
+    },
+    {
+      "id": "metrology-004",
+      "calculator": "metrology.gauge_rr",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n_trials": 2,
+        "n_appraisers": 3,
+        "n_parts": 5,
+        "k_sigma": 5.15,
+        "R_bar": "5 um",
+        "X_bar_diff": "10 um",
+        "R_p": "50 um",
+        "tol": "0.5 mm"
+      },
+      "solve_for": [
+        "EV",
+        "AV",
+        "GRR",
+        "PV",
+        "TV",
+        "pct_GRR_TV",
+        "pct_GRR_Tol",
+        "ndc"
+      ],
+      "expected_as_specified": {
+        "EV": "22.82034 um",
+        "AV": "25.95716 um",
+        "GRR": "34.56215 um",
+        "PV": "103.7785 um",
+        "TV": "109.3824 um",
+        "pct_GRR_TV": 31.597532,
+        "pct_GRR_Tol": 6.91243,
+        "ndc": 4.233755
+      },
+      "expected_SI": {
+        "EV": 2.2820340000000002e-05,
+        "AV": 2.5957159999999997e-05,
+        "GRR": 3.456215e-05,
+        "PV": 0.00010377849999999999,
+        "TV": 0.0001093824,
+        "pct_GRR_TV": 31.597532,
+        "pct_GRR_Tol": 6.91243,
+        "ndc": 4.233755
+      },
+      "actual_SI": {
+        "EV": {
+          "value": 2.2820343330414522e-05,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_rr (procedure)"
+        },
+        "AV": {
+          "value": 2.595716130623246e-05,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_rr (procedure)"
+        },
+        "GRR": {
+          "value": 3.456215115984198e-05,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_rr (procedure)"
+        },
+        "PV": {
+          "value": 0.00010377849340178477,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_rr (procedure)"
+        },
+        "TV": {
+          "value": 0.00010938243910948435,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_rr (procedure)"
+        },
+        "pct_GRR_TV": {
+          "value": 31.597531963286745,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_rr (procedure)"
+        },
+        "pct_GRR_Tol": {
+          "value": 6.912430231968395,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_rr (procedure)"
+        },
+        "ndc": {
+          "value": 4.233754867276193,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_rr (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "EV": {
+          "absolute_error": 3.330414520146029e-12,
+          "relative_error": 1.4594061789377496e-07,
+          "allowed_absolute_error": 1.141017e-08,
+          "passed": true
+        },
+        "AV": {
+          "absolute_error": 1.3062324625537271e-12,
+          "relative_error": 5.032262630248175e-08,
+          "allowed_absolute_error": 1.2978579999999998e-08,
+          "passed": true
+        },
+        "GRR": {
+          "absolute_error": 1.1598419775060882e-12,
+          "relative_error": 3.355815473013363e-08,
+          "allowed_absolute_error": 1.7281075000000002e-08,
+          "passed": true
+        },
+        "PV": {
+          "absolute_error": 6.598215219642475e-12,
+          "relative_error": 6.357978983741793e-08,
+          "allowed_absolute_error": 5.1889249999999996e-08,
+          "passed": true
+        },
+        "TV": {
+          "absolute_error": 3.910948434136981e-11,
+          "relative_error": 3.575482375717648e-07,
+          "allowed_absolute_error": 5.46912e-08,
+          "passed": true
+        },
+        "pct_GRR_TV": {
+          "absolute_error": 3.671325643495038e-08,
+          "relative_error": 1.1619026585668266e-09,
+          "allowed_absolute_error": 0.015798766000000002,
+          "passed": true
+        },
+        "pct_GRR_Tol": {
+          "absolute_error": 2.3196839560313265e-07,
+          "relative_error": 3.355815474487737e-08,
+          "allowed_absolute_error": 0.003456215,
+          "passed": true
+        },
+        "ndc": {
+          "absolute_error": 1.3272380705586784e-07,
+          "relative_error": 3.134895785322198e-08,
+          "allowed_absolute_error": 0.0021168775000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "K1 uses the plain d2(2) = 1.128379 \u2192 K1 = 5.15/1.128379 = 4.564069. The single-range constants use d2* = \u221a(d2\u00b2 + d3\u00b2): d2*(3) = \u221a(1.692569\u00b2 + 0.888368\u00b2) = \u221a3.653988 = 1.911540 \u2192 K2 = 5.15/1.911540 = 2.694162; d2*(5) = \u221a(2.325929\u00b2 + 0.864082\u00b2) = \u221a6.156584 = 2.481246 \u2192 K3 = 5.15/2.481246 = 2.075570. EV = 5e-6\u00b74.564069 = 2.28203e-5; AV = \u221a((1e-5\u00b72.694162)\u00b2 \u2212 EV\u00b2/10) = \u221a(7.25851e-10 \u2212 5.20768e-11) = 2.59572e-5; GRR = \u221a(EV\u00b2+AV\u00b2) = 3.45622e-5; PV = 5e-5\u00b72.075570 = 1.03778e-4; TV = \u221a(GRR\u00b2+PV\u00b2) = 1.09382e-4; %TV = 31.5975; %Tol = 6.91243; ndc = 1.41\u00b7PV/GRR = 4.23375"
+      }
+    },
+    {
+      "id": "metrology-005",
+      "calculator": "metrology.cp_cpk",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": "10 mm",
+        "sigma": "0.1 mm",
+        "USL": "10.4 mm",
+        "LSL": "9.6 mm"
+      },
+      "solve_for": [
+        "Cpk",
+        "Cp"
+      ],
+      "expected_as_specified": {
+        "Cp": 1.3333333,
+        "Cpk": 1.3333333
+      },
+      "expected_SI": {
+        "Cp": 1.3333333,
+        "Cpk": 1.3333333
+      },
+      "actual_SI": {
+        "Cp": {
+          "value": 1.3333333333333368,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.cp_cpk (procedure)"
+        },
+        "Cpk": {
+          "value": 1.3333333333333368,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.cp_cpk (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Cp": {
+          "absolute_error": 3.3333336757479515e-08,
+          "relative_error": 2.5000003193109714e-08,
+          "allowed_absolute_error": 0.0026666666,
+          "passed": true
+        },
+        "Cpk": {
+          "absolute_error": 3.3333336757479515e-08,
+          "relative_error": 2.5000003193109714e-08,
+          "allowed_absolute_error": 0.0026666666,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Cp = 0.8/(6\u00b70.1) = 1.3333; Cpk = min(0.4, 0.4)/(3\u00b70.1) = 1.3333 (centered)"
+      }
+    },
+    {
+      "id": "metrology-006",
+      "calculator": "metrology.cp_cpk",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": "10.2 mm",
+        "sigma": "0.1 mm",
+        "USL": "10.4 mm",
+        "LSL": "9.6 mm"
+      },
+      "solve_for": [
+        "Cpk",
+        "Cp"
+      ],
+      "expected_as_specified": {
+        "Cp": 1.3333333,
+        "Cpk": 0.6666667
+      },
+      "expected_SI": {
+        "Cp": 1.3333333,
+        "Cpk": 0.6666667
+      },
+      "actual_SI": {
+        "Cp": {
+          "value": 1.3333333333333368,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.cp_cpk (procedure)"
+        },
+        "Cpk": {
+          "value": 0.6666666666666742,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.cp_cpk (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Cp": {
+          "absolute_error": 3.3333336757479515e-08,
+          "relative_error": 2.5000003193109714e-08,
+          "allowed_absolute_error": 0.0026666666,
+          "passed": true
+        },
+        "Cpk": {
+          "absolute_error": 3.333332576627157e-08,
+          "relative_error": 4.9999986149408055e-08,
+          "allowed_absolute_error": 0.0013333333999999998,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Mean shifted toward USL: Cp = 1.3333 (unchanged); Cpk = min(0.2, 0.6)/(0.3) = 0.6667"
+      }
+    },
+    {
+      "id": "metrology-007",
+      "calculator": "metrology.cp_cpk",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": "10.6 mm",
+        "sigma": "0.1 mm",
+        "USL": "10.4 mm",
+        "LSL": "9.6 mm"
+      },
+      "solve_for": [
+        "Cpk",
+        "Cp"
+      ],
+      "expected_as_specified": {
+        "Cp": 1.3333333,
+        "Cpk": -0.6666667
+      },
+      "expected_SI": {
+        "Cp": 1.3333333,
+        "Cpk": -0.6666667
+      },
+      "actual_SI": {
+        "Cp": {
+          "value": 1.3333333333333368,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.cp_cpk (procedure)"
+        },
+        "Cpk": {
+          "value": -0.6666666666666625,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.cp_cpk (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Cp": {
+          "absolute_error": 3.3333336757479515e-08,
+          "relative_error": 2.5000003193109714e-08,
+          "allowed_absolute_error": 0.0026666666,
+          "passed": true
+        },
+        "Cpk": {
+          "absolute_error": 3.333333742361333e-08,
+          "relative_error": 5.000000363541982e-08,
+          "allowed_absolute_error": 0.0013333333999999998,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Mean OUTSIDE the spec (\u03bc > USL): Cpk = min(USL\u2212\u03bc, \u03bc\u2212LSL)/(3\u03c3) = min(\u22120.2, 1.0)/0.3 = \u22120.6667 (signed index)"
+      }
+    },
+    {
+      "id": "metrology-008",
+      "calculator": "metrology.pp_ppk",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": "10 mm",
+        "sigma_total": "0.15 mm",
+        "USL": "10.4 mm",
+        "LSL": "9.6 mm"
+      },
+      "solve_for": [
+        "Ppk",
+        "Pp"
+      ],
+      "expected_as_specified": {
+        "Pp": 0.8888889,
+        "Ppk": 0.8888889
+      },
+      "expected_SI": {
+        "Pp": 0.8888889,
+        "Ppk": 0.8888889
+      },
+      "actual_SI": {
+        "Pp": {
+          "value": 0.8888888888888913,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.pp_ppk (procedure)"
+        },
+        "Ppk": {
+          "value": 0.8888888888888913,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.pp_ppk (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Pp": {
+          "absolute_error": 1.1111108699779493e-08,
+          "relative_error": 1.2499997131001965e-08,
+          "allowed_absolute_error": 0.0017777778,
+          "passed": true
+        },
+        "Ppk": {
+          "absolute_error": 1.1111108699779493e-08,
+          "relative_error": 1.2499997131001965e-08,
+          "allowed_absolute_error": 0.0017777778,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Pp = 0.8/(6\u00b70.15) = 0.8889; Ppk = 0.4/(3\u00b70.15) = 0.8889"
+      }
+    },
+    {
+      "id": "metrology-009",
+      "calculator": "metrology.pp_ppk",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": "10.6 mm",
+        "sigma_total": "0.15 mm",
+        "USL": "10.4 mm",
+        "LSL": "9.6 mm"
+      },
+      "solve_for": [
+        "Ppk",
+        "Pp"
+      ],
+      "expected_as_specified": {
+        "Pp": 0.8888889,
+        "Ppk": -0.4444444
+      },
+      "expected_SI": {
+        "Pp": 0.8888889,
+        "Ppk": -0.4444444
+      },
+      "actual_SI": {
+        "Pp": {
+          "value": 0.8888888888888913,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.pp_ppk (procedure)"
+        },
+        "Ppk": {
+          "value": -0.44444444444444176,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.pp_ppk (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Pp": {
+          "absolute_error": 1.1111108699779493e-08,
+          "relative_error": 1.2499997131001965e-08,
+          "allowed_absolute_error": 0.0017777778,
+          "passed": true
+        },
+        "Ppk": {
+          "absolute_error": 4.4444441738011875e-08,
+          "relative_error": 1.0000000391052711e-07,
+          "allowed_absolute_error": 0.0008888888000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Mean outside spec: Ppk = min(\u22120.2, 1.0)/(3\u00b70.15) = \u22120.2/0.45 = \u22120.4444"
+      }
+    },
+    {
+      "id": "metrology-010",
+      "calculator": "metrology.control_chart_constants",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "n": 5
+      },
+      "solve_for": [
+        "d2",
+        "d3",
+        "A2",
+        "D3",
+        "D4"
+      ],
+      "expected_as_specified": {
+        "d2": 2.326,
+        "d3": 0.864,
+        "A2": 0.577,
+        "D3": 0.0,
+        "D4": 2.114
+      },
+      "expected_SI": {
+        "d2": 2.326,
+        "d3": 0.864,
+        "A2": 0.577,
+        "D3": 0.0,
+        "D4": 2.114
+      },
+      "actual_SI": {
+        "d2": {
+          "value": 2.325928947278278,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_chart_constants (procedure)"
+        },
+        "d3": {
+          "value": 0.8640819410731939,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_chart_constants (procedure)"
+        },
+        "A2": {
+          "value": 0.5768193340857706,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_chart_constants (procedure)"
+        },
+        "D3": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_chart_constants (procedure)"
+        },
+        "D4": {
+          "value": 2.1144991450632826,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_chart_constants (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "d2": {
+          "absolute_error": 7.105272172225341e-05,
+          "relative_error": 3.0547171849636034e-05,
+          "allowed_absolute_error": 0.002326,
+          "passed": true
+        },
+        "d3": {
+          "absolute_error": 8.194107319392518e-05,
+          "relative_error": 9.483920508556156e-05,
+          "allowed_absolute_error": 0.000864,
+          "passed": true
+        },
+        "A2": {
+          "absolute_error": 0.00018066591422938316,
+          "relative_error": 0.00031311250299719787,
+          "allowed_absolute_error": 0.0005769999999999999,
+          "passed": true
+        },
+        "D3": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "D4": {
+          "absolute_error": 0.0004991450632827465,
+          "relative_error": 0.00023611403182722165,
+          "allowed_absolute_error": 0.002114,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Published Shewhart control-chart constants for n = 5 (standard quality-control table; recalled, not re-read): d2 = 2.326, d3 = 0.864, A2 = 0.577, D3 = 0, D4 = 2.114"
+      }
+    },
+    {
+      "id": "metrology-011",
+      "calculator": "metrology.control_chart_constants",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "n": 2
+      },
+      "solve_for": [
+        "d2",
+        "d3",
+        "A2",
+        "D3",
+        "D4"
+      ],
+      "expected_as_specified": {
+        "d2": 1.128379,
+        "A2": 1.88
+      },
+      "expected_SI": {
+        "d2": 1.128379,
+        "A2": 1.88
+      },
+      "actual_SI": {
+        "d2": {
+          "value": 1.1283791670952157,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_chart_constants (procedure)"
+        },
+        "A2": {
+          "value": 1.879971205973745,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_chart_constants (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "d2": {
+          "absolute_error": 1.6709521566404817e-07,
+          "relative_error": 1.480843011648109e-07,
+          "allowed_absolute_error": 0.001128379,
+          "passed": true
+        },
+        "A2": {
+          "absolute_error": 2.8794026254885807e-05,
+          "relative_error": 1.5315971412173304e-05,
+          "allowed_absolute_error": 0.00188,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: d2(2) = E[range of 2 standard normals] = 2/\u221a\u03c0 = 1.128379; A2 = 3/(d2\u00b7\u221a2) = 1.880 (recalled)"
+      }
+    },
+    {
+      "id": "metrology-012",
+      "calculator": "metrology.control_limits_xbar_r",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "X_bar_bar": "10 mm",
+        "R_bar": "0.5 mm",
+        "n": 5
+      },
+      "solve_for": [
+        "UCL_x",
+        "LCL_x",
+        "CL_x",
+        "UCL_R",
+        "LCL_R",
+        "CL_R"
+      ],
+      "expected_as_specified": {
+        "UCL_x": "10.2884 mm",
+        "LCL_x": "9.7116 mm",
+        "CL_x": "10 mm",
+        "UCL_R": "1.05725 mm",
+        "LCL_R": "0 mm",
+        "CL_R": "0.5 mm"
+      },
+      "expected_SI": {
+        "UCL_x": 0.0102884,
+        "LCL_x": 0.0097116,
+        "CL_x": 0.01,
+        "UCL_R": 0.00105725,
+        "LCL_R": 0.0,
+        "CL_R": 0.0005
+      },
+      "actual_SI": {
+        "UCL_x": {
+          "value": 0.010288409667042886,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_xbar_r (procedure)"
+        },
+        "LCL_x": {
+          "value": 0.009711590332957114,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_xbar_r (procedure)"
+        },
+        "CL_x": {
+          "value": 0.01,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_xbar_r (procedure)"
+        },
+        "UCL_R": {
+          "value": 0.0010572495725316414,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_xbar_r (procedure)"
+        },
+        "LCL_R": {
+          "value": 0.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_xbar_r (procedure)"
+        },
+        "CL_R": {
+          "value": 0.0005,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_xbar_r (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "UCL_x": {
+          "absolute_error": 9.667042886671307e-09,
+          "relative_error": 9.396060501799411e-07,
+          "allowed_absolute_error": 1.02884e-05,
+          "passed": true
+        },
+        "LCL_x": {
+          "absolute_error": 9.667042886671307e-09,
+          "relative_error": 9.954119698784243e-07,
+          "allowed_absolute_error": 9.7116e-06,
+          "passed": true
+        },
+        "CL_x": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1e-05,
+          "passed": true
+        },
+        "UCL_R": {
+          "absolute_error": 4.2746835867031596e-10,
+          "relative_error": 4.043209824264043e-07,
+          "allowed_absolute_error": 1.0572500000000001e-06,
+          "passed": true
+        },
+        "LCL_R": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "CL_R": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A2(5)=0.5768, D3=0, D4=2.1145: UCL_x = 10 + 0.5768\u00b70.5 = 10.2884; LCL_x = 10 \u2212 0.2884 = 9.7116; UCL_R = 2.1145\u00b70.5 = 1.05725; LCL_R = 0"
+      }
+    },
+    {
+      "id": "metrology-013",
+      "calculator": "metrology.control_limits_p",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p_bar": 0.1,
+        "n": 100.0
+      },
+      "solve_for": [
+        "UCL",
+        "LCL",
+        "CL"
+      ],
+      "expected_as_specified": {
+        "UCL": 0.19,
+        "LCL": 0.01,
+        "CL": 0.1
+      },
+      "expected_SI": {
+        "UCL": 0.19,
+        "LCL": 0.01,
+        "CL": 0.1
+      },
+      "actual_SI": {
+        "UCL": {
+          "value": 0.19,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_p (procedure)"
+        },
+        "LCL": {
+          "value": 0.009999999999999995,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_p (procedure)"
+        },
+        "CL": {
+          "value": 0.1,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_p (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "UCL": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00038,
+          "passed": true
+        },
+        "LCL": {
+          "absolute_error": 5.204170427930421e-18,
+          "relative_error": 5.204170427930421e-16,
+          "allowed_absolute_error": 2e-05,
+          "passed": true
+        },
+        "CL": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c3 = \u221a(0.1\u00b70.9/100) = 0.03; UCL = 0.1 + 0.09 = 0.19; LCL = 0.1 \u2212 0.09 = 0.01; CL = 0.1"
+      }
+    },
+    {
+      "id": "metrology-014",
+      "calculator": "metrology.control_limits_p",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p_bar": 0.02,
+        "n": 50.0
+      },
+      "solve_for": [
+        "UCL",
+        "LCL",
+        "CL"
+      ],
+      "expected_as_specified": {
+        "UCL": 0.0793969,
+        "LCL": 0.0,
+        "CL": 0.02
+      },
+      "expected_SI": {
+        "UCL": 0.0793969,
+        "LCL": 0.0,
+        "CL": 0.02
+      },
+      "actual_SI": {
+        "UCL": {
+          "value": 0.07939696961967,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_p (procedure)"
+        },
+        "LCL": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_p (procedure)"
+        },
+        "CL": {
+          "value": 0.02,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_p (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "UCL": {
+          "absolute_error": 6.961966998730862e-08,
+          "relative_error": 8.768562750851558e-07,
+          "allowed_absolute_error": 3.969845e-05,
+          "passed": true
+        },
+        "LCL": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "CL": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c3 = \u221a(0.02\u00b70.98/50) = \u221a3.92e-4 = 0.019799; UCL = 0.02 + 0.059397 = 0.079397; LCL = 0.02 \u2212 0.059397 = \u22120.039397 \u2192 floored at 0 (a p-chart has no negative lower limit)"
+      }
+    },
+    {
+      "id": "metrology-015",
+      "calculator": "metrology.control_limits_p",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p_bar": 0.9,
+        "n": 5.0
+      },
+      "solve_for": [
+        "UCL",
+        "LCL",
+        "CL"
+      ],
+      "expected_as_specified": {
+        "UCL": 1.0,
+        "LCL": 0.497508,
+        "CL": 0.9
+      },
+      "expected_SI": {
+        "UCL": 1.0,
+        "LCL": 0.497508,
+        "CL": 0.9
+      },
+      "actual_SI": {
+        "UCL": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_p (procedure)"
+        },
+        "LCL": {
+          "value": 0.49750776405003794,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_p (procedure)"
+        },
+        "CL": {
+          "value": 0.9,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.control_limits_p (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "UCL": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        },
+        "LCL": {
+          "absolute_error": 2.35949962068549e-07,
+          "relative_error": 4.7426365418957887e-07,
+          "allowed_absolute_error": 0.000248754,
+          "passed": true
+        },
+        "CL": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00045000000000000004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c3 = \u221a(0.9\u00b70.1/5) = \u221a0.018 = 0.134164; UCL = 0.9 + 0.402492 = 1.30249 \u2192 capped at 1; LCL = 0.9 \u2212 0.402492 = 0.497508"
+      }
+    },
+    {
+      "id": "metrology-016",
+      "calculator": "metrology.dpmo",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "D": 5.0,
+        "N": 1000.0,
+        "O": 10.0
+      },
+      "solve_for": [
+        "dpmo"
+      ],
+      "expected_as_specified": {
+        "dpmo": 500.0
+      },
+      "expected_SI": {
+        "dpmo": 500.0
+      },
+      "actual_SI": {
+        "dpmo": {
+          "value": 500.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.dpmo (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dpmo": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "dpmo = 5/(1000\u00b710)\u00b71e6 = 500"
+      }
+    },
+    {
+      "id": "metrology-017",
+      "calculator": "metrology.dpmo",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dpmo": 500.0,
+        "N": 1000.0,
+        "O": 10.0
+      },
+      "solve_for": [
+        "D"
+      ],
+      "expected_as_specified": {
+        "D": 5.0
+      },
+      "expected_SI": {
+        "D": 5.0
+      },
+      "actual_SI": {
+        "D": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.dpmo (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "D": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 500\u00b71000\u00b710/1e6 = 5"
+      }
+    },
+    {
+      "id": "metrology-018",
+      "calculator": "metrology.sigma_level",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "yield": 0.5
+      },
+      "solve_for": [
+        "Z_lt",
+        "Z_st"
+      ],
+      "expected_as_specified": {
+        "Z_lt": 0.0,
+        "Z_st": 1.5
+      },
+      "expected_SI": {
+        "Z_lt": 0.0,
+        "Z_st": 1.5
+      },
+      "actual_SI": {
+        "Z_lt": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.sigma_level (procedure)"
+        },
+        "Z_st": {
+          "value": 1.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.sigma_level (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Z_lt": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "Z_st": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Landmark: \u03a6\u207b\u00b9(0.5) = 0 \u2192 Z_lt = 0 (long-term); short-term Z_st = 0 + 1.5 = 1.5"
+      }
+    },
+    {
+      "id": "metrology-019",
+      "calculator": "metrology.sigma_level",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "yield": 0.9986501
+      },
+      "solve_for": [
+        "Z_lt",
+        "Z_st"
+      ],
+      "expected_as_specified": {
+        "Z_lt": 3.0,
+        "Z_st": 4.5
+      },
+      "expected_SI": {
+        "Z_lt": 3.0,
+        "Z_st": 4.5
+      },
+      "actual_SI": {
+        "Z_lt": {
+          "value": 2.999999555858318,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.sigma_level (procedure)"
+        },
+        "Z_st": {
+          "value": 4.499999555858318,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.sigma_level (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Z_lt": {
+          "absolute_error": 4.4414168209883087e-07,
+          "relative_error": 1.4804722736627696e-07,
+          "allowed_absolute_error": 0.0015,
+          "passed": true
+        },
+        "Z_st": {
+          "absolute_error": 4.4414168165474166e-07,
+          "relative_error": 9.869815147883148e-08,
+          "allowed_absolute_error": 0.0022500000000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "1350 DPMO long-term yield: \u03a6\u207b\u00b9(0.9986501) = 3.0 \u2192 Z_lt = 3.0; Z_st = 3.0 + 1.5 = 4.5"
+      }
+    },
+    {
+      "id": "metrology-020",
+      "calculator": "metrology.sigma_level",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "yield": 0.9999966
+      },
+      "solve_for": [
+        "Z_lt",
+        "Z_st"
+      ],
+      "expected_as_specified": {
+        "Z_lt": 4.499854,
+        "Z_st": 5.999854
+      },
+      "expected_SI": {
+        "Z_lt": 4.499854,
+        "Z_st": 5.999854
+      },
+      "actual_SI": {
+        "Z_lt": {
+          "value": 4.499854470025836,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.sigma_level (procedure)"
+        },
+        "Z_st": {
+          "value": 5.999854470025836,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.sigma_level (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Z_lt": {
+          "absolute_error": 4.7002583603017456e-07,
+          "relative_error": 1.0445357472268535e-07,
+          "allowed_absolute_error": 0.002249927,
+          "passed": true
+        },
+        "Z_st": {
+          "absolute_error": 4.7002583603017456e-07,
+          "relative_error": 7.83395456006387e-08,
+          "allowed_absolute_error": 0.002999927,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "3.4 DPMO landmark: \u03a6\u207b\u00b9(0.9999966) = 4.49985 \u2192 Z_lt = 4.5; Z_st = 4.5 + 1.5 = 6.0"
+      }
+    },
+    {
+      "id": "metrology-021",
+      "calculator": "metrology.sigma_level_dpmo",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dpmo": 3.4
+      },
+      "solve_for": [
+        "Z_lt",
+        "Z_st"
+      ],
+      "expected_as_specified": {
+        "Z_lt": 4.499854,
+        "Z_st": 5.999854
+      },
+      "expected_SI": {
+        "Z_lt": 4.499854,
+        "Z_st": 5.999854
+      },
+      "actual_SI": {
+        "Z_lt": {
+          "value": 4.499854470025836,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.sigma_level_dpmo (procedure)"
+        },
+        "Z_st": {
+          "value": 5.999854470025836,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.sigma_level_dpmo (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Z_lt": {
+          "absolute_error": 4.7002583603017456e-07,
+          "relative_error": 1.0445357472268535e-07,
+          "allowed_absolute_error": 0.002249927,
+          "passed": true
+        },
+        "Z_st": {
+          "absolute_error": 4.7002583603017456e-07,
+          "relative_error": 7.83395456006387e-08,
+          "allowed_absolute_error": 0.002999927,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "yield = 1 \u2212 3.4e-6 = 0.9999966; \u03a6\u207b\u00b9(0.9999966) = 4.49985 \u2192 Z_lt = 4.5; Z_st = 6.0 (the classic 3.4 DPMO \u2194 6\u03c3)"
+      }
+    },
+    {
+      "id": "metrology-022",
+      "calculator": "metrology.sigma_level_dpmo",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dpmo": 1350.0
+      },
+      "solve_for": [
+        "Z_lt",
+        "Z_st"
+      ],
+      "expected_as_specified": {
+        "Z_lt": 2.999977,
+        "Z_st": 4.499977
+      },
+      "expected_SI": {
+        "Z_lt": 2.999977,
+        "Z_st": 4.499977
+      },
+      "actual_SI": {
+        "Z_lt": {
+          "value": 2.9999769927034015,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.sigma_level_dpmo (procedure)"
+        },
+        "Z_st": {
+          "value": 4.4999769927034015,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.sigma_level_dpmo (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Z_lt": {
+          "absolute_error": 7.296598436568047e-09,
+          "relative_error": 2.4322181258616475e-09,
+          "allowed_absolute_error": 0.0014999885,
+          "passed": true
+        },
+        "Z_st": {
+          "absolute_error": 7.296598880657257e-09,
+          "relative_error": 1.6214747054612183e-09,
+          "allowed_absolute_error": 0.0022499885000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "yield = 1 \u2212 0.00135 = 0.99865; \u03a6\u207b\u00b9(0.99865) = 2.99998 \u2192 Z_lt = 3.0; Z_st = 4.5"
+      }
+    },
+    {
+      "id": "metrology-023",
+      "calculator": "metrology.acceptance_sampling",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "N": 1000,
+        "n": 80,
+        "c": 3,
+        "p": 0.05
+      },
+      "solve_for": [
+        "P_a",
+        "AOQ"
+      ],
+      "expected_as_specified": {
+        "P_a": 0.420477,
+        "AOQ": 0.0193419
+      },
+      "expected_SI": {
+        "P_a": 0.420477,
+        "AOQ": 0.0193419
+      },
+      "actual_SI": {
+        "P_a": {
+          "value": 0.420477182256939,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.acceptance_sampling (procedure)"
+        },
+        "AOQ": {
+          "value": 0.019341950383819192,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.acceptance_sampling (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "P_a": {
+          "absolute_error": 1.822569389853257e-07,
+          "relative_error": 4.334528142688558e-07,
+          "allowed_absolute_error": 0.0002102385,
+          "passed": true
+        },
+        "AOQ": {
+          "absolute_error": 5.038381919314494e-08,
+          "relative_error": 2.6049053708862595e-06,
+          "allowed_absolute_error": 9.67095e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 50 defective in 1000; hypergeometric P(X\u22643) = \u03a3 C(50,d)C(950,80\u2212d)/C(1000,80) = 0.420477 (scipy hypergeom, independent); AOQ = 0.05\u00b70.420477\u00b7920/1000 = 0.019342"
+      }
+    },
+    {
+      "id": "metrology-024",
+      "calculator": "metrology.oc_binomial",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n": 80,
+        "c": 3,
+        "p": 0.05
+      },
+      "solve_for": [
+        "P_a"
+      ],
+      "expected_as_specified": {
+        "P_a": 0.428449
+      },
+      "expected_SI": {
+        "P_a": 0.428449
+      },
+      "actual_SI": {
+        "P_a": {
+          "value": 0.4284486372204303,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.oc_binomial (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "P_a": {
+          "absolute_error": 3.627795697180858e-07,
+          "relative_error": 8.467275445107486e-07,
+          "allowed_absolute_error": 0.0002142245,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Binomial P(X\u22643) = \u03a3 C(80,k)\u00b70.05^k\u00b70.95^(80\u2212k), k=0..3 = 0.428449 (scipy binom, independent)"
+      }
+    },
+    {
+      "id": "metrology-025",
+      "calculator": "metrology.sine_bar",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H": "25 mm",
+        "L": "100 mm"
+      },
+      "solve_for": [
+        "theta"
+      ],
+      "expected_as_specified": {
+        "theta": "14.4775 deg"
+      },
+      "expected_SI": {
+        "theta": 0.25268004245747905
+      },
+      "actual_SI": {
+        "theta": {
+          "value": 0.25268025514207865,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc metrology.sine_bar (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "theta": {
+          "absolute_error": 2.1268459959866703e-07,
+          "relative_error": 8.417150698969728e-07,
+          "allowed_absolute_error": 0.00012634002122873954,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sin \u03b8 = 25/100 = 0.25 \u2192 \u03b8 = 14.4775\u00b0"
+      }
+    },
+    {
+      "id": "metrology-026",
+      "calculator": "metrology.sine_bar",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "theta": "14.4775 deg",
+        "L": "100 mm"
+      },
+      "solve_for": [
+        "H"
+      ],
+      "expected_as_specified": {
+        "H": "25 mm"
+      },
+      "expected_SI": {
+        "H": 0.025
+      },
+      "actual_SI": {
+        "H": {
+          "value": 0.02499997940690163,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.sine_bar (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "H": {
+          "absolute_error": 2.0593098372378993e-08,
+          "relative_error": 8.237239348951597e-07,
+          "allowed_absolute_error": 1.25e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "H = L\u00b7sin \u03b8 = 0.1\u00b70.25 = 0.025 m"
+      }
+    },
+    {
+      "id": "metrology-027",
+      "calculator": "metrology.gauge_blocks",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "target": "25.231 mm",
+        "blocks": [
+          0.02,
+          0.01,
+          0.005,
+          0.002,
+          0.0012,
+          0.00103,
+          0.001001
+        ]
+      },
+      "solve_for": [
+        "selected",
+        "residual",
+        "n_blocks"
+      ],
+      "expected_as_specified": {
+        "selected": [
+          0.02,
+          0.002,
+          0.0012,
+          0.00103,
+          0.001001
+        ],
+        "residual": "0 m",
+        "n_blocks": 5
+      },
+      "expected_SI": {
+        "selected": [
+          0.02,
+          0.002,
+          0.0012,
+          0.00103,
+          0.001001
+        ],
+        "residual": 0.0,
+        "n_blocks": 5.0
+      },
+      "actual_SI": {
+        "selected": {
+          "value": [
+            0.02,
+            0.002,
+            0.0012,
+            0.00103,
+            0.001001
+          ],
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_blocks (procedure)",
+          "unit": ""
+        },
+        "residual": {
+          "value": 0.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_blocks (procedure)"
+        },
+        "n_blocks": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_blocks (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "selected": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 4e-05,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 4e-06,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 2.4e-06,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 2.06e-06,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 2.002e-06,
+            "passed": true
+          }
+        ],
+        "residual": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "n_blocks": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "25.231 mm = 20 + 2 + 1.2 + 1.03 + 1.001 (the standard wipe-digit stack); no exact stack uses fewer than 5 of the given blocks, so residual = 0 and 5 blocks"
+      }
+    },
+    {
+      "id": "metrology-028",
+      "calculator": "metrology.gauge_blocks",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "target": "5 mm",
+        "blocks": [
+          0.001,
+          0.002,
+          0.003,
+          0.004,
+          0.005
+        ]
+      },
+      "solve_for": [
+        "selected",
+        "residual",
+        "n_blocks"
+      ],
+      "expected_as_specified": {
+        "selected": [
+          0.005
+        ],
+        "residual": "0 m",
+        "n_blocks": 1
+      },
+      "expected_SI": {
+        "selected": [
+          0.005
+        ],
+        "residual": 0.0,
+        "n_blocks": 1.0
+      },
+      "actual_SI": {
+        "selected": {
+          "value": [
+            0.005
+          ],
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_blocks (procedure)",
+          "unit": ""
+        },
+        "residual": {
+          "value": 0.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_blocks (procedure)"
+        },
+        "n_blocks": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_blocks (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "selected": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 1e-05,
+            "passed": true
+          }
+        ],
+        "residual": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "n_blocks": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Target 5 mm from {1..5} mm: both {5} and {3+2} (and {4+1}) are exact, but the minimum-block-count search returns the single 5 mm block"
+      }
+    },
+    {
+      "id": "metrology-029",
+      "calculator": "metrology.gauge_blocks",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "target": "6 mm",
+        "blocks": [
+          0.001,
+          0.002,
+          0.003,
+          0.004,
+          0.005
+        ]
+      },
+      "solve_for": [
+        "selected",
+        "residual",
+        "n_blocks"
+      ],
+      "expected_as_specified": {
+        "n_blocks": 2,
+        "residual": 0.0
+      },
+      "expected_SI": {
+        "n_blocks": 2.0,
+        "residual": 0.0
+      },
+      "actual_SI": {
+        "n_blocks": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_blocks (procedure)"
+        },
+        "residual": {
+          "value": 0.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_blocks (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_blocks": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "residual": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Target 6 mm from {1..5} mm: {5+1} and {4+2} are both 2-block exact stacks ({3+2+1} is 3), so 2 blocks is minimal; the search returns the largest-first stack {5, 1}"
+      }
+    },
+    {
+      "id": "metrology-030",
+      "calculator": "metrology.gauge_blocks",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "blocks": [
+          0.001,
+          0.002,
+          0.003,
+          0.004
+        ],
+        "target": "9 mm"
+      },
+      "solve_for": [
+        "selected",
+        "residual",
+        "n_blocks"
+      ],
+      "expected_as_specified": {
+        "selected": [
+          0.004,
+          0.003,
+          0.002
+        ],
+        "n_blocks": 3
+      },
+      "expected_SI": {
+        "selected": [
+          0.004,
+          0.003,
+          0.002
+        ],
+        "n_blocks": 3.0
+      },
+      "actual_SI": {
+        "selected": {
+          "value": [
+            0.004,
+            0.003,
+            0.002
+          ],
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_blocks (procedure)",
+          "unit": ""
+        },
+        "n_blocks": {
+          "value": 3.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc metrology.gauge_blocks (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "selected": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 8e-06,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 6e-06,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 4e-06,
+            "passed": true
+          }
+        ],
+        "n_blocks": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.006,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Distinct blocks from {1,2,3,4} mm summing to 9 mm: only 4+3+2 (4+5 impossible, 4+4+1 reuses a block) \u2192 3 blocks.]"
+      }
+    }
+  ],
+  "passed": 30,
+  "failed": 0
+}

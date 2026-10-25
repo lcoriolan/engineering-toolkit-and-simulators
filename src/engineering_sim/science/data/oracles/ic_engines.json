@@ -1,0 +1,296 @@
+{
+  "section": "ic_engines",
+  "cases": [
+    {
+      "calc": "ic_engines.displacement_volume",
+      "inputs": {
+        "B": "90 mm",
+        "S": "85 mm",
+        "N_cyl": 6
+      },
+      "expect": {
+        "V_d": "5.4075e-4 m^3",
+        "V_total": "3.2445e-3 m^3"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V_d = (π/4)·0.09²·0.085 = 0.785398·0.0006885 = 5.4075e-4 m³; V_total = 6·V_d = 3.2445e-3 m³"
+      }
+    },
+    {
+      "calc": "ic_engines.compression_ratio",
+      "inputs": {
+        "V_d": "500 cm^3",
+        "V_c": "50 cm^3"
+      },
+      "expect": {
+        "r": 11.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 1 + 500/50 = 1 + 10 = 11"
+      }
+    },
+    {
+      "calc": "ic_engines.compression_ratio",
+      "inputs": {
+        "V_d": "5e-4 m^3",
+        "r": 9.0
+      },
+      "solve_for": [
+        "V_c"
+      ],
+      "expect": {
+        "V_c": "6.25e-5 m^3"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V_c = V_d/(r − 1) = 5e-4/8 = 6.25e-5 m³"
+      }
+    },
+    {
+      "calc": "ic_engines.engine_power",
+      "inputs": {
+        "BP": "90 kW",
+        "FP": "20 kW"
+      },
+      "expect": {
+        "IP": "110 kW"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "IP = BP + FP = 90 + 20 = 110 kW"
+      }
+    },
+    {
+      "calc": "ic_engines.mep",
+      "inputs": {
+        "W_cycle": "2.4 kJ",
+        "V_d": "3 L"
+      },
+      "expect": {
+        "mep": "800 kPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "MEP = 2.4e3/3.0e-3 = 800 000 Pa = 800 kPa"
+      }
+    },
+    {
+      "calc": "ic_engines.indicated_power",
+      "inputs": {
+        "MEP": "800 kPa",
+        "V_d": "2 L",
+        "N": "50 1/s",
+        "n_rev": "four-stroke"
+      },
+      "expect": {
+        "IP": "40 kW"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "IP = 800e3·2e-3·50/2 = 40 000 W = 40 kW (3000 rpm four-stroke)"
+      }
+    },
+    {
+      "calc": "ic_engines.indicated_power",
+      "inputs": {
+        "MEP": "800 kPa",
+        "V_d": "2 L",
+        "N": "50 1/s",
+        "n_rev": "two-stroke"
+      },
+      "expect": {
+        "IP": "80 kW"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "IP = 800e3·2e-3·50/1 = 80 000 W = 80 kW (two-stroke, one power stroke per revolution)"
+      }
+    },
+    {
+      "calc": "ic_engines.brake_mep",
+      "inputs": {
+        "T": "250 N*m",
+        "V_d": "2 L",
+        "n_rev": "four-stroke"
+      },
+      "expect": {
+        "BMEP": "1.5708 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "BMEP = 2π·2·250/2e-3 = 4π·250/0.002 = 1 570 796 Pa = 1.5708 MPa (four-stroke)"
+      }
+    },
+    {
+      "calc": "ic_engines.brake_mep",
+      "inputs": {
+        "T": "300 N*m",
+        "V_d": "2.5 L",
+        "n_rev": "two-stroke"
+      },
+      "expect": {
+        "BMEP": "753.98 kPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "BMEP = 2π·1·300/2.5e-3 = 600π/0.0025 = 753 982 Pa = 753.98 kPa (two-stroke)"
+      }
+    },
+    {
+      "calc": "ic_engines.brake_thermal_efficiency",
+      "inputs": {
+        "BP": "100 kW",
+        "m_dot_f": "6 g/s",
+        "LHV": "43 MJ/kg"
+      },
+      "expect": {
+        "eta_bth": "0.38760"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η_bth = 100e3/(0.006·43e6) = 100e3/258e3 = 0.38760"
+      }
+    },
+    {
+      "calc": "ic_engines.mechanical_efficiency",
+      "inputs": {
+        "BP": "88 kW",
+        "IP": "100 kW"
+      },
+      "expect": {
+        "eta_m": 0.88
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η_m = 88/100 = 0.88"
+      }
+    },
+    {
+      "calc": "ic_engines.volumetric_efficiency",
+      "inputs": {
+        "m_dot_a": "0.05 kg/s",
+        "rho_a": "1.18 kg/m^3",
+        "V_d": "2 L",
+        "N": "50 1/s",
+        "n_rev": "four-stroke"
+      },
+      "expect": {
+        "eta_v": "0.84746"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η_v = 0.05/(1.18·2e-3·50/2) = 0.05/0.059 = 0.84746"
+      }
+    },
+    {
+      "calc": "ic_engines.volumetric_efficiency",
+      "inputs": {
+        "m_dot_a": "0.05 kg/s",
+        "rho_a": "1.18 kg/m^3",
+        "V_d": "2 L",
+        "N": "50 1/s",
+        "n_rev": "two-stroke"
+      },
+      "expect": {
+        "eta_v": "0.42373"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "η_v = 0.05/(1.18·2e-3·50/1) = 0.05/0.118 = 0.42373 (two-stroke)"
+      }
+    },
+    {
+      "calc": "ic_engines.bsfc",
+      "inputs": {
+        "m_dot_f": "20 kg/h",
+        "BP": "80 kW"
+      },
+      "expect": {
+        "bsfc": "6.9444e-8"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "BSFC = (20/3600)/80 000 = 0.0055556/80 000 = 6.9444e-8 kg/J (= 250 g/kWh)"
+      }
+    },
+    {
+      "calc": "ic_engines.piston_speed",
+      "inputs": {
+        "S": "90 mm",
+        "N": "40 1/s"
+      },
+      "expect": {
+        "S_p": "7.2 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "S_p = 2·0.09·40 = 7.2 m/s"
+      }
+    },
+    {
+      "calc": "ic_engines.air_fuel_ratio",
+      "inputs": {
+        "m_air": "15.5 kg",
+        "m_fuel": "1 kg"
+      },
+      "expect": {
+        "AF": 15.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "AF = 15.5/1 = 15.5"
+      }
+    },
+    {
+      "calc": "ic_engines.equivalence_ratio",
+      "inputs": {
+        "AF_stoich": 15.0,
+        "AF_actual": 18.0
+      },
+      "expect": {
+        "phi": "0.83333",
+        "lam": 1.2
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "φ = 15.0/18.0 = 0.83333; λ = 18.0/15.0 = 1.2 (lean)"
+      }
+    },
+    {
+      "calc": "ic_engines.equivalence_ratio",
+      "inputs": {
+        "AF_stoich": 14.7,
+        "phi": 0.8
+      },
+      "solve_for": [
+        "AF_actual",
+        "lam"
+      ],
+      "expect": {
+        "AF_actual": 18.375
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "AF_actual = AF_st/φ = 14.7/0.8 = 18.375 (lean)"
+      }
+    },
+    {
+      "calc": "ic_engines.heat_balance",
+      "inputs": {
+        "BP": "80 kW",
+        "Q_coolant": "100 kW",
+        "Q_exhaust": "85 kW",
+        "Q_misc": "20 kW"
+      },
+      "expect": {
+        "Q_fuel": "285 kW"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Q_fuel = 80 + 100 + 85 + 20 = 285 kW"
+      }
+    }
+  ]
+}

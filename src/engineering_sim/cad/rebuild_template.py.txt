@@ -1,0 +1,191 @@
+# DESCRIPTION: Exact original components with verified editable primitives and extrusions.
+"""Millimetres. Default geometry comes from original BREP; edits are explicit and reproducible."""
+import hashlib
+import json
+import math
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parent
+DATA=__MODEL_DATA__
+
+
+def spec():
+    """Keep individual component controls and cache nodes independent of neighboring parts."""
+    fields=[dict(key='scale',label='Assembly scale',type='number',default=1.,min=.25,max=4.,group='Assembly',unit='×')]
+    for part in DATA['parts']:
+        group=part['label']+' · '+part['kind']
+        for key,value in part.get('controls',{}).items():
+            fields.append(dict(key=part['name']+'_'+key,label=key.replace('_',' ').capitalize(),type='number',default=value,
+                min=0. if key in ('radius_1_mm','radius_2_mm') else .001 if key.endswith('_mm') else .25,
+                max=max(1.,value*4) if key.endswith('_mm') else 4.,group=group,unit='mm' if key.endswith('_mm') else '×'))
+        # Rotation uses world XYZ axes about the original component mass center.
+        # Translation is in final world mm, independent of assembly scaling.
+        controls=[('component_scale','Component scale',1.,.25,4.,'×')]
+        controls += [(axis+'_mm','Move '+axis.upper(),0.,-10000,10000,'mm') for axis in 'xyz']
+        controls += [('rotate_'+axis,'Rotate '+axis.upper(),0.,-180,180,'°') for axis in 'xyz']
+        for key,label,value,low,high,unit in controls:
+            fields.append(dict(key=part['name']+'_'+key,label=label,type='number',default=value,min=low,max=high,group=group,unit=unit))
+    nodes=[dict(id=part['name'],parameters=['scale',*[f['key'] for f in fields if f['key'].startswith(part['name']+'_')]],depends=[],output=True) for part in DATA['parts']]
+    return dict(id='__MODEL_ID__',name='__MODEL_TITLE__',version='1.1.0',description='Exact CAD components; verified primitive dimensions and independent placement edits.',
+        fields=fields,presets=[dict(name='Original CAD geometry',parameters={})],nodes=nodes)
+
+
+def defaults():
+    """Return independent default inputs for the standalone CLI and studio."""
+    return {f['key']:f['default'] for f in spec()['fields']}
+
+
+def source_files():
+    """Capture unmodified source solids and conversion evidence in generating-Python exports."""
+    return [ROOT/'conversion.json',ROOT/'rebuild.py',*[ROOT/p['brep'] for p in DATA['parts']]]
+
+
+def validate(p):
+    """Reject nonfinite dimensions, inverted tori and zero-radius cones before CAD."""
+    for field in spec()['fields']:
+        value=p[field['key']]
+        if type(value) not in (int,float) or not math.isfinite(value) or not field['min']<=value<=field['max']:
+            raise ValueError('Outside supported control range: '+field['key'])
+    for part in DATA['parts']:
+        prefix=part['name']+'_'
+        if part['kind']=='torus' and p[prefix+'minor_radius_mm']>=p[prefix+'major_radius_mm']:
+            raise ValueError('Torus minor radius must be smaller than its major radius.')
+        if part['kind']=='cone' and max(p[prefix+'radius_1_mm'],p[prefix+'radius_2_mm'])<=0:
+            raise ValueError('A cone needs at least one positive end radius.')
+
+
+def feature_changed(part,p):
+    """Only intentional dimensional edits switch away from the original representation."""
+    return any(p[part['name']+'_'+key]!=value for key,value in part.get('controls',{}).items())
+
+
+def calculate(p):
+    """Predict volume analytically; placements preserve mass and component scales act cubically."""
+    volume=0.
+    for part in DATA['parts']:
+        f=lambda key:p[part['name']+'_'+key];kind=part['kind'];v=part['volume_mm3']
+        if feature_changed(part,p):
+            if kind=='pad':v*=f('profile_scale')**2*f('depth_mm')/part['depth_mm']
+            elif kind=='box':v=f('length_mm')*f('width_mm')*f('height_mm')
+            elif kind=='cylinder':v=math.pi*f('radius_mm')**2*f('height_mm')
+            elif kind=='cone':v=math.pi*f('height_mm')*(f('radius_1_mm')**2+f('radius_1_mm')*f('radius_2_mm')+f('radius_2_mm')**2)/3
+            elif kind=='sphere':v=4*math.pi*f('radius_mm')**3/3
+            elif kind=='torus':v=2*math.pi**2*f('major_radius_mm')*f('minor_radius_mm')**2
+        volume+=v*(p['scale']*f('component_scale'))**3
+    return dict(material_volume_mm3=volume,components=len(DATA['parts']),editable_components=len(DATA['parts']),
+        recognized_components=sum(x['kind']!='brep' for x in DATA['parts']),
+        original_shape_components=sum(not feature_changed(x,p) for x in DATA['parts']))
+
+
+def preview(p):
+    """Keep exact geometry visible while edited component candidates are being rebuilt."""
+    return []
+
+
+def notes(p):
+    """State preservation, recognition and interface semantics explicitly in the page."""
+    return ['Unchanged components use their retained original BREP. Recognized shapes replace it only after a dimensional edit; the original remains available.',
+        'Boxes, cylinders, cones, spheres, tori and supported extrusions are editable only after volume, area, bounds and two-way Boolean equivalence checks.',
+        'Every component can move, rotate and scale independently. Rotation uses world XYZ axes about its original mass center; translation is final world mm.',
+        'Recognized shapes describe geometry, not recovered design history or original constraints. Native exports include verified editable features and hidden original masters.',
+        'Component edits invalidate assumed mating fit. Hardware sizes, clearances and physical performance must be rechecked.']
+
+
+def original(part):
+    """Read the immutable component payload and reject silent changes to its recorded master."""
+    import Part
+    file=ROOT/part['brep']
+    if hashlib.sha256(file.read_bytes()).hexdigest()!=part['original_sha256']:
+        raise ValueError('Original geometry changed: '+part['name'])
+    shape=Part.Shape();shape.read(str(file));return shape
+
+
+def geometry(item,factor=1.):
+    """Create exact planar Sketcher curves; no fitting or sampled polylines."""
+    import FreeCAD as App,Part
+    v=lambda point:App.Vector(*[x*factor for x in point])
+    if item['kind']=='line':return Part.LineSegment(v(item['start']),v(item['end']))
+    if item['kind']=='circle':return Part.Circle(v(item['center']),App.Vector(0,0,1),item['radius']*factor)
+    if item['kind']=='arc':return Part.Arc(v(item['start']),v(item['middle']),v(item['end']))
+    raise ValueError('Unsupported profile curve.')
+
+
+def placement(body,part,p):
+    """Compose uniform scale, rotation about the original centroid, then world-mm translation."""
+    import FreeCAD as App
+    name=part['name'];s=p['scale'];local=p[name+'_component_scale'];pivot=App.Vector(*part['pivot_mm'])*s
+    rotation=App.Rotation(App.Vector(0,0,1),p[name+'_rotate_z']).multiply(App.Rotation(App.Vector(0,1,0),p[name+'_rotate_y'])).multiply(App.Rotation(App.Vector(1,0,0),p[name+'_rotate_x']))
+    # Geometry was already scaled by s*local about world zero. This shift
+    # instead makes component scaling use its original scaled mass center.
+    base=body.Placement;base.Base=base.Base+pivot*(1-local)
+    move=App.Vector(*[p[name+'_'+axis+'_mm'] for axis in 'xyz'])
+    change=App.Placement(pivot+move,rotation).multiply(App.Placement(-pivot,App.Rotation()))
+    body.Placement=change.multiply(base)
+
+
+def rebuild_document(p,recognized=False,component=None,originals=False):
+    """Build retained originals or intentional edits; native export can expose verified features."""
+    import FreeCAD as App,Part,Sketcher
+    p={**defaults(),**p};validate(p);doc=App.newDocument('ExactComponentCAD')
+    selected=[part for part in DATA['parts'] if component is None or part['name']==component]
+    try:
+        for part in selected:
+            name=part['name'];kind=part['kind'];factor=p['scale']*p[name+'_component_scale'];f=lambda key:p[name+'_'+key]*factor
+            master=original(part);use_feature=kind!='brep' and (recognized or feature_changed(part,p))
+            if not use_feature:
+                body=doc.addObject('Part::Feature',name);shape=master.copy()
+                if factor!=1.:shape.scale(factor)
+                body.Shape=shape
+            elif kind=='pad':
+                body=doc.addObject('PartDesign::Body',name);sketch=doc.addObject('Sketcher::SketchObject',name+'_profile');body.addObject(sketch)
+                sketch.addGeometry([geometry(g,p[name+'_profile_scale']*factor) for g in part['profile']],False)
+                for a,ap,b,bp in part.get('coincident',[]):sketch.addConstraint(Sketcher.Constraint('Coincident',a,ap,b,bp))
+                doc.recompute();pad=body.newObject('PartDesign::Pad',name+'_pad');pad.Profile=sketch;pad.Length=f('depth_mm');doc.recompute();sketch.Visibility=False;body.Tip=pad
+            elif kind=='box':
+                body=doc.addObject('Part::Box',name);body.Length=f('length_mm');body.Width=f('width_mm');body.Height=f('height_mm')
+            elif kind=='cylinder' or kind=='cone' and p[name+'_radius_1_mm']==p[name+'_radius_2_mm']:
+                body=doc.addObject('Part::Cylinder',name);body.Radius=f('radius_mm' if kind=='cylinder' else 'radius_1_mm');body.Height=f('height_mm')
+            elif kind=='cone':
+                body=doc.addObject('Part::Cone',name);body.Radius1=f('radius_1_mm');body.Radius2=f('radius_2_mm');body.Height=f('height_mm')
+            elif kind=='sphere':
+                body=doc.addObject('Part::Sphere',name);body.Radius=f('radius_mm')
+            elif kind=='torus':
+                body=doc.addObject('Part::Torus',name);body.Radius1=f('major_radius_mm');body.Radius2=f('minor_radius_mm')
+            else:raise ValueError('Unsupported recognized primitive.')
+            if use_feature:
+                body.Placement=App.Placement(App.Vector(*part['origin'])*factor,App.Rotation(*part['quaternion']))
+            placement(body,part,p);body.Label=part['label']
+            body.addProperty('App::PropertyString','GeometryBasis','Import');body.GeometryBasis=('Verified '+kind if use_feature else 'Retained original BREP')
+            body.addProperty('App::PropertyString','OriginalSHA256','Import');body.OriginalSHA256=part['original_sha256'];body.Visibility=True
+            if originals:
+                # Hidden reference copies retain original assembly coordinates.
+                saved=doc.addObject('Part::Feature',name+'_original');saved.Shape=master;saved.Label=part['label']+' [original master]';saved.Visibility=False
+        doc.recompute()
+        for part in selected:
+            shape=doc.getObject(part['name']).Shape
+            if shape.isNull() or not shape.isValid() or len(shape.Solids)!=1:raise ValueError('Invalid edited component: '+part['name'])
+        return doc
+    except Exception:
+        App.closeDocument(doc.Name);raise
+
+
+def build_node(node,p,dependencies):
+    """Only the edited component cache node rebuilds; the master is never overwritten."""
+    import FreeCAD as App
+    selected=None if node=='assembly' else node
+    doc=rebuild_document(p,component=selected)
+    try:return [dict(name=part['name'],shape=doc.getObject(part['name']).Shape.copy(),color=part['color']) for part in DATA['parts'] if selected is None or part['name']==selected]
+    finally:App.closeDocument(doc.Name)
+
+
+def check(parts,p):
+    """Compare material volume with independent equations; report original/edited coverage."""
+    expected=calculate(p)['material_volume_mm3'];actual=sum(x['shape'].Volume for x in parts)
+    if abs(actual-expected)>max(1e-6,expected*1e-8):raise ValueError('Edited volume differs from declared primitive dimensions.')
+    return dict(material_volume_match=True,original_geometry_retained=True,
+        original_shape_components=sum(not feature_changed(x,p) for x in DATA['parts']),qualification='Geometric edits; mating fit and physical performance require review.')
+
+
+def native_export(p,path):
+    """Native features are checked against the saved snapshot; hidden original masters remain."""
+    return rebuild_document(p,recognized=True,originals=True)

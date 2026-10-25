@@ -1,0 +1,42 @@
+{
+  "warp": "1.9.1",
+  "device": "Tesla P4",
+  "cpu": {
+    "time_s": 0.20000000000000015,
+    "steps": 200,
+    "position_m": [
+      0.0,
+      0.0,
+      9.802886009216309
+    ],
+    "velocity_m_s": [
+      0.0,
+      0.0,
+      -1.9613277912139893
+    ]
+  },
+  "gpu": {
+    "time_s": 0.20000000000000015,
+    "steps": 200,
+    "position_m": [
+      0.0,
+      0.0,
+      9.802886009216309
+    ],
+    "velocity_m_s": [
+      0.0,
+      0.0,
+      -1.9613277912139893
+    ]
+  },
+  "max_component_difference": 0.0,
+  "passed": true,
+  "cuda_toolkit": "12.8",
+  "driver": "580.178.04",
+  "scope": "200-step synthetic freefall on one Tesla P4; CPU/GPU parity, not all-domain GPU qualification",
+  "incompatible_test": {
+    "warp": "1.18.0",
+    "cuda_toolkit": "13.4",
+    "result": "Kernel launch rejected: sm_61 requires a CUDA 12 build."
+  }
+}

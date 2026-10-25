@@ -1,0 +1,3870 @@
+{
+  "section": "turbomachinery",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k turbomachinery",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "turbomachinery.pump_power": {
+      "title": "Pump hydraulic power, shaft power and efficiency",
+      "variables": [
+        {
+          "name": "P_hyd",
+          "unit": "W",
+          "desc": "hydraulic (fluid) power rho g Q H",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_shaft",
+          "unit": "W",
+          "desc": "shaft (input) power",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration (9.80665 m/s^2 standard)",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": "g",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "volumetric flow rate",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "m",
+          "desc": "pump head",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "pump efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P_hyd = rho*g*Q*H",
+        "P_shaft = P_hyd/eta"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P_hyd",
+        "P_shaft"
+      ],
+      "assumptions": [
+        "eta = P_hyd/P_shaft is the overall pump efficiency. H is the total head added to the fluid across the pump."
+      ],
+      "method_references": [
+        "P_hyd = rho g Q H; eta = P_hyd/P_shaft"
+      ],
+      "synthetic_example": {
+        "rho": 1000.0,
+        "g": 9.80665,
+        "Q": 0.05,
+        "H": 20.0,
+        "eta": 0.75
+      }
+    },
+    "turbomachinery.npsh_available": {
+      "title": "Net positive suction head available (NPSHa)",
+      "variables": [
+        {
+          "name": "fluid",
+          "unit": "",
+          "desc": "CoolProp fluid name, e.g. Water",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "K",
+          "desc": "liquid temperature at the pump suction",
+          "lo": 274.0,
+          "hi": 640.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_s",
+          "unit": "Pa",
+          "desc": "absolute pressure at the free surface",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "z_s",
+          "unit": "m",
+          "desc": "static suction head (positive if the liquid level is above the pump)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_loss",
+          "unit": "m",
+          "desc": "friction + minor loss head in the suction line",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "liquid density",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration (9.80665 m/s^2 standard)",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": "g",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "NPSH_A",
+          "unit": "m",
+          "desc": "net positive suction head available",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_vap",
+          "unit": "Pa",
+          "desc": "vapour pressure of the liquid at T",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _npsh_available(values):\n    \"\"\"Net positive suction head available, with vapour pressure from common.saturation.\"\"\"\n    fluid = _fluid_name(values['fluid'])\n    T, p_s, z_s, h_loss, rho, g = (values[k] for k in ('T', 'p_s', 'z_s', 'h_loss', 'rho', 'g'))\n    sat = common.saturation(fluid, T=T)\n    p_vap = sat['P']\n    npsh = (p_s - p_vap) / (rho * g) + z_s - h_loss\n    return {'NPSH_A': npsh, 'p_vap': p_vap}\n",
+        "source": "turbomachinery.py",
+        "line": 47
+      },
+      "outputs": [
+        "NPSH_A",
+        "p_vap"
+      ],
+      "assumptions": [
+        "NPSHa = (p_s - p_vap)/(rho g) + z_s - h_loss. The vapour pressure p_vap is computed from common.saturation (CoolProp) at the liquid temperature T, which must lie in the fluid saturation range. Density rho is entered by the user (a liquid at that state)."
+      ],
+      "method_references": [
+        "NPSH available = (p_s - p_vap)/(rho g) + z_s - h_loss"
+      ],
+      "synthetic_example": {
+        "fluid": "Water",
+        "T": 300.0,
+        "p_s": 101325.0,
+        "z_s": 3.0,
+        "h_loss": 1.5,
+        "rho": 997.0,
+        "g": 9.80665
+      }
+    },
+    "turbomachinery.npsh_margin": {
+      "title": "NPSH margin (cavitation check against required NPSH)",
+      "variables": [
+        {
+          "name": "NPSH_A",
+          "unit": "m",
+          "desc": "NPSH available",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "NPSH_R",
+          "unit": "m",
+          "desc": "NPSH required (pump data from the manufacturer)",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "margin",
+          "unit": "m",
+          "desc": "margin NPSHa - NPSHr (must stay positive)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "margin = NPSH_A - NPSH_R"
+      ],
+      "procedure": null,
+      "outputs": [
+        "margin"
+      ],
+      "assumptions": [
+        "NPSH_R is a pump characteristic obtained from the manufacturer curve, not computed here. Keep margin > 0 (with a safety allowance) to avoid cavitation."
+      ],
+      "method_references": [
+        "NPSH margin = NPSHa - NPSHr"
+      ],
+      "synthetic_example": {
+        "NPSH_A": 5.2,
+        "NPSH_R": 3.1
+      }
+    },
+    "turbomachinery.cavitation_number": {
+      "title": "Cavitation number",
+      "variables": [
+        {
+          "name": "sigma",
+          "unit": "",
+          "desc": "cavitation number",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "local static pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_vap",
+          "unit": "Pa",
+          "desc": "vapour pressure of the liquid",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m/s",
+          "desc": "characteristic (approach) velocity",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma = (p - p_vap)/(0.5*rho*V**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma"
+      ],
+      "assumptions": [
+        "sigma = (p - p_vap)/(0.5 rho V^2); cavitation is expected as sigma approaches the critical (incipient) value for the geometry. p_vap may be taken from npsh_available or the thermo section."
+      ],
+      "method_references": [
+        "Cavitation number (Thoma) sigma = (p - p_vap)/(1/2 rho V^2)"
+      ],
+      "synthetic_example": {
+        "p": 200000.0,
+        "p_vap": 2339.0,
+        "rho": 1000.0,
+        "V": 10.0
+      }
+    },
+    "turbomachinery.specific_speed": {
+      "title": "Pump specific speed (dimensionless)",
+      "variables": [
+        {
+          "name": "N_s",
+          "unit": "",
+          "desc": "specific speed omega sqrt(Q)/(g H)^(3/4)",
+          "lo": 0.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular speed (enter rad/s, rpm or rps)",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "flow rate at best efficiency point",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration (9.80665 m/s^2 standard)",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": "g",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "m",
+          "desc": "head per stage at best efficiency point",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "N_s = omega*sqrt(Q)/(g*H)**(3/4)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "N_s"
+      ],
+      "assumptions": [
+        "Dimensionless specific speed: omega in rad/s, Q in m^3/s, H in m. The traditional US value is N_s,US = N_s x 2733 (n in rpm, Q in gpm, H in ft). Low N_s favours centrifugal, high N_s axial impellers."
+      ],
+      "method_references": [
+        "Dimensionless specific speed omega sqrt(Q)/(g H)^(3/4)"
+      ],
+      "synthetic_example": {
+        "omega": 157.07963267948966,
+        "Q": 0.1,
+        "g": 9.80665,
+        "H": 15.0
+      }
+    },
+    "turbomachinery.suction_specific_speed": {
+      "title": "Suction specific speed (dimensionless)",
+      "variables": [
+        {
+          "name": "S",
+          "unit": "",
+          "desc": "suction specific speed omega sqrt(Q)/(g NPSH_R)^(3/4)",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular speed (enter rad/s, rpm or rps)",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "flow rate at best efficiency point",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration (9.80665 m/s^2 standard)",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": "g",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "NPSH_R",
+          "unit": "m",
+          "desc": "required NPSH at best efficiency point",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "S = omega*sqrt(Q)/(g*NPSH_R)**(3/4)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "S"
+      ],
+      "assumptions": [
+        "Same dimensionless form as specific_speed but referenced to NPSH_R; low S implies a cavitation-prone design."
+      ],
+      "method_references": [
+        "Suction specific speed omega sqrt(Q)/(g NPSH_R)^(3/4)"
+      ],
+      "synthetic_example": {
+        "omega": 157.07963267948966,
+        "Q": 0.1,
+        "g": 9.80665,
+        "NPSH_R": 2.5
+      }
+    },
+    "turbomachinery.affinity_laws": {
+      "title": "Pump affinity laws / similarity (speed, diameter and density scaling)",
+      "variables": [
+        {
+          "name": "Q1",
+          "unit": "m^3/s",
+          "desc": "flow at machine 1",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q2",
+          "unit": "m^3/s",
+          "desc": "flow at machine 2",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H1",
+          "unit": "m",
+          "desc": "head at machine 1",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H2",
+          "unit": "m",
+          "desc": "head at machine 2",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P1",
+          "unit": "W",
+          "desc": "power at machine 1",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P2",
+          "unit": "W",
+          "desc": "power at machine 2",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega1",
+          "unit": "rad/s",
+          "desc": "speed 1",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega2",
+          "unit": "rad/s",
+          "desc": "speed 2",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D1",
+          "unit": "m",
+          "desc": "impeller diameter of machine 1",
+          "lo": 0.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D2",
+          "unit": "m",
+          "desc": "impeller diameter of machine 2",
+          "lo": 0.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho1",
+          "unit": "kg/m^3",
+          "desc": "fluid density of machine 1",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c11",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho2",
+          "unit": "kg/m^3",
+          "desc": "fluid density of machine 2",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c12",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q2 = Q1*(omega2/omega1)*(D2/D1)**3",
+        "H2 = H1*(omega2/omega1)**2*(D2/D1)**2",
+        "P2 = P1*(rho2/rho1)*(omega2/omega1)**3*(D2/D1)**5"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q2",
+        "H2",
+        "P2"
+      ],
+      "assumptions": [
+        "Geometrically similar machines; efficiency assumed constant. Q ~ N D^3, H ~ N^2 D^2, P ~ rho N^3 D^5. Impeller trimming (cutting D in the same housing) is a separate approximation with slightly different exponents, not this geometric-similarity law."
+      ],
+      "method_references": [
+        "Pump affinity laws (Q ~ N D^3, H ~ N^2 D^2, P ~ rho N^3 D^5)"
+      ],
+      "synthetic_example": {
+        "Q1": 0.1,
+        "H1": 20.0,
+        "P1": 30000.0,
+        "omega1": 151.84364492350667,
+        "omega2": 183.25957145940458,
+        "D1": 0.3,
+        "D2": 0.3,
+        "rho1": 1000.0,
+        "rho2": 1000.0
+      }
+    },
+    "turbomachinery.system_curve": {
+      "title": "System curve (static head plus friction)",
+      "variables": [
+        {
+          "name": "H_sys",
+          "unit": "m",
+          "desc": "system head",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H_static",
+          "unit": "m",
+          "desc": "static (elevation + pressure) head",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "s^2/m^5",
+          "desc": "system resistance coefficient",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "flow rate",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "H_sys = H_static + K*Q**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "H_sys"
+      ],
+      "assumptions": [
+        "Quadratic (turbulent) system curve; K lumps pipe friction and minor losses for a given pipe network."
+      ],
+      "method_references": [
+        "H_sys = H_static + K Q^2"
+      ],
+      "synthetic_example": {
+        "H_static": 20.0,
+        "K": 500.0,
+        "Q": 0.1
+      }
+    },
+    "turbomachinery.operating_point": {
+      "title": "Pump/system operating point (curve intersection)",
+      "variables": [
+        {
+          "name": "pump_curve",
+          "unit": "",
+          "desc": "pump head curve [[Q (m^3/s), H (m)], ...] (decreasing H with Q)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "H_static",
+          "unit": "m",
+          "desc": "static head of the system",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "s^2/m^5",
+          "desc": "system resistance coefficient",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q_op",
+          "unit": "m^3/s",
+          "desc": "operating flow rate",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H_op",
+          "unit": "m",
+          "desc": "operating head",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _operating_point(values):\n    \"\"\"Pump/system operating point: intersect a tabulated pump curve with H = H_static + K Q^2.\n\n    The intersection must lie inside the tabulated range [Q_min, Q_max] of the supplied pump curve;\n    otherwise the pump curve is not defined at the duty point and this raises (no flat-end clamping or\n    extrapolation beyond the last row).\n    \"\"\"\n    curve = values['pump_curve']\n    H_static, K = values['H_static'], values['K']\n    if not isinstance(curve, list) or len(curve) < 2:\n        raise MechError('pump_curve: give at least two [Q (m^3/s), H (m)] rows')\n    pts = sorted((float(r[0]), float(r[1])) for r in curve)\n    Qs = [p[0] for p in pts]\n    Hs = [p[1] for p in pts]\n    Q_min, Q_max = Qs[0], Qs[-1]\n\n    def H_pump(Q):\n        if Q < Q_min or Q > Q_max:\n            return None\n        for i in range(len(Qs) - 1):\n            if Q <= Qs[i + 1]:\n                f = (Q - Qs[i]) / (Qs[i + 1] - Qs[i])\n                return Hs[i] + f * (Hs[i + 1] - Hs[i])\n        return Hs[-1]\n\n    def f(Q):\n        Hp = H_pump(Q)\n        return None if Hp is None else Hp - (H_static + K * Q * Q)\n\n    def op(Q):\n        return {'Q_op': Q, 'H_op': H_static + K * Q * Q}\n\n    # Sign-change scan over the tabulated intervals only (the curve is undefined outside them).\n    fvals = [f(q) for q in Qs]\n    if any(v == 0.0 for v in fvals):\n        return op(Qs[next(i for i, v in enumerate(fvals) if v == 0.0)])\n    lo = None\n    for i in range(len(Qs) - 1):\n        if fvals[i] is not None and fvals[i + 1] is not None and fvals[i] * fvals[i + 1] < 0.0:\n            lo, hi = Qs[i], Qs[i + 1]\n            break\n    if lo is None:\n        raise MechError(f'no operating point inside the pump-curve range [{Q_min:g}, {Q_max:g}] m^3/s '\n                        '(the pump and system curves do not cross there; the duty point lies outside the '\n                        'supplied curve)')\n    for _ in range(120):\n        mid = 0.5 * (lo + hi)\n        if f(lo) * f(mid) <= 0.0:\n            hi = mid\n        else:\n            lo = mid\n    return op(0.5 * (lo + hi))\n",
+        "source": "turbomachinery.py",
+        "line": 69
+      },
+      "outputs": [
+        "Q_op",
+        "H_op"
+      ],
+      "assumptions": [
+        "Linear interpolation of the tabulated pump curve; quadratic system curve. The duty point must lie inside the supplied pump-curve range [Q_min, Q_max]; if the curves cross beyond it the calculator raises rather than extrapolate. For pumps in series add heads at equal Q, in parallel add flows at equal H (see pumps_series_parallel)."
+      ],
+      "method_references": [
+        "Operating point = intersection of pump and system curves"
+      ],
+      "synthetic_example": {
+        "pump_curve": [
+          [
+            0.0,
+            50.0
+          ],
+          [
+            0.05,
+            45.0
+          ],
+          [
+            0.1,
+            35.0
+          ],
+          [
+            0.15,
+            20.0
+          ]
+        ],
+        "H_static": 20.0,
+        "K": 500.0
+      }
+    },
+    "turbomachinery.pumps_series_parallel": {
+      "title": "Identical pumps in series and parallel",
+      "variables": [
+        {
+          "name": "H_series",
+          "unit": "m",
+          "desc": "combined head for n pumps in series (same Q)",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q_parallel",
+          "unit": "m^3/s",
+          "desc": "combined flow for n pumps in parallel (same H)",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_pumps",
+          "unit": "",
+          "desc": "number of identical pumps",
+          "lo": 1.0,
+          "hi": 20.0,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H1",
+          "unit": "m",
+          "desc": "single-pump head",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q1",
+          "unit": "m^3/s",
+          "desc": "single-pump flow",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "H_series = n_pumps*H1",
+        "Q_parallel = n_pumps*Q1"
+      ],
+      "procedure": null,
+      "outputs": [
+        "H_series",
+        "Q_parallel"
+      ],
+      "assumptions": [
+        "Identical pumps: series adds head at equal flow, parallel adds flow at equal head. The actual combined operating point is the intersection with the system curve (operating_point)."
+      ],
+      "method_references": [
+        "Series and parallel combination of identical pumps"
+      ],
+      "synthetic_example": {
+        "n_pumps": 3.0,
+        "H1": 15.0,
+        "Q1": 0.08
+      }
+    },
+    "turbomachinery.euler_turbomachine": {
+      "title": "Euler turbomachine equation (specific work and ideal head)",
+      "variables": [
+        {
+          "name": "w_euler",
+          "unit": "J/kg",
+          "desc": "specific work (positive = added to the fluid)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H_euler",
+          "unit": "m",
+          "desc": "ideal head w/g",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u1",
+          "unit": "m/s",
+          "desc": "blade speed at inlet",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "vu1",
+          "unit": "m/s",
+          "desc": "tangential component of absolute velocity at inlet",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u2",
+          "unit": "m/s",
+          "desc": "blade speed at outlet",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "vu2",
+          "unit": "m/s",
+          "desc": "tangential component of absolute velocity at outlet",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration (9.80665 m/s^2 standard)",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": "g",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "w_euler = u2*vu2 - u1*vu1",
+        "H_euler = w_euler/g"
+      ],
+      "procedure": null,
+      "outputs": [
+        "w_euler",
+        "H_euler"
+      ],
+      "assumptions": [
+        "Pump/compressor convention: w > 0 when work is added. Power = mdot * w_euler. For a turbine the fluid does work (w < 0) and the sign is reversed."
+      ],
+      "method_references": [
+        "Euler turbomachine equation w = u2 vu2 - u1 vu1"
+      ],
+      "synthetic_example": {
+        "u1": 20.0,
+        "vu1": 4.0,
+        "u2": 40.0,
+        "vu2": 30.0,
+        "g": 9.80665
+      }
+    },
+    "turbomachinery.velocity_triangle": {
+      "title": "Velocity triangle (absolute, relative and blade-speed vectors)",
+      "variables": [
+        {
+          "name": "U",
+          "unit": "m/s",
+          "desc": "blade (tangential) speed",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m/s",
+          "desc": "absolute velocity magnitude",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "rad",
+          "desc": "absolute flow angle from the tangential direction",
+          "lo": 0.0,
+          "hi": 1.5707963267948966,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Wu",
+          "unit": "m/s",
+          "desc": "tangential component of the relative velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Vm",
+          "unit": "m/s",
+          "desc": "meridional (through-flow) component",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Vu",
+          "unit": "m/s",
+          "desc": "tangential component of the absolute velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "m/s",
+          "desc": "relative velocity magnitude",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "beta",
+          "unit": "rad",
+          "desc": "relative flow angle from the tangential direction",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b2",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _velocity_triangle(values):\n    \"\"\"Velocity triangle from blade speed U, absolute speed V and absolute flow angle alpha (from tangential).\"\"\"\n    U, V, alpha = values['U'], values['V'], values['alpha']\n    Vu = V * math.cos(alpha)\n    Vm = V * math.sin(alpha)\n    Wu = Vu - U\n    W = math.hypot(Vm, Wu)\n    beta = math.atan2(Vm, Wu)\n    # Wu is listed first: it depends on all three inputs, so every input is recoverable by inversion.\n    return {'Wu': Wu, 'Vm': Vm, 'Vu': Vu, 'W': W, 'beta': beta}\n",
+        "source": "turbomachinery.py",
+        "line": 57
+      },
+      "outputs": [
+        "Wu",
+        "Vm",
+        "Vu",
+        "W",
+        "beta"
+      ],
+      "assumptions": [
+        "V = U + W. Vu = V cos(alpha), Vm = V sin(alpha), Wu = Vu - U, beta = atan2(Vm, Wu). alpha, beta measured from the tangential (U) direction; the angle used in the Euler equation is the tangential component Vu."
+      ],
+      "method_references": [
+        "Velocity triangle V = U + W; Vu = V cos(alpha), Vm = V sin(alpha)"
+      ],
+      "synthetic_example": {
+        "U": 30.0,
+        "V": 50.0,
+        "alpha": 0.6981317007977318
+      }
+    },
+    "turbomachinery.degree_of_reaction": {
+      "title": "Degree of reaction of a turbomachine stage",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "",
+          "desc": "degree of reaction",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": "R",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h1",
+          "unit": "J/kg",
+          "desc": "static enthalpy at rotor inlet",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2",
+          "unit": "J/kg",
+          "desc": "static enthalpy at rotor outlet",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h3",
+          "unit": "J/kg",
+          "desc": "static enthalpy at stage outlet",
+          "lo": -100000000.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "R = (h2 - h1)/(h3 - h1)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "R"
+      ],
+      "assumptions": [
+        "Degree of reaction R = (static enthalpy change across the rotor)/(static enthalpy change across the whole stage). Compressor convention (rotor first): station 1 = rotor inlet, 2 = rotor outlet, 3 = stage (stator) outlet, so R = (h2 - h1)/(h3 - h1). Turbine form (stator first): 1 = stage inlet, 2 = rotor inlet, 3 = rotor outlet, so R = (h2 - h3)/(h1 - h3). An impulse stage has R = 0; an ideal 50% reaction stage has R = 0.5. For an incompressible machine replace h with p/(rho g)."
+      ],
+      "method_references": [
+        "Degree of reaction R = (h2 - h1)/(h3 - h1) (compressor); R = (h2 - h3)/(h1 - h3) (turbine)"
+      ],
+      "synthetic_example": {
+        "h1": 3000000.0,
+        "h2": 3500000.0,
+        "h3": 4000000.0
+      }
+    },
+    "turbomachinery.turbine_power": {
+      "title": "Hydraulic turbine power and efficiency",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "W",
+          "desc": "turbine shaft (output) power",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration (9.80665 m/s^2 standard)",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": "g",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "flow rate",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "m",
+          "desc": "available head",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "turbine efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P = rho*g*Q*H*eta"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P"
+      ],
+      "assumptions": [
+        "eta is the overall turbine efficiency (P = eta rho g Q H)."
+      ],
+      "method_references": [
+        "Turbine power P = eta rho g Q H"
+      ],
+      "synthetic_example": {
+        "rho": 1000.0,
+        "g": 9.80665,
+        "Q": 2.0,
+        "H": 120.0,
+        "eta": 0.88
+      }
+    },
+    "turbomachinery.turbine_specific_speed": {
+      "title": "Turbine specific speed (dimensionless)",
+      "variables": [
+        {
+          "name": "N_s",
+          "unit": "",
+          "desc": "specific speed omega sqrt(P/rho)/(g H)^(5/4)",
+          "lo": 0.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular speed (enter rad/s, rpm or rps)",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "W",
+          "desc": "turbine power",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "g",
+          "unit": "m/s^2",
+          "desc": "gravitational acceleration (9.80665 m/s^2 standard)",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": "g",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "m",
+          "desc": "net head",
+          "lo": 0.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "N_s = omega*sqrt(P/rho)/(g*H)**(5/4)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "N_s"
+      ],
+      "assumptions": [
+        "Dimensionless turbine specific speed. Impulse (Pelton) machines have low N_s, Francis medium, Kaplan (axial) high; the exact selection ranges are manufacturer data."
+      ],
+      "method_references": [
+        "Turbine specific speed omega sqrt(P/rho)/(g H)^(5/4)"
+      ],
+      "synthetic_example": {
+        "omega": 31.41592653589793,
+        "P": 1000000.0,
+        "rho": 1000.0,
+        "g": 9.80665,
+        "H": 60.0
+      }
+    },
+    "turbomachinery.compressor": {
+      "title": "Compressor isentropic work, outlet temperature and efficiency",
+      "variables": [
+        {
+          "name": "T2s",
+          "unit": "K",
+          "desc": "isentropic outlet temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w_s",
+          "unit": "J/kg",
+          "desc": "isentropic specific work",
+          "lo": 0.0,
+          "hi": 10000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta_c",
+          "unit": "",
+          "desc": "isentropic efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7c",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cp",
+          "unit": "J/(kg*K)",
+          "desc": "specific heat at constant pressure",
+          "lo": 1.0,
+          "hi": 100000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "specific-heat ratio cp/cv",
+          "lo": 1.0,
+          "hi": 2.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T1",
+          "unit": "K",
+          "desc": "inlet total temperature",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P2",
+          "unit": "Pa",
+          "desc": "outlet total pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P1",
+          "unit": "Pa",
+          "desc": "inlet total pressure",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w_actual",
+          "unit": "J/kg",
+          "desc": "actual specific work",
+          "lo": 0.0,
+          "hi": 10000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T2s = T1*(P2/P1)**((gamma - 1)/gamma)",
+        "w_s = cp*(T2s - T1)",
+        "eta_c = w_s/w_actual"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T2s",
+        "w_s",
+        "eta_c"
+      ],
+      "assumptions": [
+        "Ideal gas, constant cp and gamma. eta_c = w_s/w_actual, with w_s the isentropic work between the same pressure levels. Real-gas behaviour can be evaluated with the thermo section (common.fluid_state)."
+      ],
+      "method_references": [
+        "Isentropic compression: T2s = T1 (P2/P1)^((gamma-1)/gamma); w_s = cp (T2s - T1); eta_c = w_s/w_actual"
+      ],
+      "synthetic_example": {
+        "cp": 1005.0,
+        "gamma": 1.4,
+        "T1": 300.0,
+        "P2": 800000.0,
+        "P1": 100000.0,
+        "w_actual": 245000.0
+      }
+    },
+    "turbomachinery.fan_laws": {
+      "title": "Fan laws (speed scaling for flow, pressure and power)",
+      "variables": [
+        {
+          "name": "Q1",
+          "unit": "m^3/s",
+          "desc": "flow at speed 1",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q2",
+          "unit": "m^3/s",
+          "desc": "flow at speed 2",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dp1",
+          "unit": "Pa",
+          "desc": "pressure rise at speed 1",
+          "lo": 0.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dp2",
+          "unit": "Pa",
+          "desc": "pressure rise at speed 2",
+          "lo": 0.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P1",
+          "unit": "W",
+          "desc": "power at speed 1",
+          "lo": 0.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P2",
+          "unit": "W",
+          "desc": "power at speed 2",
+          "lo": 0.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega1",
+          "unit": "rad/s",
+          "desc": "speed 1",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega2",
+          "unit": "rad/s",
+          "desc": "speed 2",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q2 = Q1*(omega2/omega1)",
+        "dp2 = dp1*(omega2/omega1)**2",
+        "P2 = P1*(omega2/omega1)**3"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q2",
+        "dp2",
+        "P2"
+      ],
+      "assumptions": [
+        "Same fan at different speeds, density unchanged: Q ~ N, dp ~ N^2, P ~ N^3."
+      ],
+      "method_references": [
+        "Fan laws (Q ~ N, dp ~ N^2, P ~ N^3)"
+      ],
+      "synthetic_example": {
+        "Q1": 2.0,
+        "dp1": 500.0,
+        "P1": 2000.0,
+        "omega1": 104.71975511965977,
+        "omega2": 125.66370614359172
+      }
+    },
+    "turbomachinery.fan_total_pressure": {
+      "title": "Fan total pressure from static and velocity pressure",
+      "variables": [
+        {
+          "name": "p_t",
+          "unit": "Pa",
+          "desc": "total pressure",
+          "lo": 0.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_s",
+          "unit": "Pa",
+          "desc": "static pressure",
+          "lo": 0.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m/s",
+          "desc": "air velocity (at the measuring plane)",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "p_t = p_s + 0.5*rho*V**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "p_t"
+      ],
+      "assumptions": [
+        "Total pressure = static + dynamic (velocity) pressure. The fan total pressure rise is the difference of p_t across the fan."
+      ],
+      "method_references": [
+        "p_t = p_s + 1/2 rho V^2"
+      ],
+      "synthetic_example": {
+        "p_s": 400.0,
+        "rho": 1.2,
+        "V": 20.0
+      }
+    },
+    "turbomachinery.wind_turbine_power": {
+      "title": "Wind turbine power (power coefficient)",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "W",
+          "desc": "turbine power",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "air density",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "rotor swept area",
+          "lo": 0.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m/s",
+          "desc": "wind speed",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Cp",
+          "unit": "",
+          "desc": "power coefficient (<= 16/27 by Betz)",
+          "lo": 0.0,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P = 0.5*rho*A*V**3*Cp"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P"
+      ],
+      "assumptions": [
+        "Cp is the power coefficient (fraction of the wind power captured); the Betz limit caps Cp at 16/27 ~ 0.593 (see betz_limit)."
+      ],
+      "method_references": [
+        "P = 1/2 rho A V^3 Cp"
+      ],
+      "synthetic_example": {
+        "rho": 1.225,
+        "A": 500.0,
+        "V": 10.0,
+        "Cp": 0.45
+      }
+    },
+    "turbomachinery.betz_limit": {
+      "title": "Betz limit: maximum extractable wind power",
+      "variables": [
+        {
+          "name": "P_betz",
+          "unit": "W",
+          "desc": "maximum (Betz-limited) power",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "air density",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "rotor swept area",
+          "lo": 0.0,
+          "hi": 1000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m/s",
+          "desc": "wind speed",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P_betz = (16/27)*0.5*rho*A*V**3"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P_betz"
+      ],
+      "assumptions": [
+        "Betz (1919) limit: a frictionless actuator disc can extract at most 16/27 of the wind power; no real turbine reaches it."
+      ],
+      "method_references": [
+        "Betz limit Cp,max = 16/27 (landmark)"
+      ],
+      "synthetic_example": {
+        "rho": 1.225,
+        "A": 500.0,
+        "V": 10.0
+      }
+    },
+    "turbomachinery.tip_speed_ratio": {
+      "title": "Tip speed ratio",
+      "variables": [
+        {
+          "name": "TSR",
+          "unit": "",
+          "desc": "tip speed ratio omega R / V",
+          "lo": 0.0,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "angular speed (enter rad/s, rpm or rps)",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "m",
+          "desc": "rotor radius",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m/s",
+          "desc": "wind speed",
+          "lo": 0.0,
+          "hi": 1000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "TSR = omega*R/V"
+      ],
+      "procedure": null,
+      "outputs": [
+        "TSR"
+      ],
+      "assumptions": [
+        "Tip speed ratio lambda = omega R / V. Modern three-blade turbines peak around lambda ~ 6-8 (design value)."
+      ],
+      "method_references": [
+        "TSR = omega R / V"
+      ],
+      "synthetic_example": {
+        "omega": 2.0943951023931953,
+        "R": 25.0,
+        "V": 10.0
+      }
+    },
+    "turbomachinery.propeller": {
+      "title": "Propeller thrust and efficiency (momentum theory)",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N",
+          "desc": "thrust",
+          "lo": 0.0,
+          "hi": 100000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta_p",
+          "unit": "",
+          "desc": "propulsive efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7p",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mdot",
+          "unit": "kg/s",
+          "desc": "mass flow rate through the propeller disc",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_e",
+          "unit": "m/s",
+          "desc": "exit (slipstream) velocity",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_0",
+          "unit": "m/s",
+          "desc": "freestream (flight) velocity",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_shaft",
+          "unit": "W",
+          "desc": "shaft power input",
+          "lo": 0.0,
+          "hi": 1000000000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = mdot*(V_e - V_0)",
+        "eta_p = T*V_0/P_shaft"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T",
+        "eta_p"
+      ],
+      "assumptions": [
+        "Ideal (actuator-disc) propeller: thrust = momentum change T = mdot (V_e - V_0); propulsive efficiency eta_p = T V_0 / P_shaft. Requires V_e >= V_0."
+      ],
+      "method_references": [
+        "Propeller momentum theory: T = mdot (V_e - V_0); eta_p = T V_0 / P_shaft"
+      ],
+      "synthetic_example": {
+        "mdot": 20.0,
+        "V_e": 60.0,
+        "V_0": 40.0,
+        "P_shaft": 20000.0
+      }
+    },
+    "turbomachinery.froude_efficiency": {
+      "title": "Ideal (Froude) propulsive efficiency",
+      "variables": [
+        {
+          "name": "eta_ideal",
+          "unit": "",
+          "desc": "ideal propulsive efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7ideal",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_e",
+          "unit": "m/s",
+          "desc": "exit (slipstream) velocity",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_0",
+          "unit": "m/s",
+          "desc": "freestream (flight) velocity",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eta_ideal = 2*V_0/(V_0 + V_e)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eta_ideal"
+      ],
+      "assumptions": [
+        "Ideal actuator-disc (Froude) propulsive efficiency eta_ideal = 2/(1 + V_e/V_0). Requires V_e >= V_0; static operation (V_0 = 0) gives zero propulsive efficiency."
+      ],
+      "method_references": [
+        "Froude propulsive efficiency 2/(1 + V_e/V_0)"
+      ],
+      "synthetic_example": {
+        "V_e": 60.0,
+        "V_0": 40.0
+      }
+    },
+    "turbomachinery.pelton_optimum": {
+      "title": "Pelton wheel optimum bucket speed (u = V/2)",
+      "variables": [
+        {
+          "name": "u",
+          "unit": "m/s",
+          "desc": "bucket (pitch-circle) speed for maximum power",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m/s",
+          "desc": "jet velocity",
+          "lo": 0.0,
+          "hi": 10000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "u = V/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "u"
+      ],
+      "assumptions": [
+        "For a frictionless Pelton wheel the power is maximised when the bucket speed is half the jet speed, u = V/2; real turbines run slightly below this ideal (u ~ 0.46 V)."
+      ],
+      "method_references": [
+        "Pelton optimum bucket speed u = V/2 (ideal)"
+      ],
+      "synthetic_example": {
+        "V": 60.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "turbomachinery-001",
+      "calculator": "turbomachinery.pump_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "g": "9.80665 m/s^2",
+        "Q": "50 L/s",
+        "H": "20 m",
+        "eta": 0.75
+      },
+      "solve_for": [
+        "P_hyd",
+        "P_shaft"
+      ],
+      "expected_as_specified": {
+        "P_hyd": "9806.65 W",
+        "P_shaft": "13.0755 kW"
+      },
+      "expected_SI": {
+        "P_hyd": 9806.65,
+        "P_shaft": 13075.5
+      },
+      "actual_SI": {
+        "P_hyd": {
+          "value": 9806.650000000001,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.pump_power (symbolic)"
+        },
+        "P_shaft": {
+          "value": 13075.533333333335,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.pump_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "P_hyd": {
+          "absolute_error": 1.8189894035458565e-12,
+          "relative_error": 1.8548529860307613e-16,
+          "allowed_absolute_error": 4.903325,
+          "passed": true
+        },
+        "P_shaft": {
+          "absolute_error": 0.03333333333466726,
+          "relative_error": 2.5492970314456243e-06,
+          "allowed_absolute_error": 6.53775,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P_hyd = 1000 x 9.80665 x 0.05 x 20 = 9806.65 W; P_shaft = 9806.65/0.75 = 13075.5 W"
+      }
+    },
+    {
+      "id": "turbomachinery-002",
+      "calculator": "turbomachinery.npsh_available",
+      "classification": "backend regression; not independent physical validation",
+      "inputs": {
+        "fluid": "Water",
+        "T": "300 K",
+        "p_s": "101.325 kPa",
+        "z_s": "3 m",
+        "h_loss": "1.5 m",
+        "rho": "997 kg/m^3",
+        "g": "9.80665 m/s^2"
+      },
+      "solve_for": [
+        "NPSH_A",
+        "p_vap"
+      ],
+      "expected_as_specified": {
+        "NPSH_A": "11.5016 m",
+        "p_vap": "3536.81 Pa"
+      },
+      "expected_SI": {
+        "NPSH_A": 11.5016,
+        "p_vap": 3536.81
+      },
+      "actual_SI": {
+        "NPSH_A": {
+          "value": 11.501625485702453,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.npsh_available (procedure)"
+        },
+        "p_vap": {
+          "value": 3536.8067523441227,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.npsh_available (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "NPSH_A": {
+          "absolute_error": 2.54857024533095e-05,
+          "relative_error": 2.2158397486705763e-06,
+          "allowed_absolute_error": 0.0057508,
+          "passed": true
+        },
+        "p_vap": {
+          "absolute_error": 0.003247655877203215,
+          "relative_error": 9.18244371963214e-07,
+          "allowed_absolute_error": 1.768405,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "p_vap = 3536.81 Pa (CoolProp, Water @ 300 K); NPSHa = (101325 - 3536.81)/(997 x 9.80665) + 3 - 1.5 = 97788.2/9777.2 + 1.5 = 10.0016 + 1.5 = 11.5016 m"
+      }
+    },
+    {
+      "id": "turbomachinery-003",
+      "calculator": "turbomachinery.npsh_margin",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "NPSH_A": "5.2 m",
+        "NPSH_R": "3.1 m"
+      },
+      "solve_for": [
+        "margin"
+      ],
+      "expected_as_specified": {
+        "margin": "2.1 m"
+      },
+      "expected_SI": {
+        "margin": 2.1
+      },
+      "actual_SI": {
+        "margin": {
+          "value": 2.1,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.npsh_margin (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "margin": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004200000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "margin = 5.2 - 3.1 = 2.1 m"
+      }
+    },
+    {
+      "id": "turbomachinery-004",
+      "calculator": "turbomachinery.cavitation_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p": "200 kPa",
+        "p_vap": "2339 Pa",
+        "rho": "1000 kg/m^3",
+        "V": "10 m/s"
+      },
+      "solve_for": [
+        "sigma"
+      ],
+      "expected_as_specified": {
+        "sigma": 3.95322
+      },
+      "expected_SI": {
+        "sigma": 3.95322
+      },
+      "actual_SI": {
+        "sigma": {
+          "value": 3.95322,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.cavitation_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00790644,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma = (200000 - 2339)/(0.5 x 1000 x 100) = 197661/50000 = 3.95322"
+      }
+    },
+    {
+      "id": "turbomachinery-005",
+      "calculator": "turbomachinery.cavitation_number",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma": 3.95322,
+        "p": "200 kPa",
+        "p_vap": "2339 Pa",
+        "rho": "1000 kg/m^3"
+      },
+      "solve_for": [
+        "V"
+      ],
+      "expected_as_specified": {
+        "V": "10 m/s"
+      },
+      "expected_SI": {
+        "V": 10.0
+      },
+      "actual_SI": {
+        "V": {
+          "value": 10.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.cavitation_number (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "V": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = sqrt((p - p_vap)/(0.5 rho sigma)) = sqrt(197661/1976.61) = sqrt(100) = 10 m/s"
+      }
+    },
+    {
+      "id": "turbomachinery-006",
+      "calculator": "turbomachinery.specific_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega": "1500 rpm",
+        "Q": "100 L/s",
+        "g": "9.80665 m/s^2",
+        "H": "15 m"
+      },
+      "solve_for": [
+        "N_s"
+      ],
+      "expected_as_specified": {
+        "N_s": 1.17601
+      },
+      "expected_SI": {
+        "N_s": 1.17601
+      },
+      "actual_SI": {
+        "N_s": {
+          "value": 1.1760097599499477,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.specific_speed (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "N_s": {
+          "absolute_error": 2.400500522803384e-07,
+          "relative_error": 2.041224583807437e-07,
+          "allowed_absolute_error": 0.0005880050000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = 157.08 rad/s; N_s = 157.08 x sqrt(0.1)/(9.80665 x 15)^(3/4) = 49.673/42.230 = 1.17601"
+      }
+    },
+    {
+      "id": "turbomachinery-007",
+      "calculator": "turbomachinery.suction_specific_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega": "1500 rpm",
+        "Q": "100 L/s",
+        "g": "9.80665 m/s^2",
+        "NPSH_R": "2.5 m"
+      },
+      "solve_for": [
+        "S"
+      ],
+      "expected_as_specified": {
+        "S": 4.50842
+      },
+      "expected_SI": {
+        "S": 4.50842
+      },
+      "actual_SI": {
+        "S": {
+          "value": 4.508419959877999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.suction_specific_speed (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "S": {
+          "absolute_error": 4.012200083280959e-08,
+          "relative_error": 8.899348515180393e-09,
+          "allowed_absolute_error": 0.00225421,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "S = 157.08 x sqrt(0.1)/(9.80665 x 2.5)^(3/4) = 49.673/11.018 = 4.50842"
+      }
+    },
+    {
+      "id": "turbomachinery-008",
+      "calculator": "turbomachinery.affinity_laws",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Q1": "0.1 m^3/s",
+        "H1": "20 m",
+        "P1": "30 kW",
+        "omega1": "1450 rpm",
+        "omega2": "1750 rpm",
+        "D1": "0.3 m",
+        "D2": "0.3 m",
+        "rho1": "1000 kg/m^3",
+        "rho2": "1000 kg/m^3"
+      },
+      "solve_for": [
+        "Q2",
+        "H2",
+        "P2"
+      ],
+      "expected_as_specified": {
+        "Q2": "0.120690 m^3/s",
+        "H2": "29.1320 m",
+        "P2": "52.7389 kW"
+      },
+      "expected_SI": {
+        "Q2": 0.12069,
+        "H2": 29.132,
+        "P2": 52738.9
+      },
+      "actual_SI": {
+        "Q2": {
+          "value": 0.12068965517241377,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.affinity_laws (symbolic)"
+        },
+        "H2": {
+          "value": 29.131985731272287,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.affinity_laws (symbolic)"
+        },
+        "P2": {
+          "value": 52738.939685923964,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.affinity_laws (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Q2": {
+          "absolute_error": 3.44827586234997e-07,
+          "relative_error": 2.857134694133706e-06,
+          "allowed_absolute_error": 6.0345000000000006e-05,
+          "passed": true
+        },
+        "H2": {
+          "absolute_error": 1.4268727714039642e-05,
+          "relative_error": 4.897956787738446e-07,
+          "allowed_absolute_error": 0.014566,
+          "passed": true
+        },
+        "P2": {
+          "absolute_error": 0.039685923962679226,
+          "relative_error": 7.524981363410921e-07,
+          "allowed_absolute_error": 26.36945,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 1750/1450 = 1.20690, D2/D1 = 1, rho2/rho1 = 1; Q2 = 0.1 r = 0.120690; H2 = 20 r^2 = 29.1320; P2 = 30000 r^3 = 52738.9 W"
+      }
+    },
+    {
+      "id": "turbomachinery-009",
+      "calculator": "turbomachinery.affinity_laws",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Q1": "0.1 m^3/s",
+        "H1": "20 m",
+        "P1": "30 kW",
+        "omega1": "1450 rpm",
+        "omega2": "1450 rpm",
+        "D1": "0.3 m",
+        "D2": "0.6 m",
+        "rho1": "1000 kg/m^3",
+        "rho2": "1000 kg/m^3"
+      },
+      "solve_for": [
+        "Q2",
+        "H2",
+        "P2"
+      ],
+      "expected_as_specified": {
+        "Q2": "0.8 m^3/s",
+        "H2": "80 m",
+        "P2": "960 kW"
+      },
+      "expected_SI": {
+        "Q2": 0.8,
+        "H2": 80.0,
+        "P2": 960000.0
+      },
+      "actual_SI": {
+        "Q2": {
+          "value": 0.7999999999999999,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.affinity_laws (symbolic)"
+        },
+        "H2": {
+          "value": 80.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.affinity_laws (symbolic)"
+        },
+        "P2": {
+          "value": 960000.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.affinity_laws (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q2": {
+          "absolute_error": 1.1102230246251565e-16,
+          "relative_error": 1.3877787807814457e-16,
+          "allowed_absolute_error": 0.0016,
+          "passed": true
+        },
+        "H2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.16,
+          "passed": true
+        },
+        "P2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1920.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D2/D1 = 2 at constant speed and density: Q2 = Q1 x 2^3 = 0.8; H2 = H1 x 2^2 = 80; P2 = P1 x 2^5 = 30000 x 32 = 960000 W"
+      }
+    },
+    {
+      "id": "turbomachinery-010",
+      "calculator": "turbomachinery.system_curve",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H_static": "20 m",
+        "K": "500 s^2/m^5",
+        "Q": "100 L/s"
+      },
+      "solve_for": [
+        "H_sys"
+      ],
+      "expected_as_specified": {
+        "H_sys": "25 m"
+      },
+      "expected_SI": {
+        "H_sys": 25.0
+      },
+      "actual_SI": {
+        "H_sys": {
+          "value": 25.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.system_curve (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "H_sys": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "H_sys = 20 + 500 x 0.01 = 25 m"
+      }
+    },
+    {
+      "id": "turbomachinery-011",
+      "calculator": "turbomachinery.system_curve",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "H_sys": "25 m",
+        "H_static": "20 m",
+        "K": "500 s^2/m^5"
+      },
+      "solve_for": [
+        "Q"
+      ],
+      "expected_as_specified": {
+        "Q": "0.1 m^3/s"
+      },
+      "expected_SI": {
+        "Q": 0.1
+      },
+      "actual_SI": {
+        "Q": {
+          "value": 0.1,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.system_curve (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Q": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 5e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = sqrt((H_sys - H_static)/K) = sqrt(5/500) = sqrt(0.01) = 0.1 m^3/s"
+      }
+    },
+    {
+      "id": "turbomachinery-012",
+      "calculator": "turbomachinery.operating_point",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "pump_curve": [
+          [
+            0.0,
+            50.0
+          ],
+          [
+            0.05,
+            45.0
+          ],
+          [
+            0.1,
+            35.0
+          ],
+          [
+            0.15,
+            20.0
+          ]
+        ],
+        "H_static": "20 m",
+        "K": "500 s^2/m^5"
+      },
+      "solve_for": [
+        "Q_op",
+        "H_op"
+      ],
+      "expected_as_specified": {
+        "Q_op": "0.124264 m^3/s",
+        "H_op": "27.7208 m"
+      },
+      "expected_SI": {
+        "Q_op": 0.124264,
+        "H_op": 27.7208
+      },
+      "actual_SI": {
+        "Q_op": {
+          "value": 0.12426406871192852,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.operating_point (procedure)"
+        },
+        "H_op": {
+          "value": 27.720779386421448,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.operating_point (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Q_op": {
+          "absolute_error": 6.87119285219806e-08,
+          "relative_error": 5.529512048701201e-07,
+          "allowed_absolute_error": 6.213200000000001e-05,
+          "passed": true
+        },
+        "H_op": {
+          "absolute_error": 2.0613578552541867e-05,
+          "relative_error": 7.436141291933086e-07,
+          "allowed_absolute_error": 0.0138604,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "In Q in [0.1, 0.15] the pump line is H = 65 - 300 Q; set 65 - 300 Q = 20 + 500 Q^2 -> 500 Q^2 + 300 Q - 45 = 0 -> Q = (-300 + sqrt(90000 + 90000))/1000 = 0.124264 m^3/s; H = 20 + 500 x 0.124264^2 = 27.7208 m"
+      }
+    },
+    {
+      "id": "turbomachinery-013",
+      "calculator": "turbomachinery.pumps_series_parallel",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n_pumps": 3,
+        "H1": "15 m",
+        "Q1": "80 L/s"
+      },
+      "solve_for": [
+        "H_series",
+        "Q_parallel"
+      ],
+      "expected_as_specified": {
+        "H_series": "45 m",
+        "Q_parallel": "0.24 m^3/s"
+      },
+      "expected_SI": {
+        "H_series": 45.0,
+        "Q_parallel": 0.24
+      },
+      "actual_SI": {
+        "H_series": {
+          "value": 45.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.pumps_series_parallel (symbolic)"
+        },
+        "Q_parallel": {
+          "value": 0.24000000000000005,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.pumps_series_parallel (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "H_series": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.09,
+          "passed": true
+        },
+        "Q_parallel": {
+          "absolute_error": 5.551115123125783e-17,
+          "relative_error": 2.312964634635743e-16,
+          "allowed_absolute_error": 0.00048,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "series: 3 x 15 = 45 m; parallel: 3 x 0.08 = 0.24 m^3/s"
+      }
+    },
+    {
+      "id": "turbomachinery-014",
+      "calculator": "turbomachinery.euler_turbomachine",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "u1": "20 m/s",
+        "vu1": "4 m/s",
+        "u2": "40 m/s",
+        "vu2": "30 m/s",
+        "g": "9.80665 m/s^2"
+      },
+      "solve_for": [
+        "w_euler",
+        "H_euler"
+      ],
+      "expected_as_specified": {
+        "w_euler": "1120 J/kg",
+        "H_euler": "114.208 m"
+      },
+      "expected_SI": {
+        "w_euler": 1120.0,
+        "H_euler": 114.208
+      },
+      "actual_SI": {
+        "w_euler": {
+          "value": 1120.0,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.euler_turbomachine (symbolic)"
+        },
+        "H_euler": {
+          "value": 114.20821585352797,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.euler_turbomachine (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "w_euler": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.56,
+          "passed": true
+        },
+        "H_euler": {
+          "absolute_error": 0.00021585352797615087,
+          "relative_error": 1.89000357222043e-06,
+          "allowed_absolute_error": 0.057104,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "w = 40 x 30 - 20 x 4 = 1120 J/kg; H = 1120/9.80665 = 114.208 m"
+      }
+    },
+    {
+      "id": "turbomachinery-015",
+      "calculator": "turbomachinery.velocity_triangle",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "U": "30 m/s",
+        "V": "50 m/s",
+        "alpha": "40 deg"
+      },
+      "solve_for": [
+        "Wu",
+        "Vm",
+        "Vu",
+        "W",
+        "beta"
+      ],
+      "expected_as_specified": {
+        "Vu": "38.3022 m/s",
+        "Vm": "32.1394 m/s",
+        "Wu": "8.30222 m/s",
+        "W": "33.1944 m/s",
+        "beta": "75.5160 deg"
+      },
+      "expected_SI": {
+        "Vu": 38.3022,
+        "Vm": 32.1394,
+        "Wu": 8.30222,
+        "W": 33.1944,
+        "beta": 1.318002837936038
+      },
+      "actual_SI": {
+        "Vu": {
+          "value": 38.302222155948904,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.velocity_triangle (procedure)"
+        },
+        "Vm": {
+          "value": 32.13938048432696,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.velocity_triangle (procedure)"
+        },
+        "Wu": {
+          "value": 8.302222155948904,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.velocity_triangle (procedure)"
+        },
+        "W": {
+          "value": 33.19437709376493,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.velocity_triangle (procedure)"
+        },
+        "beta": {
+          "value": 1.3180031936330945,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.velocity_triangle (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Vu": {
+          "absolute_error": 2.2155948904867273e-05,
+          "relative_error": 5.784510786552018e-07,
+          "allowed_absolute_error": 0.0191511,
+          "passed": true
+        },
+        "Vm": {
+          "absolute_error": 1.9515673038483783e-05,
+          "relative_error": 6.072195821478864e-07,
+          "allowed_absolute_error": 0.016069700000000003,
+          "passed": true
+        },
+        "Wu": {
+          "absolute_error": 2.1559489038480706e-06,
+          "relative_error": 2.5968342248796957e-07,
+          "allowed_absolute_error": 0.00415111,
+          "passed": true
+        },
+        "W": {
+          "absolute_error": 2.2906235074060532e-05,
+          "relative_error": 6.900632357885827e-07,
+          "allowed_absolute_error": 0.0165972,
+          "passed": true
+        },
+        "beta": {
+          "absolute_error": 3.556970564755346e-07,
+          "relative_error": 2.698757895184414e-07,
+          "allowed_absolute_error": 0.000659001418968019,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Vu = 50 cos40 = 38.3022; Vm = 50 sin40 = 32.1394; Wu = 38.3022 - 30 = 8.30222; W = sqrt(32.1394^2 + 8.30222^2) = 33.1944; beta = atan2(32.1394, 8.30222) = 75.5160 deg"
+      }
+    },
+    {
+      "id": "turbomachinery-016",
+      "calculator": "turbomachinery.degree_of_reaction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h1": "3 MJ/kg",
+        "h2": "3.5 MJ/kg",
+        "h3": "4 MJ/kg"
+      },
+      "solve_for": [
+        "R"
+      ],
+      "expected_as_specified": {
+        "R": 0.5
+      },
+      "expected_SI": {
+        "R": 0.5
+      },
+      "actual_SI": {
+        "R": {
+          "value": 0.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.degree_of_reaction (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "R": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = (3.5 - 3)/(4 - 3) = 0.5"
+      }
+    },
+    {
+      "id": "turbomachinery-017",
+      "calculator": "turbomachinery.turbine_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "g": "9.80665 m/s^2",
+        "Q": "2 m^3/s",
+        "H": "120 m",
+        "eta": 0.88
+      },
+      "solve_for": [
+        "P"
+      ],
+      "expected_as_specified": {
+        "P": "2.07116 MW"
+      },
+      "expected_SI": {
+        "P": 2071160.0
+      },
+      "actual_SI": {
+        "P": {
+          "value": 2071164.48,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.turbine_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "P": {
+          "absolute_error": 4.4799999999813735,
+          "relative_error": 2.1630390698842067e-06,
+          "allowed_absolute_error": 1035.58,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = 1000 x 9.80665 x 2 x 120 x 0.88 = 2.07116e6 W"
+      }
+    },
+    {
+      "id": "turbomachinery-018",
+      "calculator": "turbomachinery.turbine_specific_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega": "300 rpm",
+        "P": "1 MW",
+        "rho": "1000 kg/m^3",
+        "g": "9.80665 m/s^2",
+        "H": "60 m"
+      },
+      "solve_for": [
+        "N_s"
+      ],
+      "expected_as_specified": {
+        "N_s": 0.342815
+      },
+      "expected_SI": {
+        "N_s": 0.342815
+      },
+      "actual_SI": {
+        "N_s": {
+          "value": 0.34281511750169064,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.turbine_specific_speed (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "N_s": {
+          "absolute_error": 1.1750169065516403e-07,
+          "relative_error": 3.427553947615012e-07,
+          "allowed_absolute_error": 0.0001714075,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = 31.4159 rad/s; N_s = 31.4159 x sqrt(1000)/(9.80665 x 60)^(5/4) = 993.46/2898.3 = 0.342815"
+      }
+    },
+    {
+      "id": "turbomachinery-019",
+      "calculator": "turbomachinery.compressor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "cp": "1005 J/(kg*K)",
+        "gamma": 1.4,
+        "T1": "300 K",
+        "P2": "800 kPa",
+        "P1": "100 kPa",
+        "w_actual": "245 kJ/kg"
+      },
+      "solve_for": [
+        "T2s",
+        "w_s",
+        "eta_c"
+      ],
+      "expected_as_specified": {
+        "T2s": "543.434 K",
+        "w_s": "244.651 kJ/kg",
+        "eta_c": 0.998577
+      },
+      "expected_SI": {
+        "T2s": 543.434,
+        "w_s": 244651.0,
+        "eta_c": 0.998577
+      },
+      "actual_SI": {
+        "T2s": {
+          "value": 543.4341985583441,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.compressor (symbolic)"
+        },
+        "w_s": {
+          "value": 244651.3695511357,
+          "unit": "J/kg",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.compressor (symbolic)"
+        },
+        "eta_c": {
+          "value": 0.9985770185760641,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.compressor (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T2s": {
+          "absolute_error": 0.00019855834409554518,
+          "relative_error": 3.6537710944759656e-07,
+          "allowed_absolute_error": 0.271717,
+          "passed": true
+        },
+        "w_s": {
+          "absolute_error": 0.36955113569274545,
+          "relative_error": 1.5105237080279479e-06,
+          "allowed_absolute_error": 122.3255,
+          "passed": true
+        },
+        "eta_c": {
+          "absolute_error": 1.8576064020336958e-08,
+          "relative_error": 1.860253542825136e-08,
+          "allowed_absolute_error": 0.0004992885,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T2s = 300 x 8^(0.4/1.4) = 300 x 1.81145 = 543.434 K; w_s = 1005 x 243.434 = 244651 J/kg; eta_c = 244651/245000 = 0.998577"
+      }
+    },
+    {
+      "id": "turbomachinery-020",
+      "calculator": "turbomachinery.fan_laws",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Q1": "2 m^3/s",
+        "dp1": "500 Pa",
+        "P1": "2 kW",
+        "omega1": "1000 rpm",
+        "omega2": "1200 rpm"
+      },
+      "solve_for": [
+        "Q2",
+        "dp2",
+        "P2"
+      ],
+      "expected_as_specified": {
+        "Q2": "2.4 m^3/s",
+        "dp2": "720 Pa",
+        "P2": "3.456 kW"
+      },
+      "expected_SI": {
+        "Q2": 2.4,
+        "dp2": 720.0,
+        "P2": 3456.0
+      },
+      "actual_SI": {
+        "Q2": {
+          "value": 2.4,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.fan_laws (symbolic)"
+        },
+        "dp2": {
+          "value": 720.0000000000001,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.fan_laws (symbolic)"
+        },
+        "P2": {
+          "value": 3456.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.fan_laws (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Q2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0012,
+          "passed": true
+        },
+        "dp2": {
+          "absolute_error": 1.1368683772161603e-13,
+          "relative_error": 1.5789838572446671e-16,
+          "allowed_absolute_error": 0.36,
+          "passed": true
+        },
+        "P2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.728,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 1.2; Q2 = 2 x 1.2 = 2.4; dp2 = 500 x 1.44 = 720; P2 = 2000 x 1.728 = 3456 W"
+      }
+    },
+    {
+      "id": "turbomachinery-021",
+      "calculator": "turbomachinery.fan_total_pressure",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p_s": "400 Pa",
+        "rho": "1.2 kg/m^3",
+        "V": "20 m/s"
+      },
+      "solve_for": [
+        "p_t"
+      ],
+      "expected_as_specified": {
+        "p_t": "640 Pa"
+      },
+      "expected_SI": {
+        "p_t": 640.0
+      },
+      "actual_SI": {
+        "p_t": {
+          "value": 640.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.fan_total_pressure (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "p_t": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.28,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "p_t = 400 + 0.5 x 1.2 x 400 = 640 Pa"
+      }
+    },
+    {
+      "id": "turbomachinery-022",
+      "calculator": "turbomachinery.wind_turbine_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho": "1.225 kg/m^3",
+        "A": "500 m^2",
+        "V": "10 m/s",
+        "Cp": 0.45
+      },
+      "solve_for": [
+        "P"
+      ],
+      "expected_as_specified": {
+        "P": "137.8125 kW"
+      },
+      "expected_SI": {
+        "P": 137812.5
+      },
+      "actual_SI": {
+        "P": {
+          "value": 137812.5,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.wind_turbine_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "P": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 68.90625,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = 0.5 x 1.225 x 500 x 1000 x 0.45 = 306250 x 0.45 = 137812.5 W"
+      }
+    },
+    {
+      "id": "turbomachinery-023",
+      "calculator": "turbomachinery.betz_limit",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "rho": "1.225 kg/m^3",
+        "A": "500 m^2",
+        "V": "10 m/s"
+      },
+      "solve_for": [
+        "P_betz"
+      ],
+      "expected_as_specified": {
+        "P_betz": "181.481 kW"
+      },
+      "expected_SI": {
+        "P_betz": 181481.0
+      },
+      "actual_SI": {
+        "P_betz": {
+          "value": 181481.4814814813,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.betz_limit (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P_betz": {
+          "absolute_error": 0.48148148131440394,
+          "relative_error": 2.653068262321697e-06,
+          "allowed_absolute_error": 362.962,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Betz limit landmark: Cp,max = 16/27. P_betz = (16/27) x 0.5 x 1.225 x 500 x 1000 = (16/27) x 306250 = 181481 W (recalled; not re-read)"
+      }
+    },
+    {
+      "id": "turbomachinery-024",
+      "calculator": "turbomachinery.tip_speed_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "omega": "20 rpm",
+        "R": "25 m",
+        "V": "10 m/s"
+      },
+      "solve_for": [
+        "TSR"
+      ],
+      "expected_as_specified": {
+        "TSR": 5.23599
+      },
+      "expected_SI": {
+        "TSR": 5.23599
+      },
+      "actual_SI": {
+        "TSR": {
+          "value": 5.235987755982988,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.tip_speed_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "TSR": {
+          "absolute_error": 2.2440170122095537e-06,
+          "relative_error": 4.285754961735133e-07,
+          "allowed_absolute_error": 0.002617995,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = 2.09440 rad/s; TSR = 2.09440 x 25/10 = 5.23599"
+      }
+    },
+    {
+      "id": "turbomachinery-025",
+      "calculator": "turbomachinery.propeller",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mdot": "20 kg/s",
+        "V_e": "60 m/s",
+        "V_0": "40 m/s",
+        "P_shaft": "20 kW"
+      },
+      "solve_for": [
+        "T",
+        "eta_p"
+      ],
+      "expected_as_specified": {
+        "T": "400 N",
+        "eta_p": 0.8
+      },
+      "expected_SI": {
+        "T": 400.0,
+        "eta_p": 0.8
+      },
+      "actual_SI": {
+        "T": {
+          "value": 400.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.propeller (symbolic)"
+        },
+        "eta_p": {
+          "value": 0.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.propeller (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.8,
+          "passed": true
+        },
+        "eta_p": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0016,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = 20 x (60 - 40) = 400 N; eta_p = 400 x 40/20000 = 0.8"
+      }
+    },
+    {
+      "id": "turbomachinery-026",
+      "calculator": "turbomachinery.froude_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V_e": "60 m/s",
+        "V_0": "40 m/s"
+      },
+      "solve_for": [
+        "eta_ideal"
+      ],
+      "expected_as_specified": {
+        "eta_ideal": 0.8
+      },
+      "expected_SI": {
+        "eta_ideal": 0.8
+      },
+      "actual_SI": {
+        "eta_ideal": {
+          "value": 0.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.froude_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta_ideal": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0016,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "eta_ideal = 2/(1 + 60/40) = 2/2.5 = 0.8"
+      }
+    },
+    {
+      "id": "turbomachinery-027",
+      "calculator": "turbomachinery.pelton_optimum",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V": "60 m/s"
+      },
+      "solve_for": [
+        "u"
+      ],
+      "expected_as_specified": {
+        "u": "30 m/s"
+      },
+      "expected_SI": {
+        "u": 30.0
+      },
+      "actual_SI": {
+        "u": {
+          "value": 30.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.pelton_optimum (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "u": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "u = V/2 = 60/2 = 30 m/s"
+      }
+    },
+    {
+      "id": "turbomachinery-028",
+      "calculator": "turbomachinery.froude_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V_e": "30 m/s",
+        "V_0": "0 m/s"
+      },
+      "solve_for": [
+        "eta_ideal"
+      ],
+      "expected_as_specified": {
+        "eta_ideal": 0.0
+      },
+      "expected_SI": {
+        "eta_ideal": 0.0
+      },
+      "actual_SI": {
+        "eta_ideal": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc turbomachinery.froude_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta_ideal": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Static thrust (V_0 = 0): \u03b7 = 2\u00b7V_0/(V_0 + V_e) = 0"
+      }
+    }
+  ],
+  "passed": 28,
+  "failed": 0
+}

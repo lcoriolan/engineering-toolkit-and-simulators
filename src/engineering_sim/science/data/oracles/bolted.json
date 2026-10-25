@@ -1,0 +1,488 @@
+{
+  "section": "bolted",
+  "cases": [
+    {
+      "calc": "bolted.tightening_torque",
+      "inputs": {
+        "K": 0.2,
+        "F_i": "20 kN",
+        "d": "12 mm"
+      },
+      "expect": {
+        "T": "48 N*m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T = K·F·d = 0.2·20000·0.012 = 48 N·m"
+      }
+    },
+    {
+      "calc": "bolted.tightening_torque",
+      "inputs": {
+        "K": 0.2,
+        "T": "48 N*m",
+        "d": "12 mm"
+      },
+      "solve_for": [
+        "F_i"
+      ],
+      "expect": {
+        "F_i": "20 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F_i = T/(K·d) = 48/(0.2·0.012) = 20000 N"
+      }
+    },
+    {
+      "calc": "bolted.tensile_stress_area",
+      "inputs": {
+        "d": "12 mm",
+        "p": "1.75 mm"
+      },
+      "expect": {
+        "A_t": "84.2664 mm^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "At = π/4·(0.012 − 0.9382·0.00175)² = π/4·(0.01035815)² = 0.785398·1.07291e-4 = 8.42664e-5 m² (M12 × 1.75)"
+      }
+    },
+    {
+      "calc": "bolted.bolt_stiffness",
+      "inputs": {
+        "d": "12 mm",
+        "A_t": "84.3 mm^2",
+        "E": "200 GPa",
+        "L_t": "30 mm",
+        "L_d": "30 mm"
+      },
+      "expect": {
+        "A_d": "113.097 mm^2",
+        "k_b": "321.99 MN/m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "A_d = π·0.012²/4 = 1.13097e-4 m²; k_b = A_d·A_t·E/(A_d·L_t + A_t·L_d) = 1.13097e-4·8.43e-5·200e9/(0.03·(1.13097e-4 + 8.43e-5)) = 1906.82/5.92191e-6 = 3.2199e8 N/m"
+      }
+    },
+    {
+      "calc": "bolted.member_stiffness_frustum",
+      "inputs": {
+        "E": "200 GPa",
+        "d": "12 mm",
+        "D": "18 mm",
+        "alpha": "30 deg",
+        "L": "30 mm"
+      },
+      "expect": {
+        "k_m": "2413.5 MN/m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "tan30° = 0.577350; Lt = 0.0173205; arg = (0.0233205·0.030)/(0.0473205·0.006) = 6.99615e-4/2.83923e-4 = 2.46410; k_m = π·200e9·0.012·0.577350/(2·ln2.46410) = 4.35239e9/(2·0.901889) = 2.41350e9 N/m"
+      }
+    },
+    {
+      "calc": "bolted.member_stiffness_wileman",
+      "inputs": {
+        "E": "200 GPa",
+        "d": "12 mm",
+        "A": 0.787,
+        "B": 0.629,
+        "L": "30 mm"
+      },
+      "expect": {
+        "k_m": "2429.2 MN/m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "k_m = E·d·A·exp(B·d/L) = 200e9·0.012·0.787·exp(0.629·0.4) = 1.8888e9·exp(0.2516) = 1.8888e9·1.28610 = 2.42915e9 N/m"
+      }
+    },
+    {
+      "calc": "bolted.joint_constant",
+      "inputs": {
+        "k_b": "320 MN/m",
+        "k_m": "2.4 GN/m"
+      },
+      "expect": {
+        "C": 0.117647
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "C = 3.2e8/(3.2e8 + 2.4e9) = 3.2e8/2.72e9 = 0.117647"
+      }
+    },
+    {
+      "calc": "bolted.preload",
+      "inputs": {
+        "k": 0.75,
+        "A_t": "84.3 mm^2",
+        "Sp": "600 MPa",
+        "C": 0.1176,
+        "P": "10 kN"
+      },
+      "expect": {
+        "F_i": "37.935 kN",
+        "n_L": 10.752551,
+        "n_sep": 4.299071
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F_i = k·A_t·Sp = 0.75·84.3e-6·600e6 = 0.75·50580 = 37935 N; n_L = (Sp A_t − F_i)/(C P) = (50580 − 37935)/(0.1176·10000) = 12645/1176 = 10.7526; n_sep = F_i/((1−C) P) = 37935/8824 = 4.29907"
+      }
+    },
+    {
+      "calc": "bolted.preload",
+      "inputs": {
+        "k": 0.9,
+        "A_t": "84.3 mm^2",
+        "Sp": "600 MPa",
+        "C": 0.1176,
+        "P": "10 kN"
+      },
+      "expect": {
+        "F_i": "45.522 kN",
+        "n_L": 4.30102,
+        "n_sep": 5.158885
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F_i = 0.9·84.3e-6·600e6 = 45522 N; n_L = (50580 − 45522)/1176 = 5058/1176 = 4.30102; n_sep = 45522/8824 = 5.15888"
+      }
+    },
+    {
+      "calc": "bolted.preload",
+      "inputs": {
+        "A_t": "84.3 mm^2",
+        "Sp": "600 MPa",
+        "C": 0.1176,
+        "P": "10 kN",
+        "F_i": "37.935 kN"
+      },
+      "solve_for": [
+        "k",
+        "n_L",
+        "n_sep"
+      ],
+      "expect": {
+        "k": 0.75
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "k = F_i/(A_t·Sp) = 37935/(84.3e-6·600e6) = 37935/50580 = 0.75"
+      }
+    },
+    {
+      "calc": "bolted.load_sharing",
+      "inputs": {
+        "k_b": "320 MN/m",
+        "k_m": "2.4 GN/m",
+        "F_i": "20 kN",
+        "P": "10 kN"
+      },
+      "expect": {
+        "C": 0.117647,
+        "F_b": "21.1765 kN",
+        "F_m": "11.1765 kN",
+        "P_sep": "22.6667 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "C = 3.2e8/2.72e9 = 0.117647; F_b = 20000 + 0.117647·10000 = 21176.5 N; F_m = 20000 − (1−0.117647)·10000 = 20000 − 8823.53 = 11176.5 N; P_sep = 20000/0.882353 = 22666.7 N"
+      }
+    },
+    {
+      "calc": "bolted.load_sharing",
+      "inputs": {
+        "k_b": "320 MN/m",
+        "k_m": "2.4 GN/m",
+        "P": "10 kN",
+        "P_sep": "22.6667 kN"
+      },
+      "solve_for": [
+        "C",
+        "F_b",
+        "F_m",
+        "F_i"
+      ],
+      "expect": {
+        "F_i": "20 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "C = 0.117647; from P_sep = F_i/(1−C): F_i = 22666.7·0.882353 = 20000 N"
+      }
+    },
+    {
+      "calc": "bolted.bolt_fatigue",
+      "inputs": {
+        "F_i": "20 kN",
+        "C": 0.1176,
+        "Pmax": "10 kN",
+        "Pmin": "0 kN",
+        "A_t": "84.3 mm^2",
+        "Se": "180 MPa",
+        "Sut": "600 MPa"
+      },
+      "expect": {
+        "n_fatigue": 12.00157,
+        "n_sep": 2.266546,
+        "sigma_a": "6.975089 MPa",
+        "sigma_m": "244.223013 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Constant-preload Goodman: σi = F_i/A_t = 20000/84.3e-6 = 237.248 MPa; σa = C(Pmax−Pmin)/(2 A_t) = 0.1176·10000/(2·84.3e-6) = 6.97509 MPa; σm = σi + C(Pmax+Pmin)/(2 A_t) = 237.248 + 6.97509 = 244.223 MPa. n_f = Se(Sut−σi)/(Sut σa + Se(σm−σi)) = 180e6·(600e6−237.248e6)/(600e6·6.97509e6 + 180e6·6.97509e6) = 6.52954e16/5.44057e15 = 12.0016; n_sep = 20000/(0.8824·10000) = 2.26655"
+      }
+    },
+    {
+      "calc": "bolted.bolt_fatigue",
+      "inputs": {
+        "F_i": "20 kN",
+        "C": 0.1176,
+        "Pmax": "10 kN",
+        "Pmin": "10 kN",
+        "A_t": "84.3 mm^2",
+        "Se": "180 MPa",
+        "Sut": "600 MPa"
+      },
+      "expect": {
+        "n_fatigue": null,
+        "n_sep": 2.266546,
+        "sigma_a": "0 MPa",
+        "sigma_m": "251.198102 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Static load (Pmin = Pmax): σa = 0, so the fatigue factor of safety is undefined (null, with a note). σm = σi + C·Pmax/A_t = 237.248 + 0.1176·10000/84.3e-6 = 237.248 + 13.9502 = 251.198 MPa; n_sep = 2.26655"
+      }
+    },
+    {
+      "calc": "bolted.thread_stripping",
+      "inputs": {
+        "F": "20 kN",
+        "d_min": "10 mm",
+        "L_e": "12 mm",
+        "f": 0.5
+      },
+      "expect": {
+        "A_strip": "188.496 mm^2",
+        "tau_strip": "106.103 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "A_strip = π·0.010·0.012·0.5 = 1.88496e-4 m²; τ = 20000/1.88496e-4 = 1.06103e8 Pa"
+      }
+    },
+    {
+      "calc": "bolted.bolt_group_eccentric",
+      "inputs": {
+        "bolts": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.1,
+            0.0
+          ],
+          [
+            0.1,
+            0.1
+          ],
+          [
+            0.0,
+            0.1
+          ]
+        ],
+        "F_x": "3 kN",
+        "F_y": "4 kN",
+        "x_p": 0.2,
+        "y_p": 0.15
+      },
+      "expect": {
+        "moment": "300 N*m",
+        "direct_x": "750 N",
+        "direct_y": "1000 N",
+        "max_shear": "2304.886 N",
+        "bolt_forces": [
+          [
+            1500.0,
+            250.0,
+            1520.691
+          ],
+          [
+            1500.0,
+            1750.0,
+            2304.886
+          ],
+          [
+            0.0,
+            1750.0,
+            1750.0
+          ],
+          [
+            0.0,
+            250.0,
+            250.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Centroid (0.05, 0.05), Σr² = 4·0.005 = 0.02; M = (0.15)(4000) − (0.10)(3000) = 300 N·m; direct (750, 1000). Bolt (0,0): torsional = (300/0.02)(0.05, −0.05) = (750, −750) → resultant (1500, 250), 1520.69 N; (0.1,0): + (750, 750) → (1500, 1750), 2304.89 N; (0.1,0.1): (−750, 750) → (0, 1750), 1750 N; (0,0.1): (−750, −750) → (0, 250), 250 N. max = 2304.89 N"
+      }
+    },
+    {
+      "calc": "bolted.bolt_group_eccentric",
+      "inputs": {
+        "bolts": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.1,
+            0.0
+          ],
+          [
+            0.1,
+            0.1
+          ],
+          [
+            0.0,
+            0.1
+          ]
+        ],
+        "F_y": "4 kN",
+        "x_p": 0.2,
+        "y_p": 0.15,
+        "moment": "300 N*m"
+      },
+      "solve_for": [
+        "F_x"
+      ],
+      "expect": {
+        "F_x": "3 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "M = (x_p−x̄)F_y − (y_p−ȳ)F_x → 300 = 0.15·4000 − 0.10·F_x → F_x = (600 − 300)/0.10 = 3000 N"
+      }
+    },
+    {
+      "calc": "bolted.rivet_shear",
+      "inputs": {
+        "F": "20 kN",
+        "m": 1,
+        "n": 4,
+        "d": "8 mm",
+        "t": "6 mm"
+      },
+      "expect": {
+        "tau": "99.4718 MPa",
+        "sigma_b": "104.167 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "τ = 20000/(1·4·π·0.008²/4) = 20000/2.01062e-4 = 99.4718 MPa; σb = 20000/(4·0.008·0.006) = 20000/1.92e-4 = 104.167 MPa"
+      }
+    },
+    {
+      "calc": "bolted.rivet_shear",
+      "inputs": {
+        "F": "20 kN",
+        "m": 1,
+        "n": 4,
+        "t": "6 mm",
+        "sigma_b": "104.167 MPa"
+      },
+      "solve_for": [
+        "tau",
+        "d"
+      ],
+      "expect": {
+        "d": "8 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "d = F/(n·t·σb) = 20000/(4·0.006·104.167e6) = 20000/2.5e6 = 0.008 m"
+      }
+    },
+    {
+      "calc": "bolted.rivet_efficiency",
+      "inputs": {
+        "m": 1,
+        "n": 1,
+        "d": "8 mm",
+        "t": "6 mm",
+        "p": "24 mm",
+        "tau_allow": "60 MPa",
+        "sigma_b_allow": "150 MPa",
+        "sigma_t_allow": "110 MPa"
+      },
+      "expect": {
+        "F_shear": "3.01593 kN",
+        "F_bearing": "7.2 kN",
+        "F_tearing": "10.56 kN",
+        "F_solid": "15.84 kN",
+        "eta": 0.1904
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Per pitch (n = 1 rivet per pitch): F_shear = 1·1·π·0.008²/4·60e6 = 5.02655e-5·60e6 = 3015.93 N; F_bearing = 1·0.008·0.006·150e6 = 7200 N; F_tearing = (0.024−0.008)·0.006·110e6 = 10560 N; F_solid = 0.024·0.006·110e6 = 15840 N; η = min/15840 = 3015.93/15840 = 0.190400 (shear governs)"
+      }
+    },
+    {
+      "calc": "bolted.rivet_efficiency",
+      "inputs": {
+        "m": 1,
+        "n": 1,
+        "d": "8 mm",
+        "t": "6 mm",
+        "p": "20 mm",
+        "tau_allow": "100 MPa",
+        "sigma_b_allow": "200 MPa",
+        "sigma_t_allow": "50 MPa"
+      },
+      "expect": {
+        "F_shear": "5.02655 kN",
+        "F_bearing": "9.6 kN",
+        "F_tearing": "3.6 kN",
+        "F_solid": "6 kN",
+        "eta": 0.6
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Per pitch: F_shear = π·0.008²/4·100e6 = 5026.55 N; F_bearing = 0.008·0.006·200e6 = 9600 N; F_tearing = (0.020−0.008)·0.006·50e6 = 3600 N; F_solid = 0.020·0.006·50e6 = 6000 N; η = 3600/6000 = 0.6 (tearing governs)"
+      }
+    },
+    {
+      "calc": "bolted.rivet_efficiency",
+      "inputs": {
+        "m": 2,
+        "n": 2,
+        "d": "10 mm",
+        "t": "8 mm",
+        "p": "40 mm",
+        "tau_allow": "100 MPa",
+        "sigma_b_allow": "250 MPa",
+        "sigma_t_allow": "80 MPa"
+      },
+      "expect": {
+        "F_shear": "31.4159 kN",
+        "F_bearing": "40 kN",
+        "F_tearing": "19.2 kN",
+        "F_solid": "25.6 kN",
+        "eta": 0.75
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two rivets per pitch in double shear: F_shear = n·m·(π d²/4)·τ = 2·2·78.5398e-6·100e6 = 31415.9 N; F_bearing = n·d·t·σb = 2·0.010·0.008·250e6 = 40000 N; F_tearing (outer row, one hole per pitch) = (p − d)·t·σt = 0.030·0.008·80e6 = 19200 N; F_solid = p·t·σt = 25600 N; η = min/solid = 19200/25600 = 0.75"
+      }
+    }
+  ]
+}

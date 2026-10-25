@@ -1,0 +1,3914 @@
+{
+  "section": "controls",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k controls",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "controls.poles_zeros": {
+      "title": "Poles, zeros and system type of a transfer function",
+      "variables": [
+        {
+          "name": "num",
+          "unit": "",
+          "desc": "numerator coefficients, descending powers, e.g. [1, 1]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "den",
+          "unit": "",
+          "desc": "denominator coefficients, descending powers, e.g. [1, 2, 0]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "zeros",
+          "unit": "",
+          "desc": "zeros as [real, imag] pairs, sorted",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "poles",
+          "unit": "",
+          "desc": "poles (characteristic-equation roots) as [real, imag] pairs, sorted",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "gain",
+          "unit": "",
+          "desc": "transfer-function gain k from scipy tf2zpk (signed: k can be negative)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "type",
+          "unit": "",
+          "desc": "system type (number of open-loop poles at the origin)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _poles_zeros(v):\n    \"\"\"Poles, zeros and DC gain of G(s) = num/den via scipy.signal.tf2zpk, plus the system type.\"\"\"\n    from scipy import signal\n    num, den = _coeffs(v['num'], 'num'), _coeffs(v['den'], 'den')\n    if den[0] == 0:\n        raise MechError('den: leading coefficient must be non-zero')\n    z, p, k = signal.tf2zpk(num, den)\n    t = 0\n    while t < len(den) and den[len(den) - 1 - t] == 0.0:\n        t += 1  # poles at the origin: trailing zero coefficients\n    return {'zeros': _clist(z), 'poles': _clist(p), 'gain': float(k), 'type': t}\n",
+        "source": "controls.py",
+        "line": 117
+      },
+      "outputs": [
+        "zeros",
+        "poles",
+        "gain",
+        "type"
+      ],
+      "assumptions": [
+        "The characteristic equation is den(s) = 0; its roots are the poles. A pole with positive real part means the open loop is unstable."
+      ],
+      "method_references": [
+        "scipy.signal.tf2zpk"
+      ],
+      "synthetic_example": {
+        "num": [
+          1,
+          1
+        ],
+        "den": [
+          1,
+          2,
+          0
+        ]
+      }
+    },
+    "controls.block_reduction": {
+      "title": "Block-diagram reduction (series / parallel / feedback)",
+      "variables": [
+        {
+          "name": "setup",
+          "unit": "",
+          "desc": "{\"num1\",\"den1\",\"num2\",\"den2\",\"conn\"} with conn series | parallel | feedback (negative) | feedback_pos",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "num_out",
+          "unit": "",
+          "desc": "reduced numerator coefficients (descending powers)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "den_out",
+          "unit": "",
+          "desc": "reduced denominator coefficients (descending powers)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _block(v):\n    \"\"\"Block-diagram reduction of two transfer functions (series, parallel, feedback).\"\"\"\n    s = v['setup']\n    if not isinstance(s, dict):\n        raise MechError('setup: give {\"num1\",\"den1\",\"num2\",\"den2\",\"conn\"}')\n    n1, d1 = _coeffs(s.get('num1'), 'num1'), _coeffs(s.get('den1'), 'den1')\n    n2, d2 = _coeffs(s.get('num2'), 'num2'), _coeffs(s.get('den2'), 'den2')\n    conn = s.get('conn')\n    if conn in ('series',):\n        num = np.polymul(n1, n2)\n        den = np.polymul(d1, d2)\n    elif conn in ('parallel',):\n        num = np.polyadd(np.polymul(n1, d2), np.polymul(n2, d1))\n        den = np.polymul(d1, d2)\n    elif conn in ('feedback', 'feedback_neg'):\n        num = np.polymul(n1, d2)\n        den = np.polyadd(np.polymul(d1, d2), np.polymul(n1, n2))\n    elif conn in ('feedback_pos',):\n        num = np.polymul(n1, d2)\n        den = np.polysub(np.polymul(d1, d2), np.polymul(n1, n2))\n    else:\n        raise MechError(\"setup.conn: use 'series', 'parallel', 'feedback' (negative) or 'feedback_pos'\")\n    return {'num_out': [float(x) for x in num], 'den_out': [float(x) for x in den]}\n",
+        "source": "controls.py",
+        "line": 130
+      },
+      "outputs": [
+        "num_out",
+        "den_out"
+      ],
+      "assumptions": [
+        "Two-block reduction: series G1\u00b7G2, parallel G1 + G2, feedback G1/(1 \u00b1 G1\u00b7G2). Common pole/zero factors are not cancelled (use poles_zeros to inspect)."
+      ],
+      "method_references": [
+        "Block-diagram algebra (series, parallel, feedback)"
+      ],
+      "synthetic_example": {
+        "setup": {
+          "num1": [
+            1
+          ],
+          "den1": [
+            1,
+            1
+          ],
+          "num2": [
+            1
+          ],
+          "den2": [
+            1,
+            2
+          ],
+          "conn": "series"
+        }
+      }
+    },
+    "controls.second_order_step": {
+      "title": "Second-order step response metrics (damping ratio and natural frequency)",
+      "variables": [
+        {
+          "name": "tau",
+          "unit": "s",
+          "desc": "time constant \u03c4 = 1/(\u03b6 \u03c9n)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ts",
+          "unit": "s",
+          "desc": "settling time to within 2 % (t_s = 4\u03c4)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tp",
+          "unit": "s",
+          "desc": "peak time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tr",
+          "unit": "s",
+          "desc": "rise time (0\u2013100 %, t_r = (\u03c0 \u2212 acos \u03b6)/\u03c9d)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "OS_pct",
+          "unit": "",
+          "desc": "percent overshoot %OS = 100\u00b7exp(\u2212\u03b6\u03c0/\u221a(1\u2212\u03b6\u00b2))",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "zeta",
+          "unit": "",
+          "desc": "damping ratio (0 < \u03b6 < 1 underdamped)",
+          "lo": null,
+          "hi": 0.999,
+          "label": "\u03b6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "wn",
+          "unit": "rad/s",
+          "desc": "undamped natural frequency",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9n",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "tau = 1/(zeta*wn)",
+        "ts = 4*tau",
+        "tp = pi/(wn*sqrt(1 - zeta**2))",
+        "tr = (pi - acos(zeta))/(wn*sqrt(1 - zeta**2))",
+        "OS_pct = 100*exp(-zeta*pi/sqrt(1 - zeta**2))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "tau",
+        "ts",
+        "tp",
+        "tr",
+        "OS_pct"
+      ],
+      "assumptions": [
+        "Standard underdamped second-order step response, 0 < \u03b6 < 1. Settling uses the 2 % criterion t_s = 4/(\u03b6\u03c9n); the rise-time formula is the 0\u2013100 % definition."
+      ],
+      "method_references": [
+        "Second-order step metrics: tp = \u03c0/\u03c9d; %OS = 100 e^(\u2212\u03b6\u03c0/\u221a(1\u2212\u03b6\u00b2)); ts = 4/(\u03b6\u03c9n) (2 % criterion)"
+      ],
+      "synthetic_example": {
+        "zeta": 0.5,
+        "wn": 10.0
+      }
+    },
+    "controls.steady_state_error": {
+      "title": "System type, error constants and steady-state errors",
+      "variables": [
+        {
+          "name": "num",
+          "unit": "",
+          "desc": "open-loop numerator coefficients (descending powers)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "den",
+          "unit": "",
+          "desc": "open-loop denominator coefficients (descending powers)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "result",
+          "unit": "",
+          "desc": "{\"type\",\"Kp\",\"Kv\",\"Ka\",\"e_step\",\"e_ramp\",\"e_para\"}; null = infinite",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _ss_error(v):\n    \"\"\"System type, static error constants and steady-state errors from the open-loop G(s) = num/den.\n\n    Type N = number of poles at the origin (trailing zero coefficients in den). With K = N(0)/D_red(0):\n    Kp = K (N=0) else \u221e; Kv = 0 (N=0), K (N=1), \u221e (N\u22652); Ka = 0 (N\u22641), K (N=2), \u221e (N>2). Steady-state\n    errors: e_step = 1/(1+Kp); e_ramp = 1/Kv; e_para = 1/Ka. An infinite error is reported as null.\n    \"\"\"\n    num, den = _coeffs(v['num'], 'num'), _coeffs(v['den'], 'den')\n    if den[0] == 0:\n        raise MechError('den: leading coefficient must be non-zero')\n    # Cancel common factors of s at the origin (pole-zero cancellation at s = 0) so a zero open-loop\n    # error constant is reported as an infinite error instead of dividing by zero.\n    while len(num) > 1 and len(den) > 1 and num[-1] == 0.0 and den[-1] == 0.0:\n        num.pop()\n        den.pop()\n    t = 0\n    while t < len(den) and den[len(den) - 1 - t] == 0.0:\n        t += 1\n    red = den[:len(den) - t]  # remove the s^N factor\n    n0 = num[-1] if num else 0.0\n    d0 = red[-1] if red else 1.0\n    if d0 == 0.0:\n        raise MechError('den: constant term is zero after removing the s^N factor')\n    K = n0 / d0\n    Kp = K if t == 0 else None\n    Kv = K if t == 1 else (0.0 if t == 0 else None)\n    Ka = K if t == 2 else (0.0 if t < 2 else None)\n    e_step = (1.0 / (1.0 + K)) if (t == 0 and 1.0 + K != 0.0) else (0.0 if t > 0 else None)\n    e_ramp = (1.0 / K) if (t == 1 and K != 0.0) else (None if t == 0 else 0.0)\n    e_para = (1.0 / K) if (t == 2 and K != 0.0) else (None if t < 2 else 0.0)\n    return {'result': {'type': t, 'Kp': Kp, 'Kv': Kv, 'Ka': Ka,\n                       'e_step': e_step, 'e_ramp': e_ramp, 'e_para': e_para}}\n",
+        "source": "controls.py",
+        "line": 155
+      },
+      "outputs": [
+        "result"
+      ],
+      "assumptions": [
+        "Unity feedback, unit test inputs. e_step = 1/(1+Kp), e_ramp = 1/Kv, e_para = 1/Ka. Infinite error/constant is reported as null (e.g. a type-0 system tracking a ramp)."
+      ],
+      "method_references": [
+        "Static error constants Kp, Kv, Ka; steady-state errors"
+      ],
+      "synthetic_example": {
+        "num": [
+          10
+        ],
+        "den": [
+          1,
+          3,
+          2
+        ]
+      }
+    },
+    "controls.routh_hurwitz": {
+      "title": "Routh\u2013Hurwitz stability of a characteristic polynomial",
+      "variables": [
+        {
+          "name": "coeffs",
+          "unit": "",
+          "desc": "characteristic coefficients, descending powers, e.g. [1, 6, 11, 6]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "n_rhp",
+          "unit": "",
+          "desc": "number of right-half-plane (unstable) roots",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "stable",
+          "unit": "",
+          "desc": "1 if all roots are strictly in the left half-plane, else 0",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "marginal",
+          "unit": "",
+          "desc": "1 if no RHP roots but roots on the imaginary axis (repeated j\u03c9 roots are in fact unstable)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_imag",
+          "unit": "",
+          "desc": "number of roots on the imaginary axis (from the auxiliary polynomial)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "first_column",
+          "unit": "",
+          "desc": "first column of the Routh array (\u03b5 \u2192 0 limit; null where unbounded)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "routh_table",
+          "unit": "",
+          "desc": "Routh array rows (\u03b5 \u2192 0 limit; padded with zeros)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _routh(v):\n    \"\"\"Routh\u2013Hurwitz stability of the characteristic polynomial (descending coefficients).\n\n    Builds the Routh array exactly (sympy rationals). A zero first-column entry with a non-zero row is\n    replaced by \u03b5 and the first column is read in the limit \u03b5 \u2192 0\u207a; an all-zero row is replaced by the\n    derivative of the auxiliary polynomial and signals marginal stability (roots on the imaginary axis).\n    Sign changes in the first column equal the number of right-half-plane roots.\n    \"\"\"\n    coeffs = _coeffs(v['coeffs'], 'coeffs')\n    if coeffs[0] == 0.0:\n        raise MechError('coeffs: leading coefficient must be non-zero')\n    a0 = coeffs[0]\n    coeffs = [c / a0 for c in coeffs]  # monic: does not change stability\n    n = len(coeffs) - 1\n    eps = sp.Symbol('_eps', positive=True)\n    r0 = [sp.Rational(c) for c in coeffs[0::2]]\n    r1 = [sp.Rational(c) for c in coeffs[1::2]]\n    L = len(r0)\n    r0 += [sp.Integer(0)] * (L - len(r0))\n    r1 += [sp.Integer(0)] * (L - len(r1))\n    rows = [r0, r1]\n    n_imag = 0          # roots exactly on the imaginary axis, from the first auxiliary polynomial\n    while len(rows) <= n:\n        prev, prev2 = rows[-1], rows[-2]\n        if all(x == 0 for x in prev):\n            # All-zero row: replace it with the derivative of the auxiliary polynomial built from the\n            # row above (prev2); signals roots on the imaginary axis (marginal stability).\n            m = n - len(rows) + 2  # s-power associated with the row above\n            # An all-zero row only says the polynomial has root pairs symmetric about the origin; they may be\n            # \u00b1j\u03c9 (imaginary axis), \u00b1\u03c3 (real) or quadruples. Count the imaginary-axis ones from the auxiliary\n            # polynomial's roots instead of assuming all are on the axis (review of brief 22f: s\u00b2\u22121, s\u2074+1).\n            if n_imag == 0:\n                aux = [0.0] * (m + 1)  # descending powers s^m \u2026 s^0\n                for j in range(len(prev2)):\n                    if m - 2 * j >= 0:\n                        aux[2 * j] = float(prev2[j])\n                roots = np.roots(aux)\n                scale = max(1.0, max((abs(r) for r in roots), default=1.0))\n                n_imag = int(sum(1 for r in roots if abs(r.real) <= 1e-7 * scale))\n            der = [sp.Integer(0)] * L\n            for j in range(len(prev2)):\n                p = m - 2 * j\n                if p > 0:\n                    der[j] = p * prev2[j]\n            if all(x == 0 for x in der):\n                raise MechError('Routh table has a degenerate auxiliary polynomial; cannot decide stability')\n            rows[-1] = der\n            continue  # do not grow: the next pass computes the following row from the derivative\n        pivot = prev[0]\n        if pivot == 0:\n            prev[0] = eps  # zero first-column entry (non-zero row): epsilon substitution\n            pivot = eps\n        new = [sp.Integer(0)] * L\n        for j in range(L - 1):\n            new[j] = sp.together((prev[0] * prev2[j + 1] - prev2[0] * prev[j + 1]) / pivot)\n        rows.append(new)\n\n    first = [r[0] for r in rows]\n    signs = []\n    for x in first:\n        s = _sign_limit(x, eps)\n        if s == 0:\n            raise MechError('Routh table has an unresolved zero in the first column; cannot decide stability')\n        signs.append(s)\n    n_rhp = sum(1 for i in range(1, len(signs)) if signs[i] != signs[i - 1])\n    marginal = n_rhp == 0 and n_imag > 0\n    stable = 1 if (n_rhp == 0 and n_imag == 0) else 0\n    first_column = [_as_float(x, eps) for x in first]\n    table = [[_as_float(x, eps) for x in row] for row in rows]\n    return {'n_rhp': n_rhp, 'stable': stable, 'marginal': 1 if marginal else 0, 'n_imag': n_imag,\n            'first_column': first_column, 'routh_table': table}\n",
+        "source": "controls.py",
+        "line": 189
+      },
+      "outputs": [
+        "n_rhp",
+        "stable",
+        "marginal",
+        "n_imag",
+        "first_column",
+        "routh_table"
+      ],
+      "assumptions": [
+        "Sign changes in the first column equal the number of RHP roots (Routh\u2013Hurwitz). A zero first-column entry is handled by the \u03b5 \u2192 0 limit; an all-zero row is replaced by the derivative of the auxiliary polynomial and signals marginal stability."
+      ],
+      "method_references": [
+        "Routh\u2013Hurwitz stability criterion"
+      ],
+      "synthetic_example": {
+        "coeffs": [
+          1,
+          6,
+          11,
+          6
+        ]
+      }
+    },
+    "controls.freq_response": {
+      "title": "Frequency response magnitude and phase at one frequency (Bode)",
+      "variables": [
+        {
+          "name": "num",
+          "unit": "",
+          "desc": "numerator coefficients (descending powers)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "den",
+          "unit": "",
+          "desc": "denominator coefficients (descending powers)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "omega",
+          "unit": "rad/s",
+          "desc": "frequency (enter rad/s or rpm)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mag",
+          "unit": "",
+          "desc": "magnitude |G(j\u03c9)|",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mag_db",
+          "unit": "",
+          "desc": "magnitude in dB (negative for attenuation)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phase",
+          "unit": "rad",
+          "desc": "continuous phase of G(j\u03c9) (sum of zero angles minus pole angles)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _freq_response(v):\n    \"\"\"Magnitude (linear and dB) and continuous phase of G(j\u03c9) at one frequency.\"\"\"\n    from scipy import signal\n    num, den = _tf(v['num'], v['den'])\n    w = v['omega']\n    if w <= 0:\n        raise MechError('omega must be positive')\n    H = signal.freqresp((num, den), w=[w])[1][0]\n    mag = float(abs(H))\n    phase = float(_phase_sweep(num, den, np.array([w]))[0])\n    return {'mag': mag, 'mag_db': 20.0 * math.log10(mag) if mag > 0 else float('-inf'),\n            'phase': phase}\n",
+        "source": "controls.py",
+        "line": 262
+      },
+      "outputs": [
+        "mag",
+        "mag_db",
+        "phase"
+      ],
+      "assumptions": [
+        "Single frequency point; use the bode plot for a sweep. Phase is the continuous (unwrapped) angle built as the sum of zero angles minus pole angles, so it keeps decreasing through \u2212180\u00b0 instead of wrapping to +180\u00b0."
+      ],
+      "method_references": [
+        "G(j\u03c9) = N(j\u03c9)/D(j\u03c9) via scipy.signal.freqresp"
+      ],
+      "synthetic_example": {
+        "num": [
+          1
+        ],
+        "den": [
+          1,
+          1
+        ],
+        "omega": 1.0
+      }
+    },
+    "controls.root_locus": {
+      "title": "Closed-loop poles at a gain (root locus)",
+      "variables": [
+        {
+          "name": "setup",
+          "unit": "",
+          "desc": "{\"num\",\"den\",\"K\"} for the loop gain K\u00b7G(s)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "closed_poles",
+          "unit": "",
+          "desc": "roots of den + K\u00b7num as [real, imag] pairs, sorted",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _root_locus(v):\n    \"\"\"Closed-loop poles of 1 + K G(s) = 0 at a given gain K (den + K\u00b7num = 0).\"\"\"\n    s = v['setup']\n    if not isinstance(s, dict) or 'num' not in s or 'den' not in s or 'K' not in s:\n        raise MechError('setup: give {\"num\", \"den\", \"K\"}')\n    num, den = _coeffs(s['num'], 'num'), _coeffs(s['den'], 'den')\n    K = float(s['K'])\n    closed = np.polyadd(den, [K * c for c in num])\n    return {'closed_poles': _clist(np.roots(closed))}\n",
+        "source": "controls.py",
+        "line": 276
+      },
+      "outputs": [
+        "closed_poles"
+      ],
+      "assumptions": [
+        "Negative unity feedback: closed-loop characteristic equation den + K\u00b7num = 0. The locus chart sweeps K about the given value; branches are drawn as pole trajectories."
+      ],
+      "method_references": [
+        "1 + K G(s) = 0 (closed-loop characteristic equation)"
+      ],
+      "synthetic_example": {
+        "setup": {
+          "num": [
+            1
+          ],
+          "den": [
+            1,
+            2,
+            0
+          ],
+          "K": 2.0
+        }
+      }
+    },
+    "controls.stability_margins": {
+      "title": "Gain margin, phase margin, crossover frequencies and bandwidth",
+      "variables": [
+        {
+          "name": "num",
+          "unit": "",
+          "desc": "open-loop numerator coefficients (descending powers)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "den",
+          "unit": "",
+          "desc": "open-loop denominator coefficients (descending powers)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "gain_margin",
+          "unit": "",
+          "desc": "gain margin in dB (null if undefined; negative for an unstable system)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "phase_margin",
+          "unit": "rad",
+          "desc": "phase margin (null if undefined; negative for an unstable system)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w_gc",
+          "unit": "rad/s",
+          "desc": "gain-crossover frequency (|G| = 1)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w_pc",
+          "unit": "rad/s",
+          "desc": "phase-crossover frequency (\u2220G = \u2212180\u00b0; null if the phase never crosses \u2212180\u00b0)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "bandwidth",
+          "unit": "rad/s",
+          "desc": "closed-loop \u22123 dB bandwidth of T = G/(1+G) (null if DC gain is zero or infinite)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _stability_margins(v):\n    \"\"\"Gain margin (dB), phase margin (rad), crossover frequencies and closed-loop bandwidth.\n\n    Gain crossover \u03c9_gc: |G| = 1 (0 dB); phase margin = \u03c0 + \u2220G(j\u03c9_gc) with the continuous (unwrapped)\n    phase, so an already-unstable loop gives a negative margin. Phase crossover \u03c9_pc: Im G crosses zero\n    with Re G < 0 (\u2220G = \u2212180\u00b0); gain margin = \u221220 log10 |G(j\u03c9_pc)|. A phase pinned at \u2212180\u00b0 (e.g. a\n    double integrator 1/s\u00b2) has no genuine crossing, so those margins are null. Bandwidth: first \u03c9 where\n    the closed loop T = G/(1+G) = N/(D+N) falls 3.0103 dB below its DC gain (null for zero/infinite DC).\n    \"\"\"\n    from scipy import signal, optimize\n    num, den = _tf(v['num'], v['den'])\n    w = np.logspace(-8, 8, 16001)\n    H = signal.freqresp((num, den), w=w)[1]\n    mag_db = 20.0 * np.log10(np.abs(H) + 1e-300)\n    re, im = np.real(H), np.imag(H)\n    phase = _phase_sweep(num, den, w)\n\n    def H_at(x):\n        return signal.freqresp((num, den), w=[x])[1][0]\n\n    def db_at(x):\n        return 20.0 * np.log10(abs(H_at(x)) + 1e-300)\n\n    w_gc = None\n    for i in range(len(w) - 1):\n        if mag_db[i] >= 0.0 > mag_db[i + 1]:\n            w_gc = float(optimize.brentq(db_at, w[i], w[i + 1]))\n            break\n    phase_margin = None\n    if w_gc is not None:\n        ph_gc = float(np.interp(math.log(w_gc), np.log(w), phase))\n        phase_margin = PI + ph_gc\n\n    w_pc = None\n    for i in range(len(w) - 1):\n        if im[i] * im[i + 1] < 0.0 and re[i] < 0.0 and re[i + 1] < 0.0:\n            w_pc = float(optimize.brentq(lambda x: float(np.imag(H_at(x))), w[i], w[i + 1]))\n            break\n    gain_margin = -db_at(w_pc) if w_pc is not None else None\n\n    bandwidth = None\n    closed_den = np.polyadd(np.array(den, dtype=float), np.array(num, dtype=float))\n    T = signal.freqresp((np.array(num, dtype=float), closed_den), w=w)[1]\n    t_mag_db = 20.0 * np.log10(np.abs(T) + 1e-300)\n    if closed_den[-1] != 0.0:\n        dc = abs(float(num[-1]) / float(closed_den[-1]))\n        if dc > 0.0:\n            thr = 20.0 * math.log10(dc) - 20.0 * math.log10(math.sqrt(2.0))\n            for i in range(len(w) - 1):\n                if t_mag_db[i] >= thr > t_mag_db[i + 1]:\n                    def Tdb_at(x):\n                        return 20.0 * math.log10(abs(signal.freqresp(\n                            (np.array(num, dtype=float), closed_den), w=[x])[1][0]) + 1e-300)\n                    bandwidth = float(optimize.brentq(lambda x: Tdb_at(x) - thr, w[i], w[i + 1]))\n                    break\n    return {'gain_margin': gain_margin, 'phase_margin': phase_margin,\n            'w_gc': w_gc, 'w_pc': w_pc, 'bandwidth': bandwidth}\n",
+        "source": "controls.py",
+        "line": 287
+      },
+      "outputs": [
+        "gain_margin",
+        "phase_margin",
+        "w_gc",
+        "w_pc",
+        "bandwidth"
+      ],
+      "assumptions": [
+        "Open-loop frequency response with a continuous (unwrapped) phase. Margins are taken from genuine crossings: a phase pinned at \u2212180\u00b0 (e.g. a double integrator) has no phase crossover, so gain margin and \u03c9_pc are null. Bandwidth is the closed-loop T = G/(1+G) \u22123 dB frequency."
+      ],
+      "method_references": [
+        "Gain/phase margin definitions from the Bode plot"
+      ],
+      "synthetic_example": {
+        "num": [
+          1
+        ],
+        "den": [
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    "controls.pid_ziegler_nichols": {
+      "title": "Ziegler\u2013Nichols PID gains from ultimate gain and period",
+      "variables": [
+        {
+          "name": "Ki_PID",
+          "unit": "1/s",
+          "desc": "PID integral gain Ki = Kp/Ti",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kp_PID",
+          "unit": "",
+          "desc": "PID proportional gain",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ti_PID",
+          "unit": "s",
+          "desc": "PID integral time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Td_PID",
+          "unit": "s",
+          "desc": "PID derivative time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kd_PID",
+          "unit": "s",
+          "desc": "PID derivative gain Kd = Kp\u00b7Td",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kp_P",
+          "unit": "",
+          "desc": "P-only proportional gain",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kp_PI",
+          "unit": "",
+          "desc": "PI proportional gain",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ti_PI",
+          "unit": "s",
+          "desc": "PI integral time",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ki_PI",
+          "unit": "1/s",
+          "desc": "PI integral gain Ki = Kp/Ti",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_u",
+          "unit": "",
+          "desc": "ultimate gain (from the sustained-oscillation test)",
+          "lo": null,
+          "hi": null,
+          "label": "Ku",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_u",
+          "unit": "s",
+          "desc": "ultimate period (of the sustained oscillation)",
+          "lo": null,
+          "hi": null,
+          "label": "Tu",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _pid_zn(v):\n    \"\"\"PID/P/PI gains by the closed-loop (ultimate-gain) Ziegler\u2013Nichols rules from K_u and T_u.\n\n    Variant: ultimate-sensitivity (Ziegler\u2013Nichols, 1942). P: Kp = 0.5 K_u. PI: Kp = 0.45 K_u,\n    Ti = T_u/1.2. PID: Kp = 0.6 K_u, Ti = T_u/2, Td = T_u/8 (parallel form Ki = Kp/Ti, Kd = Kp\u00b7Td).\n    \"\"\"\n    Ku, Tu = v['K_u'], v['T_u']\n    if Ku <= 0 or Tu <= 0:\n        raise MechError('K_u and T_u must be positive')\n    return {'Ki_PID': 1.2 * Ku / Tu, 'Kp_PID': 0.6 * Ku, 'Ti_PID': Tu / 2.0, 'Td_PID': Tu / 8.0,\n            'Kd_PID': 0.6 * Ku * Tu / 8.0, 'Kp_P': 0.5 * Ku, 'Kp_PI': 0.45 * Ku, 'Ti_PI': Tu / 1.2,\n            'Ki_PI': 0.45 * Ku / (Tu / 1.2)}\n",
+        "source": "controls.py",
+        "line": 346
+      },
+      "outputs": [
+        "Ki_PID",
+        "Kp_PID",
+        "Ti_PID",
+        "Td_PID",
+        "Kd_PID",
+        "Kp_P",
+        "Kp_PI",
+        "Ti_PI",
+        "Ki_PI"
+      ],
+      "assumptions": [
+        "Closed-loop Ziegler\u2013Nichols (ultimate-sensitivity) method: P Kp = 0.5 K_u; PI Kp = 0.45 K_u, Ti = T_u/1.2; PID Kp = 0.6 K_u, Ti = T_u/2, Td = T_u/8. These give a quarter-decay response; retune for your process."
+      ],
+      "method_references": [
+        "Ziegler\u2013Nichols closed-loop (ultimate-gain) tuning rules"
+      ],
+      "synthetic_example": {
+        "K_u": 4.0,
+        "T_u": 2.0
+      }
+    },
+    "controls.state_space": {
+      "title": "State-space eigenvalues, controllability and observability",
+      "variables": [
+        {
+          "name": "A",
+          "unit": "",
+          "desc": "state matrix A (n\u00d7n)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "B",
+          "unit": "",
+          "desc": "input matrix B (n\u00d7m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "output matrix C (p\u00d7n)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "eigenvalues",
+          "unit": "",
+          "desc": "eigenvalues (system poles) as [real, imag] pairs, sorted",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "ctrb_rank",
+          "unit": "",
+          "desc": "rank of the controllability matrix",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "obsv_rank",
+          "unit": "",
+          "desc": "rank of the observability matrix",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "controllable",
+          "unit": "",
+          "desc": "1 if ctrb_rank = n, else 0",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "observable",
+          "unit": "",
+          "desc": "1 if obsv_rank = n, else 0",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _state_space(v):\n    \"\"\"Poles and controllability/observability of x\u0307 = A x + B u, y = C x.\n\n    Controllability matrix [B, AB, \u2026, A^(n\u22121)B]; observability matrix [C; CA; \u2026; CA^(n\u22121)]. Full rank \u21d4\n    controllable/observable. The feedthrough matrix D does not affect any of these quantities.\n    \"\"\"\n    A = np.array(v['A'], dtype=float)\n    B = np.array(v['B'], dtype=float)\n    C = np.array(v['C'], dtype=float)\n    if A.ndim != 2 or A.shape[0] != A.shape[1]:\n        raise MechError('A must be a square matrix')\n    n = A.shape[0]\n    if B.ndim != 2 or B.shape[0] != n:\n        raise MechError(f'B must have {n} rows')\n    if C.ndim != 2 or C.shape[1] != n:\n        raise MechError(f'C must have {n} columns')\n    ctrb = np.hstack([np.linalg.matrix_power(A, i) @ B for i in range(n)])\n    obsv = np.vstack([C @ np.linalg.matrix_power(A, i) for i in range(n)])\n    rc, ro = int(np.linalg.matrix_rank(ctrb)), int(np.linalg.matrix_rank(obsv))\n    return {'eigenvalues': _clist(np.linalg.eigvals(A)), 'ctrb_rank': rc, 'obsv_rank': ro,\n            'controllable': 1 if rc == n else 0, 'observable': 1 if ro == n else 0}\n",
+        "source": "controls.py",
+        "line": 360
+      },
+      "outputs": [
+        "eigenvalues",
+        "ctrb_rank",
+        "obsv_rank",
+        "controllable",
+        "observable"
+      ],
+      "assumptions": [
+        "x\u0307 = A x + B u, y = C x. The feedthrough matrix D does not affect the eigenvalues, controllability or observability."
+      ],
+      "method_references": [
+        "Controllability/observability matrices [B, AB, \u2026] and [C; CA; \u2026]"
+      ],
+      "synthetic_example": {
+        "A": [
+          [
+            0,
+            1
+          ],
+          [
+            -2,
+            -3
+          ]
+        ],
+        "B": [
+          [
+            0
+          ],
+          [
+            1
+          ]
+        ],
+        "C": [
+          [
+            1,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "controls-001",
+      "calculator": "controls.poles_zeros",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          1,
+          1
+        ],
+        "den": [
+          1,
+          2,
+          0
+        ]
+      },
+      "solve_for": [
+        "zeros",
+        "poles",
+        "gain",
+        "type"
+      ],
+      "expected_as_specified": {
+        "zeros": [
+          [
+            -1.0,
+            0.0
+          ]
+        ],
+        "poles": [
+          [
+            -2.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "gain": 1.0,
+        "type": 1
+      },
+      "expected_SI": {
+        "zeros": [
+          [
+            -1.0,
+            0.0
+          ]
+        ],
+        "poles": [
+          [
+            -2.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "gain": 1.0,
+        "type": 1.0
+      },
+      "actual_SI": {
+        "zeros": {
+          "value": [
+            [
+              -1.0,
+              0.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc controls.poles_zeros (procedure)",
+          "unit": ""
+        },
+        "poles": {
+          "value": [
+            [
+              -2.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc controls.poles_zeros (procedure)",
+          "unit": ""
+        },
+        "gain": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.poles_zeros (procedure)"
+        },
+        "type": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.poles_zeros (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "zeros": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ]
+        ],
+        "poles": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.004,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ]
+        ],
+        "gain": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "type": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "G = (s+1)/(s(s+2)): zero at \u22121; poles at 0 and \u22122; gain 1; one pole at the origin \u2192 type 1"
+      }
+    },
+    {
+      "id": "controls-002",
+      "calculator": "controls.poles_zeros",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          -1
+        ],
+        "den": [
+          1,
+          1
+        ]
+      },
+      "solve_for": [
+        "zeros",
+        "poles",
+        "gain",
+        "type"
+      ],
+      "expected_as_specified": {
+        "zeros": [],
+        "poles": [
+          [
+            -1.0,
+            0.0
+          ]
+        ],
+        "gain": -1.0,
+        "type": 0
+      },
+      "expected_SI": {
+        "zeros": [],
+        "poles": [
+          [
+            -1.0,
+            0.0
+          ]
+        ],
+        "gain": -1.0,
+        "type": 0.0
+      },
+      "actual_SI": {
+        "zeros": {
+          "value": [],
+          "kind": "derived",
+          "method": "mechcalc controls.poles_zeros (procedure)",
+          "unit": ""
+        },
+        "poles": {
+          "value": [
+            [
+              -1.0,
+              0.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc controls.poles_zeros (procedure)",
+          "unit": ""
+        },
+        "gain": {
+          "value": -1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.poles_zeros (procedure)"
+        },
+        "type": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.poles_zeros (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "zeros": [],
+        "poles": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ]
+        ],
+        "gain": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "type": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "G = \u22121/(s+1): no zeros, pole at \u22121, gain k = \u22121 (signed), no poles at the origin \u2192 type 0"
+      }
+    },
+    {
+      "id": "controls-003",
+      "calculator": "controls.block_reduction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "setup": {
+          "num1": [
+            1
+          ],
+          "den1": [
+            1,
+            1
+          ],
+          "num2": [
+            1
+          ],
+          "den2": [
+            1,
+            2
+          ],
+          "conn": "series"
+        }
+      },
+      "solve_for": [
+        "num_out",
+        "den_out"
+      ],
+      "expected_as_specified": {
+        "num_out": [
+          1.0
+        ],
+        "den_out": [
+          1.0,
+          3.0,
+          2.0
+        ]
+      },
+      "expected_SI": {
+        "num_out": [
+          1.0
+        ],
+        "den_out": [
+          1.0,
+          3.0,
+          2.0
+        ]
+      },
+      "actual_SI": {
+        "num_out": {
+          "value": [
+            1.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc controls.block_reduction (procedure)",
+          "unit": ""
+        },
+        "den_out": {
+          "value": [
+            1.0,
+            3.0,
+            2.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc controls.block_reduction (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "num_out": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          }
+        ],
+        "den_out": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.006,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.004,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "series: G = 1/((s+1)(s+2)) = 1/(s\u00b2 + 3s + 2); (s+1)(s+2) = s\u00b2+3s+2"
+      }
+    },
+    {
+      "id": "controls-004",
+      "calculator": "controls.block_reduction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "setup": {
+          "num1": [
+            1
+          ],
+          "den1": [
+            1,
+            1
+          ],
+          "num2": [
+            1
+          ],
+          "den2": [
+            1
+          ],
+          "conn": "feedback"
+        }
+      },
+      "solve_for": [
+        "num_out",
+        "den_out"
+      ],
+      "expected_as_specified": {
+        "num_out": [
+          1.0
+        ],
+        "den_out": [
+          1.0,
+          2.0
+        ]
+      },
+      "expected_SI": {
+        "num_out": [
+          1.0
+        ],
+        "den_out": [
+          1.0,
+          2.0
+        ]
+      },
+      "actual_SI": {
+        "num_out": {
+          "value": [
+            1.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc controls.block_reduction (procedure)",
+          "unit": ""
+        },
+        "den_out": {
+          "value": [
+            1.0,
+            2.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc controls.block_reduction (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "num_out": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          }
+        ],
+        "den_out": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.004,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "unity negative feedback: G = (1/(s+1))/(1 + 1/(s+1)) = 1/(s+2)"
+      }
+    },
+    {
+      "id": "controls-005",
+      "calculator": "controls.second_order_step",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "zeta": 0.5,
+        "wn": "10 rad/s"
+      },
+      "solve_for": [
+        "tau",
+        "ts",
+        "tp",
+        "tr",
+        "OS_pct"
+      ],
+      "expected_as_specified": {
+        "tau": "0.2 s",
+        "ts": "0.8 s",
+        "tp": "0.36276 s",
+        "tr": "0.24184 s",
+        "OS_pct": 16.30335
+      },
+      "expected_SI": {
+        "tau": 0.2,
+        "ts": 0.8,
+        "tp": 0.36276,
+        "tr": 0.24184,
+        "OS_pct": 16.30335
+      },
+      "actual_SI": {
+        "tau": {
+          "value": 0.2,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc controls.second_order_step (symbolic)"
+        },
+        "ts": {
+          "value": 0.8,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc controls.second_order_step (symbolic)"
+        },
+        "tp": {
+          "value": 0.3627598728468436,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc controls.second_order_step (symbolic)"
+        },
+        "tr": {
+          "value": 0.24183991523122902,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc controls.second_order_step (symbolic)"
+        },
+        "OS_pct": {
+          "value": 16.303353482158048,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.second_order_step (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "tau": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0001,
+          "passed": true
+        },
+        "ts": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0004,
+          "passed": true
+        },
+        "tp": {
+          "absolute_error": 1.2715315644840075e-07,
+          "relative_error": 3.505159236089997e-07,
+          "allowed_absolute_error": 0.00018138000000000003,
+          "passed": true
+        },
+        "tr": {
+          "absolute_error": 8.476877097485236e-08,
+          "relative_error": 3.5051592364725586e-07,
+          "allowed_absolute_error": 0.00012092,
+          "passed": true
+        },
+        "OS_pct": {
+          "absolute_error": 3.4821580499055926e-06,
+          "relative_error": 2.1358543182263725e-07,
+          "allowed_absolute_error": 0.008151674999999999,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c9d = 10\u221a0.75 = 8.6603; \u03c4 = 1/(0.5\u00b710) = 0.2; ts = 0.8; tp = \u03c0/8.6603 = 0.36276; tr = (\u03c0 \u2212 acos 0.5)/8.6603 = 2.0944/8.6603 = 0.24184; %OS = 100 e^(\u22120.5\u03c0/0.86603) = 16.3034 (\u03b6 = 0.5 landmark)"
+      }
+    },
+    {
+      "id": "controls-006",
+      "calculator": "controls.steady_state_error",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          10
+        ],
+        "den": [
+          1,
+          3,
+          2
+        ]
+      },
+      "solve_for": [
+        "result"
+      ],
+      "expected_as_specified": {
+        "result": {
+          "type": 0,
+          "Kp": 5.0,
+          "Kv": 0.0,
+          "Ka": 0.0,
+          "e_step": 0.1666667,
+          "e_ramp": null,
+          "e_para": null
+        }
+      },
+      "expected_SI": {
+        "result": {
+          "type": 0,
+          "Kp": 5.0,
+          "Kv": 0.0,
+          "Ka": 0.0,
+          "e_step": 0.1666667,
+          "e_ramp": null,
+          "e_para": null
+        }
+      },
+      "actual_SI": {
+        "result": {
+          "value": {
+            "type": 0,
+            "Kp": 5.0,
+            "Kv": 0.0,
+            "Ka": 0.0,
+            "e_step": 0.16666666666666666,
+            "e_ramp": null,
+            "e_para": null
+          },
+          "kind": "derived",
+          "method": "mechcalc controls.steady_state_error (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "result": {
+          "type": {
+            "absolute_error": 0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          "Kp": {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.0005,
+            "passed": true
+          },
+          "Kv": {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          "Ka": {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          "e_step": {
+            "absolute_error": 3.3333333343543714e-08,
+            "relative_error": 1.9999996006127027e-07,
+            "allowed_absolute_error": 1.6666670000000002e-05,
+            "passed": true
+          },
+          "e_ramp": {
+            "passed": true
+          },
+          "e_para": {
+            "passed": true
+          }
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "type 0 (no pole at origin): Kp = G(0) = 10/2 = 5; e_step = 1/(1+5) = 1/6; Kv = Ka = 0 so ramp/parabola errors are infinite (null)"
+      }
+    },
+    {
+      "id": "controls-007",
+      "calculator": "controls.steady_state_error",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          1
+        ],
+        "den": [
+          1,
+          1,
+          0
+        ]
+      },
+      "solve_for": [
+        "result"
+      ],
+      "expected_as_specified": {
+        "result": {
+          "type": 1,
+          "Kp": null,
+          "Kv": 1.0,
+          "Ka": 0.0,
+          "e_step": 0.0,
+          "e_ramp": 1.0,
+          "e_para": null
+        }
+      },
+      "expected_SI": {
+        "result": {
+          "type": 1,
+          "Kp": null,
+          "Kv": 1.0,
+          "Ka": 0.0,
+          "e_step": 0.0,
+          "e_ramp": 1.0,
+          "e_para": null
+        }
+      },
+      "actual_SI": {
+        "result": {
+          "value": {
+            "type": 1,
+            "Kp": null,
+            "Kv": 1.0,
+            "Ka": 0.0,
+            "e_step": 0.0,
+            "e_ramp": 1.0,
+            "e_para": null
+          },
+          "kind": "derived",
+          "method": "mechcalc controls.steady_state_error (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "result": {
+          "type": {
+            "absolute_error": 0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.0001,
+            "passed": true
+          },
+          "Kp": {
+            "passed": true
+          },
+          "Kv": {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.0001,
+            "passed": true
+          },
+          "Ka": {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          "e_step": {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          "e_ramp": {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.0001,
+            "passed": true
+          },
+          "e_para": {
+            "passed": true
+          }
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "type 1: Kv = lim sG = 1/1 = 1; e_ramp = 1/Kv = 1; e_step = 0; Kp infinite (null); Ka = 0 so e_para infinite (null)"
+      }
+    },
+    {
+      "id": "controls-008",
+      "calculator": "controls.steady_state_error",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          1,
+          0
+        ],
+        "den": [
+          1,
+          1,
+          0
+        ]
+      },
+      "solve_for": [
+        "result"
+      ],
+      "expected_as_specified": {
+        "result": {
+          "type": 0,
+          "Kp": 1.0,
+          "Kv": 0.0,
+          "Ka": 0.0,
+          "e_step": 0.5,
+          "e_ramp": null,
+          "e_para": null
+        }
+      },
+      "expected_SI": {
+        "result": {
+          "type": 0,
+          "Kp": 1.0,
+          "Kv": 0.0,
+          "Ka": 0.0,
+          "e_step": 0.5,
+          "e_ramp": null,
+          "e_para": null
+        }
+      },
+      "actual_SI": {
+        "result": {
+          "value": {
+            "type": 0,
+            "Kp": 1.0,
+            "Kv": 0.0,
+            "Ka": 0.0,
+            "e_step": 0.5,
+            "e_ramp": null,
+            "e_para": null
+          },
+          "kind": "derived",
+          "method": "mechcalc controls.steady_state_error (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "result": {
+          "type": {
+            "absolute_error": 0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          "Kp": {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.0001,
+            "passed": true
+          },
+          "Kv": {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          "Ka": {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          "e_step": {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 5e-05,
+            "passed": true
+          },
+          "e_ramp": {
+            "passed": true
+          },
+          "e_para": {
+            "passed": true
+          }
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "G = s/(s(s+1)) = 1/(s+1) after cancelling the common s factor: type 0, Kp = G(0) = 1, e_step = 1/(1+1) = 0.5, Kv = Ka = 0 so ramp/parabola errors infinite (null). Cancelling the s factors first avoids dividing by the zero error constant."
+      }
+    },
+    {
+      "id": "controls-009",
+      "calculator": "controls.routh_hurwitz",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "coeffs": [
+          1,
+          6,
+          11,
+          6
+        ]
+      },
+      "solve_for": [
+        "n_rhp",
+        "stable",
+        "marginal",
+        "n_imag",
+        "first_column",
+        "routh_table"
+      ],
+      "expected_as_specified": {
+        "n_rhp": 0,
+        "stable": 1,
+        "marginal": 0,
+        "first_column": [
+          1.0,
+          6.0,
+          10.0,
+          6.0
+        ]
+      },
+      "expected_SI": {
+        "n_rhp": 0.0,
+        "stable": 1.0,
+        "marginal": 0.0,
+        "first_column": [
+          1.0,
+          6.0,
+          10.0,
+          6.0
+        ]
+      },
+      "actual_SI": {
+        "n_rhp": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "stable": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "marginal": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "first_column": {
+          "value": [
+            1.0,
+            6.0,
+            10.0,
+            6.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_rhp": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "marginal": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "first_column": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.012,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.02,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.012,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s\u00b3+6s\u00b2+11s+6 = (s+1)(s+2)(s+3): Routh first column [1, 6, (6\u00b711\u22121\u00b76)/6 = 10, 6] \u2192 no sign changes \u2192 stable"
+      }
+    },
+    {
+      "id": "controls-010",
+      "calculator": "controls.routh_hurwitz",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "coeffs": [
+          1,
+          1,
+          2,
+          8
+        ]
+      },
+      "solve_for": [
+        "n_rhp",
+        "stable",
+        "marginal",
+        "n_imag",
+        "first_column",
+        "routh_table"
+      ],
+      "expected_as_specified": {
+        "n_rhp": 2,
+        "stable": 0,
+        "marginal": 0,
+        "first_column": [
+          1.0,
+          1.0,
+          -6.0,
+          8.0
+        ]
+      },
+      "expected_SI": {
+        "n_rhp": 2.0,
+        "stable": 0.0,
+        "marginal": 0.0,
+        "first_column": [
+          1.0,
+          1.0,
+          -6.0,
+          8.0
+        ]
+      },
+      "actual_SI": {
+        "n_rhp": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "stable": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "marginal": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "first_column": {
+          "value": [
+            1.0,
+            1.0,
+            -6.0,
+            8.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_rhp": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "marginal": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "first_column": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.002,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.012,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.016,
+            "passed": true
+          }
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s\u00b3+s\u00b2+2s+8 = (s+2)(s\u00b2\u2212s+4): Routh first column [1, 1, (1\u00b72\u22121\u00b78)/1 = \u22126, 8] \u2192 two sign changes \u2192 two RHP roots"
+      }
+    },
+    {
+      "id": "controls-011",
+      "calculator": "controls.routh_hurwitz",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "coeffs": [
+          1,
+          2,
+          2,
+          4,
+          11,
+          10
+        ]
+      },
+      "solve_for": [
+        "n_rhp",
+        "stable",
+        "marginal",
+        "n_imag",
+        "first_column",
+        "routh_table"
+      ],
+      "expected_as_specified": {
+        "n_rhp": 2,
+        "stable": 0,
+        "marginal": 0
+      },
+      "expected_SI": {
+        "n_rhp": 2.0,
+        "stable": 0.0,
+        "marginal": 0.0
+      },
+      "actual_SI": {
+        "n_rhp": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "stable": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "marginal": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_rhp": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "marginal": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s\u2075+2s\u2074+2s\u00b3+4s\u00b2+11s+10 has a zero first-column pivot (\u03b5 substitution); numpy.roots gives 0.895\u00b11.456j (RHP pair), \u22121.241\u00b11.038j, \u22121.309 \u2192 two RHP roots"
+      }
+    },
+    {
+      "id": "controls-012",
+      "calculator": "controls.routh_hurwitz",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "coeffs": [
+          1,
+          0,
+          1,
+          1
+        ]
+      },
+      "solve_for": [
+        "n_rhp",
+        "stable",
+        "marginal",
+        "n_imag",
+        "first_column",
+        "routh_table"
+      ],
+      "expected_as_specified": {
+        "n_rhp": 2,
+        "stable": 0,
+        "marginal": 0
+      },
+      "expected_SI": {
+        "n_rhp": 2.0,
+        "stable": 0.0,
+        "marginal": 0.0
+      },
+      "actual_SI": {
+        "n_rhp": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "stable": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "marginal": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_rhp": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "marginal": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s\u00b3+s+1: zero s\u00b2 coefficient; Routh with \u03b5 gives first column [1, \u03b5, (\u03b5\u22121)/\u03b5, 1] \u2192 signs +,+,\u2212,+ \u2192 two sign changes; numpy.roots gives 0.341\u00b11.162j (RHP pair), \u22120.682 \u2192 two RHP roots"
+      }
+    },
+    {
+      "id": "controls-013",
+      "calculator": "controls.routh_hurwitz",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "coeffs": [
+          1,
+          2,
+          3,
+          6,
+          5,
+          3
+        ]
+      },
+      "solve_for": [
+        "n_rhp",
+        "stable",
+        "marginal",
+        "n_imag",
+        "first_column",
+        "routh_table"
+      ],
+      "expected_as_specified": {
+        "n_rhp": 2,
+        "stable": 0,
+        "marginal": 0
+      },
+      "expected_SI": {
+        "n_rhp": 2.0,
+        "stable": 0.0,
+        "marginal": 0.0
+      },
+      "actual_SI": {
+        "n_rhp": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "stable": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "marginal": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_rhp": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "marginal": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s\u2075+2s\u2074+3s\u00b3+6s\u00b2+5s+3: first column [1, 2, \u03b5, (6\u03b5\u22127)/\u03b5, 3.5, 3] \u2192 signs +,+,+,\u2212,+,+ \u2192 two sign changes; numpy.roots gives 0.343\u00b11.508j (RHP pair) \u2192 two RHP roots"
+      }
+    },
+    {
+      "id": "controls-014",
+      "calculator": "controls.routh_hurwitz",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "coeffs": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "solve_for": [
+        "n_rhp",
+        "stable",
+        "marginal",
+        "n_imag",
+        "first_column",
+        "routh_table"
+      ],
+      "expected_as_specified": {
+        "n_rhp": 0,
+        "stable": 0,
+        "marginal": 1
+      },
+      "expected_SI": {
+        "n_rhp": 0.0,
+        "stable": 0.0,
+        "marginal": 1.0
+      },
+      "actual_SI": {
+        "n_rhp": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "stable": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "marginal": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_rhp": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "marginal": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s\u00b3+s\u00b2+s+1 = (s+1)(s\u00b2+1): all-zero row \u2192 auxiliary polynomial s\u00b2+1 with roots \u00b1j on the imaginary axis \u2192 marginal (never strictly stable); numpy.roots gives \u22121, \u00b1j"
+      }
+    },
+    {
+      "id": "controls-015",
+      "calculator": "controls.freq_response",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          1
+        ],
+        "den": [
+          1,
+          1
+        ],
+        "omega": "1 rad/s"
+      },
+      "solve_for": [
+        "mag",
+        "mag_db",
+        "phase"
+      ],
+      "expected_as_specified": {
+        "mag": 0.7071068,
+        "mag_db": -3.0103,
+        "phase": "-0.7853982 rad"
+      },
+      "expected_SI": {
+        "mag": 0.7071068,
+        "mag_db": -3.0103,
+        "phase": -0.7853982
+      },
+      "actual_SI": {
+        "mag": {
+          "value": 0.7071067811865476,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.freq_response (procedure)"
+        },
+        "mag_db": {
+          "value": -3.0102999566398116,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.freq_response (procedure)"
+        },
+        "phase": {
+          "value": -0.7853981633974483,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc controls.freq_response (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "mag": {
+          "absolute_error": 1.881345246257382e-08,
+          "relative_error": 2.660623891974143e-08,
+          "allowed_absolute_error": 0.0003535534,
+          "passed": true
+        },
+        "mag_db": {
+          "absolute_error": 4.3360188328733784e-08,
+          "relative_error": 1.4403942573409223e-08,
+          "allowed_absolute_error": 0.00150515,
+          "passed": true
+        },
+        "phase": {
+          "absolute_error": 3.660255176729521e-08,
+          "relative_error": 4.660381417642058e-08,
+          "allowed_absolute_error": 0.0003926991,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "G(j1) = 1/(1+j) = 0.5 \u2212 0.5j: |G| = 1/\u221a2 = 0.70711; 20 log10 = \u22123.0103 dB; \u2220 = \u2212\u03c0/4 = \u22120.78540 rad (\u22123 dB corner landmark)"
+      }
+    },
+    {
+      "id": "controls-016",
+      "calculator": "controls.freq_response",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          1
+        ],
+        "den": [
+          1,
+          3,
+          3,
+          1
+        ],
+        "omega": "3 rad/s"
+      },
+      "solve_for": [
+        "mag",
+        "mag_db",
+        "phase"
+      ],
+      "expected_as_specified": {
+        "mag_db": -30.0,
+        "phase": "-3.7471373 rad"
+      },
+      "expected_SI": {
+        "mag_db": -30.0,
+        "phase": -3.7471373
+      },
+      "actual_SI": {
+        "mag_db": {
+          "value": -29.999999999999996,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.freq_response (procedure)"
+        },
+        "phase": {
+          "value": -3.7471373171947646,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc controls.freq_response (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "mag_db": {
+          "absolute_error": 3.552713678800501e-15,
+          "relative_error": 1.1842378929335003e-16,
+          "allowed_absolute_error": 0.015,
+          "passed": true
+        },
+        "phase": {
+          "absolute_error": 1.719476472317183e-08,
+          "relative_error": 4.588773601429504e-09,
+          "allowed_absolute_error": 0.00187356865,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "G = 1/(s+1)\u00b3: three poles at \u22121 give phase = \u22123\u00b7atan(\u03c9) = \u22123\u00b7atan(3) = \u22123\u00b71.2490458 = \u22123.7471373 rad (continuous, not wrapped to +2.536 rad); |G| = 1/(\u221a(1+9))\u00b3 = 1/\u221a1000 \u2192 \u221230 dB"
+      }
+    },
+    {
+      "id": "controls-017",
+      "calculator": "controls.freq_response",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          1
+        ],
+        "den": [
+          1,
+          1
+        ],
+        "mag": 0.7071068
+      },
+      "solve_for": [
+        "omega"
+      ],
+      "expected_as_specified": {
+        "omega": "1 rad/s"
+      },
+      "expected_SI": {
+        "omega": 1.0
+      },
+      "actual_SI": {
+        "omega": {
+          "value": 0.9999999467875211,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc controls.freq_response (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "omega": {
+          "absolute_error": 5.3212478867692425e-08,
+          "relative_error": 5.3212478867692425e-08,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "|G| = 1/\u221a(\u03c9\u00b2+1) = 1/\u221a2 \u2192 \u03c9 = 1 rad/s (inverse)"
+      }
+    },
+    {
+      "id": "controls-018",
+      "calculator": "controls.root_locus",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "setup": {
+          "num": [
+            1
+          ],
+          "den": [
+            1,
+            2,
+            0
+          ],
+          "K": 2.0
+        }
+      },
+      "solve_for": [
+        "closed_poles"
+      ],
+      "expected_as_specified": {
+        "closed_poles": [
+          [
+            -1.0,
+            -1.0
+          ],
+          [
+            -1.0,
+            1.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "closed_poles": [
+          [
+            -1.0,
+            -1.0
+          ],
+          [
+            -1.0,
+            1.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "closed_poles": {
+          "value": [
+            [
+              -0.9999999999999998,
+              -0.9999999999999998
+            ],
+            [
+              -0.9999999999999998,
+              0.9999999999999998
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc controls.root_locus (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "closed_poles": [
+          [
+            {
+              "absolute_error": 2.220446049250313e-16,
+              "relative_error": 2.220446049250313e-16,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.220446049250313e-16,
+              "relative_error": 2.220446049250313e-16,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 2.220446049250313e-16,
+              "relative_error": 2.220446049250313e-16,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.220446049250313e-16,
+              "relative_error": 2.220446049250313e-16,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "closed loop s\u00b2+2s+2 = 0 \u2192 s = \u22121 \u00b1 j"
+      }
+    },
+    {
+      "id": "controls-019",
+      "calculator": "controls.stability_margins",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "num": [
+          1
+        ],
+        "den": [
+          1,
+          1,
+          0
+        ]
+      },
+      "solve_for": [
+        "gain_margin",
+        "phase_margin",
+        "w_gc",
+        "w_pc",
+        "bandwidth"
+      ],
+      "expected_as_specified": {
+        "phase_margin": "51.827 deg",
+        "w_gc": "0.78615 rad/s"
+      },
+      "expected_SI": {
+        "phase_margin": 0.9045517914311011,
+        "w_gc": 0.78615
+      },
+      "actual_SI": {
+        "phase_margin": {
+          "value": 0.9045568182967276,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)"
+        },
+        "w_gc": {
+          "value": 0.786151377757411,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "phase_margin": {
+          "absolute_error": 5.026865626533983e-06,
+          "relative_error": 5.557299951372519e-06,
+          "allowed_absolute_error": 0.00045227589571555053,
+          "passed": true
+        },
+        "w_gc": {
+          "absolute_error": 1.3777574109363755e-06,
+          "relative_error": 1.7525375703572798e-06,
+          "allowed_absolute_error": 0.000393075,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Phase margin of G = 1/(s(s+1)) is the classic 51.83\u00b0 (recalled landmark): \u03c9_gc solves \u03c9\u00b2(\u03c9\u00b2+1) = 1 \u2192 \u03c9 = 0.78615; PM = 180 \u2212 90 \u2212 atan(0.78615) = 51.827\u00b0"
+      }
+    },
+    {
+      "id": "controls-020",
+      "calculator": "controls.stability_margins",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          1
+        ],
+        "den": [
+          1,
+          1,
+          0
+        ]
+      },
+      "solve_for": [
+        "gain_margin",
+        "phase_margin",
+        "w_gc",
+        "w_pc",
+        "bandwidth"
+      ],
+      "expected_as_specified": {
+        "bandwidth": "1.27202 rad/s"
+      },
+      "expected_SI": {
+        "bandwidth": 1.27202
+      },
+      "actual_SI": {
+        "bandwidth": {
+          "value": 1.2720196495144618,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "bandwidth": {
+          "absolute_error": 3.50485538147538e-07,
+          "relative_error": 2.755346127793101e-07,
+          "allowed_absolute_error": 0.000127202,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "closed loop T = G/(1+G) = 1/(s\u00b2+s+1); |T| = 1/\u221a(\u03c9\u2074\u2212\u03c9\u00b2+1) = 1/\u221a2 \u2192 \u03c9\u2074\u2212\u03c9\u00b2\u22121 = 0 \u2192 \u03c9\u00b2 = (1+\u221a5)/2 \u2192 \u03c9 = \u221a1.61803 = 1.27202 rad/s (closed-loop \u22123 dB bandwidth)"
+      }
+    },
+    {
+      "id": "controls-021",
+      "calculator": "controls.stability_margins",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          2
+        ],
+        "den": [
+          1,
+          3,
+          2,
+          0
+        ]
+      },
+      "solve_for": [
+        "gain_margin",
+        "phase_margin",
+        "w_gc",
+        "w_pc",
+        "bandwidth"
+      ],
+      "expected_as_specified": {
+        "gain_margin": 9.542425,
+        "w_pc": "1.4142136 rad/s"
+      },
+      "expected_SI": {
+        "gain_margin": 9.542425,
+        "w_pc": 1.4142136
+      },
+      "actual_SI": {
+        "gain_margin": {
+          "value": 9.542425094393254,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)"
+        },
+        "w_pc": {
+          "value": 1.4142135623730956,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "gain_margin": {
+          "absolute_error": 9.439325410198762e-08,
+          "relative_error": 9.891956615010087e-09,
+          "allowed_absolute_error": 0.0009542425000000001,
+          "passed": true
+        },
+        "w_pc": {
+          "absolute_error": 3.762690448105843e-08,
+          "relative_error": 2.660623860572295e-08,
+          "allowed_absolute_error": 0.00014142136000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "phase crossover: atan(\u03c9) + atan(\u03c9/2) = 90\u00b0 \u2192 \u03c9\u00b2 = 2 \u2192 \u03c9_pc = \u221a2; |G| = 2/(\u221a2\u00b7\u221a3\u00b7\u221a6) = 1/3; GM = 20 log10(3) = 9.5424 dB"
+      }
+    },
+    {
+      "id": "controls-022",
+      "calculator": "controls.stability_margins",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          6
+        ],
+        "den": [
+          1,
+          3,
+          2,
+          0
+        ]
+      },
+      "solve_for": [
+        "gain_margin",
+        "phase_margin",
+        "w_gc",
+        "w_pc",
+        "bandwidth"
+      ],
+      "expected_as_specified": {
+        "phase_margin": "0 deg",
+        "gain_margin": 0.0,
+        "w_pc": "1.414214 rad/s"
+      },
+      "expected_SI": {
+        "phase_margin": 0.0,
+        "gain_margin": 0.0,
+        "w_pc": 1.414214
+      },
+      "actual_SI": {
+        "phase_margin": {
+          "value": -1.1158629575902523e-11,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)"
+        },
+        "gain_margin": {
+          "value": 5.785964799319724e-15,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)"
+        },
+        "w_pc": {
+          "value": 1.4142135623730956,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "phase_margin": {
+          "absolute_error": 1.1158629575902523e-11,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-09,
+          "passed": true
+        },
+        "gain_margin": {
+          "absolute_error": 5.785964799319724e-15,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-09,
+          "passed": true
+        },
+        "w_pc": {
+          "absolute_error": 4.376269044925607e-07,
+          "relative_error": 3.09448856037743e-07,
+          "allowed_absolute_error": 0.001414214,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "K = 6 is the critical gain of 1/(s(s+1)(s+2)): at \u03c9 = \u221a2 the loop gain is exactly 1 and the phase \u2212180\u00b0, so GM = 0 dB and PM = 0\u00b0 (both margins zero at the stability limit; abs_tol covers the brentq round-off near the exact zero)"
+      }
+    },
+    {
+      "id": "controls-023",
+      "calculator": "controls.stability_margins",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          10
+        ],
+        "den": [
+          1,
+          3,
+          2,
+          0
+        ]
+      },
+      "solve_for": [
+        "gain_margin",
+        "phase_margin",
+        "w_gc",
+        "w_pc",
+        "bandwidth"
+      ],
+      "expected_as_specified": {
+        "phase_margin": "-0.226844 rad",
+        "gain_margin": -4.436975
+      },
+      "expected_SI": {
+        "phase_margin": -0.226844,
+        "gain_margin": -4.436975
+      },
+      "actual_SI": {
+        "phase_margin": {
+          "value": -0.22684400127601512,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)"
+        },
+        "gain_margin": {
+          "value": -4.436974992327121,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "phase_margin": {
+          "absolute_error": 1.2760151268942366e-09,
+          "relative_error": 5.625077704917197e-09,
+          "allowed_absolute_error": 0.000226844,
+          "passed": true
+        },
+        "gain_margin": {
+          "absolute_error": 7.672879220876894e-09,
+          "relative_error": 1.7293041364616417e-09,
+          "allowed_absolute_error": 0.004436975,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "K = 10 exceeds the critical gain: the unwrapped phase at the gain crossover (\u03c9_gc = 1.8022) is below \u2212180\u00b0, giving PM = \u221212.997\u00b0 = \u22120.226844 rad and GM = \u22124.436975 dB (both negative for the unstable loop)"
+      }
+    },
+    {
+      "id": "controls-024",
+      "calculator": "controls.stability_margins",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "num": [
+          1
+        ],
+        "den": [
+          1,
+          0,
+          0
+        ]
+      },
+      "solve_for": [
+        "gain_margin",
+        "phase_margin",
+        "w_gc",
+        "w_pc",
+        "bandwidth"
+      ],
+      "expected_as_specified": {
+        "gain_margin": null,
+        "w_pc": null,
+        "w_gc": "1 rad/s"
+      },
+      "expected_SI": {
+        "gain_margin": null,
+        "w_pc": null,
+        "w_gc": 1.0
+      },
+      "actual_SI": {
+        "gain_margin": {
+          "value": null,
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)",
+          "unit": ""
+        },
+        "w_pc": {
+          "value": null,
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)",
+          "unit": ""
+        },
+        "w_gc": {
+          "value": 1.0,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc controls.stability_margins (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "gain_margin": {
+          "passed": true
+        },
+        "w_pc": {
+          "passed": true
+        },
+        "w_gc": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "G = 1/s\u00b2 has \u2220G = \u2212180\u00b0 everywhere (Im G \u2261 0), so the phase never crosses \u2212180\u00b0: \u03c9_pc and gain margin are undefined (null), not \u2212320 dB at the first grid point; |G| = 1 at \u03c9 = 1 rad/s"
+      }
+    },
+    {
+      "id": "controls-025",
+      "calculator": "controls.pid_ziegler_nichols",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K_u": 4.0,
+        "T_u": "2 s"
+      },
+      "solve_for": [
+        "Ki_PID",
+        "Kp_PID",
+        "Ti_PID",
+        "Td_PID",
+        "Kd_PID",
+        "Kp_P",
+        "Kp_PI",
+        "Ti_PI",
+        "Ki_PI"
+      ],
+      "expected_as_specified": {
+        "Ki_PID": "2.4 1/s",
+        "Kp_PID": 2.4,
+        "Ti_PID": "1 s",
+        "Td_PID": "0.25 s",
+        "Kd_PID": "0.6 s",
+        "Kp_P": 2.0,
+        "Kp_PI": 1.8,
+        "Ti_PI": "1.666667 s",
+        "Ki_PI": "1.08 1/s"
+      },
+      "expected_SI": {
+        "Ki_PID": 2.4,
+        "Kp_PID": 2.4,
+        "Ti_PID": 1.0,
+        "Td_PID": 0.25,
+        "Kd_PID": 0.6,
+        "Kp_P": 2.0,
+        "Kp_PI": 1.8,
+        "Ti_PI": 1.666667,
+        "Ki_PI": 1.08
+      },
+      "actual_SI": {
+        "Ki_PID": {
+          "value": 2.4,
+          "unit": "1/s",
+          "kind": "derived",
+          "method": "mechcalc controls.pid_ziegler_nichols (procedure)"
+        },
+        "Kp_PID": {
+          "value": 2.4,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.pid_ziegler_nichols (procedure)"
+        },
+        "Ti_PID": {
+          "value": 1.0,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc controls.pid_ziegler_nichols (procedure)"
+        },
+        "Td_PID": {
+          "value": 0.25,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc controls.pid_ziegler_nichols (procedure)"
+        },
+        "Kd_PID": {
+          "value": 0.6,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc controls.pid_ziegler_nichols (procedure)"
+        },
+        "Kp_P": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.pid_ziegler_nichols (procedure)"
+        },
+        "Kp_PI": {
+          "value": 1.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.pid_ziegler_nichols (procedure)"
+        },
+        "Ti_PI": {
+          "value": 1.6666666666666667,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc controls.pid_ziegler_nichols (procedure)"
+        },
+        "Ki_PI": {
+          "value": 1.08,
+          "unit": "1/s",
+          "kind": "derived",
+          "method": "mechcalc controls.pid_ziegler_nichols (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "Ki_PID": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00024,
+          "passed": true
+        },
+        "Kp_PID": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00024,
+          "passed": true
+        },
+        "Ti_PID": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0001,
+          "passed": true
+        },
+        "Td_PID": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.5e-05,
+          "passed": true
+        },
+        "Kd_PID": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 6e-05,
+          "passed": true
+        },
+        "Kp_P": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        },
+        "Kp_PI": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00018,
+          "passed": true
+        },
+        "Ti_PI": {
+          "absolute_error": 3.333333331578814e-07,
+          "relative_error": 1.9999995989473686e-07,
+          "allowed_absolute_error": 0.0001666667,
+          "passed": true
+        },
+        "Ki_PI": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00010800000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "ZN ultimate-gain: P Kp = 0.5\u00b74 = 2; PI Kp = 0.45\u00b74 = 1.8, Ti = 2/1.2 = 1.6667, Ki = 1.8/1.6667 = 1.08; PID Kp = 0.6\u00b74 = 2.4, Ti = 1, Td = 0.25, Ki = 2.4/1 = 2.4, Kd = 2.4\u00b70.25 = 0.6"
+      }
+    },
+    {
+      "id": "controls-026",
+      "calculator": "controls.pid_ziegler_nichols",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T_u": "2 s",
+        "Ki_PID": "2.4 1/s"
+      },
+      "solve_for": [
+        "K_u"
+      ],
+      "expected_as_specified": {
+        "K_u": 4.0
+      },
+      "expected_SI": {
+        "K_u": 4.0
+      },
+      "actual_SI": {
+        "K_u": {
+          "value": 4.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.pid_ziegler_nichols (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "K_u": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Ki_PID = 1.2 K_u/T_u \u2192 K_u = 2.4\u00b72/1.2 = 4 (inverse)"
+      }
+    },
+    {
+      "id": "controls-027",
+      "calculator": "controls.state_space",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "A": [
+          [
+            0,
+            1
+          ],
+          [
+            -2,
+            -3
+          ]
+        ],
+        "B": [
+          [
+            0
+          ],
+          [
+            1
+          ]
+        ],
+        "C": [
+          [
+            1,
+            0
+          ]
+        ]
+      },
+      "solve_for": [
+        "eigenvalues",
+        "ctrb_rank",
+        "obsv_rank",
+        "controllable",
+        "observable"
+      ],
+      "expected_as_specified": {
+        "eigenvalues": [
+          [
+            -2.0,
+            0.0
+          ],
+          [
+            -1.0,
+            0.0
+          ]
+        ],
+        "ctrb_rank": 2,
+        "obsv_rank": 2,
+        "controllable": 1,
+        "observable": 1
+      },
+      "expected_SI": {
+        "eigenvalues": [
+          [
+            -2.0,
+            0.0
+          ],
+          [
+            -1.0,
+            0.0
+          ]
+        ],
+        "ctrb_rank": 2.0,
+        "obsv_rank": 2.0,
+        "controllable": 1.0,
+        "observable": 1.0
+      },
+      "actual_SI": {
+        "eigenvalues": {
+          "value": [
+            [
+              -2.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc controls.state_space (procedure)",
+          "unit": ""
+        },
+        "ctrb_rank": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.state_space (procedure)"
+        },
+        "obsv_rank": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.state_space (procedure)"
+        },
+        "controllable": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.state_space (procedure)"
+        },
+        "observable": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.state_space (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "eigenvalues": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0002,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0001,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ]
+        ],
+        "ctrb_rank": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        },
+        "obsv_rank": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0002,
+          "passed": true
+        },
+        "controllable": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0001,
+          "passed": true
+        },
+        "observable": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "companion form of 1/(s\u00b2+3s+2): eigenvalues \u22121, \u22122; Ctrb = [B, AB] = [[0,1],[1,\u22123]] rank 2; Obsv = [C; CA] = [[1,0],[0,1]] rank 2 \u2192 controllable and observable"
+      }
+    },
+    {
+      "id": "controls-028",
+      "calculator": "controls.routh_hurwitz",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "coeffs": [
+          1,
+          0,
+          -1
+        ]
+      },
+      "solve_for": [
+        "n_rhp",
+        "stable",
+        "marginal",
+        "n_imag",
+        "first_column",
+        "routh_table"
+      ],
+      "expected_as_specified": {
+        "n_rhp": 1,
+        "stable": 0,
+        "marginal": 0,
+        "n_imag": 0
+      },
+      "expected_SI": {
+        "n_rhp": 1.0,
+        "stable": 0.0,
+        "marginal": 0.0,
+        "n_imag": 0.0
+      },
+      "actual_SI": {
+        "n_rhp": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "stable": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "marginal": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "n_imag": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_rhp": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "marginal": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "n_imag": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s\u00b2 \u2212 1 = (s \u2212 1)(s + 1): roots \u00b11, one in the RHP, none on the imaginary axis (reviewer case, verify22f)"
+      }
+    },
+    {
+      "id": "controls-029",
+      "calculator": "controls.routh_hurwitz",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "coeffs": [
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "solve_for": [
+        "n_rhp",
+        "stable",
+        "marginal",
+        "n_imag",
+        "first_column",
+        "routh_table"
+      ],
+      "expected_as_specified": {
+        "n_rhp": 2,
+        "stable": 0,
+        "marginal": 0,
+        "n_imag": 0
+      },
+      "expected_SI": {
+        "n_rhp": 2.0,
+        "stable": 0.0,
+        "marginal": 0.0,
+        "n_imag": 0.0
+      },
+      "actual_SI": {
+        "n_rhp": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "stable": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "marginal": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "n_imag": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_rhp": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "marginal": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "n_imag": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s\u2074 + 1: roots e^{j\u03c0(2k+1)/4} = (\u00b11 \u00b1 j)/\u221a2, two with positive real part, none on the axis (reviewer case)"
+      }
+    },
+    {
+      "id": "controls-030",
+      "calculator": "controls.routh_hurwitz",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "coeffs": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "solve_for": [
+        "n_rhp",
+        "stable",
+        "marginal",
+        "n_imag",
+        "first_column",
+        "routh_table"
+      ],
+      "expected_as_specified": {
+        "n_rhp": 0,
+        "stable": 0,
+        "marginal": 1,
+        "n_imag": 2
+      },
+      "expected_SI": {
+        "n_rhp": 0.0,
+        "stable": 0.0,
+        "marginal": 1.0,
+        "n_imag": 2.0
+      },
+      "actual_SI": {
+        "n_rhp": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "stable": {
+          "value": 0.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "marginal": {
+          "value": 1.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        },
+        "n_imag": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc controls.routh_hurwitz (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_rhp": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "stable": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "marginal": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "n_imag": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "s\u00b3 + s\u00b2 + s + 1 = (s + 1)(s\u00b2 + 1): roots \u22121, \u00b1j \u2192 two on the imaginary axis, marginal"
+      }
+    }
+  ],
+  "passed": 30,
+  "failed": 0
+}

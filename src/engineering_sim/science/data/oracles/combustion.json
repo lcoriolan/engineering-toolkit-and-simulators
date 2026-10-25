@@ -1,0 +1,401 @@
+{
+  "section": "combustion",
+  "cases": [
+    {
+      "calc": "combustion.stoichiometric_air",
+      "inputs": {
+        "C": 1,
+        "H": 4,
+        "O": 0,
+        "MW_fuel": "16.04 kg/kmol"
+      },
+      "expect": {
+        "a_O2": 2.0,
+        "a_air": "9.52",
+        "AF_st": "17.194",
+        "FA_st": "0.05816"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a = 1 + 4/4 − 0 = 2 kmol O2; air = 4.76·2 = 9.52 kmol; AF_st = 9.52·28.97/16.04 = 275.79/16.04 = 17.194 kg air/kg fuel; FA_st = 1/17.194 = 0.05816"
+      }
+    },
+    {
+      "calc": "combustion.stoichiometric_air",
+      "inputs": {
+        "C": 1,
+        "H": 4,
+        "O": 0,
+        "AF_st": "17.194"
+      },
+      "solve_for": [
+        "MW_fuel"
+      ],
+      "expect": {
+        "MW_fuel": "16.04 kg/kmol"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "MW_fuel = 9.52·28.97/17.194 = 16.04 kg/kmol"
+      }
+    },
+    {
+      "calc": "combustion.stoichiometric_air",
+      "inputs": {
+        "C": 7.76,
+        "H": 13.1,
+        "O": 0,
+        "MW_fuel": "106.2 kg/kmol"
+      },
+      "expect": {
+        "a_O2": 11.035,
+        "a_air": "52.5266",
+        "AF_st": "14.329",
+        "FA_st": "0.06979"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Diesel-surrogate C7.76H13.1 (non-integer atoms): a = 7.76 + 13.1/4 − 0 = 7.76 + 3.275 = 11.035 kmol O2; air = 4.76·11.035 = 52.5266 kmol; AF_st = 52.5266·28.97/106.2 = 1521.70/106.2 = 14.329; FA_st = 1/14.329 = 0.06979"
+      }
+    },
+    {
+      "calc": "combustion.excess_air",
+      "inputs": {
+        "AF_actual": 20.0,
+        "AF_st": 16.0
+      },
+      "expect": {
+        "excess": 0.25
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "excess = (20.0 − 16.0)/16.0 = 4/16 = 0.25 (25 % excess air)"
+      }
+    },
+    {
+      "calc": "combustion.excess_air",
+      "inputs": {
+        "AF_st": 14.7,
+        "excess": 0.2
+      },
+      "solve_for": [
+        "AF_actual"
+      ],
+      "expect": {
+        "AF_actual": 17.64
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "AF_actual = AF_st(1 + excess) = 14.7·1.2 = 17.64"
+      }
+    },
+    {
+      "calc": "combustion.products_of_combustion",
+      "inputs": {
+        "C": 1,
+        "H": 4,
+        "O": 0,
+        "lambda": 1.2,
+        "P_total": "1 atm"
+      },
+      "expect": {
+        "n_CO2": 1.0,
+        "n_H2O": 2.0,
+        "n_O2": 0.4,
+        "n_N2": "9.024",
+        "n_wet": "12.424",
+        "n_dry": "10.424",
+        "y_H2O": "0.16098",
+        "P_H2O": "16.311 kPa",
+        "T_dew": "328.87 K"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = 1 + 4/4 = 2. Products per kmol CH4: 1 CO2, 2 H2O, (1.2−1)·2 = 0.4 O2, 3.76·1.2·2 = 9.024 N2. n_wet = 1+2+0.4+9.024 = 12.424; n_dry = 10.424. y_H2O = 2/12.424 = 0.16098; P_H2O = 0.16098·101 325 = 16 311 Pa. T_dew = T_sat(H2O at 16.311 kPa) = 328.87 K (CoolProp IAPWS-95)"
+      }
+    },
+    {
+      "calc": "combustion.products_of_combustion",
+      "inputs": {
+        "C": 3,
+        "H": 8,
+        "O": 0,
+        "lambda": 1.2,
+        "P_total": "2 atm"
+      },
+      "expect": {
+        "a_O2": 5.0,
+        "n_CO2": 3.0,
+        "n_H2O": 4.0,
+        "n_O2": 1.0,
+        "n_N2": "22.56",
+        "n_wet": "30.56",
+        "n_dry": "26.56",
+        "y_H2O": "0.13089",
+        "P_H2O": "26.525 kPa",
+        "T_dew": "339.44 K"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = 3 + 8/4 = 5. Products per kmol C3H8: 3 CO2, 4 H2O, (1.2−1)·5 = 1.0 O2, 3.76·1.2·5 = 22.56 N2. n_wet = 3+4+1+22.56 = 30.56; n_dry = 26.56. y_H2O = 4/30.56 = 0.13089; P_H2O = 0.13089·202 650 = 26 525 Pa. T_dew = T_sat(H2O at 26.525 kPa) = 339.44 K (CoolProp IAPWS-95)"
+      }
+    },
+    {
+      "calc": "combustion.products_of_combustion",
+      "inputs": {
+        "C": 1,
+        "H": 0,
+        "O": 0,
+        "lambda": 1.2,
+        "P_total": "1 atm"
+      },
+      "expect": {
+        "a_O2": 1.0,
+        "n_CO2": 1.0,
+        "n_H2O": 0.0,
+        "n_O2": 0.2,
+        "n_N2": "4.512",
+        "n_wet": "5.712",
+        "n_dry": "5.712",
+        "y_H2O": 0.0,
+        "P_H2O": 0.0,
+        "T_dew": null
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Carbon (no hydrogen): a = 1 + 0 − 0 = 1. Products: 1 CO2, 0 H2O, (1.2−1)·1 = 0.2 O2, 3.76·1.2·1 = 4.512 N2. n_wet = n_dry = 5.712. No water → y_H2O = 0, P_H2O = 0, and the dew point is undefined (null)."
+      }
+    },
+    {
+      "calc": "combustion.heating_values",
+      "inputs": {
+        "C": 1,
+        "H": 4,
+        "O": 0,
+        "MW_fuel": "16.04 kg/kmol",
+        "hf_fuel": "-74.87 kJ/mol",
+        "hf_CO2": "-393.52 kJ/mol",
+        "hf_H2O_g": "-241.82 kJ/mol",
+        "hf_H2O_l": "-285.83 kJ/mol"
+      },
+      "expect": {
+        "LHV": "802.29 kJ/mol",
+        "HHV": "890.31 kJ/mol",
+        "LHV_mass": "50.02 MJ/kg",
+        "HHV_mass": "55.51 MJ/kg"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "ΔH_comb(g) = 1·(−393.52) + 2·(−241.82) − (−74.87) = −393.52 − 483.64 + 74.87 = −802.29 kJ/mol → LHV = 802.29 kJ/mol; ΔH_comb(l) = −393.52 + 2·(−285.83) + 74.87 = −890.31 kJ/mol → HHV = 890.31 kJ/mol. LHV_mass = 802.29/16.04 = 50.02 MJ/kg; HHV_mass = 890.31/16.04 = 55.51 MJ/kg"
+      }
+    },
+    {
+      "calc": "combustion.heating_value_fuel",
+      "inputs": {
+        "fuel": "CH4"
+      },
+      "expect": {
+        "a_O2": 2.0,
+        "MW": "16.043 kg/kmol",
+        "LHV_mass": "50.03 MJ/kg",
+        "HHV_mass": "55.51 MJ/kg"
+      },
+      "rel_tol": 0.005,
+      "source": {
+        "kind": "cited",
+        "ref": "Methane heating values: LHV = 50.0 MJ/kg, HHV = 55.5 MJ/kg, MW = 16.04 kg/kmol, a = 2 (standard combustion reference values; recalled, not re-read)."
+      }
+    },
+    {
+      "calc": "combustion.heating_value_fuel",
+      "inputs": {
+        "fuel": "C3H8"
+      },
+      "expect": {
+        "a_O2": 5.0,
+        "MW": "44.097 kg/kmol",
+        "LHV_mass": "46.33 MJ/kg",
+        "HHV_mass": "50.32 MJ/kg"
+      },
+      "rel_tol": 0.005,
+      "source": {
+        "kind": "cited",
+        "ref": "Propane heating values: LHV = 46.35 MJ/kg, HHV = 50.35 MJ/kg, MW = 44.10 kg/kmol, a = 5 (standard combustion reference values; recalled, not re-read)."
+      }
+    },
+    {
+      "calc": "combustion.enthalpy_of_reaction",
+      "inputs": {
+        "reactants": {
+          "H2": 1,
+          "O2": 0.5
+        },
+        "products": {
+          "H2O(g)": 1
+        },
+        "T": "298.15 K"
+      },
+      "expect": {
+        "dH": "-241.8 kJ/mol",
+        "dG": "-228.6 kJ/mol",
+        "dS": "-44.4 J/mol/K"
+      },
+      "rel_tol": 0.002,
+      "source": {
+        "kind": "cited",
+        "ref": "Standard enthalpy of formation of H2O(g): ΔHf = −241.8 kJ/mol, ΔGf = −228.6 kJ/mol, ΔS = −44.4 J/(mol·K) (standard reference values; recalled, not re-read)."
+      }
+    },
+    {
+      "calc": "combustion.enthalpy_of_reaction",
+      "inputs": {
+        "reactants": {
+          "CO": 1,
+          "O2": 0.5
+        },
+        "products": {
+          "CO2": 1
+        },
+        "T": "298.15 K"
+      },
+      "expect": {
+        "dH": "-283.0 kJ/mol"
+      },
+      "rel_tol": 0.002,
+      "source": {
+        "kind": "cited",
+        "ref": "CO + 1/2 O2 → CO2 heat of reaction ΔH = −283.0 kJ/mol (standard reference value; recalled, not re-read)."
+      }
+    },
+    {
+      "calc": "combustion.equilibrium_constant",
+      "inputs": {
+        "dG": "-10 kJ/mol",
+        "T": "298.15 K"
+      },
+      "expect": {
+        "K": "56.484",
+        "ln_K": "4.0340",
+        "log10_K": "1.7519"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ln K = −ΔG/(RT) = 10 000/(8.314462618·298.15) = 4.03396; K = exp(4.03396) = 56.484; log10 K = 4.03396/ln 10 = 1.75192"
+      }
+    },
+    {
+      "calc": "combustion.equilibrium_constant",
+      "inputs": {
+        "K": "56.484",
+        "T": "298.15 K"
+      },
+      "solve_for": [
+        "dG"
+      ],
+      "expect": {
+        "dG": "-10 kJ/mol"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "ΔG = −RT ln K = −8.314462618·298.15·ln(56.484) = −10 000 J/mol = −10 kJ/mol"
+      }
+    },
+    {
+      "calc": "combustion.equilibrium_constant",
+      "inputs": {
+        "dG": "-2000 kJ/mol",
+        "T": "298.15 K"
+      },
+      "expect": {
+        "K": null,
+        "ln_K": "806.79",
+        "log10_K": "350.38"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "ln K = 2 000 000/(8.314462618·298.15) = 806.79; log10 K = 806.79/ln 10 = 350.38. K = exp(806.79) overflows double precision, so it is reported null with the log forms as the usable result."
+      }
+    },
+    {
+      "calc": "combustion.chemical_equilibrium",
+      "inputs": {
+        "mech": "gri30",
+        "mixture": {
+          "CH4": 1,
+          "O2": 2,
+          "N2": 7.52
+        },
+        "T": "298.15 K",
+        "P": "1 atm",
+        "constraint": "HP"
+      },
+      "expect": {
+        "T_out": "2225 K"
+      },
+      "rel_tol": 0.01,
+      "source": {
+        "kind": "cited",
+        "ref": "Adiabatic flame temperature of stoichiometric methane-air at 1 atm, 298 K reactants ≈ 2226 K (with dissociation; standard reference value, recalled, not re-read)."
+      }
+    },
+    {
+      "calc": "combustion.chemical_equilibrium",
+      "inputs": {
+        "mech": "gri30",
+        "mixture": {
+          "O2": 1,
+          "N2": 3.76
+        },
+        "T": "298.15 K",
+        "P": "1 atm",
+        "constraint": "TP"
+      },
+      "expect": {
+        "T_out": "298.15 K",
+        "major": [
+          {
+            "species": "N2",
+            "X": 0.78992
+          },
+          {
+            "species": "O2",
+            "X": 0.21008
+          }
+        ]
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Air at 298 K does not react, so the equilibrium composition equals the feed: X_N2 = 3.76/4.76 = 0.78992, X_O2 = 1/4.76 = 0.21008, and T_out = 298.15 K (TP constraint holds T fixed)"
+      }
+    },
+    {
+      "calc": "combustion.enthalpy_of_reaction",
+      "inputs": {
+        "reactants": {
+          "C3H8": 1,
+          "O2": 5
+        },
+        "products": {
+          "CO2": 3,
+          "H2O(g)": 4
+        },
+        "T": "298.15 K"
+      },
+      "expect": {
+        "dH": "-2043.13 kJ/mol",
+        "ln_K": 836.29
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Propane combustion (gaseous water) from NIST standard values recalled: ΔHf CO2 −393.51, H2O(g) −241.826, C3H8 −104.7 kJ/mol → ΔH = 3(−393.51) + 4(−241.826) − (−104.7) = −2043.13 kJ/mol. S° CO2 213.785, H2O(g) 188.835, O2 205.152, C3H8 270.3 J/(mol·K) → ΔS = 100.64; ΔG = −2043134 − 298.15·100.64 = −2073139 J/mol; ln K = 2073139/(8.314462618·298.15) = 836.29 (K overflows double precision)."
+      }
+    }
+  ]
+}

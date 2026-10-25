@@ -1,0 +1,3552 @@
+{
+  "PROJECT": "Engineering simulation reference data",
+  "DESCRIPTION": "Cited additive library for science toolkit compounding screens.",
+  "records": [
+    {
+      "id": "chain_extender_joncryl_adr4468",
+      "name": "Joncryl ADR-4468 (epoxy styrene-acrylic)",
+      "class": "chain extender",
+      "chemistry": {
+        "value": "styrene-acrylic copolymer with glycidyl methacrylate epoxy groups",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "epoxy",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": 310.0,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "supplier / literature eq. weight (recalled)"
+      },
+      "functionality": {
+        "value": 23.4,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature functionality (recalled)"
+      },
+      "reacts_with": [
+        "COOH",
+        "OH"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.2,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pet",
+        "pla",
+        "pbt",
+        "pa6",
+        "pa66"
+      ],
+      "antagonisms": [
+        "sodium carboxylates (Na benzoate, Na montanate) catalyse epoxy ring-opening homopolymerisation",
+        "acidic phosphorus compounds (DOPO, phosphites hydrolysed to acids) consume epoxy",
+        "moisture hydrolyses epoxy groups",
+        "excess epoxy gels the melt (see gel point)"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not cleared for food contact in all jurisdictions; confirm grade",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Multi-epoxy oligomer couples COOH (and OH) chain ends: one molecule can couple several chains, raising Mn and restoring IV. Dose is gel-limited.",
+      "notes": "EEW 310 and fw = Mw/EEW ~23.4 match the rPET engine; confirm on the BASF datasheet."
+    },
+    {
+      "id": "pmda",
+      "name": "PMDA (pyromellitic dianhydride)",
+      "class": "chain extender",
+      "chemistry": {
+        "value": "C10H2O6 aromatic tetra-acid dianhydride",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "anhydride",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": 109.06,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "supplier / literature eq. weight (recalled)"
+      },
+      "functionality": {
+        "value": 4.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature functionality (recalled)"
+      },
+      "reacts_with": [
+        "OH",
+        "NH2"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pet",
+        "pa6",
+        "pa66",
+        "pla"
+      ],
+      "antagonisms": [
+        "hydrolyses to pyromellitic acid in moist melt",
+        "anhydride + OH opens to COOH which can re-esterify"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not for food contact",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "One PMDA opens two anhydride rings toward two OH ends (functionality 4), coupling chains. EEW = Mw/2 = 109.06 g/mol.",
+      "molar_mass_g_mol": {
+        "value": 218.12,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/pyromellitic%20dianhydride/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "bisoxazoline",
+      "name": "PBO (1,3-phenylene-bis(2-oxazoline))",
+      "class": "chain extender",
+      "chemistry": {
+        "value": "aromatic bis-oxazoline",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "oxazoline",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": 108.0,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "supplier / literature eq. weight (recalled)"
+      },
+      "functionality": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature functionality (recalled)"
+      },
+      "reacts_with": [
+        "COOH",
+        "NH2"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.2,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 1.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pet",
+        "pbt",
+        "pa6",
+        "pa66"
+      ],
+      "antagonisms": [
+        "oxazoline hydrolyses slowly in moist conditions"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not for food contact",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Oxazoline ring opens selectively on COOH (no gel risk, functionality 2); used for PET/PA chain extension."
+    },
+    {
+      "id": "carbodiimide_polymeric",
+      "name": "Stabaxol P (polymeric carbodiimide)",
+      "class": "chain extender / anti-hydrolysis",
+      "chemistry": {
+        "value": "poly(1,3,5-triisopropylphenylene carbodiimide)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "carbodiimide (-N=C=N-)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": 40.0,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "supplier / literature eq. weight (recalled)"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "COOH",
+        "water"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 2.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pet",
+        "pbt",
+        "pla",
+        "pa6",
+        "pa66",
+        "pu"
+      ],
+      "antagonisms": [
+        "consumes water but also reacts with COOH; overdosing deactivates acid ends"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not for food contact",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Carbodiimide scavenges water and COOH, blocking hydrolysis; also a chain extender for polyesters/polyamides."
+    },
+    {
+      "id": "chain_extender_tdi",
+      "name": "TDI dimer/trimer isocyanate extender",
+      "class": "chain extender",
+      "chemistry": {
+        "value": "aromatic diisocyanate oligomer",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "isocyanate",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": 87.0,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "supplier / literature eq. weight (recalled)"
+      },
+      "functionality": {
+        "value": 2.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature functionality (recalled)"
+      },
+      "reacts_with": [
+        "OH",
+        "NH2",
+        "water"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pa6",
+        "pa66",
+        "pbt"
+      ],
+      "antagonisms": [
+        "NCO reacts with water to CO2 (foaming) and urea; moisture must be excluded"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not for food contact",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "NCO couples OH/NH2 ends; very moisture-sensitive, rarely used in PET."
+    },
+    {
+      "id": "ao_irganox1010",
+      "name": "Irganox 1010 (hindered phenol)",
+      "class": "antioxidant (primary)",
+      "chemistry": {
+        "value": "pentaerythritol tetrakis(3-(3,5-di-tert-butyl-4-hydroxyphenyl)propionate), C73H108O12",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "phenolic OH (hindered)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "peroxyl radicals"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.05,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.3,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "all polyolefins",
+        "pet",
+        "pbt",
+        "pa6",
+        "pa66",
+        "pc",
+        "abs"
+      ],
+      "antagonisms": [
+        "hindered phenol is consumed by acid; add phosphite synergist"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": 335,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "literature TGA 1 % loss (recalled)"
+      },
+      "tga_5pct_loss_c": {
+        "value": 355,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "literature TGA 5 % loss (recalled)"
+      },
+      "food_contact": {
+        "value": "yes (many grades)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Donates H to alkylperoxyl radicals, breaking the oxidative chain. Standard primary AO.",
+      "molar_mass_g_mol": {
+        "value": 1177.6,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/pentaerythritol%20tetrakis%283-%283%2C5-di-tert-butyl-4-hydroxyphenyl%29propionate%29/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "phosphite_irgafos168",
+      "name": "Irgafos 168 (phosphite)",
+      "class": "antioxidant (secondary)",
+      "chemistry": {
+        "value": "tris(2,4-di-tert-butylphenyl) phosphite, C42H63O3P",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "phosphite ester",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "hydroperoxides"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.05,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.3,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "pet",
+        "pbt",
+        "pa6",
+        "pa66",
+        "pc",
+        "abs"
+      ],
+      "antagonisms": [
+        "hydrolyses to phenol + phosphoric acid in moist melt (acid catalyses polyester hydrolysis and consumes epoxy)"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": 260,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "literature TGA 1 % loss (recalled)"
+      },
+      "tga_5pct_loss_c": {
+        "value": 300,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "literature TGA 5 % loss (recalled)"
+      },
+      "food_contact": {
+        "value": "yes (many grades)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Reduces hydroperoxides to alcohols; protects colour during processing. Hydrolysis-sensitive.",
+      "molar_mass_g_mol": {
+        "value": 646.9,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/tris%282%2C4-di-tert-butylphenyl%29%20phosphite/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "thioester_dstdp",
+      "name": "DSTDP (distearyl thiodipropionate)",
+      "class": "antioxidant (secondary)",
+      "chemistry": {
+        "value": "thiodipropionic acid distearyl ester, C42H82O4S",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "thioester",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "hydroperoxides"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "abs",
+        "pvc"
+      ],
+      "antagonisms": [
+        "sulfur odour at high temperature",
+        "thioester + hindered phenol is a classic synergist pair"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (limited)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Thioether decomposes hydroperoxides; long-term thermal stabiliser, synergises with hindered phenols."
+    },
+    {
+      "id": "ao_bht",
+      "name": "BHT (2,6-di-tert-butyl-4-methylphenol)",
+      "class": "antioxidant (primary)",
+      "chemistry": {
+        "value": "C15H24O hindered monophenol",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "phenolic OH (hindered)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "peroxyl radicals"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.05,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.3,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "abs"
+      ],
+      "antagonisms": [
+        "volatile above ~200 C (loss at melt temperatures)"
+      ],
+      "boiling_point_c": {
+        "value": 265,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "literature boiling point (recalled)"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (limited levels)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Low-MW hindered phenol; cheap but migrates and volatilises in high-temperature processing."
+    },
+    {
+      "id": "hals_tinuvin770",
+      "name": "Tinuvin 770 (HALS)",
+      "class": "UV stabiliser",
+      "chemistry": {
+        "value": "bis(2,2,6,6-tetramethyl-4-piperidyl) sebacate, C28H52N2O4",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "hindered amine",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "alkyl radicals"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "abs",
+        "pa6",
+        "pa66"
+      ],
+      "antagonisms": [
+        "basic amine can catalyse polyester hydrolysis / interfere with epoxy in PET"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (limited)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Cyclic regeneration of nitroxyl radical scavenges photo-oxidation; does not absorb UV."
+    },
+    {
+      "id": "uv_benzotriazole_tinuvin326",
+      "name": "Tinuvin 326 (benzotriazole)",
+      "class": "UV absorber",
+      "chemistry": {
+        "value": "2-(2'-hydroxy-3'-tert-butyl-5'-methylphenyl)-5-chlorobenzotriazole",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "benzotriazole UV absorber",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "UV photons"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pc",
+        "abs",
+        "pet",
+        "pbt",
+        "pmma"
+      ],
+      "antagonisms": [
+        "none major"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (limited)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Absorbs UV and dissipates as heat; protects colour and surface gloss."
+    },
+    {
+      "id": "talc",
+      "name": "Talc (nucleating grade)",
+      "class": "nucleator / filler",
+      "chemistry": {
+        "value": "Mg3Si4O10(OH)2 hydrated magnesium silicate",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (surface nucleates)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 5.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pp",
+        "pet",
+        "pbt",
+        "pla",
+        "pa6",
+        "pa66"
+      ],
+      "antagonisms": [
+        "platelet stiffens and nucleates; lowers clarity"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "High-surface-area platelets nucleate crystallisation (heterogeneous). Doubles as a stiffening filler.",
+      "molar_mass_g_mol": {
+        "value": 379.27,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/talc/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "sodium_benzoate",
+      "name": "Sodium benzoate",
+      "class": "nucleator",
+      "chemistry": {
+        "value": "C7H5NaO2 sodium salt of benzoic acid",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "sodium carboxylate",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pp",
+        "pet"
+      ],
+      "antagonisms": [
+        "sodium carboxylate catalyses epoxy ring-opening (incompatible with epoxy chain extenders)"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (food preservative)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Classic PP/PET nucleating agent; the carboxylate is also an epoxy-cure catalyst, a key antagonism.",
+      "molar_mass_g_mol": {
+        "value": 144.1,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/sodium%20benzoate/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "sodium_montanate",
+      "name": "Sodium montanate",
+      "class": "nucleator",
+      "chemistry": {
+        "value": "sodium salt of montan-wax long-chain carboxylic acids",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "sodium carboxylate",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pet"
+      ],
+      "antagonisms": [
+        "sodium carboxylate catalyses epoxy ring-opening (incompatible with epoxy chain extenders)"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not for food contact",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Efficient PET nucleator; carboxylate/epoxy antagonism is the reason rPET routes pair it with the extender cautiously."
+    },
+    {
+      "id": "sorbitol_clarifier",
+      "name": "Millad 3988 (dibenzylidene sorbitol)",
+      "class": "clarifying nucleator",
+      "chemistry": {
+        "value": "1,3:2,4-bis(3,4-dimethylbenzylidene) sorbitol",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "sorbitol acetal",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.3,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pp"
+      ],
+      "antagonisms": [
+        "excess or overheating causes plate-out and haze"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Dissolves in PP melt and re-precipitates as a nanofibrillar network that clarifies by refining spherulites."
+    },
+    {
+      "id": "nucleator_na11",
+      "name": "NA-11 (sodium phosphate ester nucleator)",
+      "class": "nucleator",
+      "chemistry": {
+        "value": "sodium 2,2'-methylenebis(4,6-di-tert-butylphenyl)phosphate",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "phosphate ester (Na salt)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.05,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.3,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pp"
+      ],
+      "antagonisms": [
+        "acidic hydrolysis products can interact with basic additives"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (limited)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Organophosphate nucleator giving high PP crystallisation temperature and improved stiffness."
+    },
+    {
+      "id": "npg_dibenzoate",
+      "name": "NPG dibenzoate",
+      "class": "plasticiser / crystallisation promoter",
+      "chemistry": {
+        "value": "neopentyl glycol dibenzoate, C19H20O4",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (ester)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 1.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 6.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pet",
+        "pbt",
+        "pla"
+      ],
+      "antagonisms": [
+        "lowers Tg/Tm and modulus; not for food contact"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "no",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Lowers PET Tg enough to crystallise in a 90-100 C water-heated mould (rPET route A)."
+    },
+    {
+      "id": "atbc",
+      "name": "ATBC (acetyl tributyl citrate)",
+      "class": "plasticiser",
+      "chemistry": {
+        "value": "tributyl O-acetylcitrate, C20H34O8",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (citrate ester)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 1.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 20.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pvc",
+        "pla",
+        "abs",
+        "pc"
+      ],
+      "antagonisms": [
+        "high loadings plasticise the matrix and drop HDT"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Phthalate-free food-contact plasticiser; replaces DOP/DEHP.",
+      "molar_mass_g_mol": {
+        "value": 402.5,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/tributyl%20O-acetylcitrate/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "dibutyl_sebacate",
+      "name": "DBS (dibutyl sebacate)",
+      "class": "plasticiser",
+      "chemistry": {
+        "value": "dibutyl sebacate, C18H34O4",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (sebacate ester)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 1.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 10.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pvc",
+        "pla",
+        "cellulose esters"
+      ],
+      "antagonisms": [
+        "limited compatibility with nonpolar polyolefins"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (limited)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Phthalate-free low-temperature plasticiser.",
+      "molar_mass_g_mol": {
+        "value": 314.5,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/dibutyl%20sebacate/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "triacetin",
+      "name": "Triacetin (glycerol triacetate)",
+      "class": "plasticiser",
+      "chemistry": {
+        "value": "glycerol triacetate, C9H14O6",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (acetate ester)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 1.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 15.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pla",
+        "pvc",
+        "cellulose acetate"
+      ],
+      "antagonisms": [
+        "volatile at high temperature (bp ~258 C)"
+      ],
+      "boiling_point_c": {
+        "value": 258,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "literature boiling point (recalled)"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Food-contact (GRAS) plasticiser; also used as a PLA melt-plasticiser."
+    },
+    {
+      "id": "ema_gma",
+      "name": "Lotader AX (E-MA-GMA terpolymer)",
+      "class": "impact modifier / chain extender",
+      "chemistry": {
+        "value": "ethylene - methyl acrylate - glycidyl methacrylate random terpolymer",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "epoxy (GMA)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": 1777.0,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "supplier / literature eq. weight (recalled)"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "COOH",
+        "NH2"
+      ],
+      "loading_min_wt_pct": {
+        "value": 1.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 10.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pet",
+        "pbt",
+        "pa6",
+        "pa66"
+      ],
+      "antagonisms": [
+        "GMA epoxy contributes to the epoxy:COOH stoichiometry (raises gel risk)",
+        "food-contact grade required for food use"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "food-contact grades exist",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "GMA grafts epoxy reactivity onto a rubbery ethylene backbone; toughens and compatibilises. EEW from 8 % GMA: 142.15/0.08 = 1777 g/mol."
+    },
+    {
+      "id": "mbs",
+      "name": "MBS core-shell",
+      "class": "impact modifier",
+      "chemistry": {
+        "value": "methacrylate - butadiene - styrene core-shell rubber",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 2.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 10.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pc",
+        "pc/pbt",
+        "pvc",
+        "abs"
+      ],
+      "antagonisms": [
+        "butadiene lowers UV/thermal stability",
+        "not for transparent high-clarity parts (refractive mismatch)"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (some grades)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Core-shell rubber toughens glassy matrices (PC, PVC) with minimal modulus loss."
+    },
+    {
+      "id": "sebs_g_ma",
+      "name": "SEBS-g-MA",
+      "class": "impact modifier / compatibiliser",
+      "chemistry": {
+        "value": "styrene-ethylene/butylene-styrene block copolymer grafted with maleic anhydride",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "anhydride (maleic)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": 3000.0,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "supplier / literature eq. weight (recalled)"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "NH2",
+        "OH"
+      ],
+      "loading_min_wt_pct": {
+        "value": 2.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 10.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pa6",
+        "pa66",
+        "pp",
+        "pet"
+      ],
+      "antagonisms": [
+        "anhydride hydrolyses in moist conditions"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not for food contact (typical)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Maleated rubber toughens PA and improves PA/PP blends."
+    },
+    {
+      "id": "epdm_g_ma",
+      "name": "EPDM-g-MA",
+      "class": "impact modifier",
+      "chemistry": {
+        "value": "ethylene-propylene-diene rubber grafted with maleic anhydride",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "anhydride (maleic)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": 4000.0,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "supplier / literature eq. weight (recalled)"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "NH2",
+        "OH"
+      ],
+      "loading_min_wt_pct": {
+        "value": 2.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 15.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pp",
+        "pa6",
+        "pa66"
+      ],
+      "antagonisms": [
+        "anhydride hydrolyses in moist conditions"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not for food contact (typical)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Maleated EPDM is the standard PP and PA toughener."
+    },
+    {
+      "id": "pp_g_ma",
+      "name": "PP-g-MA (maleated PP)",
+      "class": "compatibiliser",
+      "chemistry": {
+        "value": "polypropylene grafted with maleic anhydride",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "anhydride (maleic)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": 2500.0,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "supplier / literature eq. weight (recalled)"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "NH2",
+        "OH",
+        "glass sizing"
+      ],
+      "loading_min_wt_pct": {
+        "value": 1.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 5.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pp",
+        "pp/pa blends",
+        "pp/filler"
+      ],
+      "antagonisms": [
+        "excess maleic anhydride can yellow"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not for food contact (typical)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Couples PP to glass fibre sizing and to PA in blends."
+    },
+    {
+      "id": "pets",
+      "name": "PETS (pentaerythritol tetrastearate)",
+      "class": "lubricant / release",
+      "chemistry": {
+        "value": "C77H148O8 pentaerythritol tetrastearate",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (ester wax)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pet",
+        "pbt",
+        "pa6",
+        "pa66",
+        "pc",
+        "abs"
+      ],
+      "antagonisms": [
+        "overdosing causes plate-out and weld-line weakness"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "External lubricant/release; low volatility ester wax.",
+      "molar_mass_g_mol": {
+        "value": 1202.0,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/pentaerythritol%20tetrastearate/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "ebs",
+      "name": "EBS (ethylene bis stearamide)",
+      "class": "lubricant / release / dispersant",
+      "chemistry": {
+        "value": "C38H76N2O2 N,N'-ethylenebis(stearamide)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (amide wax)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "pa6",
+        "pa66",
+        "abs",
+        "pvc"
+      ],
+      "antagonisms": [
+        "overdosing causes plate-out"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Internal/external lubricant and pigment dispersant.",
+      "molar_mass_g_mol": {
+        "value": 593.0,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/N%2CN%27-ethylenebis%28stearamide%29/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "calcium_stearate",
+      "name": "Calcium stearate",
+      "class": "acid scavenger / lubricant",
+      "chemistry": {
+        "value": "C36H70CaO4 calcium salt of stearic acid",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "metal carboxylate",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "pvc",
+        "abs"
+      ],
+      "antagonisms": [
+        "metal stearates can catalyse degradation in polyesters/polyamides at high loading"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Neutralises residual acid catalyst; internal lubricant.",
+      "molar_mass_g_mol": {
+        "value": 607.0,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/calcium%20stearate/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "zinc_stearate",
+      "name": "Zinc stearate",
+      "class": "lubricant / release",
+      "chemistry": {
+        "value": "C36H70O4Zn zinc salt of stearic acid",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "metal carboxylate",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "pvc",
+        "abs"
+      ],
+      "antagonisms": [
+        "zinc stearate catalyses PVC dehydrochlorination",
+        "metal stearate + epoxy antagonism at high loading"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (limited)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Internal/external lubricant; strong release effect at low dose.",
+      "molar_mass_g_mol": {
+        "value": 632.3,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/zinc%20stearate/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "dopo",
+      "name": "DOPO (9,10-dihydro-9-oxa-10-phosphaphenanthrene-10-oxide)",
+      "class": "flame retardant (reactive P)",
+      "chemistry": {
+        "value": "C12H9O2P cyclic phosphinate",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "P-H (reactive toward epoxy)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": 216.2,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "supplier / literature eq. weight (recalled)"
+      },
+      "functionality": {
+        "value": 1.0,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature functionality (recalled)"
+      },
+      "reacts_with": [
+        "epoxy"
+      ],
+      "loading_min_wt_pct": {
+        "value": 1.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 3.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "epoxy thermosets",
+        "pet",
+        "pbt"
+      ],
+      "antagonisms": [
+        "acidic P-H consumes epoxy (competes with chain extender)",
+        "phosphorus lowers thermal stability"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not for food contact",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Reactive phosphorus flame retardant; P-H adds across oxirane to graft DOPO onto epoxy resins."
+    },
+    {
+      "id": "ath",
+      "name": "ATH (aluminium trihydroxide)",
+      "class": "flame retardant (mineral)",
+      "chemistry": {
+        "value": "Al(OH)3 aluminium trihydroxide",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (endothermic dehydration)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 20.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 60.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "pvc",
+        "unsaturated polyester",
+        "epoxy"
+      ],
+      "antagonisms": [
+        "releases water above ~200 C (foaming/porosity at melt temps)",
+        "high loading kills mechanicals"
+      ],
+      "boiling_point_c": {
+        "value": 300,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "literature boiling point (recalled)"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Endothermic dehydration to Al2O3 + 3H2O cools and dilutes the flame; needs 20-60 % loading."
+    },
+    {
+      "id": "mdh",
+      "name": "MDH (magnesium dihydroxide)",
+      "class": "flame retardant (mineral)",
+      "chemistry": {
+        "value": "Mg(OH)2 magnesium dihydroxide",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (endothermic dehydration)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 30.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 60.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "pa6",
+        "pa66"
+      ],
+      "antagonisms": [
+        "dehydrates ~330 C (usable at higher temps than ATH)",
+        "high loading kills mechanicals"
+      ],
+      "boiling_point_c": {
+        "value": 330,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "literature boiling point (recalled)"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Higher decomposition temperature than ATH; suitable for PA."
+    },
+    {
+      "id": "al_phosphinate",
+      "name": "Exolit OP 1230 (Al diethylphosphinate)",
+      "class": "flame retardant (P)",
+      "chemistry": {
+        "value": "aluminium tris(diethylphosphinate)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "phosphinate (metal salt)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 10.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 25.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pa6",
+        "pa66",
+        "pbt",
+        "pet"
+      ],
+      "antagonisms": [
+        "phosphorus acid species can catalyse polyester hydrolysis in moist processing"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not for food contact",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Halogen-free P-based FR for polyamides and polyesters; gas + condensed phase."
+    },
+    {
+      "id": "melamine_cyanurate",
+      "name": "Melamine cyanurate",
+      "class": "flame retardant (N)",
+      "chemistry": {
+        "value": "C6H9N9O3 melamine - cyanuric acid salt",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (sublimes, endothermic)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 5.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 15.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pa6",
+        "pa66",
+        "pu"
+      ],
+      "antagonisms": [
+        "sublimes above ~320 C (plate-out, nozzle deposits)"
+      ],
+      "boiling_point_c": {
+        "value": 320,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "literature boiling point (recalled)"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "not for food contact",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "N-based FR for unfilled PA; endothermic decomposition and fuel dilution.",
+      "molar_mass_g_mol": {
+        "value": 255.2,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/melamine%20cyanurate/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "anthranilamide",
+      "name": "Anthranilamide (2-aminobenzamide)",
+      "class": "AA scavenger",
+      "chemistry": {
+        "value": "C7H8N2O",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "primary amine (condenses with aldehyde)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "acetaldehyde"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.005,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.03,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pet"
+      ],
+      "antagonisms": [
+        "reacts 1:1 with acetaldehyde (stoichiometric capacity, not kinetics)"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Primary amine condenses with acetaldehyde to an imine, trapping preform AA in PET. Capacity ~16 ppm AA per 50 ppm additive.",
+      "molar_mass_g_mol": {
+        "value": 136.15,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/anthranilamide/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "optical_brightener_ob",
+      "name": "Optical brightener OB",
+      "class": "optical brightener / toner",
+      "chemistry": {
+        "value": "2,5-bis(5-tert-butyl-2-benzoxazolyl)thiophene",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (fluorescent whitener)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.005,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.05,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pet",
+        "pc",
+        "abs",
+        "polyolefins"
+      ],
+      "antagonisms": [
+        "none major"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (limited)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Blue-emitting fluorophore masks yellow; dosage in the 10-500 ppm range."
+    },
+    {
+      "id": "antistat_gms",
+      "name": "GMS (glycerol monostearate)",
+      "class": "antistat (internal)",
+      "chemistry": {
+        "value": "glycerol monostearate, C21H42O4",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (polar ester migrates to surface)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 1.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "abs",
+        "pvc"
+      ],
+      "antagonisms": [
+        "migrates to surface (bloom); washes off"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Internal antistat: polar ester migrates to the surface and dissipates static charge."
+    },
+    {
+      "id": "blowing_azodicarbonamide",
+      "name": "Azodicarbonamide (ADCA)",
+      "class": "blowing agent (exothermic)",
+      "chemistry": {
+        "value": "C2H4N4O2 azodicarbonamide",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (decomposes ~200 C to N2/CO)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 3.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pvc",
+        "polyolefins",
+        "eva"
+      ],
+      "antagonisms": [
+        "decomposition residue (urazole) and semicarbazide are a food-contact concern"
+      ],
+      "boiling_point_c": {
+        "value": 200,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "literature boiling point (recalled)"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "no (semicarbazide concern in EU)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Exothermic chemical blowing agent; decomposes to gases near processing temperature."
+    },
+    {
+      "id": "blowing_nahco3",
+      "name": "Sodium bicarbonate",
+      "class": "blowing agent (endothermic)",
+      "chemistry": {
+        "value": "NaHCO3 sodium bicarbonate",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (decomposes ~140-160 C to CO2)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 3.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "ps",
+        "abs"
+      ],
+      "antagonisms": [
+        "releases CO2 + water (water is a hydrolysis risk in polyesters)"
+      ],
+      "boiling_point_c": {
+        "value": 150,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "literature boiling point (recalled)"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Endothermic CBA; CO2 + H2O release cools the melt and foams it."
+    },
+    {
+      "id": "ao_triphenyl_phosphite",
+      "name": "Triphenyl phosphite (TPP)",
+      "class": "antioxidant (secondary, liquid)",
+      "chemistry": {
+        "value": "triphenyl phosphite, C18H15O3P",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "phosphite ester",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "hydroperoxides"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.05,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.3,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "pet",
+        "pbt",
+        "abs"
+      ],
+      "antagonisms": [
+        "hydrolyses to phenol + phosphoric acid (acid consumes epoxy / catalyses polyester hydrolysis)"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (limited)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Liquid phosphite secondary antioxidant; hydrolytically unstable.",
+      "molar_mass_g_mol": {
+        "value": 310.3,
+        "unit": "g/mol",
+        "kind": "cited",
+        "source": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/triphenyl%20phosphite/property/MolecularFormula,MolecularWeight/JSON",
+        "retrieved": "2026-09-14",
+        "verified": true,
+        "note": "PubChem molecular weight"
+      }
+    },
+    {
+      "id": "hals_chimassorb944",
+      "name": "Chimassorb 944 (oligomeric HALS)",
+      "class": "UV stabiliser (oligomeric)",
+      "chemistry": {
+        "value": "poly[[6-[(1,1,3,3-tetramethylbutyl)amino]-1,3,5-triazine-2,4-diyl]...] oligomeric HALS",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "hindered amine (oligomeric)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [
+        "alkyl radicals"
+      ],
+      "loading_min_wt_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 0.5,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "polyolefins",
+        "abs",
+        "pa6",
+        "pa66"
+      ],
+      "antagonisms": [
+        "basic amine can interfere with acid-catalysed polyester systems"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (limited)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "High-MW oligomeric HALS: low migration and extraction, long-term light stability."
+    },
+    {
+      "id": "fr_zinc_borate",
+      "name": "Zinc borate",
+      "class": "flame retardant (synergist / smoke suppressant)",
+      "chemistry": {
+        "value": "xZnO.yB2O3.zH2O hydrated zinc borate",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature chemistry (recalled)"
+      },
+      "reactive_group": {
+        "value": "none (endothermic dehydration)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "supplier / literature reactivity (recalled)"
+      },
+      "equivalent_weight_g_mol": {
+        "value": null,
+        "unit": "g/mol",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "functionality": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "non-reactive",
+        "note": "no reactive group"
+      },
+      "reacts_with": [],
+      "loading_min_wt_pct": {
+        "value": 2.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "loading_max_wt_pct": {
+        "value": 10.0,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier recommendation (recalled)"
+      },
+      "compatible_resins": [
+        "pvc",
+        "polyolefins",
+        "unsaturated polyester"
+      ],
+      "antagonisms": [
+        "releases water on heating (porosity at high loading)"
+      ],
+      "boiling_point_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "no boiling point (polymeric / decomposes)",
+        "note": "decomposes before boiling"
+      },
+      "tga_1pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "tga_5pct_loss_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "not published",
+        "note": "TGA onset not published"
+      },
+      "food_contact": {
+        "value": "yes (limited)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "regulatory status (recalled)"
+      },
+      "mechanism": "Char-forming FR synergist (often with ATH/antimony); smoke suppressant."
+    }
+  ]
+}

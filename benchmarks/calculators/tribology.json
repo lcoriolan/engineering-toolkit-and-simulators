@@ -1,0 +1,1541 @@
+{
+  "section": "tribology",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k tribology",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "tribology.friction_power": {
+      "title": "Friction force and friction power loss (F = \u03bcN, P = F\u00b7v)",
+      "variables": [
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "friction force (sliding)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "W",
+          "desc": "friction power loss",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "friction coefficient (kinetic when sliding)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "N",
+          "desc": "normal force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "sliding speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F = mu*N",
+        "P = F*v"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F",
+        "P"
+      ],
+      "assumptions": [
+        "Coulomb friction at the sliding interface; \u03bc is the kinetic coefficient once sliding, so P is the steady heat generated at the contact."
+      ],
+      "method_references": [
+        "Coulomb friction law; power P = F\u00b7v"
+      ],
+      "synthetic_example": {
+        "mu": 0.3,
+        "N": 1000.0,
+        "v": 2.0
+      }
+    },
+    "tribology.archard_wear": {
+      "title": "Archard adhesive wear volume and wear rate (V = K\u00b7W\u00b7s/H)",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "m^3",
+          "desc": "wear volume",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w",
+          "unit": "m^2",
+          "desc": "wear rate V/s (wear volume per unit sliding distance)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "dimensionless wear coefficient (material/pair dependent)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "N",
+          "desc": "normal load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "sliding distance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "Pa",
+          "desc": "hardness of the softer surface",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "V = K*W*s/H",
+        "w = V/s"
+      ],
+      "procedure": null,
+      "outputs": [
+        "V",
+        "w"
+      ],
+      "assumptions": [
+        "Adhesive-wear model with dimensionless K (typically 1e-7\u20261e-4); H is the indentation hardness of the softer body. The specific wear rate k = K/H (m\u00b2/N) is the alternative form."
+      ],
+      "method_references": [
+        "Archard wear equation V = K\u00b7W\u00b7s/H (recalled form)"
+      ],
+      "synthetic_example": {
+        "K": 0.0002,
+        "W": 100.0,
+        "s": 500.0,
+        "H": 1000000000.0
+      }
+    },
+    "tribology.walther_viscosity": {
+      "title": "Lubricant viscosity vs temperature (Walther, ASTM D341 two-point fit)",
+      "variables": [
+        {
+          "name": "T1",
+          "unit": "K",
+          "desc": "first calibration temperature",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu1",
+          "unit": "m^2/s",
+          "desc": "kinematic viscosity at T1 (1 mm\u00b2/s = 1 cSt)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2",
+          "unit": "K",
+          "desc": "second calibration temperature",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu2",
+          "unit": "m^2/s",
+          "desc": "kinematic viscosity at T2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_query",
+          "unit": "K",
+          "desc": "temperature at which viscosity is wanted",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu_query",
+          "unit": "m^2/s",
+          "desc": "kinematic viscosity at T_query",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "",
+          "desc": "Walther constant A",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "B",
+          "unit": "",
+          "desc": "Walther constant B",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _walther(values):\n    \"\"\"Walther (ASTM D341) viscosity\u2013temperature relation fitted from two calibration points.\n\n    log10(log10(nu_cSt + 0.7)) = A \u2212 B\u00b7log10(T_K) is fitted through (T1, nu1) and (T2, nu2), then\n    evaluated at T_query. The +0.7 offset has units of cSt, so the declared m\u00b2/s values are converted to\n    cSt (\u00d7 1e6) inside the fit and converted back for the result.\n    \"\"\"\n    T1, T2, Tq = values['T1'], values['T2'], values['T_query']\n    nu1_cst = values['nu1'] * 1e6\n    nu2_cst = values['nu2'] * 1e6\n    if T1 <= 0 or T2 <= 0 or Tq <= 0:\n        raise MechError('temperatures must be positive (enter K)')\n    if nu1_cst + 0.7 <= 1.0 or nu2_cst + 0.7 <= 1.0:\n        raise MechError('Walther form needs kinematic viscosity above ~0.3 cSt (3e-7 m\u00b2/s)')\n    if abs(T1 - T2) < 1e-12:\n        raise MechError('T1 and T2 must be distinct calibration temperatures')\n    w1 = math.log10(math.log10(nu1_cst + 0.7))\n    w2 = math.log10(math.log10(nu2_cst + 0.7))\n    y1, y2 = math.log10(T1), math.log10(T2)\n    B = (w1 - w2) / (y2 - y1)          # slope of W = A \u2212 B\u00b7log10(T)\n    A = w1 + B * y1\n    wq = A - B * math.log10(Tq)\n    nu_q_cst = 10 ** (10 ** wq) - 0.7\n    return {'nu_query': nu_q_cst / 1e6, 'A': A, 'B': B}\n",
+        "source": "tribology.py",
+        "line": 28
+      },
+      "outputs": [
+        "nu_query",
+        "A",
+        "B"
+      ],
+      "assumptions": [
+        "log10(log10(\u03bd_cSt + 0.7)) = A \u2212 B\u00b7log10(T_K), the Wright form of ASTM D341, fitted from two user-supplied viscosity points and extrapolated to T_query.",
+        "Valid for \u03bd \u2273 2 cSt (the plain ASTM D341 Z = \u03bd + 0.7 form; below ~2 cSt a correction is needed and is not implemented here). Inputs below ~0.3 cSt are rejected so the double log stays real. Extrapolating far outside the two calibration points reduces accuracy. T in kelvin; \u03bd in mm\u00b2/s (= cSt) inside the relation."
+      ],
+      "method_references": [
+        "Walther equation / ASTM D341 viscosity\u2013temperature (recalled)"
+      ],
+      "synthetic_example": {
+        "T1": 313.15,
+        "nu1": 0.0001,
+        "T2": 373.15,
+        "nu2": 1.4e-05,
+        "T_query": 333.15
+      }
+    },
+    "tribology.viscosity_index": {
+      "title": "Viscosity index from ASTM D2270 L and H values (VI = 100(L\u2212U)/(L\u2212H))",
+      "variables": [
+        {
+          "name": "VI",
+          "unit": "",
+          "desc": "viscosity index",
+          "lo": null,
+          "hi": 100.0,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "U",
+          "unit": "m^2/s",
+          "desc": "kinematic viscosity at 40 \u00b0C of the oil (1 mm\u00b2/s = 1 cSt)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m^2/s",
+          "desc": "kinematic viscosity at 40 \u00b0C of a 0-VI oil with the same 100 \u00b0C viscosity (table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H",
+          "unit": "m^2/s",
+          "desc": "kinematic viscosity at 40 \u00b0C of a 100-VI oil with the same 100 \u00b0C viscosity (table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "VI = 100*(L - U)/(L - H)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "VI"
+      ],
+      "assumptions": [
+        "L and H are tabulated functions of the 100 \u00b0C viscosity (ASTM D2270 tables) \u2014 user inputs, not built in. This linear form is valid for VI \u2264 100 (VI is negative for oils thicker at 40 \u00b0C than the 0-VI reference, i.e. U > L); for VI > 100 use the extended D2270 form, which is not implemented here."
+      ],
+      "method_references": [
+        "ASTM D2270 viscosity index, VI = 100(L\u2212U)/(L\u2212H) (recalled)"
+      ],
+      "synthetic_example": {
+        "U": 0.0001,
+        "L": 0.0002,
+        "H": 6e-05
+      }
+    },
+    "tribology.ehl_film_thickness": {
+      "title": "EHL film thickness (Hamrock\u2013Dowson elliptical contact)",
+      "variables": [
+        {
+          "name": "E1",
+          "unit": "Pa",
+          "desc": "elastic modulus of body 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu1",
+          "unit": "",
+          "desc": "Poisson ratio of body 1",
+          "lo": null,
+          "hi": 0.5,
+          "label": "\u03bd1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E2",
+          "unit": "Pa",
+          "desc": "elastic modulus of body 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu2",
+          "unit": "",
+          "desc": "Poisson ratio of body 2",
+          "lo": null,
+          "hi": 0.5,
+          "label": "\u03bd2",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta0",
+          "unit": "Pa*s",
+          "desc": "inlet dynamic viscosity of the lubricant",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b70",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "alpha",
+          "unit": "1/Pa",
+          "desc": "pressure\u2013viscosity coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u",
+          "unit": "m/s",
+          "desc": "mean entrainment (rolling) speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "normal load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_x",
+          "unit": "m",
+          "desc": "effective radius in the rolling direction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R_y",
+          "unit": "m",
+          "desc": "effective radius transverse to rolling",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_min",
+          "unit": "m",
+          "desc": "minimum film thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H_min",
+          "unit": "",
+          "desc": "dimensionless minimum film thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_c",
+          "unit": "m",
+          "desc": "central film thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "H_c",
+          "unit": "",
+          "desc": "dimensionless central film thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "U",
+          "unit": "",
+          "desc": "dimensionless speed parameter \u03b70\u00b7u/(E\u2032\u00b7R_x)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G",
+          "unit": "",
+          "desc": "dimensionless materials parameter \u03b1\u00b7E\u2032",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "",
+          "desc": "dimensionless load parameter F/(E\u2032\u00b7R_x\u00b2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "desc": "ellipticity parameter \u2248 1.03\u00b7(R_y/R_x)^0.64",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_red",
+          "unit": "Pa",
+          "desc": "reduced elastic modulus E\u2032",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _ehl_film(values):\n    \"\"\"Hamrock\u2013Dowson (1977) fully-flooded elliptical-contact EHL film thickness.\n\n    Reduced modulus E' = 2 / ((1\u2212\u03bd1\u00b2)/E1 + (1\u2212\u03bd2\u00b2)/E2); dimensionless speed U = \u03b70\u00b7u/(E'\u00b7R_x),\n    materials G = \u03b1\u00b7E', load W = F/(E'\u00b7R_x\u00b2) and ellipticity k \u2248 1.03\u00b7(R_y/R_x)^0.64. Minimum and\n    central film thickness follow the canonical power-law correlations (constants and exponents\n    recalled; not re-read).\n    \"\"\"\n    E1, nu1, E2, nu2 = values['E1'], values['nu1'], values['E2'], values['nu2']\n    eta0, alpha, u, F = values['eta0'], values['alpha'], values['u'], values['F']\n    Rx, Ry = values['R_x'], values['R_y']\n    if Rx <= 0 or Ry <= 0:\n        raise MechError('R_x and R_y must be positive')\n    if E1 <= 0 or E2 <= 0:\n        raise MechError('elastic moduli must be positive')\n    E_red = 2.0 / ((1 - nu1 ** 2) / E1 + (1 - nu2 ** 2) / E2)\n    U = eta0 * u / (E_red * Rx)\n    G = alpha * E_red\n    W = F / (E_red * Rx ** 2)\n    k = 1.03 * (Ry / Rx) ** 0.64\n    H_min = 3.63 * U ** 0.68 * G ** 0.49 * W ** -0.073 * (1 - math.exp(-0.68 * k))\n    H_c = 2.69 * U ** 0.67 * G ** 0.53 * W ** -0.067 * (1 - 0.61 * math.exp(-0.73 * k))\n    return {'h_min': H_min * Rx, 'H_min': H_min, 'h_c': H_c * Rx, 'H_c': H_c,\n            'U': U, 'G': G, 'W': W, 'k': k, 'E_red': E_red}\n",
+        "source": "tribology.py",
+        "line": 54
+      },
+      "outputs": [
+        "h_min",
+        "H_min",
+        "h_c",
+        "H_c",
+        "U",
+        "G",
+        "W",
+        "k",
+        "E_red"
+      ],
+      "assumptions": [
+        "Fully flooded, isothermal, smooth surfaces, Newtonian lubricant; elliptical contact. Valid for R_y \u2265 R_x (ellipticity k \u2273 1) with 1 \u2264 k \u2272 8. The coefficients 3.63/2.69 and exponents are the Hamrock\u2013Dowson (1977) fits for typical EHL ranges (U ~ 1e-11, G ~ 5000, W ~ 1e-5); k \u2248 1.03\u00b7(R_y/R_x)^0.64 is an approximation."
+      ],
+      "method_references": [
+        "Hamrock\u2013Dowson minimum/central film thickness (recalled)"
+      ],
+      "synthetic_example": {
+        "E1": 207000000000.0,
+        "nu1": 0.3,
+        "E2": 207000000000.0,
+        "nu2": 0.3,
+        "eta0": 0.05,
+        "alpha": 2.2e-08,
+        "u": 1.0,
+        "F": 1000.0,
+        "R_x": 0.02,
+        "R_y": 0.06
+      }
+    },
+    "tribology.lambda_ratio": {
+      "title": "Specific film thickness (lambda ratio) \u039b = h_min/\u221a(\u03c3\u2081\u00b2 + \u03c3\u2082\u00b2)",
+      "variables": [
+        {
+          "name": "Lambda",
+          "unit": "",
+          "desc": "lambda ratio (specific film thickness)",
+          "lo": null,
+          "hi": null,
+          "label": "\u039b",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h_min",
+          "unit": "m",
+          "desc": "minimum film thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma1",
+          "unit": "m",
+          "desc": "RMS surface roughness of surface 1",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c31",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma2",
+          "unit": "m",
+          "desc": "RMS surface roughness of surface 2",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c32",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Lambda = h_min/sqrt(sigma1**2 + sigma2**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Lambda"
+      ],
+      "assumptions": [
+        "\u039b = h_min/\u221a(\u03c31\u00b2 + \u03c32\u00b2) with RMS roughnesses; \u221a(\u03c31\u00b2 + \u03c32\u00b2) is the standard composite roughness estimate. \u039b < 1 \u2248 boundary lubrication, 1 < \u039b < 3 \u2248 mixed, \u039b > 3 \u2248 full-film EHL. h_min may come from the Hamrock\u2013Dowson calculator."
+      ],
+      "method_references": [
+        "Specific film thickness (lambda ratio), \u039b = h_min/\u221a(\u03c31\u00b2 + \u03c32\u00b2) (recalled)"
+      ],
+      "synthetic_example": {
+        "h_min": 3e-07,
+        "sigma1": 5e-08,
+        "sigma2": 5e-08
+      }
+    },
+    "tribology.flash_temperature": {
+      "title": "Flash temperature rise (Archard circular contact)",
+      "variables": [
+        {
+          "name": "dT_flash",
+          "unit": "K",
+          "desc": "mean flash temperature rise above the bulk",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394Tf",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "friction coefficient",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F",
+          "unit": "N",
+          "desc": "normal load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_s",
+          "unit": "m/s",
+          "desc": "sliding speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "contact radius (circular contact)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k1",
+          "unit": "W/(m*K)",
+          "desc": "thermal conductivity of body 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k2",
+          "unit": "W/(m*K)",
+          "desc": "thermal conductivity of body 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "dT_flash = mu*F*v_s/(4*a*(k1 + k2))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "dT_flash"
+      ],
+      "assumptions": [
+        "Archard mean flash temperature for a single circular contact with the heat partitioned between the two semi-infinite bodies (equal interface temperature). Valid at low sliding speed (P\u00e9clet number Pe = v_s\u00b7a/(2\u03ba) \u2272 0.1, heat conduction dominates); at higher speeds the maximum (moving-source) temperature exceeds this mean. The Blok line-contact form differs."
+      ],
+      "method_references": [
+        "Archard flash temperature, \u0394T = \u03bcFv/(4a(k1+k2)) (recalled)"
+      ],
+      "synthetic_example": {
+        "mu": 0.1,
+        "F": 100.0,
+        "v_s": 2.0,
+        "a": 0.0005,
+        "k1": 50.0,
+        "k2": 50.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "tribology-001",
+      "calculator": "tribology.friction_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.3,
+        "N": "1 kN",
+        "v": "2 m/s"
+      },
+      "solve_for": [
+        "F",
+        "P"
+      ],
+      "expected_as_specified": {
+        "F": "300 N",
+        "P": "600 W"
+      },
+      "expected_SI": {
+        "F": 300.0,
+        "P": 600.0
+      },
+      "actual_SI": {
+        "F": {
+          "value": 300.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc tribology.friction_power (symbolic)"
+        },
+        "P": {
+          "value": 600.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc tribology.friction_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.6,
+          "passed": true
+        },
+        "P": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.2,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = \u03bcN = 0.3\u00b71000 = 300 N; P = F\u00b7v = 300\u00b72 = 600 W"
+      }
+    },
+    {
+      "id": "tribology-002",
+      "calculator": "tribology.friction_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F": "300 N",
+        "N": "1 kN",
+        "v": "2 m/s"
+      },
+      "solve_for": [
+        "mu",
+        "P"
+      ],
+      "expected_as_specified": {
+        "mu": 0.3
+      },
+      "expected_SI": {
+        "mu": 0.3
+      },
+      "actual_SI": {
+        "mu": {
+          "value": 0.3,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.friction_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "mu": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0006,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03bc = F/N = 300/1000 = 0.3"
+      }
+    },
+    {
+      "id": "tribology-003",
+      "calculator": "tribology.archard_wear",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K": 0.0002,
+        "W": "100 N",
+        "s": "500 m",
+        "H": "1 GPa"
+      },
+      "solve_for": [
+        "V",
+        "w"
+      ],
+      "expected_as_specified": {
+        "V": "1e-8 m^3",
+        "w": "2e-11 m^2"
+      },
+      "expected_SI": {
+        "V": 1e-08,
+        "w": 2e-11
+      },
+      "actual_SI": {
+        "V": {
+          "value": 1e-08,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc tribology.archard_wear (symbolic)"
+        },
+        "w": {
+          "value": 2.0000000000000002e-11,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc tribology.archard_wear (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.0000000000000002e-11,
+          "passed": true
+        },
+        "w": {
+          "absolute_error": 3.2311742677852644e-27,
+          "relative_error": 1.6155871338926322e-16,
+          "allowed_absolute_error": 4e-14,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = K\u00b7W\u00b7s/H = 2e-4\u00b7100\u00b7500/1e9 = 10/1e9 = 1e-8 m\u00b3; w = V/s = 1e-8/500 = 2e-11 m\u00b3/m (= m\u00b2)"
+      }
+    },
+    {
+      "id": "tribology-004",
+      "calculator": "tribology.walther_viscosity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T1": "40 degC",
+        "nu1": "40 mm^2/s",
+        "T2": "100 degC",
+        "nu2": "6 mm^2/s",
+        "T_query": "80 degC"
+      },
+      "solve_for": [
+        "nu_query",
+        "A",
+        "B"
+      ],
+      "expected_as_specified": {
+        "nu_query": "9.74059 mm^2/s",
+        "A": 9.703661,
+        "B": 3.805243
+      },
+      "expected_SI": {
+        "nu_query": 9.740589999999999e-06,
+        "A": 9.703661,
+        "B": 3.805243
+      },
+      "actual_SI": {
+        "nu_query": {
+          "value": 9.740585836398554e-06,
+          "unit": "m^2/s",
+          "kind": "derived",
+          "method": "mechcalc tribology.walther_viscosity (procedure)"
+        },
+        "A": {
+          "value": 9.703661222856546,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.walther_viscosity (procedure)"
+        },
+        "B": {
+          "value": 3.805243143083103,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.walther_viscosity (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "nu_query": {
+          "absolute_error": 4.163601445022103e-12,
+          "relative_error": 4.274485883321342e-07,
+          "allowed_absolute_error": 4.870295e-09,
+          "passed": true
+        },
+        "A": {
+          "absolute_error": 2.2285654566189805e-07,
+          "relative_error": 2.2966233637170347e-08,
+          "allowed_absolute_error": 0.0048518305,
+          "passed": true
+        },
+        "B": {
+          "absolute_error": 1.4308310314348205e-07,
+          "relative_error": 3.760156792706328e-08,
+          "allowed_absolute_error": 0.0019026215,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "W = log10(log10(\u03bd_cSt + 0.7)), y = log10(T_K). (313.15 K, 40 cSt): W1 = log10(log10 40.7) = log10 1.609594 = 0.206716; (373.15 K, 6 cSt): W2 = log10(log10 6.7) = log10 0.826075 = \u22120.082981. y1 = 2.495752, y2 = 2.571883. B = (W1\u2212W2)/(y2\u2212y1) = 0.289697/0.076131 = 3.80524; A = W1 + B\u00b7y1 = 0.206716 + 9.496945 = 9.70366. At 353.15 K: yq = 2.547959, Wq = A \u2212 B\u00b7yq = 0.008057 \u2192 \u03bd = 10^(10^0.008057) \u2212 0.7 = 10.44059 \u2212 0.7 = 9.74059 cSt = 9.74059 mm\u00b2/s"
+      }
+    },
+    {
+      "id": "tribology-005",
+      "calculator": "tribology.viscosity_index",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "U": "40 mm^2/s",
+        "L": "100 mm^2/s",
+        "H": "25 mm^2/s"
+      },
+      "solve_for": [
+        "VI"
+      ],
+      "expected_as_specified": {
+        "VI": 80
+      },
+      "expected_SI": {
+        "VI": 80.0
+      },
+      "actual_SI": {
+        "VI": {
+          "value": 79.99999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.viscosity_index (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "VI": {
+          "absolute_error": 1.4210854715202004e-14,
+          "relative_error": 1.7763568394002506e-16,
+          "allowed_absolute_error": 0.16,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "VI = 100(L\u2212U)/(L\u2212H) = 100(100\u221240)/(100\u221225) = 100\u00b760/75 = 80 (inputs varied away from the example)"
+      }
+    },
+    {
+      "id": "tribology-006",
+      "calculator": "tribology.viscosity_index",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "VI": 80,
+        "L": "100 mm^2/s",
+        "H": "25 mm^2/s"
+      },
+      "solve_for": [
+        "U"
+      ],
+      "expected_as_specified": {
+        "U": "40 mm^2/s"
+      },
+      "expected_SI": {
+        "U": 3.9999999999999996e-05
+      },
+      "actual_SI": {
+        "U": {
+          "value": 3.9999999999999996e-05,
+          "unit": "m^2/s",
+          "kind": "derived",
+          "method": "mechcalc tribology.viscosity_index (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "U": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 7.999999999999999e-08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "U = L \u2212 VI(L\u2212H)/100 = 100 \u2212 80\u00b775/100 = 100 \u2212 60 = 40 mm\u00b2/s"
+      }
+    },
+    {
+      "id": "tribology-007",
+      "calculator": "tribology.viscosity_index",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "U": "150 mm^2/s",
+        "L": "100 mm^2/s",
+        "H": "60 mm^2/s"
+      },
+      "solve_for": [
+        "VI"
+      ],
+      "expected_as_specified": {
+        "VI": -125
+      },
+      "expected_SI": {
+        "VI": -125.0
+      },
+      "actual_SI": {
+        "VI": {
+          "value": -125.00000000000003,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.viscosity_index (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "VI": {
+          "absolute_error": 2.842170943040401e-14,
+          "relative_error": 2.2737367544323206e-16,
+          "allowed_absolute_error": 0.25,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "VI = 100(L\u2212U)/(L\u2212H) = 100(100\u2212150)/(100\u221260) = 100\u00b7(\u221250)/40 = \u2212125 (an oil thicker at 40 \u00b0C than the 0-VI reference gives negative VI)"
+      }
+    },
+    {
+      "id": "tribology-008",
+      "calculator": "tribology.ehl_film_thickness",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E1": "207 GPa",
+        "nu1": 0.3,
+        "E2": "207 GPa",
+        "nu2": 0.3,
+        "eta0": "0.05 Pa*s",
+        "alpha": "2.2e-8 1/Pa",
+        "u": "1 m/s",
+        "F": "1000 N",
+        "R_x": "20 mm",
+        "R_y": "60 mm"
+      },
+      "solve_for": [
+        "h_min",
+        "H_min",
+        "h_c",
+        "H_c",
+        "U",
+        "G",
+        "W",
+        "k",
+        "E_red"
+      ],
+      "expected_as_specified": {
+        "h_min": "2.90153e-7 m",
+        "H_min": 1.45077e-05,
+        "U": 1.09903e-11,
+        "G": 5004.4,
+        "W": 1.09903e-05,
+        "k": 2.08063
+      },
+      "expected_SI": {
+        "h_min": 2.90153e-07,
+        "H_min": 1.45077e-05,
+        "U": 1.09903e-11,
+        "G": 5004.4,
+        "W": 1.09903e-05,
+        "k": 2.08063
+      },
+      "actual_SI": {
+        "h_min": {
+          "value": 2.9015312785101575e-07,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc tribology.ehl_film_thickness (procedure)"
+        },
+        "H_min": {
+          "value": 1.4507656392550787e-05,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.ehl_film_thickness (procedure)"
+        },
+        "U": {
+          "value": 1.0990338164251209e-11,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.ehl_film_thickness (procedure)"
+        },
+        "G": {
+          "value": 5004.395604395604,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.ehl_film_thickness (procedure)"
+        },
+        "W": {
+          "value": 1.0990338164251208e-05,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.ehl_film_thickness (procedure)"
+        },
+        "k": {
+          "value": 2.080629863762034,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.ehl_film_thickness (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "h_min": {
+          "absolute_error": 1.2785101573334752e-13,
+          "relative_error": 4.406330995486778e-07,
+          "allowed_absolute_error": 1.450765e-10,
+          "passed": true
+        },
+        "H_min": {
+          "absolute_error": 4.36074492132305e-11,
+          "relative_error": 3.005814099631954e-06,
+          "allowed_absolute_error": 7.25385e-09,
+          "passed": true
+        },
+        "U": {
+          "absolute_error": 3.816425120983479e-17,
+          "relative_error": 3.472539531207955e-06,
+          "allowed_absolute_error": 5.49515e-15,
+          "passed": true
+        },
+        "G": {
+          "absolute_error": 0.004395604395540431,
+          "relative_error": 8.783479329271104e-07,
+          "allowed_absolute_error": 2.5021999999999998,
+          "passed": true
+        },
+        "W": {
+          "absolute_error": 3.816425120705205e-11,
+          "relative_error": 3.4725395309547555e-06,
+          "allowed_absolute_error": 5.49515e-09,
+          "passed": true
+        },
+        "k": {
+          "absolute_error": 1.3623796624173679e-07,
+          "relative_error": 6.547918959244881e-08,
+          "allowed_absolute_error": 0.0010403150000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "E\u2032 = 2/((1\u22120.3\u00b2)/207e9\u00b72) = 2/8.7923e-12 = 2.27473e11 Pa. U = \u03b70\u00b7u/(E\u2032\u00b7R_x) = 0.05/(2.27473e11\u00b70.02) = 1.09903e-11. G = \u03b1\u00b7E\u2032 = 2.2e-8\u00b72.27473e11 = 5004.4. W = F/(E\u2032\u00b7R_x\u00b2) = 1000/(2.27473e11\u00b74e-4) = 1.09903e-5. k = 1.03\u00b7(R_y/R_x)^0.64 = 1.03\u00b73^0.64 = 2.08063. H_min = 3.63\u00b7U^0.68\u00b7G^0.49\u00b7W^\u22120.073\u00b7(1\u2212e^(\u22120.68k)) = 3.63\u00b7(3.5444e-8)\u00b7(64.74)\u00b7(2.2963)\u00b7(0.7570) = 1.45077e-5; h_min = H_min\u00b7R_x = 1.45077e-5\u00b70.02 = 2.90153e-7 m (290 nm)"
+      }
+    },
+    {
+      "id": "tribology-009",
+      "calculator": "tribology.lambda_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "h_min": "0.3 um",
+        "sigma1": "50 nm",
+        "sigma2": "50 nm"
+      },
+      "solve_for": [
+        "Lambda"
+      ],
+      "expected_as_specified": {
+        "Lambda": 4.24264
+      },
+      "expected_SI": {
+        "Lambda": 4.24264
+      },
+      "actual_SI": {
+        "Lambda": {
+          "value": 4.242640687119285,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.lambda_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Lambda": {
+          "absolute_error": 6.87119285025517e-07,
+          "relative_error": 1.6195559487147555e-07,
+          "allowed_absolute_error": 0.00848528,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u039b = h_min/\u221a(\u03c31\u00b2 + \u03c32\u00b2) = 0.3/\u221a(0.05\u00b2 + 0.05\u00b2) = 0.3/\u221a0.005 = 0.3/0.0707107 = 4.24264 (\u00b5m and nm both converted to m; the ratio is dimensionless)"
+      }
+    },
+    {
+      "id": "tribology-010",
+      "calculator": "tribology.lambda_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Lambda": 4.24264,
+        "h_min": "0.3 um",
+        "sigma2": "50 nm"
+      },
+      "solve_for": [
+        "sigma1"
+      ],
+      "expected_as_specified": {
+        "sigma1": "50 nm"
+      },
+      "expected_SI": {
+        "sigma1": 5.0000000000000004e-08
+      },
+      "actual_SI": {
+        "sigma1": {
+          "value": 5.000001619555818e-08,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc tribology.lambda_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma1": {
+          "absolute_error": 1.619555817431486e-14,
+          "relative_error": 3.2391116348629716e-07,
+          "allowed_absolute_error": 1.0000000000000002e-10,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c31 = \u221a((h_min/\u039b)\u00b2 \u2212 \u03c32\u00b2) = \u221a((0.3/4.24264)\u00b2 \u2212 0.05\u00b2) = \u221a(0.005 \u2212 0.0025) = \u221a0.0025 = 0.05 \u00b5m = 50 nm"
+      }
+    },
+    {
+      "id": "tribology-011",
+      "calculator": "tribology.flash_temperature",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "mu": 0.2,
+        "F": "50 N",
+        "v_s": "4 m/s",
+        "a": "0.4 mm",
+        "k1": "40 W/(m*K)",
+        "k2": "60 W/(m*K)"
+      },
+      "solve_for": [
+        "dT_flash"
+      ],
+      "expected_as_specified": {
+        "dT_flash": "250 K"
+      },
+      "expected_SI": {
+        "dT_flash": 250.0
+      },
+      "actual_SI": {
+        "dT_flash": {
+          "value": 250.0,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc tribology.flash_temperature (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dT_flash": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.5,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u0394T = \u03bcFv/(4a(k1+k2)) = 0.2\u00b750\u00b74/(4\u00b74e-4\u00b7100) = 40/0.16 = 250 K (inputs varied away from the example)"
+      }
+    },
+    {
+      "id": "tribology-012",
+      "calculator": "tribology.flash_temperature",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dT_flash": "250 K",
+        "F": "50 N",
+        "v_s": "4 m/s",
+        "a": "0.4 mm",
+        "k1": "40 W/(m*K)",
+        "k2": "60 W/(m*K)"
+      },
+      "solve_for": [
+        "mu"
+      ],
+      "expected_as_specified": {
+        "mu": 0.2
+      },
+      "expected_SI": {
+        "mu": 0.2
+      },
+      "actual_SI": {
+        "mu": {
+          "value": 0.2,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc tribology.flash_temperature (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "mu": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03bc = \u0394T\u00b74a(k1+k2)/(F\u00b7v_s) = 250\u00b70.16/(50\u00b74) = 40/200 = 0.2"
+      }
+    }
+  ],
+  "passed": 12,
+  "failed": 0
+}

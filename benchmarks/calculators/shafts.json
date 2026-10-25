@@ -1,0 +1,2962 @@
+{
+  "section": "shafts",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k shafts",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "shafts.shaft_diameter_de": {
+      "title": "Shaft diameter, combined bending and torsion (DE-Goodman/Gerber/ASME)",
+      "variables": [
+        {
+          "name": "Ma",
+          "unit": "N*m",
+          "desc": "alternating bending moment (magnitude)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Mm",
+          "unit": "N*m",
+          "desc": "midrange bending moment (magnitude)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Ta",
+          "unit": "N*m",
+          "desc": "alternating torque (magnitude)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Tm",
+          "unit": "N*m",
+          "desc": "midrange torque (magnitude)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kf",
+          "unit": "",
+          "desc": "fatigue stress-concentration factor, bending",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kfs",
+          "unit": "",
+          "desc": "fatigue stress-concentration factor, torsion",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Se",
+          "unit": "Pa",
+          "desc": "fully corrected endurance limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sut",
+          "unit": "Pa",
+          "desc": "ultimate tensile strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "Pa",
+          "desc": "yield strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "design factor of safety",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "N*m",
+          "desc": "alternating von Mises numerator sqrt(4(Kf\u00b7Ma)\u00b2 + 3(Kfs\u00b7Ta)\u00b2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "B",
+          "unit": "N*m",
+          "desc": "midrange von Mises numerator sqrt(4(Kf\u00b7Mm)\u00b2 + 3(Kfs\u00b7Tm)\u00b2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_goodman",
+          "unit": "m",
+          "desc": "diameter from DE-Goodman",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_gerber",
+          "unit": "m",
+          "desc": "diameter from DE-Gerber",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_elliptic",
+          "unit": "m",
+          "desc": "diameter from DE-ASME elliptic",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "A = sqrt(4*(Kf*Ma)**2 + 3*(Kfs*Ta)**2)",
+        "B = sqrt(4*(Kf*Mm)**2 + 3*(Kfs*Tm)**2)",
+        "d_goodman = (16*n/pi*(A/Se + B/Sut))**(1/3)",
+        "d_gerber = (8*n/(pi*Se)*(A + sqrt(A**2 + (2*B*Se/Sut)**2)))**(1/3)",
+        "d_elliptic = (16*n/pi*sqrt(A**2/Se**2 + B**2/Sy**2))**(1/3)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A",
+        "B",
+        "d_goodman",
+        "d_gerber",
+        "d_elliptic"
+      ],
+      "assumptions": [
+        "Solid round shaft, fully reversed or steady loading as entered (magnitudes only). Kf, Kfs are the fatigue notch factors from the geometry (user inputs, see the fatigue section). For a rotating shaft with steady torque and reversed bending, Ta = Tm = Mm = 0. The Gerber diameter is written without a 1/A factor so a steady-only load (A = 0) gives the limit d = (16 n B/(\u03c0 Sut))^(1/3) instead of dividing by zero. d_elliptic needs Sy; d_goodman/d_gerber need Sut."
+      ],
+      "method_references": [
+        "Distortion-energy shaft sizing: DE-Goodman, DE-Gerber and DE-ASME-elliptic diameters (recalled)"
+      ],
+      "synthetic_example": {
+        "Ma": 200.0,
+        "Mm": 100.0,
+        "Ta": 150.0,
+        "Tm": 100.0,
+        "Kf": 1.5,
+        "Kfs": 1.5,
+        "Se": 180000000.0,
+        "Sut": 600000000.0,
+        "Sy": 400000000.0,
+        "n": 2.0
+      }
+    },
+    "shafts.shaft_deflection_slope": {
+      "title": "Stepped-shaft deflection and slope (M/EI integration)",
+      "variables": [
+        {
+          "name": "case",
+          "unit": "",
+          "desc": "support condition",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "simply_supported",
+            "cantilever"
+          ]
+        },
+        {
+          "name": "segments",
+          "unit": "",
+          "desc": "steps [[length (m), diameter (m)], ...] from x = 0",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "loads",
+          "unit": "",
+          "desc": "point loads [[x (m), F (N, downward +)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "supports",
+          "unit": "",
+          "desc": "support positions [a, b] (m) \u2014 required only for simply_supported; for a cantilever pass [] (the value is not used)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "reactions",
+          "unit": "",
+          "desc": "support reactions [[x (m), R (N, upward +)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "deflections",
+          "unit": "",
+          "desc": "deflection [[x (m), y (m)], ...] at each load and support",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "slopes",
+          "unit": "",
+          "desc": "slope [[x (m), dy/dx (rad)], ...] at each load and support",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "max_deflection",
+          "unit": "m",
+          "desc": "largest deflection magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "max_deflection_x",
+          "unit": "m",
+          "desc": "position of the largest deflection",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "max_slope",
+          "unit": "rad",
+          "desc": "largest slope magnitude",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "max_slope_x",
+          "unit": "m",
+          "desc": "position of the largest slope",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _shaft_deflection(values):\n    \"\"\"Deflection and slope at loads/supports plus maxima, for a stepped shaft.\"\"\"\n    case = values['case']\n    loads = values['loads']\n    supports = values.get('supports') or [0.0, 0.0]\n    sol = _beam_solution(case, values['segments'], loads, supports, values['E'])\n    xg, y, slope = sol['x'], sol['y'], sol['slope']\n    pts = _eval_points(case, loads, supports)\n    defls = [[x, float(np.interp(x, xg, y))] for x in pts]\n    slps = [[x, float(np.interp(x, xg, slope))] for x in pts]\n    iy = int(np.argmax(np.abs(y)))\n    isl = int(np.argmax(np.abs(slope)))\n    return {'deflections': defls, 'slopes': slps, 'reactions': sol['reactions'],\n            'max_deflection': abs(float(y[iy])), 'max_deflection_x': float(xg[iy]),\n            'max_slope': abs(float(slope[isl])), 'max_slope_x': float(xg[isl])}\n",
+        "source": "shafts.py",
+        "line": 164
+      },
+      "outputs": [
+        "reactions",
+        "deflections",
+        "slopes",
+        "max_deflection",
+        "max_deflection_x",
+        "max_slope",
+        "max_slope_x"
+      ],
+      "assumptions": [
+        "Euler\u2013Bernoulli beam theory, linear elastic, small deflections; point loads only. Each step is a round section I = \u03c0d\u2074/64. Integration nodes are placed at every diameter step and load position, so M/(EI) is integrated exactly. Downward loads give downward (negative) y; maxima are magnitudes. Bearings at the supports, gears at the load positions. supports is required only for simply_supported (ignored for a cantilever). This calculator supplies only the static deflections/slopes; the Rayleigh/Dunkerley critical-speed relations live in the vibrations section."
+      ],
+      "method_references": [
+        "Double integration of M/(EI) with support boundary conditions"
+      ],
+      "synthetic_example": {
+        "case": "simply_supported",
+        "segments": [
+          [
+            1.0,
+            0.04
+          ]
+        ],
+        "loads": [
+          [
+            0.5,
+            1000.0
+          ]
+        ],
+        "supports": [
+          0.0,
+          1.0
+        ],
+        "E": 200000000000.0
+      }
+    },
+    "shafts.shaft_critical_speed": {
+      "title": "Stepped-shaft first critical speed (Rayleigh)",
+      "variables": [
+        {
+          "name": "case",
+          "unit": "",
+          "desc": "support condition",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "simply_supported",
+            "cantilever"
+          ]
+        },
+        {
+          "name": "segments",
+          "unit": "",
+          "desc": "steps [[length (m), diameter (m)], ...] from x = 0",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "masses",
+          "unit": "",
+          "desc": "lumped masses [[x (m), m (kg)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "supports",
+          "unit": "",
+          "desc": "support positions [a, b] (m) \u2014 required only for simply_supported; for a cantilever pass [] (the value is not used)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "omega_cr",
+          "unit": "rad/s",
+          "desc": "first bending critical speed",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c9cr",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "deflections",
+          "unit": "",
+          "desc": "static deflection [[x (m), y (m)], ...] at each mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _shaft_critical_speed(values):\n    \"\"\"First bending critical speed of a stepped shaft by Rayleigh's method (static deflections under\n    the mass weights). \u03c9 = sqrt(g\u00b7\u03a3 m_i\u00b7\u03b4_i / \u03a3 m_i\u00b7\u03b4_i\u00b2) with \u03b4_i the deflections at the masses.\"\"\"\n    masses = values['masses']\n    if not isinstance(masses, list) or not masses:\n        raise MechError('critical_speed: masses = [[x_m, m_kg], ...]')\n    weights = []\n    for row in masses:\n        if len(row) != 2:\n            raise MechError('critical_speed: each row must be [x_m, m_kg]')\n        weights.append([float(row[0]), float(row[1]) * G0])\n    case = values['case']\n    supports = values.get('supports') or [0.0, 0.0]\n    sol = _beam_solution(case, values['segments'], weights, supports, values['E'])\n    num = den = 0.0\n    defls = []\n    for row in masses:\n        x, m = float(row[0]), float(row[1])\n        y = float(np.interp(x, sol['x'], sol['y']))\n        d_i = -y                      # downward-positive static deflection under the weights\n        if d_i <= 0:\n            raise MechError('critical_speed: a mass deflects upward; Rayleigh (weight-based) needs '\n                            'downward deflections \u2014 check supports and mass positions')\n        defls.append([x, y])\n        num += m * d_i\n        den += m * d_i * d_i\n    if num <= 0 or den <= 0:\n        raise MechError('critical_speed: Rayleigh numerator/denominator must be positive; check '\n                        'supports and mass positions')\n    return {'omega_cr': math.sqrt(G0 * num / den), 'deflections': defls}\n",
+        "source": "shafts.py",
+        "line": 181
+      },
+      "outputs": [
+        "omega_cr",
+        "deflections"
+      ],
+      "assumptions": [
+        "Rayleigh method applied to the static deflections computed by this module: \u03c9 = sqrt(g\u00b7\u03a3 m_i \u03b4_i / \u03a3 m_i \u03b4_i\u00b2) with \u03b4_i the deflections under the weights m_i\u00b7g. Gives the first bending mode; upper bound on the exact frequency. Add gyroscopic/bearing stiffness for an accurate rotor. The Rayleigh/Dunkerley relations themselves are owned by the vibrations section; this calculator is the convenience that feeds them the stepped-shaft deflections."
+      ],
+      "method_references": [
+        "Rayleigh method for the fundamental frequency of a shaft (recalled)"
+      ],
+      "synthetic_example": {
+        "case": "simply_supported",
+        "segments": [
+          [
+            1.0,
+            0.04
+          ]
+        ],
+        "masses": [
+          [
+            0.5,
+            20.0
+          ]
+        ],
+        "supports": [
+          0.0,
+          1.0
+        ],
+        "E": 200000000000.0
+      }
+    },
+    "shafts.key_shear_crush": {
+      "title": "Key shear and crushing (bearing) stress",
+      "variables": [
+        {
+          "name": "tau",
+          "unit": "Pa",
+          "desc": "key shear stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c4",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_c",
+          "unit": "Pa",
+          "desc": "key crushing (bearing) stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3c",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "transmitted torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "shaft diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w",
+          "unit": "m",
+          "desc": "key width",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "key height",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "key length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "tau = 2*T/(d*w*L)",
+        "sigma_c = 4*T/(d*h*L)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "tau",
+        "sigma_c"
+      ],
+      "assumptions": [
+        "Square parallel key; shear on the full width w over length L; crushing on half the key height (h/2) against the shaft and hub. Force at the shaft surface F = 2T/d (nominal radius; keyway depth neglected)."
+      ],
+      "method_references": [
+        "Key shear \u03c4 = 2T/(d\u00b7w\u00b7L); crushing \u03c3c = 4T/(d\u00b7h\u00b7L) (standard forms, recalled)"
+      ],
+      "synthetic_example": {
+        "T": 200.0,
+        "d": 0.04,
+        "w": 0.012,
+        "h": 0.008,
+        "L": 0.05
+      }
+    },
+    "shafts.key_length": {
+      "title": "Key length required for shear and crushing",
+      "variables": [
+        {
+          "name": "L_shear",
+          "unit": "m",
+          "desc": "length required to limit shear stress",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_crush",
+          "unit": "m",
+          "desc": "length required to limit crushing stress",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "transmitted torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "shaft diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "w",
+          "unit": "m",
+          "desc": "key width",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "key height",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_allow",
+          "unit": "Pa",
+          "desc": "allowable shear stress",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_allow",
+          "unit": "Pa",
+          "desc": "allowable crushing (bearing) stress",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "L_shear = 2*T/(d*w*tau_allow)",
+        "L_crush = 4*T/(d*h*sigma_allow)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "L_shear",
+        "L_crush"
+      ],
+      "assumptions": [
+        "Design key length = max(L_shear, L_crush). Square parallel key, same areas as key_shear_crush; allowables are the user's material/app factors."
+      ],
+      "method_references": [
+        "Key length from shear and crushing stress limits (recalled)"
+      ],
+      "synthetic_example": {
+        "T": 200.0,
+        "d": 0.04,
+        "w": 0.012,
+        "h": 0.008,
+        "tau_allow": 40000000.0,
+        "sigma_allow": 100000000.0
+      }
+    },
+    "shafts.spline_torque": {
+      "title": "Spline torque capacity (bearing-pressure model)",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "torque capacity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "allowable bearing pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of teeth",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "engagement length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "major (outside) diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "minor (root) diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h",
+          "unit": "m",
+          "desc": "tooth contact height (D\u2212d)/2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_m",
+          "unit": "m",
+          "desc": "mean radius (D+d)/4",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = p*n*L*h*r_m",
+        "h = (D - d)/2",
+        "r_m = (D + d)/4"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T",
+        "h",
+        "r_m"
+      ],
+      "assumptions": [
+        "Approximate straight-sided/mean-radius model: torque = bearing pressure \u00d7 total contact area (n\u00b7L\u00b7h) \u00d7 mean radius. Real involute splines derate for unequal tooth load sharing (ANSI/AGMA); this is a first sizing estimate."
+      ],
+      "method_references": [
+        "Spline torque capacity T = p\u00b7A\u00b7r_m (standard approximation, recalled)"
+      ],
+      "synthetic_example": {
+        "p": 20000000.0,
+        "n": 6,
+        "L": 0.03,
+        "D": 0.05,
+        "d": 0.044
+      }
+    },
+    "shafts.flange_coupling": {
+      "title": "Flange coupling: bolt shear stress and torque capacity",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "coupling torque capacity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_b",
+          "unit": "N",
+          "desc": "shear force per bolt",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_b",
+          "unit": "m^2",
+          "desc": "bolt cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_b",
+          "unit": "",
+          "desc": "number of bolts",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "m",
+          "desc": "bolt pitch-circle radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "tau_b",
+          "unit": "Pa",
+          "desc": "allowable bolt shear stress",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_b",
+          "unit": "m",
+          "desc": "bolt diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T = n_b*F_b*R",
+        "F_b = tau_b*A_b",
+        "A_b = pi*d_b**2/4"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T",
+        "F_b",
+        "A_b"
+      ],
+      "assumptions": [
+        "Rigid flange coupling with the bolts in shear on the pitch circle; torque = n_b\u00b7F_b\u00b7R. Preloaded friction couplings transmit torque by face friction instead (see bolted section). Single shear; use the shear area accordingly for double-shear designs."
+      ],
+      "method_references": [
+        "Bolt-circle torque T = n\u00b7F\u00b7R"
+      ],
+      "synthetic_example": {
+        "n_b": 6,
+        "R": 0.06,
+        "tau_b": 60000000.0,
+        "d_b": 0.012
+      }
+    },
+    "shafts.set_screw": {
+      "title": "Set screw holding force and torque (friction model)",
+      "variables": [
+        {
+          "name": "N",
+          "unit": "N",
+          "desc": "clamping (normal) force at the cup point",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_hold",
+          "unit": "N",
+          "desc": "holding force against sliding",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_hold",
+          "unit": "N*m",
+          "desc": "holding torque against rotation on the shaft",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_set",
+          "unit": "N*m",
+          "desc": "set-screw tightening torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "nut factor (\u22480.2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_set",
+          "unit": "m",
+          "desc": "set-screw nominal diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "friction coefficient at the shaft",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_shaft",
+          "unit": "m",
+          "desc": "shaft diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "N = T_set/(K*d_set)",
+        "F_hold = mu*N",
+        "T_hold = F_hold*d_shaft/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "N",
+        "F_hold",
+        "T_hold"
+      ],
+      "assumptions": [
+        "Friction model: the tightening torque develops a clamp N = T/(K\u00b7d) (nut factor K is a user input), and the holding force/torque follow from the cup-point friction \u03bc. Manufacturer tabulated holding powers are more accurate for a specific screw/shaft; no tabulated values are built in."
+      ],
+      "method_references": [
+        "Screw-clamp and friction holding model (recalled)"
+      ],
+      "synthetic_example": {
+        "T_set": 2.0,
+        "K": 0.2,
+        "d_set": 0.006,
+        "mu": 0.3,
+        "d_shaft": 0.02
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "shafts-001",
+      "calculator": "shafts.shaft_diameter_de",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Ma": "200 N*m",
+        "Mm": "100 N*m",
+        "Ta": "150 N*m",
+        "Tm": "100 N*m",
+        "Kf": 1.5,
+        "Kfs": 1.5,
+        "Se": "180 MPa",
+        "Sut": "600 MPa",
+        "Sy": "400 MPa",
+        "n": 2.0
+      },
+      "solve_for": [
+        "A",
+        "B",
+        "d_goodman",
+        "d_gerber",
+        "d_elliptic"
+      ],
+      "expected_as_specified": {
+        "A": "715.454 N*m",
+        "B": "396.863 N*m",
+        "d_goodman": "36.145 mm",
+        "d_gerber": "34.643 mm",
+        "d_elliptic": "34.685 mm"
+      },
+      "expected_SI": {
+        "A": 715.454,
+        "B": 396.863,
+        "d_goodman": 0.036145000000000004,
+        "d_gerber": 0.034643,
+        "d_elliptic": 0.034685
+      },
+      "actual_SI": {
+        "A": {
+          "value": 715.4544010627093,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_diameter_de (symbolic)"
+        },
+        "B": {
+          "value": 396.8626966596886,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_diameter_de (symbolic)"
+        },
+        "d_goodman": {
+          "value": 0.03614544746067592,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_diameter_de (symbolic)"
+        },
+        "d_gerber": {
+          "value": 0.03464349988826906,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_diameter_de (symbolic)"
+        },
+        "d_elliptic": {
+          "value": 0.03468525628037676,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_diameter_de (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 0.0004010627093293806,
+          "relative_error": 5.605709232590504e-07,
+          "allowed_absolute_error": 1.4309079999999998,
+          "passed": true
+        },
+        "B": {
+          "absolute_error": 0.0003033403114045541,
+          "relative_error": 7.643451553925513e-07,
+          "allowed_absolute_error": 0.793726,
+          "passed": true
+        },
+        "d_goodman": {
+          "absolute_error": 4.474606759147237e-07,
+          "relative_error": 1.2379600938296408e-05,
+          "allowed_absolute_error": 7.229000000000001e-05,
+          "passed": true
+        },
+        "d_gerber": {
+          "absolute_error": 4.998882690565587e-07,
+          "relative_error": 1.4429704963674008e-05,
+          "allowed_absolute_error": 6.9286e-05,
+          "passed": true
+        },
+        "d_elliptic": {
+          "absolute_error": 2.562803767605648e-07,
+          "relative_error": 7.38879563962995e-06,
+          "allowed_absolute_error": 6.937000000000001e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = sqrt(4(1.5\u00b7200)\u00b2 + 3(1.5\u00b7150)\u00b2) = sqrt(360000 + 151875) = sqrt(511875) = 715.454 N\u00b7m; B = sqrt(4(1.5\u00b7100)\u00b2 + 3(1.5\u00b7100)\u00b2) = sqrt(90000 + 67500) = sqrt(157500) = 396.863 N\u00b7m; d_goodman = (16\u00b72/\u03c0\u00b7(715.454/180e6 + 396.863/600e6))^(1/3) = (10.1859\u00b7(3.97475e-6 + 6.61438e-7))^(1/3) = (4.72220e-5)^(1/3) = 0.036145 m; d_gerber = (8\u00b72/\u03c0/180e6\u00b7(715.454 + sqrt(715.454\u00b2 + (2\u00b7396.863\u00b7180e6/600e6)\u00b2)))^(1/3) = (2.82942e-8\u00b7(715.454 + 754.033))^(1/3) = (4.15777e-5)^(1/3) = 0.034643 m; d_elliptic = (16\u00b72/\u03c0\u00b7sqrt((715.454/180e6)\u00b2 + (396.863/400e6)\u00b2))^(1/3) = 0.0346853 m"
+      }
+    },
+    {
+      "id": "shafts-002",
+      "calculator": "shafts.shaft_diameter_de",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Ma": "0 N*m",
+        "Mm": "100 N*m",
+        "Ta": "0 N*m",
+        "Tm": "100 N*m",
+        "Kf": 1.0,
+        "Kfs": 1.0,
+        "Se": "200 MPa",
+        "Sut": "800 MPa",
+        "Sy": "600 MPa",
+        "n": 2.0
+      },
+      "solve_for": [
+        "A",
+        "B",
+        "d_goodman",
+        "d_gerber",
+        "d_elliptic"
+      ],
+      "expected_as_specified": {
+        "A": "0 N*m",
+        "B": "264.575 N*m",
+        "d_goodman": "14.9906 mm",
+        "d_gerber": "14.9906 mm",
+        "d_elliptic": "16.4993 mm"
+      },
+      "expected_SI": {
+        "A": 0.0,
+        "B": 264.575,
+        "d_goodman": 0.014990600000000001,
+        "d_gerber": 0.014990600000000001,
+        "d_elliptic": 0.0164993
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_diameter_de (symbolic)"
+        },
+        "B": {
+          "value": 264.5751311064591,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_diameter_de (symbolic)"
+        },
+        "d_goodman": {
+          "value": 0.014990624058865658,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_diameter_de (symbolic)"
+        },
+        "d_gerber": {
+          "value": 0.014990624058865656,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_diameter_de (symbolic)"
+        },
+        "d_elliptic": {
+          "value": 0.016499316685967963,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_diameter_de (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 0.0,
+          "relative_error": null,
+          "allowed_absolute_error": 1e-12,
+          "passed": true
+        },
+        "B": {
+          "absolute_error": 0.00013110645909364393,
+          "relative_error": 4.95536082750237e-07,
+          "allowed_absolute_error": 0.52915,
+          "passed": true
+        },
+        "d_goodman": {
+          "absolute_error": 2.405886565665094e-08,
+          "relative_error": 1.6049301333269475e-06,
+          "allowed_absolute_error": 2.9981200000000004e-05,
+          "passed": true
+        },
+        "d_gerber": {
+          "absolute_error": 2.4058865654916217e-08,
+          "relative_error": 1.6049301332112267e-06,
+          "allowed_absolute_error": 2.9981200000000004e-05,
+          "passed": true
+        },
+        "d_elliptic": {
+          "absolute_error": 1.668596796150501e-08,
+          "relative_error": 1.0113136897628997e-06,
+          "allowed_absolute_error": 3.2998600000000006e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Steady-only loading (Ma = Ta = 0): A = 0; B = sqrt(4\u00b7100\u00b2 + 3\u00b7100\u00b2) = sqrt(70000) = 264.575 N\u00b7m. The Gerber form must not divide by zero \u2014 its limit is d = (16 n B/(\u03c0 Sut))^(1/3) = (16\u00b72\u00b7264.575/(\u03c0\u00b7800e6))^(1/3) = (3.36866e-6)^(1/3) = 14.9906 mm (equal to Goodman here). d_elliptic = (16\u00b72\u00b7264.575/(\u03c0\u00b7600e6))^(1/3) = (4.49154e-6)^(1/3) = 16.4993 mm"
+      }
+    },
+    {
+      "id": "shafts-003",
+      "calculator": "shafts.shaft_deflection_slope",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "case": "simply_supported",
+        "segments": [
+          [
+            1.0,
+            0.04
+          ]
+        ],
+        "loads": [
+          [
+            0.5,
+            1000.0
+          ]
+        ],
+        "supports": [
+          0.0,
+          1.0
+        ],
+        "E": "200 GPa"
+      },
+      "solve_for": [
+        "reactions",
+        "deflections",
+        "slopes",
+        "max_deflection",
+        "max_deflection_x",
+        "max_slope",
+        "max_slope_x"
+      ],
+      "expected_as_specified": {
+        "reactions": [
+          [
+            0.0,
+            500.0
+          ],
+          [
+            1.0,
+            500.0
+          ]
+        ],
+        "deflections": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.5,
+            -0.000828932
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "slopes": [
+          [
+            0.0,
+            -0.002486796
+          ],
+          [
+            0.5,
+            0.0
+          ],
+          [
+            1.0,
+            0.002486796
+          ]
+        ],
+        "max_deflection": "0.828932 mm",
+        "max_deflection_x": 0.5,
+        "max_slope": "0.002486796 rad"
+      },
+      "expected_SI": {
+        "reactions": [
+          [
+            0.0,
+            500.0
+          ],
+          [
+            1.0,
+            500.0
+          ]
+        ],
+        "deflections": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.5,
+            -0.000828932
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "slopes": [
+          [
+            0.0,
+            -0.002486796
+          ],
+          [
+            0.5,
+            0.0
+          ],
+          [
+            1.0,
+            0.002486796
+          ]
+        ],
+        "max_deflection": 0.000828932,
+        "max_deflection_x": 0.5,
+        "max_slope": 0.002486796
+      },
+      "actual_SI": {
+        "reactions": {
+          "value": [
+            [
+              0.0,
+              500.0
+            ],
+            [
+              1.0,
+              500.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)",
+          "unit": ""
+        },
+        "deflections": {
+          "value": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.5,
+              -0.0008289319952702893
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)",
+          "unit": ""
+        },
+        "slopes": {
+          "value": [
+            [
+              0.0,
+              -0.0024867959858108656
+            ],
+            [
+              0.5,
+              -8.673617379884035e-19
+            ],
+            [
+              1.0,
+              0.002486795985810862
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)",
+          "unit": ""
+        },
+        "max_deflection": {
+          "value": 0.0008289319952702893,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)"
+        },
+        "max_deflection_x": {
+          "value": 0.5,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)"
+        },
+        "max_slope": {
+          "value": 0.0024867959858108656,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "reactions": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 1.0,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 1.0,
+              "passed": true
+            }
+          ]
+        ],
+        "deflections": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.001,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.729710655244912e-12,
+              "relative_error": 5.705788478723118e-09,
+              "allowed_absolute_error": 1.6578640000000001e-06,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ]
+        ],
+        "slopes": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 1.4189134242559298e-11,
+              "relative_error": 5.705789394288594e-09,
+              "allowed_absolute_error": 4.973592e-06,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.001,
+              "passed": true
+            },
+            {
+              "absolute_error": 8.673617379884035e-19,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 1.418913771200625e-11,
+              "relative_error": 5.705790789435986e-09,
+              "allowed_absolute_error": 4.973592e-06,
+              "passed": true
+            }
+          ]
+        ],
+        "max_deflection": {
+          "absolute_error": 4.729710655244912e-12,
+          "relative_error": 5.705788478723118e-09,
+          "allowed_absolute_error": 1.6578640000000001e-06,
+          "passed": true
+        },
+        "max_deflection_x": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "max_slope": {
+          "absolute_error": 1.4189134242559298e-11,
+          "relative_error": 5.705789394288594e-09,
+          "allowed_absolute_error": 4.973592e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Landmark: simply supported uniform shaft (I = \u03c0\u00b70.04\u2074/64 = 1.25664e-7 m\u2074), centre point load. y_max = FL\u00b3/48EI = 1000/(48\u00b7200e9\u00b71.25664e-7) = 8.28932e-4 m at x = 0.5; support slope FL\u00b2/16EI = 1000/(16\u00b7200e9\u00b71.25664e-7) = 2.48680e-3 rad (left \u2212, right +); reactions 500 N each."
+      }
+    },
+    {
+      "id": "shafts-004",
+      "calculator": "shafts.shaft_deflection_slope",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "case": "simply_supported",
+        "segments": [
+          [
+            0.5,
+            0.04
+          ],
+          [
+            0.5,
+            0.03
+          ]
+        ],
+        "loads": [
+          [
+            0.25,
+            1000.0
+          ]
+        ],
+        "supports": [
+          0.0,
+          1.0
+        ],
+        "E": "207 GPa"
+      },
+      "solve_for": [
+        "reactions",
+        "deflections",
+        "slopes",
+        "max_deflection",
+        "max_deflection_x",
+        "max_slope",
+        "max_slope_x"
+      ],
+      "expected_as_specified": {
+        "reactions": [
+          [
+            0.0,
+            750.0
+          ],
+          [
+            1.0,
+            250.0
+          ]
+        ],
+        "deflections": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.25,
+            -0.000666799
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "slopes": [
+          [
+            0.0,
+            -0.002967534
+          ],
+          [
+            0.25,
+            -0.002066521
+          ],
+          [
+            1.0,
+            0.003232029
+          ]
+        ],
+        "max_deflection": "0.993984 mm",
+        "max_deflection_x": 0.538687,
+        "max_slope": "0.003232029 rad",
+        "max_slope_x": 1.0
+      },
+      "expected_SI": {
+        "reactions": [
+          [
+            0.0,
+            750.0
+          ],
+          [
+            1.0,
+            250.0
+          ]
+        ],
+        "deflections": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.25,
+            -0.000666799
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "slopes": [
+          [
+            0.0,
+            -0.002967534
+          ],
+          [
+            0.25,
+            -0.002066521
+          ],
+          [
+            1.0,
+            0.003232029
+          ]
+        ],
+        "max_deflection": 0.000993984,
+        "max_deflection_x": 0.538687,
+        "max_slope": 0.003232029,
+        "max_slope_x": 1.0
+      },
+      "actual_SI": {
+        "reactions": {
+          "value": [
+            [
+              0.0,
+              750.0
+            ],
+            [
+              1.0,
+              250.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)",
+          "unit": ""
+        },
+        "deflections": {
+          "value": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.25,
+              -0.0006667990866707221
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)",
+          "unit": ""
+        },
+        "slopes": {
+          "value": [
+            [
+              0.0,
+              -0.002967534026128645
+            ],
+            [
+              0.25,
+              -0.0020665209877913757
+            ],
+            [
+              1.0,
+              0.0032320289372454983
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)",
+          "unit": ""
+        },
+        "max_deflection": {
+          "value": 0.0009939835904220857,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)"
+        },
+        "max_deflection_x": {
+          "value": 0.538625,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)"
+        },
+        "max_slope": {
+          "value": 0.0032320289372454983,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)"
+        },
+        "max_slope_x": {
+          "value": 1.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "reactions": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 1.5,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.5,
+              "passed": true
+            }
+          ]
+        ],
+        "deflections": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0005,
+              "passed": true
+            },
+            {
+              "absolute_error": 8.667072203157045e-11,
+              "relative_error": 1.2998028196138633e-07,
+              "allowed_absolute_error": 1.3335980000000002e-06,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ]
+        ],
+        "slopes": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.6128644820683222e-11,
+              "relative_error": 8.804834189156122e-09,
+              "allowed_absolute_error": 5.935068e-06,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.0005,
+              "passed": true
+            },
+            {
+              "absolute_error": 1.2208624302484372e-11,
+              "relative_error": 5.907815261729434e-09,
+              "allowed_absolute_error": 4.133042e-06,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 6.275450168194419e-11,
+              "relative_error": 1.9416441400106308e-08,
+              "allowed_absolute_error": 6.464058e-06,
+              "passed": true
+            }
+          ]
+        ],
+        "max_deflection": {
+          "absolute_error": 4.09577914336004e-10,
+          "relative_error": 4.120568483355909e-07,
+          "allowed_absolute_error": 1.9879680000000002e-06,
+          "passed": true
+        },
+        "max_deflection_x": {
+          "absolute_error": 6.20000000000065e-05,
+          "relative_error": 0.00011509466536227251,
+          "allowed_absolute_error": 0.001077374,
+          "passed": true
+        },
+        "max_slope": {
+          "absolute_error": 6.275450168194419e-11,
+          "relative_error": 1.9416441400106308e-08,
+          "allowed_absolute_error": 6.464058e-06,
+          "passed": true
+        },
+        "max_slope_x": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Stepped shaft (\u00d840 on 0\u20130.5 m, \u00d830 on 0.5\u20131 m), simply supported at 0 and 1 m, 1 kN at 0.25 m, E = 207 GPa. Reactions: Rb = 1000\u00b70.25/1 = 250 N, Ra = 750 N. Deflection at the load by unit-load integration y(0.25) = \u222b M\u00b7m/(EI) dx over [0,0.25]/EI1 + [0.25,0.5]/EI1 + [0.5,1]/EI2 = (562.5\u00b70.25\u00b3/3 + 62.5\u00b7(0.75\u00b3\u22120.5\u00b3)/3)/EI1 + (62.5\u00b70.5\u00b3/3)/EI2 with EI1 = 207e9\u00b7\u03c0\u00b70.04\u2074/64 = 26012.4, EI2 = 207e9\u00b7\u03c0\u00b70.03\u2074/64 = 8230.5 \u2192 \u22126.6680e-4 m. Max |y| = 0.993984 mm at x = 0.538687 m (slope zero, per-interval EI). Note: the review's quoted \u22120.6901 mm / 1.0288 mm match E = 200 GPa (a factor 207/200 = 1.035); this oracle uses the stated E = 207 GPa."
+      }
+    },
+    {
+      "id": "shafts-005",
+      "calculator": "shafts.shaft_deflection_slope",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "case": "cantilever",
+        "segments": [
+          [
+            1.0,
+            0.04
+          ]
+        ],
+        "loads": [
+          [
+            1.0,
+            1000.0
+          ]
+        ],
+        "supports": [],
+        "E": "200 GPa"
+      },
+      "solve_for": [
+        "reactions",
+        "deflections",
+        "slopes",
+        "max_deflection",
+        "max_deflection_x",
+        "max_slope",
+        "max_slope_x"
+      ],
+      "expected_as_specified": {
+        "reactions": [
+          [
+            0.0,
+            1000.0
+          ]
+        ],
+        "deflections": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            -0.0132629
+          ]
+        ],
+        "slopes": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            -0.0198944
+          ]
+        ],
+        "max_deflection": "13.2629 mm",
+        "max_deflection_x": 1.0,
+        "max_slope": "0.0198944 rad",
+        "max_slope_x": 1.0
+      },
+      "expected_SI": {
+        "reactions": [
+          [
+            0.0,
+            1000.0
+          ]
+        ],
+        "deflections": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            -0.0132629
+          ]
+        ],
+        "slopes": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            -0.0198944
+          ]
+        ],
+        "max_deflection": 0.013262900000000001,
+        "max_deflection_x": 1.0,
+        "max_slope": 0.0198944,
+        "max_slope_x": 1.0
+      },
+      "actual_SI": {
+        "reactions": {
+          "value": [
+            [
+              0.0,
+              1000.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)",
+          "unit": ""
+        },
+        "deflections": {
+          "value": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              -0.013262911924324602
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)",
+          "unit": ""
+        },
+        "slopes": {
+          "value": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              -0.01989436788648692
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)",
+          "unit": ""
+        },
+        "max_deflection": {
+          "value": 0.013262911924324602,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)"
+        },
+        "max_deflection_x": {
+          "value": 1.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)"
+        },
+        "max_slope": {
+          "value": 0.01989436788648692,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)"
+        },
+        "max_slope_x": {
+          "value": 1.0,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_deflection_slope (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "reactions": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 2.0,
+              "passed": true
+            }
+          ]
+        ],
+        "deflections": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 1.192432460238313e-08,
+              "relative_error": 8.990737020096005e-07,
+              "allowed_absolute_error": 2.65258e-05,
+              "passed": true
+            }
+          ]
+        ],
+        "slopes": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 3.211351307791377e-08,
+              "relative_error": 1.6141986226231387e-06,
+              "allowed_absolute_error": 3.97888e-05,
+              "passed": true
+            }
+          ]
+        ],
+        "max_deflection": {
+          "absolute_error": 1.1924324600648406e-08,
+          "relative_error": 8.990737018788051e-07,
+          "allowed_absolute_error": 2.6525800000000003e-05,
+          "passed": true
+        },
+        "max_deflection_x": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        },
+        "max_slope": {
+          "absolute_error": 3.211351307791377e-08,
+          "relative_error": 1.6141986226231387e-06,
+          "allowed_absolute_error": 3.97888e-05,
+          "passed": true
+        },
+        "max_slope_x": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Landmark: cantilever tip load (supports ignored). y_tip = FL\u00b3/3EI = 1000/(3\u00b7200e9\u00b71.25664e-7) = 1.32629e-2 m; tip slope FL\u00b2/2EI = 1000/(2\u00b7200e9\u00b71.25664e-7) = 1.98944e-2 rad (downward = negative); fixed-end reaction 1000 N."
+      }
+    },
+    {
+      "id": "shafts-006",
+      "calculator": "shafts.shaft_critical_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "case": "simply_supported",
+        "segments": [
+          [
+            1.0,
+            0.04
+          ]
+        ],
+        "masses": [
+          [
+            0.5,
+            20.0
+          ]
+        ],
+        "supports": [
+          0.0,
+          1.0
+        ],
+        "E": "200 GPa"
+      },
+      "solve_for": [
+        "omega_cr",
+        "deflections"
+      ],
+      "expected_as_specified": {
+        "omega_cr": "245.598 rad/s",
+        "deflections": [
+          [
+            0.5,
+            -0.000162581
+          ]
+        ]
+      },
+      "expected_SI": {
+        "omega_cr": 245.598,
+        "deflections": [
+          [
+            0.5,
+            -0.000162581
+          ]
+        ]
+      },
+      "actual_SI": {
+        "omega_cr": {
+          "value": 245.59840990715787,
+          "unit": "rad/s",
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_critical_speed (procedure)"
+        },
+        "deflections": {
+          "value": [
+            [
+              0.5,
+              -0.0001625809190283466
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc shafts.shaft_critical_speed (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "omega_cr": {
+          "absolute_error": 0.00040990715785937937,
+          "relative_error": 1.6690166770876773e-06,
+          "allowed_absolute_error": 0.491196,
+          "passed": true
+        },
+        "deflections": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.001,
+              "passed": true
+            },
+            {
+              "absolute_error": 8.097165340027572e-11,
+              "relative_error": 4.980388446391382e-07,
+              "allowed_absolute_error": 3.25162e-07,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Rayleigh with one central mass: \u03b4 = W\u00b7L\u00b3/48EI = (20\u00b79.80665)/(48\u00b7200e9\u00b71.25664e-7) = 196.133/1.20637e6 = 1.62581e-4 m; \u03c9 = sqrt(g\u00b7m\u00b7\u03b4/(m\u00b7\u03b4\u00b2)) = sqrt(g/\u03b4) = sqrt(9.80665/1.62581e-4) = sqrt(60317.9) = 245.60 rad/s."
+      }
+    },
+    {
+      "id": "shafts-007",
+      "calculator": "shafts.key_shear_crush",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T": "200 N*m",
+        "d": "40 mm",
+        "w": "12 mm",
+        "h": "8 mm",
+        "L": "50 mm"
+      },
+      "solve_for": [
+        "tau",
+        "sigma_c"
+      ],
+      "expected_as_specified": {
+        "tau": "16.6667 MPa",
+        "sigma_c": "50 MPa"
+      },
+      "expected_SI": {
+        "tau": 16666699.999999998,
+        "sigma_c": 50000000.0
+      },
+      "actual_SI": {
+        "tau": {
+          "value": 16666666.666666666,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc shafts.key_shear_crush (symbolic)"
+        },
+        "sigma_c": {
+          "value": 50000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc shafts.key_shear_crush (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "tau": {
+          "absolute_error": 33.33333333209157,
+          "relative_error": 1.9999959999334946e-06,
+          "allowed_absolute_error": 33333.399999999994,
+          "passed": true
+        },
+        "sigma_c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 100000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c4 = 2T/(d\u00b7w\u00b7L) = 400/(0.04\u00b70.012\u00b70.05) = 400/2.4e-5 = 16.667 MPa; \u03c3c = 4T/(d\u00b7h\u00b7L) = 800/(0.04\u00b70.008\u00b70.05) = 800/1.6e-5 = 50 MPa"
+      }
+    },
+    {
+      "id": "shafts-008",
+      "calculator": "shafts.key_shear_crush",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T": "200 N*m",
+        "d": "40 mm",
+        "w": "12 mm",
+        "h": "8 mm",
+        "tau": "16.6667 MPa"
+      },
+      "solve_for": [
+        "L",
+        "sigma_c"
+      ],
+      "expected_as_specified": {
+        "L": "50 mm"
+      },
+      "expected_SI": {
+        "L": 0.05
+      },
+      "actual_SI": {
+        "L": {
+          "value": 0.04999990000020001,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.key_shear_crush (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "L": {
+          "absolute_error": 9.999979999619768e-08,
+          "relative_error": 1.9999959999239536e-06,
+          "allowed_absolute_error": 0.0001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L = 2T/(d\u00b7w\u00b7\u03c4) = 400/(0.04\u00b70.012\u00b716.6667e6) = 400/8000 = 0.05 m"
+      }
+    },
+    {
+      "id": "shafts-009",
+      "calculator": "shafts.key_length",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T": "200 N*m",
+        "d": "40 mm",
+        "w": "12 mm",
+        "h": "8 mm",
+        "tau_allow": "40 MPa",
+        "sigma_allow": "100 MPa"
+      },
+      "solve_for": [
+        "L_shear",
+        "L_crush"
+      ],
+      "expected_as_specified": {
+        "L_shear": "20.8333 mm",
+        "L_crush": "25 mm"
+      },
+      "expected_SI": {
+        "L_shear": 0.020833300000000003,
+        "L_crush": 0.025
+      },
+      "actual_SI": {
+        "L_shear": {
+          "value": 0.020833333333333332,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.key_length (symbolic)"
+        },
+        "L_crush": {
+          "value": 0.024999999999999998,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.key_length (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "L_shear": {
+          "absolute_error": 3.3333333329665926e-08,
+          "relative_error": 1.60000255982806e-06,
+          "allowed_absolute_error": 4.1666600000000005e-05,
+          "passed": true
+        },
+        "L_crush": {
+          "absolute_error": 3.469446951953614e-18,
+          "relative_error": 1.3877787807814457e-16,
+          "allowed_absolute_error": 5e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L_shear = 2T/(d\u00b7w\u00b7\u03c4_allow) = 400/(0.04\u00b70.012\u00b740e6) = 400/19200 = 0.020833 m; L_crush = 4T/(d\u00b7h\u00b7\u03c3_allow) = 800/(0.04\u00b70.008\u00b7100e6) = 800/32000 = 0.025 m"
+      }
+    },
+    {
+      "id": "shafts-010",
+      "calculator": "shafts.spline_torque",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p": "20 MPa",
+        "n": 6,
+        "L": "30 mm",
+        "D": "50 mm",
+        "d": "44 mm"
+      },
+      "solve_for": [
+        "T",
+        "h",
+        "r_m"
+      ],
+      "expected_as_specified": {
+        "T": "253.8 N*m",
+        "h": "3 mm",
+        "r_m": "23.5 mm"
+      },
+      "expected_SI": {
+        "T": 253.8,
+        "h": 0.003,
+        "r_m": 0.0235
+      },
+      "actual_SI": {
+        "T": {
+          "value": 253.8000000000002,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc shafts.spline_torque (symbolic)"
+        },
+        "h": {
+          "value": 0.0030000000000000027,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.spline_torque (symbolic)"
+        },
+        "r_m": {
+          "value": 0.0235,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.spline_torque (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T": {
+          "absolute_error": 1.9895196601282805e-13,
+          "relative_error": 7.838926950860049e-16,
+          "allowed_absolute_error": 0.5076,
+          "passed": true
+        },
+        "h": {
+          "absolute_error": 2.6020852139652106e-18,
+          "relative_error": 8.673617379884035e-16,
+          "allowed_absolute_error": 6e-06,
+          "passed": true
+        },
+        "r_m": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4.7000000000000004e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "h = (50\u221244)/2 = 3 mm; r_m = (50+44)/4 = 23.5 mm; T = p\u00b7n\u00b7L\u00b7h\u00b7r_m = 20e6\u00b76\u00b70.03\u00b70.003\u00b70.0235 = 253.8 N\u00b7m"
+      }
+    },
+    {
+      "id": "shafts-011",
+      "calculator": "shafts.flange_coupling",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n_b": 6,
+        "R": "60 mm",
+        "tau_b": "60 MPa",
+        "d_b": "12 mm"
+      },
+      "solve_for": [
+        "T",
+        "F_b",
+        "A_b"
+      ],
+      "expected_as_specified": {
+        "A_b": "113.097 mm^2",
+        "F_b": "6785.84 N",
+        "T": "2442.90 N*m"
+      },
+      "expected_SI": {
+        "A_b": 0.00011309699999999999,
+        "F_b": 6785.84,
+        "T": 2442.9
+      },
+      "actual_SI": {
+        "A_b": {
+          "value": 0.00011309733552923255,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc shafts.flange_coupling (symbolic)"
+        },
+        "F_b": {
+          "value": 6785.840131753953,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc shafts.flange_coupling (symbolic)"
+        },
+        "T": {
+          "value": 2442.902447431423,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc shafts.flange_coupling (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A_b": {
+          "absolute_error": 3.355292325582385e-10,
+          "relative_error": 2.9667385744824224e-06,
+          "allowed_absolute_error": 2.26194e-07,
+          "passed": true
+        },
+        "F_b": {
+          "absolute_error": 0.00013175395270081935,
+          "relative_error": 1.941601226978817e-08,
+          "allowed_absolute_error": 13.57168,
+          "passed": true
+        },
+        "T": {
+          "absolute_error": 0.0024474314227518335,
+          "relative_error": 1.0018549358352096e-06,
+          "allowed_absolute_error": 4.885800000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A_b = \u03c0\u00b70.012\u00b2/4 = 1.13097e-4 m\u00b2; F_b = 60e6\u00b71.13097e-4 = 6785.84 N; T = 6\u00b76785.84\u00b70.06 = 2442.90 N\u00b7m"
+      }
+    },
+    {
+      "id": "shafts-012",
+      "calculator": "shafts.flange_coupling",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n_b": 6,
+        "R": "60 mm",
+        "tau_b": "60 MPa",
+        "T": "2442.90 N*m"
+      },
+      "solve_for": [
+        "F_b",
+        "A_b",
+        "d_b"
+      ],
+      "expected_as_specified": {
+        "d_b": "12 mm"
+      },
+      "expected_SI": {
+        "d_b": 0.012
+      },
+      "actual_SI": {
+        "d_b": {
+          "value": 0.011999993988874904,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc shafts.flange_coupling (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "d_b": {
+          "absolute_error": 6.0111250959477e-09,
+          "relative_error": 5.009270913289751e-07,
+          "allowed_absolute_error": 2.4e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F_b = T/(n_b\u00b7R) = 2442.90/0.36 = 6785.84 N; A_b = F_b/\u03c4_b = 1.13097e-4 m\u00b2; d_b = sqrt(4\u00b7A_b/\u03c0) = sqrt(1.44e-4) = 0.012 m"
+      }
+    },
+    {
+      "id": "shafts-013",
+      "calculator": "shafts.set_screw",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T_set": "2 N*m",
+        "K": 0.2,
+        "d_set": "6 mm",
+        "mu": 0.3,
+        "d_shaft": "20 mm"
+      },
+      "solve_for": [
+        "N",
+        "F_hold",
+        "T_hold"
+      ],
+      "expected_as_specified": {
+        "N": "1666.67 N",
+        "F_hold": "500 N",
+        "T_hold": "5 N*m"
+      },
+      "expected_SI": {
+        "N": 1666.67,
+        "F_hold": 500.0,
+        "T_hold": 5.0
+      },
+      "actual_SI": {
+        "N": {
+          "value": 1666.6666666666665,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc shafts.set_screw (symbolic)"
+        },
+        "F_hold": {
+          "value": 499.99999999999994,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc shafts.set_screw (symbolic)"
+        },
+        "T_hold": {
+          "value": 5.0,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc shafts.set_screw (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "N": {
+          "absolute_error": 0.0033333333335576754,
+          "relative_error": 1.999996000142605e-06,
+          "allowed_absolute_error": 3.33334,
+          "passed": true
+        },
+        "F_hold": {
+          "absolute_error": 5.684341886080802e-14,
+          "relative_error": 1.1368683772161603e-16,
+          "allowed_absolute_error": 1.0,
+          "passed": true
+        },
+        "T_hold": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "N = T/(K\u00b7d) = 2/(0.2\u00b70.006) = 1666.67 N; F_hold = \u03bc\u00b7N = 0.3\u00b71666.67 = 500 N; T_hold = F_hold\u00b7d_shaft/2 = 500\u00b70.01 = 5 N\u00b7m"
+      }
+    },
+    {
+      "id": "shafts-014",
+      "calculator": "shafts.set_screw",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T_set": "2 N*m",
+        "K": 0.2,
+        "d_set": "6 mm",
+        "F_hold": "500 N",
+        "d_shaft": "20 mm"
+      },
+      "solve_for": [
+        "N",
+        "mu",
+        "T_hold"
+      ],
+      "expected_as_specified": {
+        "mu": 0.3
+      },
+      "expected_SI": {
+        "mu": 0.3
+      },
+      "actual_SI": {
+        "mu": {
+          "value": 0.3,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc shafts.set_screw (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "mu": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0006,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "N = T/(K\u00b7d) = 1666.67 N; \u03bc = F_hold/N = 500/1666.67 = 0.30"
+      }
+    }
+  ],
+  "passed": 14,
+  "failed": 0
+}

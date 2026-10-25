@@ -1,0 +1,616 @@
+{
+  "section": "math",
+  "cases": [
+    {
+      "calc": "math.circle_area",
+      "inputs": {
+        "r": "10 cm"
+      },
+      "expect": {
+        "A": "0.03141593 m^2",
+        "C": "0.6283185 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 0.10 m; A = pi*0.01 = 0.0314159 m^2; C = 2*pi*0.1 = 0.628319 m"
+      }
+    },
+    {
+      "calc": "math.circle_area",
+      "inputs": {
+        "A": "3.14159265 m^2"
+      },
+      "solve_for": [
+        "r",
+        "C"
+      ],
+      "expect": {
+        "r": "1 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r = sqrt(A/pi) = sqrt(1) = 1 m"
+      }
+    },
+    {
+      "calc": "math.sphere_volume",
+      "inputs": {
+        "r": "1 m"
+      },
+      "expect": {
+        "V": "4.188790 m^3",
+        "A": "12.56637 m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V = 4/3*pi = 4.188790; A = 4*pi = 12.56637"
+      }
+    },
+    {
+      "calc": "math.arc_length",
+      "inputs": {
+        "r": "0.5 m",
+        "theta": "60 deg"
+      },
+      "expect": {
+        "s": "0.5235988 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "theta = pi/3 rad; s = 0.5*pi/3 = 0.5235988 m"
+      }
+    },
+    {
+      "calc": "math.arc_length",
+      "inputs": {
+        "r": "0.5 m",
+        "s": "0.5235988 m"
+      },
+      "solve_for": [
+        "theta"
+      ],
+      "expect": {
+        "theta": "1.0471976 rad"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "theta = s/r = 0.5235988/0.5 = 1.0471976 rad = 60 deg"
+      }
+    },
+    {
+      "calc": "math.curvature",
+      "inputs": {
+        "R": "250 mm"
+      },
+      "expect": {
+        "kappa": "4 1/m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "kappa = 1/0.25 = 4 m^-1"
+      }
+    },
+    {
+      "calc": "math.curvature",
+      "inputs": {
+        "kappa": "4 1/m"
+      },
+      "solve_for": [
+        "R"
+      ],
+      "expect": {
+        "R": "0.25 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = 1/kappa = 0.25 m"
+      }
+    },
+    {
+      "calc": "math.triangle_centroid",
+      "inputs": {
+        "vertices": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            1,
+            3
+          ]
+        ]
+      },
+      "expect": {
+        "x_bar": "1.6666667 m",
+        "y_bar": "1 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "x_bar = (0+4+1)/3 = 5/3 = 1.666667; y_bar = (0+0+3)/3 = 1"
+      }
+    },
+    {
+      "calc": "math.vector_components",
+      "inputs": {
+        "r": 5,
+        "theta": "30 deg"
+      },
+      "expect": {
+        "x": 4.330127,
+        "y": 2.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "x = 5*cos30 = 5*0.8660254 = 4.330127; y = 5*sin30 = 2.5"
+      }
+    },
+    {
+      "calc": "math.vector_components",
+      "inputs": {
+        "x": 4.330127,
+        "y": 2.5
+      },
+      "solve_for": [
+        "r",
+        "theta"
+      ],
+      "expect": {
+        "r": 5,
+        "theta": "30 deg"
+      },
+      "abs_tol": 1e-05,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = sqrt(4.330127^2 + 2.5^2) = 5; theta = atan2(2.5, 4.330127) = 30 deg"
+      }
+    },
+    {
+      "calc": "math.det2",
+      "inputs": {
+        "a": 1,
+        "b": 2,
+        "c": 3,
+        "d": 4
+      },
+      "expect": {
+        "det": -2
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "det = 1*4 - 2*3 = 4 - 6 = -2"
+      }
+    },
+    {
+      "calc": "math.det2",
+      "inputs": {
+        "det": -2,
+        "b": 2,
+        "c": 3,
+        "d": 4
+      },
+      "solve_for": [
+        "a"
+      ],
+      "expect": {
+        "a": 1
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a = (det + b*c)/d = (-2 + 6)/4 = 1"
+      }
+    },
+    {
+      "calc": "math.vector_ops",
+      "inputs": {
+        "a": [
+          1,
+          2,
+          3
+        ],
+        "b": [
+          4,
+          5,
+          6
+        ]
+      },
+      "expect": {
+        "dot": 32,
+        "cross": [
+          -3,
+          6,
+          -3
+        ],
+        "mag_a": 3.7416574,
+        "mag_b": 8.7749644,
+        "angle": "0.2257261 rad"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "dot = 1*4+2*5+3*6 = 32; cross = (2*6-3*5, 3*4-1*6, 1*5-2*4) = (-3, 6, -3); |a| = sqrt(14) = 3.741657; |b| = sqrt(77) = 8.774964; angle = acos(32/(sqrt14*sqrt77)) = acos(0.9746318) = 0.225726 rad"
+      }
+    },
+    {
+      "calc": "math.matrix_ops",
+      "inputs": {
+        "matrix": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      "expect": {
+        "det": -2,
+        "trace": 5,
+        "inverse": [
+          [
+            -2,
+            1
+          ],
+          [
+            1.5,
+            -0.5
+          ]
+        ]
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "det = 1*4 - 2*3 = -2; trace = 1+4 = 5; inverse = (1/det)*[[4,-2],[-3,1]] = [[-2,1],[1.5,-0.5]]"
+      }
+    },
+    {
+      "calc": "math.eigen",
+      "inputs": {
+        "matrix": [
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      "expect": {
+        "eigenvalues": [
+          3,
+          1
+        ]
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Characteristic polynomial (2-lam)^2 - 1 = 0 -> lam = 2 +/- 1 = 3, 1 (eigenvector signs are arbitrary so only the eigenvalues are checked)"
+      }
+    },
+    {
+      "calc": "math.derivative",
+      "inputs": {
+        "expr": [
+          "x**2 + 3*x"
+        ],
+        "at": 3
+      },
+      "expect": {
+        "value": 9
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "d/dx(x^2+3x) = 2x+3; at x=3 -> 2*3+3 = 9"
+      }
+    },
+    {
+      "calc": "math.integral",
+      "inputs": {
+        "expr": [
+          "x"
+        ],
+        "a": 0,
+        "b": 2
+      },
+      "expect": {
+        "definite": 2
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "integral_0^2 x dx = 2^2/2 = 2"
+      }
+    },
+    {
+      "calc": "math.integral",
+      "inputs": {
+        "expr": [
+          "x"
+        ],
+        "a": 0,
+        "definite": 2
+      },
+      "solve_for": [
+        "b"
+      ],
+      "expect": {
+        "b": 2
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "integral_0^b x dx = b^2/2 = 2 -> b = 2"
+      }
+    },
+    {
+      "calc": "math.laplace_transform",
+      "inputs": {
+        "expr": [
+          "exp(-3*t)"
+        ],
+        "s_val": 1
+      },
+      "expect": {
+        "value": 0.25
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L{exp(-3t)} = 1/(s+3); at s=1 -> 1/4 = 0.25"
+      }
+    },
+    {
+      "calc": "math.fourier_transform",
+      "inputs": {
+        "expr": [
+          "exp(-x**2)"
+        ],
+        "k_val": 1
+      },
+      "expect": {
+        "value": 9.167696e-05
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Gaussian landmark: F{exp(-x^2)} = sqrt(pi)*exp(-pi^2 k^2); at k=1 -> 1.772454*exp(-9.869604) = 9.167696e-5"
+      }
+    },
+    {
+      "calc": "math.newton_raphson",
+      "inputs": {
+        "expr": [
+          "x**2 - 2"
+        ],
+        "x0": 1
+      },
+      "expect": {
+        "root": 1.4142136
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Landmark: Newton's method for sqrt(2) from x0 = 1 converges to 1.41421356"
+      }
+    },
+    {
+      "calc": "math.simpson_rule",
+      "inputs": {
+        "expr": [
+          "x**3"
+        ],
+        "a": 0,
+        "b": 1,
+        "n": 4
+      },
+      "expect": {
+        "integral": 0.25
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "integral_0^1 x^3 dx = 1/4 = 0.25; Simpson is exact for cubics at any even n"
+      }
+    },
+    {
+      "calc": "math.runge_kutta",
+      "inputs": {
+        "expr": [
+          "x"
+        ],
+        "x0": 0,
+        "y0": 0,
+        "h": 0.25,
+        "n": 4
+      },
+      "expect": {
+        "y_final": 0.5
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "y' = x has solution y = x^2/2; RK4 integrates y'=f(x) exactly, so y(1) = 0.5"
+      }
+    },
+    {
+      "calc": "math.stats_basic",
+      "inputs": {
+        "data": [
+          2,
+          4,
+          4,
+          4,
+          5,
+          5,
+          7,
+          9
+        ]
+      },
+      "expect": {
+        "mean": 5,
+        "sample_std": 2.1380899,
+        "sample_var": 4.5714286,
+        "pop_var": 4,
+        "count": 8
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "mean = 40/8 = 5; deviations squared sum 32; sample var = 32/7 = 4.57143 (s = 2.13809); pop var = 32/8 = 4 (the classic textbook set)"
+      }
+    },
+    {
+      "calc": "math.linear_regression",
+      "inputs": {
+        "points": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      },
+      "expect": {
+        "slope": 2,
+        "intercept": -1,
+        "r": 1,
+        "r2": 1
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Points lie exactly on y = 2x - 1, so slope 2, intercept -1, r = r2 = 1"
+      }
+    },
+    {
+      "calc": "math.confidence_interval",
+      "inputs": {
+        "data": [
+          2,
+          4,
+          4,
+          4,
+          5,
+          5,
+          7,
+          9
+        ],
+        "conf": 0.95
+      },
+      "expect": {
+        "margin": 1.7874879,
+        "mean": 5,
+        "lower": 3.2125121,
+        "upper": 6.7874879
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "s = 2.13809, n = 8, se = s/sqrt(8) = 0.755929; t(0.975, 7) = 2.364624; margin = 2.364624*0.755929 = 1.787488; mean = 5"
+      }
+    },
+    {
+      "calc": "math.unit_convert",
+      "inputs": {
+        "value": 12,
+        "unit_from": [
+          "in"
+        ],
+        "unit_to": [
+          "mm"
+        ]
+      },
+      "expect": {
+        "value_out": 304.8
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "1 in = 25.4 mm exactly; 12*25.4 = 304.8"
+      }
+    },
+    {
+      "calc": "math.unit_convert",
+      "inputs": {
+        "value_out": 20,
+        "unit_from": [
+          "degF"
+        ],
+        "unit_to": [
+          "degC"
+        ]
+      },
+      "solve_for": [
+        "value"
+      ],
+      "expect": {
+        "value": 68
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse of the offset round-trip: 68 degF -> 20 degC (degC = (degF - 32)*5/9), so value = 68 recovers value_out = 20"
+      }
+    },
+    {
+      "calc": "math.percent_error",
+      "inputs": {
+        "measured": 10.5,
+        "true": 10
+      },
+      "expect": {
+        "pct": 5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "(10.5 - 10)/10*100 = 5%"
+      }
+    },
+    {
+      "calc": "math.percent_error",
+      "inputs": {
+        "measured": 10.5,
+        "pct": 5
+      },
+      "solve_for": [
+        "true"
+      ],
+      "expect": {
+        "true": 10
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "true = measured/(1 + pct/100) = 10.5/1.05 = 10"
+      }
+    },
+    {
+      "calc": "math.linear_interp",
+      "inputs": {
+        "x0": "0 m",
+        "y0": 0,
+        "x1": "2 m",
+        "y1": 10,
+        "x": "100 cm"
+      },
+      "expect": {
+        "y": 5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "y = 0 + (1-0)*(10-0)/(2-0) = 5 (x in mixed units: 100 cm = 1 m)"
+      }
+    }
+  ]
+}

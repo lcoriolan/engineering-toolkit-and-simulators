@@ -1,0 +1,730 @@
+{
+  "section": "thermo",
+  "cases": [
+    {
+      "calc": "thermo.ideal_gas_law",
+      "inputs": {
+        "v": "0.847 m^3/kg",
+        "R": "287 J/(kg*K)",
+        "T": "15 degC"
+      },
+      "expect": {
+        "P": "97637.6 Pa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = R T / v = 287 x 288.15 / 0.847 = 97637.6 Pa"
+      }
+    },
+    {
+      "calc": "thermo.compressibility_factor",
+      "inputs": {
+        "P": "10 MPa",
+        "v": "0.005 m^3/kg",
+        "R": "287 J/(kg*K)",
+        "T": "300 K"
+      },
+      "expect": {
+        "Z": 0.58072
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Z = P v/(R T) = 1e7 x 0.005/(287 x 300) = 50000/86100 = 0.58072"
+      }
+    },
+    {
+      "calc": "thermo.specific_heats",
+      "inputs": {
+        "R": "287 J/(kg*K)",
+        "gamma": 1.4
+      },
+      "expect": {
+        "cp": "1004.5 J/(kg*K)",
+        "cv": "717.5 J/(kg*K)"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "cp = 1.4 x 287/0.4 = 1004.5; cv = 287/0.4 = 717.5"
+      }
+    },
+    {
+      "calc": "thermo.specific_heats",
+      "inputs": {
+        "cp": "1004.5 J/(kg*K)",
+        "R": "287 J/(kg*K)"
+      },
+      "solve_for": [
+        "gamma",
+        "cv"
+      ],
+      "expect": {
+        "gamma": 1.4
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "gamma = cp/(cp - R) = 1004.5/717.5 = 1.4; cv = cp - R = 717.5"
+      }
+    },
+    {
+      "calc": "thermo.ideal_gas_energy",
+      "inputs": {
+        "cv": "718 J/(kg*K)",
+        "cp": "1005 J/(kg*K)",
+        "delta_T": "100 delta_degC"
+      },
+      "expect": {
+        "delta_u": "71.8 kJ/kg",
+        "delta_h": "100.5 kJ/kg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "du = 718 x 100 = 71800; dh = 1005 x 100 = 100500"
+      }
+    },
+    {
+      "calc": "thermo.ideal_gas_entropy",
+      "inputs": {
+        "cp": "1005 J/(kg*K)",
+        "R": "287 J/(kg*K)",
+        "T1": "300 K",
+        "T2": "600 K",
+        "P1": "100 kPa",
+        "P2": "200 kPa"
+      },
+      "expect": {
+        "delta_s": "497.680 J/(kg*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "ds = (1005 - 287) ln(2) = 718 x 0.693147 = 497.680 J/(kg K)"
+      }
+    },
+    {
+      "calc": "thermo.fluid_state_TP",
+      "inputs": {
+        "fluid": "Air",
+        "T": "300 K",
+        "P": "101.325 kPa"
+      },
+      "expect": {
+        "rho": "1.176996 kg/m^3",
+        "h": "426.298 kJ/kg",
+        "s": "3886.71 J/(kg*K)",
+        "u": "340.210 kJ/kg",
+        "cp": "1006.37 J/(kg*K)",
+        "cv": "717.972 J/(kg*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "CoolProp Air @ (300 K, 101325 Pa): rho = 1.176996, h = 426297.8, s = 3886.71; u = h - P/rho = 426297.8 - 101325/1.176996 = 340209.9; cp = 1006.37, cv = 717.972"
+      }
+    },
+    {
+      "calc": "thermo.fluid_state_TP",
+      "inputs": {
+        "fluid": "Nitrogen",
+        "T": "100 K",
+        "P": "10 bar"
+      },
+      "expect": {
+        "rho": "690.766 kg/m^3",
+        "h": "-73.1834 kJ/kg",
+        "s": "3373.12 J/(kg*K)",
+        "u": "-74.6311 kJ/kg",
+        "cp": "2304.75 J/(kg*K)",
+        "cv": "983.309 J/(kg*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "CoolProp Nitrogen @ (100 K, 1 MPa), subcooled liquid: rho = 690.766, h = -73183.43, s = 3373.12; u = h - P/rho = -73183.43 - 1e6/690.766 = -74631.10; cp = 2304.75, cv = 983.309. h and u are negative, exercising the signed declarations"
+      }
+    },
+    {
+      "calc": "thermo.fluid_state_TQ",
+      "inputs": {
+        "fluid": "Water",
+        "T": "373.15 K",
+        "Q": 0.5
+      },
+      "expect": {
+        "h": "1547.37 kJ/kg",
+        "P": "101.418 kPa",
+        "rho": "1.19559 kg/m^3",
+        "s": "4330.67 J/(kg*K)"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Water @ 373.15 K: h_f = 419166.2, h_g = 2675569.9; h = h_f + 0.5 h_fg = 419166.2 + 0.5 x 2256403.7 = 1547368.0; P = 101418 Pa; rho = 1.19559; s = s_f + 0.5 s_fg = 1307.21 + 0.5 x 6046.91 = 4330.67"
+      }
+    },
+    {
+      "calc": "thermo.mixture_quality",
+      "inputs": {
+        "v": "0.5 m^3/kg",
+        "v_f": "0.001044 m^3/kg",
+        "v_g": "1.6940 m^3/kg"
+      },
+      "expect": {
+        "x": 0.294725
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "x = (0.5 - 0.001044)/(1.6940 - 0.001044) = 0.498956/1.692956 = 0.294725"
+      }
+    },
+    {
+      "calc": "thermo.mixture_quality",
+      "inputs": {
+        "x": 0.294725,
+        "v_f": "0.001044 m^3/kg",
+        "v_g": "1.6940 m^3/kg"
+      },
+      "solve_for": [
+        "v"
+      ],
+      "expect": {
+        "v": "0.5 m^3/kg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "v = v_f + x(v_g - v_f) = 0.001044 + 0.294725 x 1.692956 = 0.5 m^3/kg"
+      }
+    },
+    {
+      "calc": "thermo.boundary_work_isobaric",
+      "inputs": {
+        "P": "200 kPa",
+        "V1": "100 L",
+        "V2": "300 L"
+      },
+      "expect": {
+        "W": "40 kJ"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "W = 200000 x (0.3 - 0.1) = 40000 J"
+      }
+    },
+    {
+      "calc": "thermo.boundary_work_isothermal",
+      "inputs": {
+        "P1": "100 kPa",
+        "V1": "0.5 m^3",
+        "V2": "1.0 m^3"
+      },
+      "expect": {
+        "W": "34.6574 kJ"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "W = 100000 x 0.5 x ln(2) = 50000 x 0.693147 = 34657.4 J"
+      }
+    },
+    {
+      "calc": "thermo.boundary_work_polytropic",
+      "inputs": {
+        "P1": "100 kPa",
+        "V1": "0.1 m^3",
+        "P2": "400 kPa",
+        "V2": "0.035 m^3",
+        "n": 1.3
+      },
+      "expect": {
+        "W": "-13.3333 kJ"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "W = (400000 x 0.035 - 100000 x 0.1)/(1 - 1.3) = (14000 - 10000)/(-0.3) = -13333.3 J"
+      }
+    },
+    {
+      "calc": "thermo.first_law_closed",
+      "inputs": {
+        "W": "50 kJ",
+        "delta_U": "25 kJ"
+      },
+      "expect": {
+        "Q": "75 kJ"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = W + dU = 50000 + 25000 = 75000 J"
+      }
+    },
+    {
+      "calc": "thermo.cv_energy_balance",
+      "inputs": {
+        "w": "100 kJ/kg",
+        "h1": "3 MJ/kg",
+        "h2": "2.9 MJ/kg",
+        "V1": "10 m/s",
+        "V2": "50 m/s",
+        "g": "9.80665 m/s^2",
+        "z1": "2 m",
+        "z2": "7 m"
+      },
+      "expect": {
+        "q": "1249.03 J/kg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "q = 100000 + (2.9e6 - 3e6) + (2500 - 100)/2 + 9.80665 x (7 - 2) = 100000 - 100000 + 1200 + 49.03 = 1249.03 J/kg"
+      }
+    },
+    {
+      "calc": "thermo.nozzle_diffuser",
+      "inputs": {
+        "V1": "30 m/s",
+        "h1": "3000 kJ/kg",
+        "h2": "2800 kJ/kg"
+      },
+      "expect": {
+        "V2": "633.167 m/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "V2 = sqrt(30^2 + 2 x 200000) = sqrt(400900) = 633.167 m/s"
+      }
+    },
+    {
+      "calc": "thermo.turbine_work",
+      "inputs": {
+        "h1": "3.2 MJ/kg",
+        "h2": "2.4 MJ/kg"
+      },
+      "expect": {
+        "w_out": "800 kJ/kg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "w_out = 3.2e6 - 2.4e6 = 800000 J/kg"
+      }
+    },
+    {
+      "calc": "thermo.compressor_work",
+      "inputs": {
+        "h1": "300 kJ/kg",
+        "h2": "500 kJ/kg"
+      },
+      "expect": {
+        "w_in": "200 kJ/kg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "w_in = 500000 - 300000 = 200000 J/kg"
+      }
+    },
+    {
+      "calc": "thermo.throttle",
+      "inputs": {
+        "h1": "2.8 MJ/kg"
+      },
+      "expect": {
+        "h2": "2.8 MJ/kg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "h2 = h1 = 2.8 MJ/kg (isenthalpic)"
+      }
+    },
+    {
+      "calc": "thermo.mixing_chamber",
+      "inputs": {
+        "mdot1": "1 kg/s",
+        "h1": "500 kJ/kg",
+        "mdot2": "2 kg/s",
+        "h2": "200 kJ/kg"
+      },
+      "expect": {
+        "h_mix": "300 kJ/kg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "h_mix = (1 x 500000 + 2 x 200000)/3 = 900000/3 = 300000 J/kg"
+      }
+    },
+    {
+      "calc": "thermo.transient_filling",
+      "inputs": {
+        "gamma": 1.4,
+        "T_line": "300 K"
+      },
+      "expect": {
+        "T2": "420 K"
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark: adiabatic charging of an initially evacuated rigid tank from an ideal-gas line gives u2 = h_line, so T2 = gamma T_line = 1.4 x 300 = 420 K (recalled; not re-read)"
+      }
+    },
+    {
+      "calc": "thermo.transient_discharge",
+      "inputs": {
+        "T1": "300 K",
+        "P1": "800 kPa",
+        "P2": "100 kPa",
+        "gamma": 1.4
+      },
+      "expect": {
+        "T2": "165.613 K"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "T2 = 300 x (0.125)^(0.4/1.4) = 300 x 0.552045 = 165.613 K"
+      }
+    },
+    {
+      "calc": "thermo.thermal_efficiency",
+      "inputs": {
+        "W_net": "400 kJ",
+        "Q_in": "1000 kJ"
+      },
+      "expect": {
+        "eta_th": 0.4
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "eta_th = 400000/1000000 = 0.4"
+      }
+    },
+    {
+      "calc": "thermo.carnot_efficiency",
+      "inputs": {
+        "T_L": "300 K",
+        "T_H": "600 K"
+      },
+      "expect": {
+        "eta_carnot": 0.5
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "eta = 1 - 300/600 = 0.5"
+      }
+    },
+    {
+      "calc": "thermo.cop",
+      "inputs": {
+        "Q_L": "2 MJ",
+        "Q_H": "2.5 MJ",
+        "W_in": "500 kJ"
+      },
+      "expect": {
+        "COP_ref": 4.0,
+        "COP_hp": 5.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "COP_ref = 2e6/5e5 = 4; COP_hp = 2.5e6/5e5 = 5"
+      }
+    },
+    {
+      "calc": "thermo.cop_carnot",
+      "inputs": {
+        "T_L": "268.15 K",
+        "T_H": "308.15 K"
+      },
+      "expect": {
+        "COP_ref_max": 6.70375,
+        "COP_hp_max": 7.70375
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "COP_ref_max = 268.15/40 = 6.70375; COP_hp_max = 308.15/40 = 7.70375"
+      }
+    },
+    {
+      "calc": "thermo.entropy_generation",
+      "inputs": {
+        "s1": "1 kJ/(kg*K)",
+        "s2": "1.5 kJ/(kg*K)",
+        "q": "100 kJ/kg",
+        "T_b": "400 K"
+      },
+      "expect": {
+        "s_gen": "250 J/(kg*K)"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "s_gen = (1500 - 1000) - 100000/400 = 500 - 250 = 250 J/(kg K)"
+      }
+    },
+    {
+      "calc": "thermo.isentropic_efficiency_turbine",
+      "inputs": {
+        "h1": "3.2 MJ/kg",
+        "h2a": "2.4 MJ/kg",
+        "h2s": "2.2 MJ/kg"
+      },
+      "expect": {
+        "eta_t": 0.8
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "eta_t = (3.2 - 2.4)/(3.2 - 2.2) = 0.8/1.0 = 0.8"
+      }
+    },
+    {
+      "calc": "thermo.isentropic_efficiency_compressor",
+      "inputs": {
+        "h1": "300 kJ/kg",
+        "h2s": "500 kJ/kg",
+        "h2a": "550 kJ/kg"
+      },
+      "expect": {
+        "eta_c": 0.8
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "eta_c = (500 - 300)/(550 - 300) = 200/250 = 0.8"
+      }
+    },
+    {
+      "calc": "thermo.exergy",
+      "inputs": {
+        "h": "3 MJ/kg",
+        "h0": "100 kJ/kg",
+        "T0": "298.15 K",
+        "s": "7 kJ/(kg*K)",
+        "s0": "360 J/(kg*K)",
+        "V": "0 m/s",
+        "z": "0 m"
+      },
+      "expect": {
+        "psi": "920.284 kJ/kg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "psi = (3e6 - 1e5) - 298.15 x (7000 - 360) + 0 + 0 = 2.9e6 - 1.979716e6 = 920284 J/kg"
+      }
+    },
+    {
+      "calc": "thermo.exergy",
+      "inputs": {
+        "h": "3 MJ/kg",
+        "h0": "100 kJ/kg",
+        "T0": "298.15 K",
+        "s": "7 kJ/(kg*K)",
+        "s0": "360 J/(kg*K)",
+        "V": "20 m/s",
+        "z": "5 m"
+      },
+      "expect": {
+        "psi": "920.533 kJ/kg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "kinetic = 0.5 x 400 = 200 J/kg; potential = 9.80665 x 5 = 49.033 J/kg; psi = 920284 + 200 + 49.033 = 920533.03 J/kg"
+      }
+    },
+    {
+      "calc": "thermo.exergy_destruction",
+      "inputs": {
+        "T0": "298.15 K",
+        "s_gen": "200 J/(kg*K)"
+      },
+      "expect": {
+        "x_destroyed": "59.63 kJ/kg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "x_destroyed = 298.15 x 200 = 59630 J/kg"
+      }
+    },
+    {
+      "calc": "thermo.second_law_efficiency",
+      "inputs": {
+        "x_destroyed": "30 kJ/kg",
+        "x_supplied": "100 kJ/kg"
+      },
+      "expect": {
+        "eta_II": 0.7
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "eta_II = 1 - 30000/100000 = 0.7"
+      }
+    },
+    {
+      "calc": "thermo.partial_pressure",
+      "inputs": {
+        "y_i": 0.21,
+        "P": "101.325 kPa"
+      },
+      "expect": {
+        "p_i": "21.2783 kPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "p_i = 0.21 x 101325 = 21278.25 Pa"
+      }
+    },
+    {
+      "calc": "thermo.partial_pressure",
+      "inputs": {
+        "p_i": "21.2783 kPa",
+        "y_i": 0.21
+      },
+      "solve_for": [
+        "P"
+      ],
+      "expect": {
+        "P": "101.325 kPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = p_i/y_i = 21278.25/0.21 = 101325 Pa"
+      }
+    },
+    {
+      "calc": "thermo.gas_mixture",
+      "inputs": {
+        "y1": 0.21,
+        "y2": 0.79,
+        "M1": "32 kg/kmol",
+        "M2": "28 kg/kmol"
+      },
+      "expect": {
+        "mf1": 0.23301,
+        "M_mix": "28.84 kg/kmol"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "mf1 = 0.21 x 32/(0.21 x 32 + 0.79 x 28) = 6.72/28.84 = 0.233010; M_mix = 6.72 + 22.12 = 28.84"
+      }
+    },
+    {
+      "calc": "thermo.clapeyron",
+      "inputs": {
+        "s_g": "7.354119 kJ/(kg*K)",
+        "s_f": "1.307211 kJ/(kg*K)",
+        "v_g": "1.671766 m^3/kg",
+        "v_f": "0.00104346 m^3/kg"
+      },
+      "expect": {
+        "dPdT": "3.61934 kPa/K"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "One consistent CoolProp saturation row for Water at 373.15 K (s_f = 1307.211, s_g = 7354.119 J/(kg K); v_f = 0.00104346, v_g = 1.671766 m^3/kg): dP/dT = (7354.119 - 1307.211)/(1.671766 - 0.001043) = 6046.908/1.670723 = 3619.34 Pa/K. Cross-check h_fg/(T v_fg) = 2256403.7/(373.15 x 1.670723) = 3619.34 Pa/K"
+      }
+    },
+    {
+      "calc": "thermo.clausius_clapeyron",
+      "inputs": {
+        "P1": "101.325 kPa",
+        "h_fg": "2.256 MJ/kg",
+        "R": "461.5 J/(kg*K)",
+        "T1": "373.15 K",
+        "T2": "383.15 K"
+      },
+      "expect": {
+        "P2": "142.629 kPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "ln(P2/P1) = (2.256e6/461.5)(1/373.15 - 1/383.15) = 4888.4 x 7.001e-5 = 0.34224 -> P2 = 101325 x 1.40811 = 142629 Pa"
+      }
+    },
+    {
+      "calc": "thermo.joule_thomson",
+      "inputs": {
+        "fluid": "Air",
+        "T": "300 K",
+        "P": "101.325 kPa"
+      },
+      "expect": {
+        "mu": "2.2503e-6 K/Pa",
+        "cp": "1006.37 J/(kg*K)"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Independent isenthalpic finite difference (CoolProp): h(300 K, 101325 Pa) found again at T = 300.02250 K when P rises 10 kPa, so mu = 0.02250 K / 10 kPa = 2.2503e-6 K/Pa = 0.225 K/bar (cross-checks the textbook ~0.22 K/bar for air at 300 K). cp = 1006.37 J/(kg K)"
+      }
+    },
+    {
+      "calc": "thermo.joule_thomson",
+      "inputs": {
+        "fluid": "Nitrogen",
+        "T": "300 K",
+        "P": "100 kPa"
+      },
+      "expect": {
+        "mu": "2.11967e-6 K/Pa",
+        "cp": "1041.33 J/(kg*K)"
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Independent central difference on CoolProp h(Nitrogen): mu = -(dh/dP)_T/(dh/dT)_P = 2.11967e-6 K/Pa = 0.212 K/bar, cross-checking the textbook ~0.21 K/bar for nitrogen at 300 K; cp = 1041.33 J/(kg K). All stencil states are single-phase (supercritical_gas)"
+      }
+    },
+    {
+      "calc": "thermo.fluid_saturation_dome",
+      "inputs": {
+        "fluid": "Water",
+        "T_range": [
+          300.0,
+          600.0
+        ]
+      },
+      "expect": {
+        "P_min": "3536.81 Pa",
+        "P_max": "12.3448 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "CoolProp saturation: P(300 K) = 3536.81 Pa, P(600 K) = 12.3448 MPa"
+      }
+    },
+    {
+      "calc": "thermo.throttle",
+      "inputs": {
+        "h1": "-73.1834 kJ/kg"
+      },
+      "expect": {
+        "h2": "-73.1834 kJ/kg"
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "Negative enthalpy landmark: CoolProp reference state for nitrogen gives h(100 K, 10 bar) = -73183.4 J/kg (queried independently in the reviewer scratch script, not via mechcalc); throttling preserves h."
+      }
+    },
+    {
+      "calc": "thermo.turbine_work",
+      "inputs": {
+        "h1": "-50 kJ/kg",
+        "h2": "-120 kJ/kg"
+      },
+      "expect": {
+        "w_out": "70 kJ/kg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "w_out = h1 − h2 = −50 − (−120) = 70 kJ/kg (both enthalpies below the reference zero)"
+      }
+    }
+  ]
+}

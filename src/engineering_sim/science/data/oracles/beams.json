@@ -1,0 +1,466 @@
+{
+  "section": "beams",
+  "cases": [
+    {
+      "calc": "beams.cantilever_end_load",
+      "inputs": {
+        "P": "1 kN",
+        "L": "2000 mm",
+        "E": "200 GPa",
+        "I": "8e-6 m^4"
+      },
+      "expect": {
+        "delta": "1.6666667e-3 m",
+        "theta": "1.25e-3 rad",
+        "M_max": "2 kN*m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "P=1000, L=2, EI=200e9·8e-6=1.6e6; delta = 1000·8/(3·1.6e6) = 1.66667e-3; theta = 1000·4/(2·1.6e6) = 1.25e-3; M_max = 1000·2 = 2000"
+      }
+    },
+    {
+      "calc": "beams.cantilever_end_load",
+      "inputs": {
+        "P": "1000 N",
+        "L": "2 m",
+        "E": "200 GPa",
+        "delta": "1.6666667e-3 m"
+      },
+      "solve_for": [
+        "I",
+        "theta",
+        "M_max"
+      ],
+      "expect": {
+        "I": "8e-6 m^4",
+        "theta": "1.25e-3 rad",
+        "M_max": "2 kN*m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "I = P·L^3/(3E·delta) = 1000·8/(3·200e9·1.66667e-3) = 8e-6 m^4 (with theta = 1.25e-3, M_max = 2000 recovered alongside)"
+      }
+    },
+    {
+      "calc": "beams.cantilever_udl",
+      "inputs": {
+        "w": "2 kN/m",
+        "L": "2 m",
+        "E": "200 GPa",
+        "I": "8e-6 m^4"
+      },
+      "expect": {
+        "delta": "2.5e-3 m",
+        "theta": "1.6666667e-3 rad",
+        "M_max": "4 kN*m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "w=2000; delta = 2000·16/(8·1.6e6) = 2.5e-3; theta = 2000·8/(6·1.6e6) = 1.66667e-3; M_max = 2000·4/2 = 4000"
+      }
+    },
+    {
+      "calc": "beams.ss_point_center",
+      "inputs": {
+        "P": "10 kN",
+        "L": "4 m",
+        "E": "200 GPa",
+        "I": "8e-6 m^4"
+      },
+      "expect": {
+        "delta": "8.3333333e-3 m",
+        "theta_A": "6.25e-3 rad",
+        "M_max": "10 kN*m",
+        "R_A": "5 kN",
+        "R_B": "5 kN"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "delta = 10000·64/(48·1.6e6) = 8.33333e-3; theta_A = 10000·16/(16·1.6e6) = 6.25e-3; M_max = PL/4 = 10000; R_A = R_B = P/2 = 5000"
+      }
+    },
+    {
+      "calc": "beams.ss_udl",
+      "inputs": {
+        "w": "2 kN/m",
+        "L": "4 m",
+        "E": "200 GPa",
+        "I": "8e-6 m^4"
+      },
+      "expect": {
+        "delta": "4.1666667e-3 m",
+        "M_max": "4 kN*m",
+        "R_A": "4 kN",
+        "R_B": "4 kN"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "delta = 5·2000·256/(384·1.6e6) = 2.56e6/6.144e8 = 4.16667e-3; M_max = wL^2/8 = 4000; R_A = R_B = wL/2 = 4000"
+      }
+    },
+    {
+      "calc": "beams.ss_point_offcenter",
+      "inputs": {
+        "P": "8 kN",
+        "a": "1.5 m",
+        "b": "2.5 m",
+        "L": "4 m",
+        "E": "200 GPa",
+        "I": "8e-6 m^4"
+      },
+      "expect": {
+        "R_A": "5 kN",
+        "R_B": "3 kN",
+        "M_max": "7.5 kN*m",
+        "delta_load": "5.859375e-3 m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "R_A = Pb/L = 8000·2.5/4 = 5000; R_B = Pa/L = 3000; M_max = Pab/L = 7500; delta_load = P a^2 b^2/(3EIL) = 8000·2.25·6.25/(3·1.6e6·4) = 112500/1.92e7 = 5.859375e-3"
+      }
+    },
+    {
+      "calc": "beams.beam_stiffness",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "8e-6 m^4",
+        "L": "2 m"
+      },
+      "expect": {
+        "k_cant": "6e5 N/m",
+        "k_ss": "9.6e6 N/m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "k_cant = 3·200e9·8e-6/8 = 6e5; k_ss = 48·200e9·8e-6/8 = 9.6e6"
+      }
+    },
+    {
+      "calc": "beams.moment_area",
+      "inputs": {
+        "P": "1000 N",
+        "L": "2 m",
+        "E": "200 GPa",
+        "I": "8e-6 m^4"
+      },
+      "expect": {
+        "delta": "1.6666667e-3 m",
+        "theta": "1.25e-3 rad"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Moment-area: tip slope = area of M/EI diagram = (PL/EI)(L/2) = PL^2/(2EI) = 1.25e-3; tip deflection = first moment = (PL^2/2EI)(2L/3) = PL^3/(3EI) = 1.66667e-3 (equals cantilever_end_load and the general solver)"
+      }
+    },
+    {
+      "calc": "beams.castigliano_energy",
+      "inputs": {
+        "P": "1000 N",
+        "L": "2 m",
+        "E": "200 GPa",
+        "I": "8e-6 m^4"
+      },
+      "expect": {
+        "delta": "1.6666667e-3 m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Castigliano: U = integral_0^L (Px)^2/(2EI) dx = P^2 L^3/(6EI); delta = dU/dP = PL^3/(3EI) = 1.66667e-3 (equals the general solver)"
+      }
+    },
+    {
+      "calc": "beams.unit_load",
+      "inputs": {
+        "P": "10 kN",
+        "L": "4 m",
+        "E": "200 GPa",
+        "I": "8e-6 m^4"
+      },
+      "expect": {
+        "delta": "8.3333333e-3 m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Unit load: delta = integral m M/(EI) dx with m = x/2, M = Px/2 over each half; = PL^3/(48EI) = 8.33333e-3 (equals ss_point_center and the general solver)"
+      }
+    },
+    {
+      "calc": "beams.deflection_superposition",
+      "inputs": {
+        "delta1": "4 mm",
+        "delta2": "1 mm"
+      },
+      "expect": {
+        "delta": "5 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "delta = 0.004 + 0.001 = 0.005 m"
+      }
+    },
+    {
+      "calc": "beams.general_beam",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "8e-6 m^4",
+        "L": "4 m",
+        "loads": [
+          [
+            "P",
+            10000,
+            2
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "simple"
+          ],
+          [
+            4,
+            "simple"
+          ]
+        ]
+      },
+      "expect": {
+        "reactions": [
+          [
+            0,
+            5000
+          ],
+          [
+            4,
+            5000
+          ]
+        ],
+        "M_max": "10 kN*m",
+        "x_M_max": "2 m",
+        "delta_max": "8.3333333e-3 m",
+        "x_delta_max": "2 m",
+        "V_max": "5 kN"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Simply supported central load: R = 5000 each; M_max = PL/4 = 10000 at x=2; delta_max = PL^3/(48EI) = 8.33333e-3 at x=2 (agrees with the double-integration closed form ss_point_center)"
+      }
+    },
+    {
+      "calc": "beams.general_beam",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "8e-6 m^4",
+        "L": "2 m",
+        "loads": [
+          [
+            "P",
+            1000,
+            2
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "fixed"
+          ]
+        ]
+      },
+      "expect": {
+        "reactions": [
+          [
+            0,
+            1000
+          ]
+        ],
+        "M_fixed": [
+          2000
+        ],
+        "M_max": "2 kN*m",
+        "x_M_max": "0 m",
+        "delta_max": "1.6666667e-3 m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Cantilever end load: R = 1000 up, fixed-end moment reaction 2000 N·m (CCW), M_max = PL = 2000 at x=0, delta_max = PL^3/(3EI) = 1.66667e-3 (agrees with the moment-area / Castigliano closed forms)"
+      }
+    },
+    {
+      "calc": "beams.general_beam",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "8e-6 m^4",
+        "L": "4 m",
+        "loads": [
+          [
+            "w",
+            2000,
+            0,
+            4
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "fixed"
+          ],
+          [
+            4,
+            "simple"
+          ]
+        ]
+      },
+      "expect": {
+        "reactions": [
+          [
+            4,
+            3000
+          ],
+          [
+            0,
+            5000
+          ]
+        ],
+        "M_fixed": [
+          4000
+        ],
+        "M_max": "4 kN*m",
+        "delta_max": "1.7331589e-3 m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Propped cantilever (indeterminate): by compatibility R_simple = 3wL/8 = 3000, R_fixed = 5wL/8 = 5000, fixed-end moment = wL^2/8 = 4000; delta_max = w/(48EI)·x^2(3L^2 - 5Lx + 2x^2) at x = L(15-sqrt33)/16 = 2.31386 m = 1.73316e-3"
+      }
+    },
+    {
+      "calc": "beams.general_beam",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "8e-6 m^4",
+        "L": "8 m",
+        "loads": [
+          [
+            "w",
+            2000,
+            0,
+            8
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "simple"
+          ],
+          [
+            4,
+            "simple"
+          ],
+          [
+            8,
+            "simple"
+          ]
+        ]
+      },
+      "expect": {
+        "reactions": [
+          [
+            0,
+            3000
+          ],
+          [
+            4,
+            10000
+          ],
+          [
+            8,
+            3000
+          ]
+        ],
+        "M_max": "4 kN*m",
+        "x_M_max": "4 m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two-span continuous beam (indeterminate): end reactions 3wL/8 = 3000, interior reaction 10wL/8 = 10000; support moment at the middle = -wL^2/8 = -4000 (magnitude 4000) at x=4"
+      }
+    },
+    {
+      "calc": "beams.general_beam",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "8e-6 m^4",
+        "L": "2 m",
+        "loads": [
+          [
+            "P",
+            1000,
+            0
+          ]
+        ],
+        "supports": [
+          [
+            2,
+            "fixed"
+          ]
+        ]
+      },
+      "expect": {
+        "M_max": "2 kN*m",
+        "x_M_max": "2 m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Cantilever with the fixed support at the right end (x = 2 m) and a 1 kN tip load at x = 0: the fixed-end moment reaction is P·L = 1000·2 = 2000 N·m, so |M|max = 2000 N·m at x = 2 (the right-end fixed support; the step is evaluated just inside x = L)"
+      }
+    },
+    {
+      "calc": "beams.general_beam",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "8e-6 m^4",
+        "L": "4 m",
+        "loads": [
+          [
+            "w",
+            2000,
+            0,
+            4
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "simple"
+          ],
+          [
+            4,
+            "fixed"
+          ]
+        ]
+      },
+      "expect": {
+        "M_max": "4 kN*m",
+        "x_M_max": "4 m"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Propped cantilever with the fixed support at the right end (x = 4 m) and a 2 kN/m UDL: by compatibility the fixed-end moment is wL^2/8 = 2000·16/8 = 4000 N·m, so |M|max = 4000 N·m at x = 4 (the right-end fixed support; the step is evaluated just inside x = L)"
+      }
+    }
+  ]
+}

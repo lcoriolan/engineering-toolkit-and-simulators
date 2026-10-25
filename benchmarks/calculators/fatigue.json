@@ -1,0 +1,2400 @@
+{
+  "section": "fatigue",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k fatigue",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "fatigue.endurance_prime": {
+      "title": "Endurance limit of a steel (Se\u2032 = 0.5 Sut, capped at 700 MPa)",
+      "variables": [
+        {
+          "name": "Se_prime",
+          "unit": "Pa",
+          "desc": "theoretical endurance limit",
+          "lo": null,
+          "hi": null,
+          "label": "Se\u2032",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sut",
+          "unit": "Pa",
+          "desc": "ultimate tensile strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _endurance_prime(values):\n    \"\"\"Endurance limit of a steel from Sut: Se\u2032 = 0.5 Sut up to 1400 MPa, capped at 700 MPa above.\n\n    The cap applies to steels only; wrought aluminium alloys (Se\u2032 \u2248 0.4 Sut) are not handled here.\n    \"\"\"\n    Sut = values['Sut']\n    if Sut <= 0:\n        raise MechError('endurance_prime: Sut must be positive')\n    return {'Se_prime': 0.5 * Sut if Sut <= 1400e6 else 700e6}\n",
+        "source": "fatigue.py",
+        "line": 139
+      },
+      "outputs": [
+        "Se_prime"
+      ],
+      "assumptions": [
+        "Steels: Se\u2032 = 0.5 Sut for Sut \u2264 1400 MPa, and Se\u2032 = 700 MPa above 1400 MPa. Wrought aluminium alloys: Se\u2032 \u2248 0.4 Sut \u2014 not handled by this steel branch; enter the ratio yourself. Based on fully reversed rotating-beam specimens."
+      ],
+      "method_references": [
+        "Se\u2032 = 0.5 Sut capped at 700 MPa (steel; recalled)"
+      ],
+      "synthetic_example": {
+        "Sut": 600000000.0
+      }
+    },
+    "fatigue.marin_surface": {
+      "title": "Marin surface (finish) factor (ka = a\u00b7Sut^b)",
+      "variables": [
+        {
+          "name": "ka",
+          "unit": "",
+          "desc": "surface factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "",
+          "desc": "surface coefficient a (Marin surface table, Sut in MPa)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "desc": "surface exponent b (Marin surface table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sut",
+          "unit": "Pa",
+          "desc": "ultimate tensile strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _marin_surface(values):\n    \"\"\"Surface (Marin) factor ka = a\u00b7(Sut/MPa)^b with a, b from the Marin surface table (Sut in MPa).\n\n    Example pairs (a, b): ground 1.58, \u22120.085; machined/cold-drawn 4.51, \u22120.265; hot-rolled 57.7,\n    \u22120.718; as-forged 272, \u22120.995. These are the user's inputs, not built-in values.\n    \"\"\"\n    Sut_MPa = values['Sut'] / 1e6\n    return {'ka': values['a'] * Sut_MPa ** values['b']}\n",
+        "source": "fatigue.py",
+        "line": 30
+      },
+      "outputs": [
+        "ka"
+      ],
+      "assumptions": [
+        "a, b are tabulated for Sut in MPa (machined 4.51, \u22120.265; ground 1.58, \u22120.085; hot-rolled 57.7, \u22120.718; as-forged 272, \u22120.995). Enter the pair for your finish."
+      ],
+      "method_references": [
+        "Marin surface factor ka = a\u00b7Sut^b (recalled)"
+      ],
+      "synthetic_example": {
+        "a": 4.51,
+        "b": -0.265,
+        "Sut": 600000000.0
+      }
+    },
+    "fatigue.marin_size": {
+      "title": "Marin size factor (kb, rotating round section)",
+      "variables": [
+        {
+          "name": "kb",
+          "unit": "",
+          "desc": "size factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "section diameter (rotating round bar)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _marin_size(values):\n    \"\"\"Size (Marin) factor kb for a rotating round section (d in mm).\n\n    kb = 1.24 d^\u22120.107 for 2.79 \u2264 d \u2264 51 mm; kb = 1.51 d^\u22120.157 for 51 < d \u2264 254 mm. Axial load gives\n    kb = 1 regardless of size (enter it directly in the corrected-endurance calculator).\n    \"\"\"\n    d_mm = values['d'] * 1e3\n    if 2.79 <= d_mm <= 51.0:\n        kb = 1.24 * d_mm ** -0.107\n    elif 51.0 < d_mm <= 254.0:\n        kb = 1.51 * d_mm ** -0.157\n    else:\n        raise MechError('marin_size: d must be 2.79\u2013254 mm for the rotating-round formula; for axial '\n                        'load kb = 1 \u2014 enter it directly in the corrected endurance limit')\n    return {'kb': kb}\n",
+        "source": "fatigue.py",
+        "line": 40
+      },
+      "outputs": [
+        "kb"
+      ],
+      "assumptions": [
+        "kb = 1.24 d^\u22120.107 for 2.79 \u2264 d \u2264 51 mm; kb = 1.51 d^\u22120.157 for 51 < d \u2264 254 mm. Bending or torsion of a rotating round section. Axial load: kb = 1 (enter directly)."
+      ],
+      "method_references": [
+        "Marin size factor kb (rotating round section, recalled)"
+      ],
+      "synthetic_example": {
+        "d": 0.02
+      }
+    },
+    "fatigue.endurance_limit_corrected": {
+      "title": "Corrected endurance limit (Marin)",
+      "variables": [
+        {
+          "name": "Se",
+          "unit": "Pa",
+          "desc": "fully corrected endurance limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Se_prime",
+          "unit": "Pa",
+          "desc": "theoretical endurance limit",
+          "lo": null,
+          "hi": null,
+          "label": "Se\u2032",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ka",
+          "unit": "",
+          "desc": "surface factor (Marin surface table)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "kb",
+          "unit": "",
+          "desc": "size factor (rotating-round size relation)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "kc",
+          "unit": "",
+          "desc": "load factor (1.0 bend, 0.85 axial, 0.59 torsion typical)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "kd",
+          "unit": "",
+          "desc": "temperature factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ke",
+          "unit": "",
+          "desc": "reliability factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "kf",
+          "unit": "",
+          "desc": "miscellaneous-effects factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Se = ka*kb*kc*kd*ke*kf*Se_prime"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Se"
+      ],
+      "assumptions": [
+        "Se = ka\u00b7kb\u00b7kc\u00b7kd\u00b7ke\u00b7kf\u00b7Se\u2032. Every k factor is a user input (the surface, size, load, temperature and reliability factors are tabulated values the user supplies); kf covers residual stress, plating, corrosion and any other effect."
+      ],
+      "method_references": [
+        "Marin equation Se = ka kb kc kd ke kf Se\u2032 (recalled)"
+      ],
+      "synthetic_example": {
+        "ka": 0.828,
+        "kb": 0.9,
+        "kc": 0.85,
+        "kd": 1.0,
+        "ke": 0.868,
+        "kf": 1.0,
+        "Se_prime": 300000000.0
+      }
+    },
+    "fatigue.sn_power": {
+      "title": "S\u2013N curve (power law): fatigue strength at N cycles",
+      "variables": [
+        {
+          "name": "S",
+          "unit": "Pa",
+          "desc": "fatigue strength at N cycles",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "Pa",
+          "desc": "S\u2013N curve intercept (coefficient a in S = a\u00b7N^b)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "desc": "S\u2013N curve slope (exponent b, negative)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "",
+          "desc": "number of cycles",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _sn_power(values):\n    \"\"\"Fatigue strength S = a\u00b7N^b (Basquin power law); warns outside the 10\u00b3\u201310\u2076 cycle validity range.\"\"\"\n    a, b, N = values['a'], values['b'], values['N']\n    if a <= 0:\n        raise MechError('sn_power: the S\u2013N intercept a must be positive')\n    S = a * N ** b\n    out = {'S': S}\n    if N < 1e3 or N > 1e6:\n        out['_warnings'] = ['sn_power: N is outside the 10^3\u201310^6 cycle range where the power-law '\n                            'S\u2013N fit is usually valid']\n    return out\n",
+        "source": "fatigue.py",
+        "line": 150
+      },
+      "outputs": [
+        "S"
+      ],
+      "assumptions": [
+        "High-cycle fatigue (no plasticity): S = a\u00b7N^b on a log\u2013log plot, N \u2265 1. A warning is emitted outside the 10\u00b3\u201310\u2076 cycle range where the power law is usually valid; use strain-life below ~10\u00b3 cycles."
+      ],
+      "method_references": [
+        "Basquin / power-law S\u2013N relation S = a N^b"
+      ],
+      "synthetic_example": {
+        "a": 1250000000.0,
+        "b": -0.13265,
+        "N": 100000.0
+      }
+    },
+    "fatigue.sn_constants": {
+      "title": "S\u2013N curve constants from two points",
+      "variables": [
+        {
+          "name": "a",
+          "unit": "Pa",
+          "desc": "S\u2013N intercept (a in S = a\u00b7N^b)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "desc": "S\u2013N slope (exponent b)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S1",
+          "unit": "Pa",
+          "desc": "stress at N1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N1",
+          "unit": "",
+          "desc": "cycles at S1",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S2",
+          "unit": "Pa",
+          "desc": "stress at N2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N2",
+          "unit": "",
+          "desc": "cycles at S2",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _sn_constants(values):\n    \"\"\"S\u2013N power-law constants a, b from two points: S = a\u00b7N^b (b = ln(S1/S2)/ln(N1/N2)).\"\"\"\n    S1, N1 = values['S1'], values['N1']\n    S2, N2 = values['S2'], values['N2']\n    if S1 <= 0 or S2 <= 0 or N1 <= 0 or N2 <= 0:\n        raise MechError('sn_constants: S and N must be positive')\n    if S1 == S2 or N1 == N2:\n        raise MechError('sn_constants: the two (S, N) points must be distinct')\n    b = math.log(S1 / S2) / math.log(N1 / N2)\n    a = S1 / N1 ** b\n    return {'a': a, 'b': b}\n",
+        "source": "fatigue.py",
+        "line": 57
+      },
+      "outputs": [
+        "a",
+        "b"
+      ],
+      "assumptions": [
+        "Fits S = a\u00b7N^b through two points: b = ln(S1/S2)/ln(N1/N2), a = S1/N1^b. Feed a, b into sn_power to read off the strength at any N."
+      ],
+      "method_references": [
+        "Two-point fit of the power-law S\u2013N curve"
+      ],
+      "synthetic_example": {
+        "S1": 500000000.0,
+        "N1": 1000.0,
+        "S2": 200000000.0,
+        "N2": 1000000.0
+      }
+    },
+    "fatigue.mean_alternating": {
+      "title": "Mean and alternating stress, stress ratio",
+      "variables": [
+        {
+          "name": "sigma_m",
+          "unit": "Pa",
+          "desc": "midrange (mean) stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3m",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_a",
+          "unit": "Pa",
+          "desc": "alternating stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3a",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "R",
+          "unit": "",
+          "desc": "stress ratio \u03c3min/\u03c3max",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_max",
+          "unit": "Pa",
+          "desc": "maximum stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3max",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_min",
+          "unit": "Pa",
+          "desc": "minimum stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3min",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_m = (sigma_max + sigma_min)/2",
+        "sigma_a = (sigma_max - sigma_min)/2",
+        "R = sigma_min/sigma_max"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_m",
+        "sigma_a",
+        "R"
+      ],
+      "assumptions": [
+        "Requires \u03c3max \u2265 \u03c3min (then \u03c3a \u2265 0). Fully reversed: R = \u22121; pulsating from zero: R = 0; static: R = 1."
+      ],
+      "method_references": [
+        "\u03c3m = (\u03c3max+\u03c3min)/2; \u03c3a = (\u03c3max\u2212\u03c3min)/2; R = \u03c3min/\u03c3max"
+      ],
+      "synthetic_example": {
+        "sigma_max": 200000000.0,
+        "sigma_min": -100000000.0
+      }
+    },
+    "fatigue.fatigue_criteria": {
+      "title": "Fatigue safety factors: Goodman, Gerber, Soderberg, ASME elliptic, Langer",
+      "variables": [
+        {
+          "name": "sigma_a",
+          "unit": "Pa",
+          "desc": "alternating stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3a",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_m",
+          "unit": "Pa",
+          "desc": "midrange (mean) stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3m",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Se",
+          "unit": "Pa",
+          "desc": "fully corrected endurance limit",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sut",
+          "unit": "Pa",
+          "desc": "ultimate tensile strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "Pa",
+          "desc": "yield strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_goodman",
+          "unit": "",
+          "desc": "Goodman factor of safety",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_gerber",
+          "unit": "",
+          "desc": "Gerber factor of safety",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_soderberg",
+          "unit": "",
+          "desc": "Soderberg factor of safety",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_asme",
+          "unit": "",
+          "desc": "ASME-elliptic factor of safety",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_langer",
+          "unit": "",
+          "desc": "Langer (static yield) factor of safety",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _fatigue_criteria(values):\n    \"\"\"Goodman, Gerber, Soderberg, ASME-elliptic and Langer factors of safety.\n\n    For a compressive mean stress (sigma_m < 0) the mean stress does not reduce fatigue life, so the\n    four fatigue criteria all reduce to n = Se/sigma_a (the fully-reversed value); the first-cycle-yield\n    guard becomes n_y = Sy/(sigma_a + |sigma_m|), i.e. Sy/(sigma_a \u2212 sigma_m) with sigma_m < 0. The\n    ASME-elliptic relation is even in sigma_m; treating its compressive branch as non-damaging (the same\n    Se/sigma_a reduction as Goodman/Gerber/Soderberg) is the documented convention here.\n    \"\"\"\n    sa, sm = values['sigma_a'], values['sigma_m']\n    Se, Sut, Sy = values['Se'], values['Sut'], values['Sy']\n    if sa <= 0:\n        raise MechError('fatigue_criteria: sigma_a must be positive')\n    if Se <= 0 or Sut <= 0 or Sy <= 0:\n        raise MechError('fatigue_criteria: Se, Sut and Sy must be positive')\n    if sm < 0:\n        nf = Se / sa\n        n_goodman = n_gerber = n_soderberg = n_asme = nf\n        n_langer = Sy / (sa - sm)  # sa + |sm|\n    else:\n        n_goodman = 1.0 / (sa / Se + sm / Sut)\n        a = (sm / Sut) ** 2\n        b = sa / Se\n        n_gerber = (-b + math.sqrt(b * b + 4.0 * a)) / (2.0 * a) if a > 0 else 1.0 / b\n        n_soderberg = 1.0 / (sa / Se + sm / Sy)\n        n_asme = 1.0 / math.sqrt((sa / Se) ** 2 + (sm / Sy) ** 2)\n        n_langer = Sy / (sa + sm)\n    return {'n_goodman': n_goodman, 'n_gerber': n_gerber, 'n_soderberg': n_soderberg,\n            'n_asme': n_asme, 'n_langer': n_langer}\n",
+        "source": "fatigue.py",
+        "line": 163
+      },
+      "outputs": [
+        "n_goodman",
+        "n_gerber",
+        "n_soderberg",
+        "n_asme",
+        "n_langer"
+      ],
+      "assumptions": [
+        "Proportional loading (all stress components scale together); \u03c3m \u2265 0 for the diagram. Goodman is the usual design line; Soderberg is conservative (yield-based); Gerber fits test data best for ductile steels; ASME-elliptic matches data and includes yield; Langer guards first-cycle yielding (\u03c3a + \u03c3m \u2264 Sy). For a compressive mean stress (\u03c3m < 0) Goodman, Gerber, Soderberg and ASME-elliptic all reduce to Se/\u03c3a, and Langer uses \u03c3a + |\u03c3m|. Check that n_langer \u2265 n to avoid yield on the first cycle."
+      ],
+      "method_references": [
+        "Goodman, Gerber, Soderberg, ASME-elliptic and Langer fatigue criteria (recalled)"
+      ],
+      "synthetic_example": {
+        "sigma_a": 100000000.0,
+        "sigma_m": 150000000.0,
+        "Se": 180000000.0,
+        "Sut": 600000000.0,
+        "Sy": 400000000.0
+      }
+    },
+    "fatigue.miner_rule": {
+      "title": "Miner's rule: cumulative damage and predicted life",
+      "variables": [
+        {
+          "name": "blocks",
+          "unit": "",
+          "desc": "load blocks [[n_i (cycles), N_i (cycles to failure at that amplitude)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "",
+          "desc": "cumulative damage \u03a3 n_i/N_i (failure at D = 1)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "life",
+          "unit": "",
+          "desc": "predicted repetitions of the block sequence to failure (1/D)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _miner(values):\n    \"\"\"Miner's linear cumulative-damage rule: D = \u03a3 n_i/N_i over blocks [[n_i, N_i], ...].\"\"\"\n    blocks = values['blocks']\n    if not isinstance(blocks, list) or not blocks:\n        raise MechError('miner_rule: give blocks as [[n_i (cycles), N_i (cycles)], ...]')\n    D = 0.0\n    for row in blocks:\n        if len(row) != 2:\n            raise MechError('miner_rule: each block must be [n_i, N_i]')\n        n, N = float(row[0]), float(row[1])\n        if N <= 0 or n < 0:\n            raise MechError('miner_rule: need N_i > 0 and n_i >= 0')\n        D += n / N\n    if D <= 0:\n        raise MechError('miner_rule: total damage is zero, so life is unbounded')\n    return {'D': D, 'life': 1.0 / D}\n",
+        "source": "fatigue.py",
+        "line": 70
+      },
+      "outputs": [
+        "D",
+        "life"
+      ],
+      "assumptions": [
+        "Linear damage accumulation; D = 1 predicts failure (some codes use D = 0.7). Ignores load sequence/order and mean-stress interaction."
+      ],
+      "method_references": [
+        "Palmgren\u2013Miner linear damage rule"
+      ],
+      "synthetic_example": {
+        "blocks": [
+          [
+            5000,
+            100000.0
+          ],
+          [
+            20000,
+            200000.0
+          ]
+        ]
+      }
+    },
+    "fatigue.coffin_manson": {
+      "title": "Strain-life (Coffin\u2013Manson) total strain amplitude",
+      "variables": [
+        {
+          "name": "eps_a",
+          "unit": "",
+          "desc": "total strain amplitude \u0394\u03b5/2",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b5a",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_fp",
+          "unit": "Pa",
+          "desc": "fatigue strength coefficient \u03c3f\u2032",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3f\u2032",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "desc": "fatigue strength exponent (negative)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eps_fp",
+          "unit": "",
+          "desc": "fatigue ductility coefficient \u03b5f\u2032",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b5f\u2032",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "",
+          "desc": "fatigue ductility exponent (negative)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Nf",
+          "unit": "",
+          "desc": "cycles to failure (reversals 2Nf = 2\u00b7Nf)",
+          "lo": 0.5,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eps_a = (sigma_fp/E)*(2*Nf)**b + eps_fp*(2*Nf)**c"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eps_a"
+      ],
+      "assumptions": [
+        "Total strain amplitude = elastic (Basquin) + plastic (Coffin\u2013Manson) parts. \u03c3f\u2032 and \u03b5f\u2032 are the cyclic material constants; b \u2248 \u22120.05\u2026\u22120.12, c \u2248 \u22120.5\u2026\u22120.7 for metals. Solving for Nf is numeric (the relation is transcendental in Nf)."
+      ],
+      "method_references": [
+        "Coffin\u2013Manson / Basquin strain\u2013life relation"
+      ],
+      "synthetic_example": {
+        "sigma_fp": 1000000000.0,
+        "b": -0.09,
+        "eps_fp": 0.6,
+        "c": -0.6,
+        "E": 200000000000.0,
+        "Nf": 1000.0
+      }
+    },
+    "fatigue.neuber": {
+      "title": "Neuber's rule with a Ramberg\u2013Osgood cyclic curve (local stress/strain)",
+      "variables": [
+        {
+          "name": "Kf",
+          "unit": "",
+          "desc": "fatigue notch factor (or Kt for a sharp elastic notch)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S",
+          "unit": "Pa",
+          "desc": "nominal (net-section) stress",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Kp",
+          "unit": "Pa",
+          "desc": "cyclic strength coefficient K'",
+          "lo": null,
+          "hi": null,
+          "label": "K\u2032",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "np",
+          "unit": "",
+          "desc": "cyclic strain-hardening exponent n'",
+          "lo": null,
+          "hi": null,
+          "label": "n\u2032",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "Pa",
+          "desc": "local (notch-root) stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eps",
+          "unit": "",
+          "desc": "local (notch-root) strain",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b5",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_sigma",
+          "unit": "",
+          "desc": "stress concentration factor on stress \u03c3/S",
+          "lo": null,
+          "hi": null,
+          "label": "K\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_eps",
+          "unit": "",
+          "desc": "strain concentration factor on strain \u03b5/e",
+          "lo": null,
+          "hi": null,
+          "label": "K\u03b5",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "e_nom",
+          "unit": "",
+          "desc": "nominal strain S/E",
+          "lo": null,
+          "hi": null,
+          "label": "e",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _neuber(values):\n    \"\"\"Neuber's rule with a Ramberg\u2013Osgood cyclic stress\u2013strain curve, solved by bisection.\n\n    Finds the local (notch-root) stress \u03c3 and strain \u03b5 satisfying the Neuber hyperbola\n    \u03c3\u00b7\u03b5 = (Kf\u00b7S)\u00b2/E together with \u03b5 = \u03c3/E + (\u03c3/K')^(1/n'). The nominal stress S is elastic, so the\n    nominal strain is e = S/E; Kf is the fatigue notch factor (Kt may be used for a sharp elastic notch).\n    \"\"\"\n    Kf, S, E, Kp, np = values['Kf'], values['S'], values['E'], values['Kp'], values['np']\n    if S <= 0 or E <= 0 or Kp <= 0 or np <= 0:\n        raise MechError('neuber: need S, E, Kp, np > 0')\n    if Kf < 1.0:\n        raise MechError('neuber: Kf must be >= 1')\n    target = (Kf * S) ** 2 / E\n\n    def g(sigma):\n        return sigma * (sigma / E + (sigma / Kp) ** (1.0 / np)) - target\n\n    # g(0) = -target < 0 and g(Kf\u00b7S) = Kf\u00b7S\u00b7(Kf\u00b7S/Kp)^(1/np) > 0, so exactly one root in (0, Kf\u00b7S].\n    lo, hi = 0.0, Kf * S\n    for _ in range(200):\n        mid = 0.5 * (lo + hi)\n        if g(mid) < 0:\n            lo = mid\n        else:\n            hi = mid\n    sigma = 0.5 * (lo + hi)\n    e_nom = S / E\n    eps = sigma / E + (sigma / Kp) ** (1.0 / np)\n    return {'sigma': sigma, 'eps': eps, 'K_sigma': sigma / S, 'K_eps': eps / e_nom, 'e_nom': e_nom}\n",
+        "source": "fatigue.py",
+        "line": 88
+      },
+      "outputs": [
+        "sigma",
+        "eps",
+        "K_sigma",
+        "K_eps",
+        "e_nom"
+      ],
+      "assumptions": [
+        "Neuber hyperbola \u03c3\u00b7\u03b5 = (Kf\u00b7S)\u00b2/E solved together with the cyclic stress\u2013strain curve \u03b5 = \u03c3/E + (\u03c3/K\u2032)\u207d\u00b9/\u207f\u2032\u207e (Ramberg\u2013Osgood). Nominal behaviour is elastic. K\u2032 and n\u2032 are cyclic material constants (user inputs)."
+      ],
+      "method_references": [
+        "Neuber's rule; Ramberg\u2013Osgood cyclic stress\u2013strain curve (recalled)"
+      ],
+      "synthetic_example": {
+        "Kf": 2.0,
+        "S": 300000000.0,
+        "E": 200000000000.0,
+        "Kp": 1200000000.0,
+        "np": 0.15
+      }
+    },
+    "fatigue.welded_fatigue": {
+      "title": "Welded-joint fatigue (nominal stress-range S\u2013N)",
+      "variables": [
+        {
+          "name": "N",
+          "unit": "",
+          "desc": "cycles to failure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "FAT",
+          "unit": "Pa",
+          "desc": "detail category: characteristic stress range at 2e6 cycles (FAT class)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Delta_sigma",
+          "unit": "Pa",
+          "desc": "applied nominal stress range \u0394\u03c3",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "",
+          "desc": "S\u2013N slope (m = 3 for most details, 5 for some)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "N = 2e6*(FAT/Delta_sigma)**m"
+      ],
+      "procedure": null,
+      "outputs": [
+        "N"
+      ],
+      "assumptions": [
+        "Nominal-stress-range method (IIW / Eurocode 3): \u0394\u03c3^m\u00b7N = FAT^m\u00b72\u00d710\u2076. FAT and the slope m are the detail-category inputs supplied by the user (FAT 36\u2013160 MPa typical). Valid for the design S\u2013N curve; the constant-amplitude fatigue limit (the horizontal knee, typically at 1\u00d710\u2077 cycles) is not modelled and no stress-ratio correction is applied."
+      ],
+      "method_references": [
+        "IIW / Eurocode 3 nominal stress-range S\u2013N: \u0394\u03c3^m\u00b7N = \u0394\u03c3c^m\u00b72e6 (recalled)"
+      ],
+      "synthetic_example": {
+        "FAT": 80000000.0,
+        "Delta_sigma": 100000000.0,
+        "m": 3.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "fatigue-001",
+      "calculator": "fatigue.endurance_prime",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Sut": "600 MPa"
+      },
+      "solve_for": [
+        "Se_prime"
+      ],
+      "expected_as_specified": {
+        "Se_prime": "300 MPa"
+      },
+      "expected_SI": {
+        "Se_prime": 300000000.0
+      },
+      "actual_SI": {
+        "Se_prime": {
+          "value": 300000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.endurance_prime (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Se_prime": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 600000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Se\u2032 = 0.5\u00b7Sut = 0.5\u00b7600 = 300 MPa (steel, below the 1400 MPa cap)"
+      }
+    },
+    {
+      "id": "fatigue-002",
+      "calculator": "fatigue.endurance_prime",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Sut": "1600 MPa"
+      },
+      "solve_for": [
+        "Se_prime"
+      ],
+      "expected_as_specified": {
+        "Se_prime": "700 MPa"
+      },
+      "expected_SI": {
+        "Se_prime": 700000000.0
+      },
+      "actual_SI": {
+        "Se_prime": {
+          "value": 700000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.endurance_prime (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Se_prime": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1400000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Steel above 1400 MPa: the endurance limit is capped at Se\u2032 = 700 MPa (0.5\u00b71600 = 800 would exceed the cap)"
+      }
+    },
+    {
+      "id": "fatigue-003",
+      "calculator": "fatigue.marin_surface",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a": 4.51,
+        "b": -0.265,
+        "Sut": "600 MPa"
+      },
+      "solve_for": [
+        "ka"
+      ],
+      "expected_as_specified": {
+        "ka": 0.827878
+      },
+      "expected_SI": {
+        "ka": 0.827878
+      },
+      "actual_SI": {
+        "ka": {
+          "value": 0.8278782262842558,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.marin_surface (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "ka": {
+          "absolute_error": 2.2628425577764233e-07,
+          "relative_error": 2.7333043730796363e-07,
+          "allowed_absolute_error": 0.001655756,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "machined finish a=4.51, b=\u22120.265: ka = 4.51\u00b7(600)^\u22120.265 = 4.51\u00b7exp(\u22120.265\u00b7ln600) = 4.51\u00b7exp(\u22121.69515) = 4.51\u00b70.183575 = 0.82788"
+      }
+    },
+    {
+      "id": "fatigue-004",
+      "calculator": "fatigue.marin_size",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "20 mm"
+      },
+      "solve_for": [
+        "kb"
+      ],
+      "expected_as_specified": {
+        "kb": 0.899936
+      },
+      "expected_SI": {
+        "kb": 0.899936
+      },
+      "actual_SI": {
+        "kb": {
+          "value": 0.8999356901018009,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.marin_size (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "kb": {
+          "absolute_error": 3.0989819910232086e-07,
+          "relative_error": 3.4435581986087995e-07,
+          "allowed_absolute_error": 0.0017998719999999999,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "20 mm in the 2.79\u201351 mm range: kb = 1.24\u00b720^\u22120.107 = 1.24\u00b7exp(\u22120.107\u00b7ln20) = 1.24\u00b7exp(\u22120.320543) = 1.24\u00b70.725755 = 0.89994"
+      }
+    },
+    {
+      "id": "fatigue-005",
+      "calculator": "fatigue.marin_size",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "d": "100 mm"
+      },
+      "solve_for": [
+        "kb"
+      ],
+      "expected_as_specified": {
+        "kb": 0.732786
+      },
+      "expected_SI": {
+        "kb": 0.732786
+      },
+      "actual_SI": {
+        "kb": {
+          "value": 0.7327856352448028,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.marin_size (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "kb": {
+          "absolute_error": 3.6475519726852923e-07,
+          "relative_error": 4.977649644896726e-07,
+          "allowed_absolute_error": 0.001465572,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "100 mm in the 51\u2013254 mm range: kb = 1.51\u00b7100^\u22120.157 = 1.51\u00b7exp(\u22120.157\u00b7ln100) = 1.51\u00b7exp(\u22120.723032) = 1.51\u00b70.485289 = 0.73279"
+      }
+    },
+    {
+      "id": "fatigue-006",
+      "calculator": "fatigue.endurance_limit_corrected",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "ka": 0.828,
+        "kb": 0.9,
+        "kc": 0.85,
+        "kd": 1.0,
+        "ke": 0.868,
+        "kf": 1.0,
+        "Se_prime": "300 MPa"
+      },
+      "solve_for": [
+        "Se"
+      ],
+      "expected_as_specified": {
+        "Se": "164.942568 MPa"
+      },
+      "expected_SI": {
+        "Se": 164942568.0
+      },
+      "actual_SI": {
+        "Se": {
+          "value": 164942568.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.endurance_limit_corrected (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Se": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 329885.136,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Se = 0.828\u00b70.9\u00b70.85\u00b71.0\u00b70.868\u00b71.0\u00b7300 = 0.828\u00b70.9 = 0.7452; \u00b70.85 = 0.633420; \u00b70.868 = 0.549809; \u00b7300 = 164.943 MPa"
+      }
+    },
+    {
+      "id": "fatigue-007",
+      "calculator": "fatigue.endurance_limit_corrected",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "ka": 0.828,
+        "kb": 0.9,
+        "kc": 0.85,
+        "kd": 1.0,
+        "ke": 0.868,
+        "kf": 1.0,
+        "Se": "164.942568 MPa"
+      },
+      "solve_for": [
+        "Se_prime"
+      ],
+      "expected_as_specified": {
+        "Se_prime": "300 MPa"
+      },
+      "expected_SI": {
+        "Se_prime": 300000000.0
+      },
+      "actual_SI": {
+        "Se_prime": {
+          "value": 300000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.endurance_limit_corrected (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Se_prime": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 600000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Se\u2032 = Se/(ka\u00b7kb\u00b7kc\u00b7kd\u00b7ke\u00b7kf) = 164.942568/0.549809 = 300 MPa"
+      }
+    },
+    {
+      "id": "fatigue-008",
+      "calculator": "fatigue.sn_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a": "1.25 GPa",
+        "b": -0.13265,
+        "N": 100000
+      },
+      "solve_for": [
+        "S"
+      ],
+      "expected_as_specified": {
+        "S": "271.431354 MPa"
+      },
+      "expected_SI": {
+        "S": 271431354.0
+      },
+      "actual_SI": {
+        "S": {
+          "value": 271431353.9300867,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.sn_power (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "S": {
+          "absolute_error": 0.06991332769393921,
+          "relative_error": 2.575727772921149e-10,
+          "allowed_absolute_error": 542862.708,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "S = a\u00b7N^b = 1.25e9\u00b7(1e5)^\u22120.13265 = 1.25e9\u00b7exp(\u22120.13265\u00b7ln1e5) = 1.25e9\u00b7exp(\u22121.527182) = 1.25e9\u00b70.217145 = 271.43 MPa"
+      }
+    },
+    {
+      "id": "fatigue-009",
+      "calculator": "fatigue.sn_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a": "1.25 GPa",
+        "b": -0.13265,
+        "N": 10000000
+      },
+      "solve_for": [
+        "S"
+      ],
+      "expected_as_specified": {
+        "S": "147.353350 MPa"
+      },
+      "expected_SI": {
+        "S": 147353350.0
+      },
+      "actual_SI": {
+        "S": {
+          "value": 147353349.7475436,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.sn_power (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "S": {
+          "absolute_error": 0.252456396818161,
+          "relative_error": 1.7132721910846344e-09,
+          "allowed_absolute_error": 294706.7,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "S = a\u00b7N^b = 1.25e9\u00b7(1e7)^\u22120.13265 = 1.25e9\u00b7exp(\u22120.13265\u00b7ln1e7) = 1.25e9\u00b70.117883 = 147.35 MPa (N outside 10\u00b3\u201310\u2076: the calculator warns)"
+      }
+    },
+    {
+      "id": "fatigue-010",
+      "calculator": "fatigue.sn_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "a": "1.25 GPa",
+        "b": -0.13265,
+        "S": "271.431354 MPa"
+      },
+      "solve_for": [
+        "N"
+      ],
+      "expected_as_specified": {
+        "N": 100000
+      },
+      "expected_SI": {
+        "N": 100000.0
+      },
+      "actual_SI": {
+        "N": {
+          "value": 99999.99980582537,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.sn_power (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "N": {
+          "absolute_error": 0.00019417463045101613,
+          "relative_error": 1.9417463045101612e-09,
+          "allowed_absolute_error": 200.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "N = (S/a)^(1/b) = (271.431354e6/1.25e9)^(\u22121/0.13265) = (0.217145)^(\u22127.53864) = 100000"
+      }
+    },
+    {
+      "id": "fatigue-011",
+      "calculator": "fatigue.sn_constants",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "S1": "500 MPa",
+        "N1": 1000,
+        "S2": "200 MPa",
+        "N2": 1000000
+      },
+      "solve_for": [
+        "a",
+        "b"
+      ],
+      "expected_as_specified": {
+        "a": "1.25 GPa",
+        "b": -0.132647
+      },
+      "expected_SI": {
+        "a": 1250000000.0,
+        "b": -0.132647
+      },
+      "actual_SI": {
+        "a": {
+          "value": 1250000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.sn_constants (procedure)"
+        },
+        "b": {
+          "value": -0.1326466695573459,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.sn_constants (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2500000.0,
+          "passed": true
+        },
+        "b": {
+          "absolute_error": 3.304426541006489e-07,
+          "relative_error": 2.4911430646803086e-06,
+          "allowed_absolute_error": 0.00026529399999999996,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "b = ln(500/200)/ln(1000/1e6) = ln2.5/ln0.001 = 0.916291/\u22126.907755 = \u22120.132647; a = 500e6/1000^\u22120.132647 = 500e6\u00b7exp(0.132647\u00b7ln1000) = 500e6\u00b7exp(0.916291) = 500e6\u00b72.5 = 1.25 GPa"
+      }
+    },
+    {
+      "id": "fatigue-012",
+      "calculator": "fatigue.mean_alternating",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_max": "200 MPa",
+        "sigma_min": "-100 MPa"
+      },
+      "solve_for": [
+        "sigma_m",
+        "sigma_a",
+        "R"
+      ],
+      "expected_as_specified": {
+        "sigma_m": "50 MPa",
+        "sigma_a": "150 MPa",
+        "R": -0.5
+      },
+      "expected_SI": {
+        "sigma_m": 50000000.0,
+        "sigma_a": 150000000.0,
+        "R": -0.5
+      },
+      "actual_SI": {
+        "sigma_m": {
+          "value": 50000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.mean_alternating (symbolic)"
+        },
+        "sigma_a": {
+          "value": 150000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.mean_alternating (symbolic)"
+        },
+        "R": {
+          "value": -0.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.mean_alternating (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_m": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 100000.0,
+          "passed": true
+        },
+        "sigma_a": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 300000.0,
+          "passed": true
+        },
+        "R": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c3m = (200\u2212100)/2 = 50 MPa; \u03c3a = (200+100)/2 = 150 MPa; R = \u2212100/200 = \u22120.5"
+      }
+    },
+    {
+      "id": "fatigue-013",
+      "calculator": "fatigue.mean_alternating",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_max": "200 MPa",
+        "R": -0.5
+      },
+      "solve_for": [
+        "sigma_min",
+        "sigma_m",
+        "sigma_a"
+      ],
+      "expected_as_specified": {
+        "sigma_min": "-100 MPa"
+      },
+      "expected_SI": {
+        "sigma_min": -100000000.0
+      },
+      "actual_SI": {
+        "sigma_min": {
+          "value": -100000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.mean_alternating (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_min": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 200000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c3min = R\u00b7\u03c3max = \u22120.5\u00b7200 = \u2212100 MPa"
+      }
+    },
+    {
+      "id": "fatigue-014",
+      "calculator": "fatigue.fatigue_criteria",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_a": "100 MPa",
+        "sigma_m": "150 MPa",
+        "Se": "180 MPa",
+        "Sut": "600 MPa",
+        "Sy": "400 MPa"
+      },
+      "solve_for": [
+        "n_goodman",
+        "n_gerber",
+        "n_soderberg",
+        "n_asme",
+        "n_langer"
+      ],
+      "expected_as_specified": {
+        "n_goodman": 1.241379,
+        "n_gerber": 1.534944,
+        "n_soderberg": 1.074627,
+        "n_asme": 1.491928,
+        "n_langer": 1.6
+      },
+      "expected_SI": {
+        "n_goodman": 1.241379,
+        "n_gerber": 1.534944,
+        "n_soderberg": 1.074627,
+        "n_asme": 1.491928,
+        "n_langer": 1.6
+      },
+      "actual_SI": {
+        "n_goodman": {
+          "value": 1.2413793103448276,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_gerber": {
+          "value": 1.5349440209216487,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_soderberg": {
+          "value": 1.0746268656716418,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_asme": {
+          "value": 1.4919276133361665,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_langer": {
+          "value": 1.6,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_goodman": {
+          "absolute_error": 3.1034482761427284e-07,
+          "relative_error": 2.500000625226243e-07,
+          "allowed_absolute_error": 0.0024827580000000003,
+          "passed": true
+        },
+        "n_gerber": {
+          "absolute_error": 2.092164863576329e-08,
+          "relative_error": 1.363023578434346e-08,
+          "allowed_absolute_error": 0.0030698880000000002,
+          "passed": true
+        },
+        "n_soderberg": {
+          "absolute_error": 1.3432835821447497e-07,
+          "relative_error": 1.249999843801384e-07,
+          "allowed_absolute_error": 0.002149254,
+          "passed": true
+        },
+        "n_asme": {
+          "absolute_error": 3.8666383339602817e-07,
+          "relative_error": 2.5917057216972144e-07,
+          "allowed_absolute_error": 0.002983856,
+          "passed": true
+        },
+        "n_langer": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0032,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Goodman 1/(100/180 + 150/600) = 1/0.805556 = 1.24138; Gerber: 0.0625\u00b7n\u00b2 + 0.55556\u00b7n \u2212 1 = 0 \u2192 n = (\u22120.55556 + sqrt(0.308642 + 0.25))/0.125 = (\u22120.55556 + 0.747425)/0.125 = 1.53494; Soderberg 1/(100/180 + 150/400) = 1/0.930556 = 1.07463; ASME 1/sqrt((100/180)\u00b2 + (150/400)\u00b2) = 1/sqrt(0.308642 + 0.140625) = 1/0.670264 = 1.49193; Langer 400/250 = 1.6"
+      }
+    },
+    {
+      "id": "fatigue-015",
+      "calculator": "fatigue.fatigue_criteria",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_a": "100 MPa",
+        "sigma_m": "-50 MPa",
+        "Se": "180 MPa",
+        "Sut": "600 MPa",
+        "Sy": "400 MPa"
+      },
+      "solve_for": [
+        "n_goodman",
+        "n_gerber",
+        "n_soderberg",
+        "n_asme",
+        "n_langer"
+      ],
+      "expected_as_specified": {
+        "n_goodman": 1.8,
+        "n_gerber": 1.8,
+        "n_soderberg": 1.8,
+        "n_asme": 1.8,
+        "n_langer": 2.666667
+      },
+      "expected_SI": {
+        "n_goodman": 1.8,
+        "n_gerber": 1.8,
+        "n_soderberg": 1.8,
+        "n_asme": 1.8,
+        "n_langer": 2.666667
+      },
+      "actual_SI": {
+        "n_goodman": {
+          "value": 1.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_gerber": {
+          "value": 1.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_soderberg": {
+          "value": 1.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_asme": {
+          "value": 1.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_langer": {
+          "value": 2.6666666666666665,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_goodman": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0036000000000000003,
+          "passed": true
+        },
+        "n_gerber": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0036000000000000003,
+          "passed": true
+        },
+        "n_soderberg": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0036000000000000003,
+          "passed": true
+        },
+        "n_asme": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0036000000000000003,
+          "passed": true
+        },
+        "n_langer": {
+          "absolute_error": 3.33333333379926e-07,
+          "relative_error": 1.2499998439247421e-07,
+          "allowed_absolute_error": 0.005333334,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Compressive mean stress: Goodman/Gerber/Soderberg/ASME reduce to Se/\u03c3a = 180/100 = 1.8; Langer first-cycle yield n_y = Sy/(\u03c3a + |\u03c3m|) = 400/(100+50) = 2.6667"
+      }
+    },
+    {
+      "id": "fatigue-016",
+      "calculator": "fatigue.fatigue_criteria",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_a": "100 MPa",
+        "sigma_m": "-150 MPa",
+        "Se": "180 MPa",
+        "Sut": "600 MPa",
+        "Sy": "400 MPa"
+      },
+      "solve_for": [
+        "n_goodman",
+        "n_gerber",
+        "n_soderberg",
+        "n_asme",
+        "n_langer"
+      ],
+      "expected_as_specified": {
+        "n_goodman": 1.8,
+        "n_gerber": 1.8,
+        "n_soderberg": 1.8,
+        "n_asme": 1.8,
+        "n_langer": 1.6
+      },
+      "expected_SI": {
+        "n_goodman": 1.8,
+        "n_gerber": 1.8,
+        "n_soderberg": 1.8,
+        "n_asme": 1.8,
+        "n_langer": 1.6
+      },
+      "actual_SI": {
+        "n_goodman": {
+          "value": 1.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_gerber": {
+          "value": 1.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_soderberg": {
+          "value": 1.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_asme": {
+          "value": 1.8,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        },
+        "n_langer": {
+          "value": 1.6,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n_goodman": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0036000000000000003,
+          "passed": true
+        },
+        "n_gerber": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0036000000000000003,
+          "passed": true
+        },
+        "n_soderberg": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0036000000000000003,
+          "passed": true
+        },
+        "n_asme": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0036000000000000003,
+          "passed": true
+        },
+        "n_langer": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0032,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Compressive mean stress: the four fatigue criteria give Se/\u03c3a = 180/100 = 1.8; Langer n_y = Sy/(\u03c3a + |\u03c3m|) = 400/(100+150) = 1.6 (returns a value, not 'no admissible solution')"
+      }
+    },
+    {
+      "id": "fatigue-017",
+      "calculator": "fatigue.fatigue_criteria",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_a": "100 MPa",
+        "sigma_m": "150 MPa",
+        "Sut": "600 MPa",
+        "Sy": "400 MPa",
+        "n_goodman": 1.241379
+      },
+      "solve_for": [
+        "Se"
+      ],
+      "expected_as_specified": {
+        "Se": "180 MPa"
+      },
+      "expected_SI": {
+        "Se": 180000000.0
+      },
+      "actual_SI": {
+        "Se": {
+          "value": 179999934.75000727,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.fatigue_criteria (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Se": {
+          "absolute_error": 65.24999272823334,
+          "relative_error": 3.6249995960129633e-07,
+          "allowed_absolute_error": 360000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "From n_goodman = 1/(\u03c3a/Se + \u03c3m/Sut): Se = \u03c3a/(1/n \u2212 \u03c3m/Sut) = 100/(1/1.241379 \u2212 150/600) = 100/(0.805556 \u2212 0.25) = 180 MPa"
+      }
+    },
+    {
+      "id": "fatigue-018",
+      "calculator": "fatigue.miner_rule",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "blocks": [
+          [
+            5000,
+            100000
+          ],
+          [
+            20000,
+            200000
+          ]
+        ]
+      },
+      "solve_for": [
+        "D",
+        "life"
+      ],
+      "expected_as_specified": {
+        "D": 0.15,
+        "life": 6.666667
+      },
+      "expected_SI": {
+        "D": 0.15,
+        "life": 6.666667
+      },
+      "actual_SI": {
+        "D": {
+          "value": 0.15000000000000002,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.miner_rule (procedure)"
+        },
+        "life": {
+          "value": 6.666666666666666,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.miner_rule (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "D": {
+          "absolute_error": 2.7755575615628914e-17,
+          "relative_error": 1.8503717077085943e-16,
+          "allowed_absolute_error": 0.0003,
+          "passed": true
+        },
+        "life": {
+          "absolute_error": 3.333333342681044e-07,
+          "relative_error": 4.999999764021578e-08,
+          "allowed_absolute_error": 0.013333334,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 5000/100000 + 20000/200000 = 0.05 + 0.10 = 0.15; life = 1/0.15 = 6.6667"
+      }
+    },
+    {
+      "id": "fatigue-019",
+      "calculator": "fatigue.coffin_manson",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_fp": "1000 MPa",
+        "b": -0.09,
+        "eps_fp": 0.6,
+        "c": -0.6,
+        "E": "200 GPa",
+        "Nf": 1000
+      },
+      "solve_for": [
+        "eps_a"
+      ],
+      "expected_as_specified": {
+        "eps_a": 0.0087966
+      },
+      "expected_SI": {
+        "eps_a": 0.0087966
+      },
+      "actual_SI": {
+        "eps_a": {
+          "value": 0.008796605264253236,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.coffin_manson (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eps_a": {
+          "absolute_error": 5.264253236450522e-09,
+          "relative_error": 5.984418112055251e-07,
+          "allowed_absolute_error": 1.75932e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "2Nf = 2000: \u03b5a = (1000e6/200e9)\u00b72000^\u22120.09 + 0.6\u00b72000^\u22120.6 = 0.005\u00b7exp(\u22120.09\u00b7ln2000) + 0.6\u00b7exp(\u22120.6\u00b7ln2000) = 0.005\u00b70.504636 + 0.6\u00b70.010454 = 0.0025232 + 0.0062724 = 0.0087966"
+      }
+    },
+    {
+      "id": "fatigue-020",
+      "calculator": "fatigue.neuber",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Kf": 2.0,
+        "S": "300 MPa",
+        "E": "200 GPa",
+        "Kp": "1200 MPa",
+        "np": 0.15
+      },
+      "solve_for": [
+        "sigma",
+        "eps",
+        "K_sigma",
+        "K_eps",
+        "e_nom"
+      ],
+      "expected_as_specified": {
+        "sigma": "458.368017 MPa",
+        "eps": 0.00392698,
+        "K_sigma": 1.527893,
+        "K_eps": 2.617984,
+        "e_nom": 0.0015
+      },
+      "expected_SI": {
+        "sigma": 458368017.0,
+        "eps": 0.00392698,
+        "K_sigma": 1.527893,
+        "K_eps": 2.617984,
+        "e_nom": 0.0015
+      },
+      "actual_SI": {
+        "sigma": {
+          "value": 458368017.2604468,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fatigue.neuber (procedure)"
+        },
+        "eps": {
+          "value": 0.0039269755572349,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.neuber (procedure)"
+        },
+        "K_sigma": {
+          "value": 1.527893390868156,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.neuber (procedure)"
+        },
+        "K_eps": {
+          "value": 2.6179837048232666,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.neuber (procedure)"
+        },
+        "e_nom": {
+          "value": 0.0015,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.neuber (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma": {
+          "absolute_error": 0.26044678688049316,
+          "relative_error": 5.68204537011781e-10,
+          "allowed_absolute_error": 916736.034,
+          "passed": true
+        },
+        "eps": {
+          "absolute_error": 4.44276510025432e-09,
+          "relative_error": 1.1313439590357782e-06,
+          "allowed_absolute_error": 7.85396e-06,
+          "passed": true
+        },
+        "K_sigma": {
+          "absolute_error": 3.908681560638172e-07,
+          "relative_error": 2.558216812720637e-07,
+          "allowed_absolute_error": 0.003055786,
+          "passed": true
+        },
+        "K_eps": {
+          "absolute_error": 2.951767332781685e-07,
+          "relative_error": 1.1274963226596058e-07,
+          "allowed_absolute_error": 0.005235968,
+          "passed": true
+        },
+        "e_nom": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 3e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Solve \u03c3(\u03c3/E + (\u03c3/K\u2032)\u207d\u00b9/\u207f\u2032\u207e) = (Kf\u00b7S)\u00b2/E = (600e6)\u00b2/200e9 = 1.8e6 by bisection (plain Python math, 200 steps): \u03c3 = 458.368017 MPa. Then \u03b5 = \u03c3/E + (\u03c3/K\u2032)\u207d\u00b9/\u207f\u2032\u207e = 0.0022918 + (0.381973)^6.6667 = 0.0022918 + 0.0016351 = 0.0039270; K\u03c3 = 458.368/300 = 1.527893; e = 300/200000 = 0.0015; K\u03b5 = 0.0039270/0.0015 = 2.61798"
+      }
+    },
+    {
+      "id": "fatigue-021",
+      "calculator": "fatigue.welded_fatigue",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "FAT": "80 MPa",
+        "Delta_sigma": "100 MPa",
+        "m": 3.0
+      },
+      "solve_for": [
+        "N"
+      ],
+      "expected_as_specified": {
+        "N": 1024000
+      },
+      "expected_SI": {
+        "N": 1024000.0
+      },
+      "actual_SI": {
+        "N": {
+          "value": 1023999.9999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.welded_fatigue (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "N": {
+          "absolute_error": 1.1641532182693481e-10,
+          "relative_error": 1.1368683772161603e-16,
+          "allowed_absolute_error": 2048.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "N = 2e6\u00b7(FAT/\u0394\u03c3)^m = 2e6\u00b7(80/100)\u00b3 = 2e6\u00b70.512 = 1.024e6 cycles"
+      }
+    },
+    {
+      "id": "fatigue-022",
+      "calculator": "fatigue.welded_fatigue",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "FAT": "80 MPa",
+        "Delta_sigma": "100 MPa",
+        "N": 1024000
+      },
+      "solve_for": [
+        "m"
+      ],
+      "expected_as_specified": {
+        "m": 3.0
+      },
+      "expected_SI": {
+        "m": 3.0
+      },
+      "actual_SI": {
+        "m": {
+          "value": 3.0000000000000004,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fatigue.welded_fatigue (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "m": {
+          "absolute_error": 4.440892098500626e-16,
+          "relative_error": 1.4802973661668753e-16,
+          "allowed_absolute_error": 0.006,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "m = ln(N/2e6)/ln(FAT/\u0394\u03c3) = ln0.512/ln0.8 = \u22120.669431/\u22120.223144 = 3.0"
+      }
+    }
+  ],
+  "passed": 22,
+  "failed": 0
+}

@@ -1,0 +1,293 @@
+{
+  "section": "fluid_statics",
+  "cases": [
+    {
+      "calc": "fluid_statics.density_relations",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "rho_ref": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "expect": {
+        "gamma": "9806.65 N/m^3",
+        "SG": 1.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "γ = ρg = 1000·9.80665 = 9806.65 N/m³; SG = 1000/1000 = 1.0"
+      }
+    },
+    {
+      "calc": "fluid_statics.density_relations",
+      "inputs": {
+        "gamma": "9806.65 N/m^3",
+        "rho_ref": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "solve_for": [
+        "rho",
+        "SG"
+      ],
+      "expect": {
+        "rho": "1000 kg/m^3"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ρ = γ/g = 9806.65/9.80665 = 1000 kg/m³ (and SG = ρ/ρ_ref = 1.0)"
+      }
+    },
+    {
+      "calc": "fluid_statics.viscosity_relations",
+      "inputs": {
+        "mu": "1.002 mPa*s",
+        "rho": "998.2 kg/m^3"
+      },
+      "expect": {
+        "nu": "1.00381e-6 m^2/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ν = μ/ρ = 1.002e-3/998.2 = 1.00381e-6 m²/s"
+      }
+    },
+    {
+      "calc": "fluid_statics.capillary_rise",
+      "inputs": {
+        "sigma": "0.0728 N/m",
+        "theta": "0 deg",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665,
+        "r": "0.5 mm"
+      },
+      "expect": {
+        "h": "0.0296941 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "h = 2σcosθ/(ρgr) = 2·0.0728·1/(1000·9.80665·5e-4) = 0.1456/4.90333 = 0.029694 m (water in a 1 mm glass tube rises ~29.7 mm)"
+      }
+    },
+    {
+      "calc": "fluid_statics.bulk_modulus_sound",
+      "inputs": {
+        "E_v": "2.2 GPa",
+        "rho": "1000 kg/m^3"
+      },
+      "expect": {
+        "c": "1483.24 m/s",
+        "beta": "4.54545e-10 1/Pa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "c = √(E_v/ρ) = √(2.2e9/1000) = √(2.2e6) = 1483.24 m/s; β = 1/E_v = 1/2.2e9 = 4.54545e-10 1/Pa"
+      }
+    },
+    {
+      "calc": "fluid_statics.hydrostatic_pressure",
+      "inputs": {
+        "p_atm": "101.325 kPa",
+        "h": "10 m",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "expect": {
+        "p_gauge": "98066.5 Pa",
+        "p_abs": "199391.5 Pa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "p_gauge = ρgh = 1000·9.80665·10 = 98066.5 Pa; p_abs = 98066.5 + 101325 = 199391.5 Pa"
+      }
+    },
+    {
+      "calc": "fluid_statics.manometer",
+      "inputs": {
+        "rho_m": "13600 kg/m^3",
+        "rho_f": "1000 kg/m^3",
+        "g": 9.80665,
+        "h": "100 mm"
+      },
+      "expect": {
+        "dp": "12356.4 Pa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Δp = (ρ_m − ρ_f)gh = (13600 − 1000)·9.80665·0.1 = 12600·0.980665 = 12356.4 Pa (mercury over water, 100 mm column)"
+      }
+    },
+    {
+      "calc": "fluid_statics.hydrostatic_force_plane",
+      "inputs": {
+        "h_c": "2 m",
+        "A": "1.5 m^2",
+        "I_c": "0.28125 m^4",
+        "theta": "90 deg",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "expect": {
+        "F": "29419.95 N",
+        "y_cp": "2.09375 m",
+        "y_c": "2 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = ρg h_c A = 1000·9.80665·2·1.5 = 29419.95 N; y_c = h_c/sin90° = 2 m; y_cp = y_c + I_c/(A·y_c) = 2 + 0.28125/(1.5·2) = 2.09375 m"
+      }
+    },
+    {
+      "calc": "fluid_statics.hydrostatic_force_plane",
+      "inputs": {
+        "y_cp": "2.09375 m",
+        "h_c": "2 m",
+        "A": "1.5 m^2",
+        "theta": "90 deg",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "solve_for": [
+        "I_c",
+        "y_c",
+        "F"
+      ],
+      "expect": {
+        "I_c": "0.28125 m^4"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "y_c = h_c/sin90° = 2 m; I_c = A·y_c·(y_cp − y_c) = 1.5·2·(2.09375 − 2) = 0.28125 m⁴"
+      }
+    },
+    {
+      "calc": "fluid_statics.hydrostatic_force_plane",
+      "inputs": {
+        "h_c": "3 m",
+        "A": "6 m^2",
+        "I_c": "4.5 m^4",
+        "theta": "30 deg",
+        "rho": "1000 kg/m^3",
+        "g": 9.80665
+      },
+      "expect": {
+        "F": "176519.7 N",
+        "y_c": "6 m",
+        "y_cp": "6.125 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inclined rectangular gate 2 m wide × 3 m tall along the plane (A = 6 m², centroidal I_c = b·a³/12 = 2·3³/12 = 4.5 m⁴) with centroid depth h_c = 3 m at θ = 30°. F = ρg h_c A = 1000·9.80665·3·6 = 176519.7 N; y_c = h_c/sin30° = 3/0.5 = 6 m; y_cp = y_c + I_c/(A·y_c) = 6 + 4.5/(6·6) = 6 + 0.125 = 6.125 m"
+      }
+    },
+    {
+      "calc": "fluid_statics.buoyancy",
+      "inputs": {
+        "rho": "1000 kg/m^3",
+        "g": 9.80665,
+        "V": "0.01 m^3"
+      },
+      "expect": {
+        "F_B": "98.0665 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F_B = ρgV = 1000·9.80665·0.01 = 98.0665 N (10 L of water displaced)"
+      }
+    },
+    {
+      "calc": "fluid_statics.metacentric_height",
+      "inputs": {
+        "I": "60 m^4",
+        "V_sub": "40 m^3",
+        "KB": "0.5 m",
+        "KG": "1.1 m"
+      },
+      "expect": {
+        "BM": "1.5 m",
+        "GM": "0.9 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "BM = I/V_sub = 60/40 = 1.5 m; GM = KB + BM − KG = 0.5 + 1.5 − 1.1 = 0.9 m (stable)"
+      }
+    },
+    {
+      "calc": "fluid_statics.metacentric_height",
+      "inputs": {
+        "GM": "0.9 m",
+        "I": "60 m^4",
+        "V_sub": "40 m^3",
+        "KB": "0.5 m"
+      },
+      "solve_for": [
+        "KG",
+        "BM"
+      ],
+      "expect": {
+        "KG": "1.1 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "BM = 1.5 m; KG = KB + BM − GM = 0.5 + 1.5 − 0.9 = 1.1 m"
+      }
+    },
+    {
+      "calc": "fluid_statics.rigid_body_accel",
+      "inputs": {
+        "a_x": "3 m/s^2",
+        "a_z": "0 m/s^2",
+        "g": 9.80665,
+        "p_ref": "101.325 kPa",
+        "rho": "1000 kg/m^3",
+        "x": "1 m",
+        "z": "-1 m"
+      },
+      "expect": {
+        "theta": "0.296874 rad",
+        "p": "108131.65 Pa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "θ = atan(a_x/(g+a_z)) = atan(3/9.80665) = 0.296874 rad (17.01°); p = p_ref − ρ(a_x·x + (g+a_z)·z) = 101325 − 1000(3·1 + 9.80665·(−1)) = 101325 − 1000(−6.80665) = 108131.65 Pa"
+      }
+    },
+    {
+      "calc": "fluid_statics.rigid_body_rotation",
+      "inputs": {
+        "omega": "10 rad/s",
+        "R": "0.2 m",
+        "g": 9.80665,
+        "p0": "101.325 kPa",
+        "rho": "1000 kg/m^3",
+        "r": "0.2 m",
+        "z": "0 m"
+      },
+      "expect": {
+        "dh": "0.203943 m",
+        "p": "103325 Pa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "dh = ω²R²/(2g) = 100·0.04/(2·9.80665) = 4/19.6133 = 0.203943 m; p = p0 + ρω²r²/2 − ρgz = 101325 + 1000·100·0.04/2 − 0 = 103325 Pa"
+      }
+    },
+    {
+      "calc": "fluid_statics.fluid_state_lookup",
+      "inputs": {
+        "fluid": {
+          "name": "Water"
+        },
+        "T": "20 degC",
+        "P": "101.325 kPa"
+      },
+      "expect": {
+        "rho": "998.2 kg/m^3",
+        "mu": "1.002 mPa*s"
+      },
+      "rel_tol": 0.002,
+      "source": {
+        "kind": "cited",
+        "ref": "Water at 20 °C / 1 atm: density 998.2 kg/m³ and dynamic viscosity 1.002 mPa·s (standard textbook values; recalled, not re-read). CoolProp returns 998.21 kg/m³ and 1.0016 mPa·s, within the stated tolerance."
+      }
+    }
+  ]
+}

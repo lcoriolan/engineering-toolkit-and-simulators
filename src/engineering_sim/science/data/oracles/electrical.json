@@ -1,0 +1,371 @@
+{
+  "section": "electrical",
+  "cases": [
+    {
+      "calc": "electrical.ohms_law",
+      "inputs": {
+        "I": "25 mA",
+        "R": "470 ohm"
+      },
+      "expect": {
+        "V": "11.75 V"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "V = I R = 0.025 A x 470 ohm = 11.75 V"
+      }
+    },
+    {
+      "calc": "electrical.ohms_law",
+      "inputs": {
+        "V": "12 V",
+        "I": "25 mA"
+      },
+      "solve_for": [
+        "R"
+      ],
+      "expect": {
+        "R": "480 ohm"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = V/I = 12/0.025 = 480 ohm"
+      }
+    },
+    {
+      "calc": "electrical.electrical_power",
+      "inputs": {
+        "V": "120 V",
+        "I": "2.5 A",
+        "t": "10 min"
+      },
+      "expect": {
+        "P": "300 W",
+        "E": "180000 J"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = 120 x 2.5 = 300 W; E = P t = 300 x 600 = 180000 J"
+      }
+    },
+    {
+      "calc": "electrical.electrical_power",
+      "inputs": {
+        "V": "230 V",
+        "P": "1150 W",
+        "t": "1 h"
+      },
+      "solve_for": [
+        "I",
+        "E"
+      ],
+      "expect": {
+        "I": "5 A",
+        "E": "4.14 MJ"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "I = P/V = 1150/230 = 5 A; E = P t = 1150 x 3600 = 4.14e6 J"
+      }
+    },
+    {
+      "calc": "electrical.resistance_series_parallel",
+      "inputs": {
+        "R1": "120 ohm",
+        "R2": "180 ohm"
+      },
+      "expect": {
+        "R_s": "300 ohm",
+        "R_p": "72 ohm"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "R_s = 120 + 180 = 300; R_p = 120x180/(120+180) = 21600/300 = 72 ohm"
+      }
+    },
+    {
+      "calc": "electrical.capacitance_series_parallel",
+      "inputs": {
+        "C1": "2 uF",
+        "C2": "3 uF"
+      },
+      "expect": {
+        "C_p": "5 uF",
+        "C_s": "1.2 uF"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "C_p = 2 + 3 = 5 uF; C_s = 2x3/(2+3) = 6/5 = 1.2 uF"
+      }
+    },
+    {
+      "calc": "electrical.inductance_series_parallel",
+      "inputs": {
+        "L1": "20 mH",
+        "L2": "30 mH"
+      },
+      "expect": {
+        "L_s": "50 mH",
+        "L_p": "12 mH"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "L_s = 20 + 30 = 50 mH; L_p = 20x30/(20+30) = 600/50 = 12 mH"
+      }
+    },
+    {
+      "calc": "electrical.rc_transient",
+      "inputs": {
+        "R": "2 kohm",
+        "C": "1 uF",
+        "V0": "5 V",
+        "t": "2 ms"
+      },
+      "expect": {
+        "tau": "2 ms",
+        "Vc": "3.160603 V"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "tau = R C = 2000 x 1e-6 = 2 ms; at t = tau, Vc = V0(1 - e^-1) = 5 x 0.632121 = 3.16060 V"
+      }
+    },
+    {
+      "calc": "electrical.rl_transient",
+      "inputs": {
+        "R": "20 ohm",
+        "L": "0.1 H",
+        "V0": "10 V",
+        "t": "5 ms"
+      },
+      "expect": {
+        "tau": "5 ms",
+        "i": "0.316060 A"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "tau = L/R = 0.1/20 = 5 ms; at t = tau, i = (V0/R)(1 - e^-1) = 0.5 x 0.632121 = 0.31606 A"
+      }
+    },
+    {
+      "calc": "electrical.dc_motor",
+      "inputs": {
+        "V": "12 V",
+        "R": "1 ohm",
+        "ke": "0.04 V*s/rad",
+        "kt": "0.04 N*m/A",
+        "T": "0.08 N*m"
+      },
+      "expect": {
+        "I": "2 A",
+        "omega": "250 rad/s",
+        "E": "10 V",
+        "P_out": "20 W",
+        "P_in": "24 W",
+        "eta": 0.8333333,
+        "omega_nl": "300 rad/s",
+        "T_stall": "0.48 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "I = T/kt = 0.08/0.04 = 2 A; omega = (V - I R)/ke = (12 - 2 x 1)/0.04 = 250 rad/s; E = ke omega = 0.04 x 250 = 10 V; P_out = T omega = 0.08 x 250 = 20 W; P_in = V I = 12 x 2 = 24 W; eta = 20/24 = 0.8333; no-load omega_nl = V/ke = 12/0.04 = 300 rad/s; stall T_stall = kt V/R = 0.04 x 12/1 = 0.48 N m"
+      }
+    },
+    {
+      "calc": "electrical.dc_motor",
+      "inputs": {
+        "V": "12 V",
+        "R": "1 ohm",
+        "ke": "0.04 V*s/rad",
+        "kt": "0.04 N*m/A",
+        "omega": "2387.3241 rpm"
+      },
+      "solve_for": [
+        "T"
+      ],
+      "expect": {
+        "T": "0.08 N*m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega = 2387.3241 x 2pi/60 = 250 rad/s; solve T from omega = (V - (T/kt) R)/ke: T = kt(V - ke omega)/R = 0.04(12 - 0.04 x 250)/1 = 0.04(12 - 10) = 0.08 N m"
+      }
+    },
+    {
+      "calc": "electrical.ac_power",
+      "inputs": {
+        "V_rms": "230 V",
+        "I_rms": "10 A",
+        "phi": "-36.86989765 deg"
+      },
+      "expect": {
+        "S": "2300 W",
+        "P": "1840 W",
+        "Q": "-1380 W",
+        "pf": 0.8
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Leading (capacitive) 3-4-5: cos(phi) = 0.8, sin(phi) = -0.6. S = 230 x 10 = 2300 VA; P = 2300 x 0.8 = 1840 W; Q = 2300 x (-0.6) = -1380 var (negative = leading); pf = 0.8"
+      }
+    },
+    {
+      "calc": "electrical.ac_power",
+      "inputs": {
+        "V_rms": "120 V",
+        "I_rms": "10 A",
+        "phi": "53.130102 deg"
+      },
+      "expect": {
+        "S": "1200 W",
+        "P": "720 W",
+        "Q": "960 W",
+        "pf": 0.6
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "cos(phi) = 0.6, sin(phi) = 0.8. S = 120 x 10 = 1200 VA; P = 1200 x 0.6 = 720 W; Q = 1200 x 0.8 = 960 var; pf = 0.6 (3-4-5 triangle)"
+      }
+    },
+    {
+      "calc": "electrical.stepper_motor",
+      "inputs": {
+        "m": 4,
+        "Z_r": 50,
+        "mu": 8
+      },
+      "expect": {
+        "theta_step": "0.03141593 rad",
+        "theta_micro": "0.003926991 rad",
+        "res": 1600
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta_step = 2pi/(m Z_r) = 2pi/200 = 0.0314159 rad (1.8 deg); theta_micro = 0.0314159/8 = 0.0039270 rad; res = m Z_r mu = 4 x 50 x 8 = 1600"
+      }
+    },
+    {
+      "calc": "electrical.stepper_motor",
+      "inputs": {
+        "m": 3,
+        "Z_r": 40,
+        "mu": 1
+      },
+      "expect": {
+        "theta_step": "0.05235988 rad",
+        "theta_micro": "0.05235988 rad",
+        "res": 120
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "theta_step = 2pi/(3 x 40) = 2pi/120 = 0.0523599 rad (3 deg); mu = 1 so theta_micro = theta_step; res = 3 x 40 x 1 = 120"
+      }
+    },
+    {
+      "calc": "electrical.gearmotor_output",
+      "inputs": {
+        "omega_in": "3600 rpm",
+        "i": 30,
+        "T_in": "0.1 N*m",
+        "eta": 0.8
+      },
+      "expect": {
+        "omega_out": "12.56637 rad/s",
+        "T_out": "2.4 N*m",
+        "P_out": "30.15929 W"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "omega_in = 3600x2pi/60 = 376.99 rad/s; omega_out = 376.99/30 = 12.5664 rad/s; T_out = 0.1 x 30 x 0.8 = 2.4 N m; P_out = 2.4 x 12.5664 = 30.159 W"
+      }
+    },
+    {
+      "calc": "electrical.gearmotor_output",
+      "inputs": {
+        "omega_in": "3600 rpm",
+        "omega_out": "12.56637 rad/s",
+        "T_in": "0.1 N*m",
+        "eta": 0.8
+      },
+      "solve_for": [
+        "i",
+        "T_out",
+        "P_out"
+      ],
+      "expect": {
+        "i": 30
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "i = omega_in/omega_out = 376.9911/12.56637 = 30"
+      }
+    },
+    {
+      "calc": "electrical.encoder_resolution",
+      "inputs": {
+        "N_lines": 512,
+        "m": 4
+      },
+      "expect": {
+        "cpr": 2048,
+        "theta_res": "0.003067962 rad"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "cpr = 4 x 512 = 2048; theta_res = 2pi/2048 = 0.00306796 rad"
+      }
+    },
+    {
+      "calc": "electrical.encoder_resolution",
+      "inputs": {
+        "N_lines": 512,
+        "m": 2
+      },
+      "expect": {
+        "cpr": 1024,
+        "theta_res": "0.006135923 rad"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "cpr = 2 x 512 = 1024; theta_res = 2pi/1024 = 0.00613592 rad"
+      }
+    },
+    {
+      "calc": "electrical.pwm_duty_cycle",
+      "inputs": {
+        "t_on": "0.3 ms",
+        "T": "1.2 ms",
+        "V_supply": "24 V"
+      },
+      "expect": {
+        "D": 0.25,
+        "f": "833.3333 Hz",
+        "V_avg": "6 V"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 0.3/1.2 = 0.25; f = 1/0.0012 = 833.33 Hz; V_avg = 0.25 x 24 = 6 V"
+      }
+    }
+  ]
+}

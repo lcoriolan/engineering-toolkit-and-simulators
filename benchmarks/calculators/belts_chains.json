@@ -1,0 +1,2107 @@
+{
+  "section": "belts_chains",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k belts_chains",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "belts_chains.belt_length": {
+      "title": "Exact open-belt length between two pulleys",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "belt length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "m",
+          "desc": "center distance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D1",
+          "unit": "m",
+          "desc": "smaller pulley diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D2",
+          "unit": "m",
+          "desc": "larger pulley diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _belt_length(values):\n    \"\"\"Exact open-belt length (no small-angle approximation), D2 >= D1.\n\n    alpha = asin((D2 - D1)/(2C)); wrap theta_s = pi - 2 alpha (small), theta_l = pi + 2 alpha (large).\n    L = sqrt(4 C^2 - (D2 - D1)^2) + (D2 theta_l + D1 theta_s)/2.\n    \"\"\"\n    C, D1, D2 = values['C'], values['D1'], values['D2']\n    if C <= 0 or D1 <= 0 or D2 <= 0:\n        raise MechError('C, D1, D2 must be positive')\n    if 2 * C < abs(D2 - D1):\n        raise MechError('center distance too small: need C >= (D2 - D1)/2 for an open belt')\n    alpha = math.asin((D2 - D1) / (2.0 * C))\n    theta_s = PI - 2.0 * alpha\n    theta_l = PI + 2.0 * alpha\n    L = math.sqrt(4.0 * C * C - (D2 - D1) ** 2) + (D2 * theta_l + D1 * theta_s) / 2.0\n    return {'L': L}\n",
+        "source": "belts_chains.py",
+        "line": 51
+      },
+      "outputs": [
+        "L"
+      ],
+      "assumptions": [
+        "Open (uncrossed) belt on two pulleys, exact: alpha = asin((D2-D1)/(2C)), wrap theta_s = pi - 2 alpha (small pulley), theta_l = pi + 2 alpha (large pulley), L = sqrt(4 C^2 - (D2-D1)^2) + (D2 theta_l + D1 theta_s)/2. Requires C >= (D2-D1)/2. The familiar approximation L = 2C + pi(D1+D2)/2 + (D2-D1)^2/(4C) agrees to within ~1% for C >> (D2-D1)."
+      ],
+      "method_references": [
+        "Open-belt length L = sqrt(4C^2 - (D2-D1)^2) + (D2 theta_l + D1 theta_s)/2 (recalled)"
+      ],
+      "synthetic_example": {
+        "C": 2.0,
+        "D1": 0.2,
+        "D2": 0.5
+      }
+    },
+    "belts_chains.belt_wrap": {
+      "title": "Angle of wrap on each pulley (open belt)",
+      "variables": [
+        {
+          "name": "theta_s",
+          "unit": "rad",
+          "desc": "wrap angle on the small pulley",
+          "lo": null,
+          "hi": 3.141592653589793,
+          "label": "\u03b8s",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta_l",
+          "unit": "rad",
+          "desc": "wrap angle on the large pulley",
+          "lo": 3.141592653589793,
+          "hi": 6.283185307179586,
+          "label": "\u03b8l",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D1",
+          "unit": "m",
+          "desc": "smaller pulley diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D2",
+          "unit": "m",
+          "desc": "larger pulley diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "m",
+          "desc": "center distance",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "theta_s = pi - 2*asin((D2 - D1)/(2*C))",
+        "theta_l = pi + 2*asin((D2 - D1)/(2*C))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "theta_s",
+        "theta_l"
+      ],
+      "assumptions": [
+        "Open belt, D2 >= D1. The small-pulley wrap angle governs friction capacity: use it in the capstan ratio (statics.belt_friction or belt_tension_ratio here). Requires C >= (D2 - D1)/2."
+      ],
+      "method_references": [
+        "Wrap angle theta = pi \u00b1 2 asin((D2-D1)/(2C)) (recalled)"
+      ],
+      "synthetic_example": {
+        "D1": 0.2,
+        "D2": 0.5,
+        "C": 2.0
+      }
+    },
+    "belts_chains.belt_centrifugal_tension": {
+      "title": "Centrifugal belt tension (T_c = m v^2)",
+      "variables": [
+        {
+          "name": "T_c",
+          "unit": "N",
+          "desc": "centrifugal tension",
+          "lo": null,
+          "hi": null,
+          "label": "Tc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "kg/m",
+          "desc": "belt mass per unit length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "belt speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T_c = m*v**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T_c"
+      ],
+      "assumptions": [
+        "Centrifugal tension is uniform around the belt and does not contribute to power transmission; it raises the total belt tension and reduces the useful friction."
+      ],
+      "method_references": [
+        "Centrifugal tension T_c = m v^2 (recalled)"
+      ],
+      "synthetic_example": {
+        "m": 0.5,
+        "v": 20.0
+      }
+    },
+    "belts_chains.belt_tension_ratio": {
+      "title": "Belt tension ratio with centrifugal tension (capstan + T_c)",
+      "variables": [
+        {
+          "name": "T1",
+          "unit": "N",
+          "desc": "total tight-side tension (including centrifugal)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2",
+          "unit": "N",
+          "desc": "total slack-side tension (including centrifugal)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_c",
+          "unit": "N",
+          "desc": "centrifugal tension",
+          "lo": null,
+          "hi": null,
+          "label": "Tc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mu",
+          "unit": "",
+          "desc": "coefficient of friction between belt and pulley",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "wrap angle (use the small-pulley value)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _belt_tension_ratio(values):\n    \"\"\"Total tight-side tension from the capstan relation with centrifugal tension.\n\n    (T1 - T_c) = (T2 - T_c) e^(mu theta); the slack-side effective tension must be positive.\n    \"\"\"\n    T2, T_c, mu, theta = values['T2'], values['T_c'], values['mu'], values['theta']\n    if T2 <= T_c:\n        raise MechError('T2 (slack-side total tension) must exceed T_c (centrifugal tension) or the '\n                        'belt cannot grip the pulley')\n    return {'T1': T_c + (T2 - T_c) * math.exp(mu * theta)}\n",
+        "source": "belts_chains.py",
+        "line": 69
+      },
+      "outputs": [
+        "T1"
+      ],
+      "assumptions": [
+        "Impending slip on the effective tensions (total minus centrifugal): (T1 - T_c) = (T2 - T_c) e^(mu theta); a MechError is raised if T2 <= T_c (the slack-side effective tension must stay positive). With T_c = 0 this reduces to the capstan equation (statics.belt_friction). For a V-belt use the effective friction mu/sin(beta/2) (statics.vbelt_friction)."
+      ],
+      "method_references": [
+        "Capstan equation with centrifugal tension (recalled)"
+      ],
+      "synthetic_example": {
+        "T2": 100.0,
+        "T_c": 50.0,
+        "mu": 0.3,
+        "theta": 3.141592653589793
+      }
+    },
+    "belts_chains.belt_initial_tension": {
+      "title": "Initial (installation) belt tension from running tensions",
+      "variables": [
+        {
+          "name": "T_i",
+          "unit": "N",
+          "desc": "initial (installation) tension",
+          "lo": null,
+          "hi": null,
+          "label": "Ti",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T1",
+          "unit": "N",
+          "desc": "total tight-side tension (including centrifugal)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2",
+          "unit": "N",
+          "desc": "total slack-side tension (including centrifugal)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_c",
+          "unit": "N",
+          "desc": "centrifugal tension",
+          "lo": null,
+          "hi": null,
+          "label": "Tc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T_i = (T1 + T2)/2 - T_c"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T_i"
+      ],
+      "assumptions": [
+        "T1 and T2 are the TOTAL (running) tensions; the installed tension is the mean of the effective tensions, T_i = (T1 + T2)/2 - T_c. Tension the belt so the effective tensions stay positive (T2 > T_c)."
+      ],
+      "method_references": [
+        "Initial tension T_i = (T1 + T2)/2 - T_c (recalled)"
+      ],
+      "synthetic_example": {
+        "T1": 600.0,
+        "T2": 200.0,
+        "T_c": 100.0
+      }
+    },
+    "belts_chains.belt_power": {
+      "title": "Power transmitted by a belt (P = (T1 - T2) v)",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "W",
+          "desc": "transmitted power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T1",
+          "unit": "N",
+          "desc": "total tight-side tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T2",
+          "unit": "N",
+          "desc": "total slack-side tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "belt speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P = (T1 - T2)*v"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P"
+      ],
+      "assumptions": [
+        "Centrifugal tension cancels in the difference: power is carried by (T1 - T2) alone."
+      ],
+      "method_references": [
+        "Belt power P = (T1 - T2) v (recalled)"
+      ],
+      "synthetic_example": {
+        "T1": 600.0,
+        "T2": 200.0,
+        "v": 20.0
+      }
+    },
+    "belts_chains.belt_slip": {
+      "title": "Belt slip fraction from the speed ratio",
+      "variables": [
+        {
+          "name": "s",
+          "unit": "",
+          "desc": "slip fraction (0 = no slip)",
+          "lo": null,
+          "hi": 1.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n1",
+          "unit": "Hz",
+          "desc": "driver pulley speed in rev/s (enter rpm/60)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n2",
+          "unit": "Hz",
+          "desc": "driven pulley speed in rev/s (enter rpm/60)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D1",
+          "unit": "m",
+          "desc": "driver pulley diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D2",
+          "unit": "m",
+          "desc": "driven pulley diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "s = 1 - (n2/n1)*(D2/D1)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "s"
+      ],
+      "assumptions": [
+        "s = 1 - (n2 D2)/(n1 D1) = (v_driver - v_driven)/v_driver. Flat/vee belts creep ~1-2%; larger s means the belt is slipping and losing power."
+      ],
+      "method_references": [
+        "Belt slip s = 1 - (n2 D2)/(n1 D1) (recalled)"
+      ],
+      "synthetic_example": {
+        "n1": 30.0,
+        "n2": 7.2,
+        "D1": 0.2,
+        "D2": 0.8
+      }
+    },
+    "belts_chains.v_belt_selection": {
+      "title": "V-belt design power and number of belts",
+      "variables": [
+        {
+          "name": "P_d",
+          "unit": "W",
+          "desc": "design power (service factor x transmitted power)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N_b",
+          "unit": "",
+          "desc": "number of belts (round up to an integer)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_s",
+          "unit": "",
+          "desc": "service factor (catalogue/table input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "W",
+          "desc": "transmitted (nameplate) power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_r",
+          "unit": "W",
+          "desc": "rated power per belt (manufacturer catalogue input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_theta",
+          "unit": "",
+          "desc": "angle-of-wrap correction factor (catalogue input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_L",
+          "unit": "",
+          "desc": "belt-length correction factor (catalogue input)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P_d = K_s*P",
+        "N_b = P_d/(P_r*C_theta*C_L)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P_d",
+        "N_b"
+      ],
+      "assumptions": [
+        "P_r, K_s, C_theta and C_L are catalogue inputs. Round N_b up to the next whole belt; each belt shares the load only approximately (small drives use 1 belt)."
+      ],
+      "method_references": [
+        "Number of belts N_b = P_d / (P_r C_theta C_L) (recalled)"
+      ],
+      "synthetic_example": {
+        "K_s": 1.3,
+        "P": 5000.0,
+        "P_r": 2000.0,
+        "C_theta": 0.95,
+        "C_L": 0.98
+      }
+    },
+    "belts_chains.chain_length": {
+      "title": "Roller-chain length, number of links and velocity-independent length",
+      "variables": [
+        {
+          "name": "C_p",
+          "unit": "",
+          "desc": "center distance in pitches (= C/p)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "m",
+          "desc": "chain pitch",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N1",
+          "unit": "",
+          "desc": "small sprocket teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N2",
+          "unit": "",
+          "desc": "large sprocket teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "chain length (metres)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_p",
+          "unit": "",
+          "desc": "chain length in pitches",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L_links",
+          "unit": "",
+          "desc": "number of links (rounded up to an even integer)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _chain_length(values):\n    \"\"\"Roller-chain length from center distance C_p (pitches), pitch p, sprocket teeth N1, N2.\n\n    L_p = 2 C_p + (N1 + N2)/2 + (N2 - N1)^2 / (4 pi^2 C_p)   (pitches)\n    Number of links is rounded up to the nearest EVEN integer; chain length L = L_p p.\n    \"\"\"\n    Cp, p = values['C_p'], values['p']\n    N1, N2 = values['N1'], values['N2']\n    if abs(N1 - round(N1)) > 1e-6 or abs(N2 - round(N2)) > 1e-6:\n        raise MechError('N1 and N2 (sprocket teeth) must be integers')\n    N1, N2 = int(round(N1)), int(round(N2))\n    if Cp <= 0 or p <= 0:\n        raise MechError('C_p (center distance in pitches) and p (pitch) must be positive')\n    Lp = 2.0 * Cp + (N1 + N2) / 2.0 + (N2 - N1) ** 2 / (4.0 * PI ** 2 * Cp)\n    links = int(math.ceil(Lp / 2.0)) * 2\n    return {'L': Lp * p, 'L_p': Lp, 'L_links': float(links)}\n",
+        "source": "belts_chains.py",
+        "line": 33
+      },
+      "outputs": [
+        "L",
+        "L_p",
+        "L_links"
+      ],
+      "assumptions": [
+        "L_p = 2 C_p + (N1+N2)/2 + (N2-N1)^2/(4 pi^2 C_p). The number of links must be an even integer so the chain can be joined (offset link otherwise); it is rounded up here. Prefer ~30-50 pitches of center distance and N1 >= 17 for smooth running."
+      ],
+      "method_references": [
+        "Roller-chain length in pitches (ANSI/ASME B29; recalled)"
+      ],
+      "synthetic_example": {
+        "C_p": 30.0,
+        "p": 0.0127,
+        "N1": 17,
+        "N2": 51
+      }
+    },
+    "belts_chains.chain_velocity": {
+      "title": "Roller-chain velocity (v = p N n)",
+      "variables": [
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "chain speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "m",
+          "desc": "chain pitch",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "",
+          "desc": "sprocket teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "Hz",
+          "desc": "sprocket speed in rev/s (enter rpm/60)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v = p*N*n"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v"
+      ],
+      "assumptions": [
+        "Average chain velocity (ignores the chordal oscillation \u2014 see chordal_speed)."
+      ],
+      "method_references": [
+        "Chain velocity v = p N n (recalled)"
+      ],
+      "synthetic_example": {
+        "p": 0.0127,
+        "N": 17,
+        "n": 20.0
+      }
+    },
+    "belts_chains.chordal_speed": {
+      "title": "Chordal speed variation of a chain drive (polygon effect)",
+      "variables": [
+        {
+          "name": "delta_v",
+          "unit": "",
+          "desc": "chordal speed variation, delta_v/V (fraction of the mean speed V)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "",
+          "desc": "sprocket teeth",
+          "lo": 6.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "delta_v = (pi/N)*(1/sin(pi/N) - 1/tan(pi/N))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "delta_v"
+      ],
+      "assumptions": [
+        "The chain rides the sprocket as a polygon, so its speed oscillates about the mean V = p N n. Shigley measures the variation relative to that mean speed: delta_v/V = (pi/N)(1/sin(pi/N) - 1/tan(pi/N)). N = 17 -> 0.0171 (1.7%), N = 6 -> 0.140 (14%). More teeth (N >= 17, preferably 19-25) reduce the variation and its whip/whine."
+      ],
+      "method_references": [
+        "Chordal speed variation delta_v/V = (pi/N)(1/sin(pi/N) - 1/tan(pi/N)) (Shigley; recalled)"
+      ],
+      "synthetic_example": {
+        "N": 17
+      }
+    },
+    "belts_chains.rope_working_load": {
+      "title": "Wire-rope safe working load (F_work = F_break / n)",
+      "variables": [
+        {
+          "name": "F_work",
+          "unit": "N",
+          "desc": "safe working load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_break",
+          "unit": "N",
+          "desc": "catalogue breaking strength of the rope",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "factor of safety (design-code input; ~5 hoisting, 8-12 elevators)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "F_work = F_break/n"
+      ],
+      "procedure": null,
+      "outputs": [
+        "F_work"
+      ],
+      "assumptions": [
+        "F_break is the catalogue (nominal) breaking strength; n is the design-code factor of safety. Check the bending and bearing limits too (rope_bending_stress, rope_pressure)."
+      ],
+      "method_references": [
+        "Safe working load = breaking strength / factor of safety (recalled)"
+      ],
+      "synthetic_example": {
+        "F_break": 200000.0,
+        "n": 5.0
+      }
+    },
+    "belts_chains.rope_bending_stress": {
+      "title": "Wire-rope bending stress over a sheave (sigma_b = E_r d_w / D)",
+      "variables": [
+        {
+          "name": "sigma_b",
+          "unit": "Pa",
+          "desc": "bending stress in the outer wires",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3b",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E_r",
+          "unit": "Pa",
+          "desc": "rope modulus of elasticity (input; ~80-90 GPa for wire rope)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d_w",
+          "unit": "m",
+          "desc": "wire diameter (not the rope diameter)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "sheave (or drum) diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_b = E_r*d_w/D"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_b"
+      ],
+      "assumptions": [
+        "Bending stress is proportional to the wire diameter over the sheave diameter \u2014 the reason large D/d_w ratios are required for long rope life (D/d >= 40 typical). E_r is an input (rope construction dependent)."
+      ],
+      "method_references": [
+        "Wire-rope bending stress sigma_b = E_r d_w / D (recalled)"
+      ],
+      "synthetic_example": {
+        "E_r": 84000000000.0,
+        "d_w": 0.002,
+        "D": 0.6
+      }
+    },
+    "belts_chains.rope_pressure": {
+      "title": "Wire-rope sheave pressure and p/Su ratio (feeds the fatigue chart)",
+      "variables": [
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "bearing pressure between rope and sheave",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "pressure ratio p/Su (x-axis of the rope fatigue chart)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N",
+          "desc": "rope tension",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "rope diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "sheave (or drum) diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Su",
+          "unit": "Pa",
+          "desc": "wire ultimate tensile strength (input; ~1570-1960 MPa)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "p = 2*T/(d*D)",
+        "r = p/Su"
+      ],
+      "procedure": null,
+      "outputs": [
+        "p",
+        "r"
+      ],
+      "assumptions": [
+        "p = 2 T/(d D) is the contact pressure of the rope on the sheave. The ratio p/Su is the abscissa of the rope maker's fatigue (bending-cycle) chart; the cycles-to-failure are read from that chart (input data, not built in)."
+      ],
+      "method_references": [
+        "Rope/sheave bearing pressure p = 2T/(d D) (recalled)"
+      ],
+      "synthetic_example": {
+        "T": 10000.0,
+        "d": 0.012,
+        "D": 0.6,
+        "Su": 1770000000.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "belts_chains-001",
+      "calculator": "belts_chains.belt_length",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": "2 m",
+        "D1": "200 mm",
+        "D2": "500 mm"
+      },
+      "solve_for": [
+        "L"
+      ],
+      "expected_as_specified": {
+        "L": "5.11081 m"
+      },
+      "expected_SI": {
+        "L": 5.11081
+      },
+      "actual_SI": {
+        "L": {
+          "value": 5.110812711115269,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_length (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "L": {
+          "absolute_error": 2.711115269171671e-06,
+          "relative_error": 5.304668475587375e-07,
+          "allowed_absolute_error": 0.01022162,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Exact open-belt length: alpha = asin(0.3/4) = 0.0750704 rad; theta_s = pi - 2 alpha = 2.99145 rad, theta_l = pi + 2 alpha = 3.29173 rad; L = sqrt(16 - 0.09) + (0.5*3.29173 + 0.2*2.99145)/2 = 3.98874 + (1.64586 + 0.59829)/2 = 3.98874 + 1.12207 = 5.11081 m"
+      }
+    },
+    {
+      "id": "belts_chains-002",
+      "calculator": "belts_chains.belt_length",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": "1 m",
+        "D1": "200 mm",
+        "D2": "600 mm"
+      },
+      "solve_for": [
+        "L"
+      ],
+      "expected_as_specified": {
+        "L": "3.29677 m"
+      },
+      "expected_SI": {
+        "L": 3.29677
+      },
+      "actual_SI": {
+        "L": {
+          "value": 3.2967720239785923,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_length (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "L": {
+          "absolute_error": 2.0239785922804288e-06,
+          "relative_error": 6.139277511868978e-07,
+          "allowed_absolute_error": 0.00659354,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Second geometry: alpha = asin(0.4/2) = 0.201358 rad; theta_s = 2.73888 rad, theta_l = 3.54431 rad; L = sqrt(4 - 0.16) + (0.6*3.54431 + 0.2*2.73888)/2 = 1.95959 + (2.12659 + 0.54778)/2 = 1.95959 + 1.33718 = 3.29677 m"
+      }
+    },
+    {
+      "id": "belts_chains-003",
+      "calculator": "belts_chains.belt_length",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L": "5.11081 m",
+        "D1": "200 mm",
+        "D2": "500 mm"
+      },
+      "solve_for": [
+        "C"
+      ],
+      "expected_as_specified": {
+        "C": "2 m"
+      },
+      "expected_SI": {
+        "C": 2.0
+      },
+      "actual_SI": {
+        "C": {
+          "value": 1.9999986406136974,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_length (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "C": {
+          "absolute_error": 1.3593863026351016e-06,
+          "relative_error": 6.796931513175508e-07,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: with D1 = 0.2, D2 = 0.5 the exact length is monotonic in C (for C >= 0.15 m); L = 5.11081 m is the value at C = 2 m"
+      }
+    },
+    {
+      "id": "belts_chains-004",
+      "calculator": "belts_chains.belt_wrap",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "D1": "200 mm",
+        "D2": "500 mm",
+        "C": "2 m"
+      },
+      "solve_for": [
+        "theta_s",
+        "theta_l"
+      ],
+      "expected_as_specified": {
+        "theta_s": "171.3976 deg",
+        "theta_l": "188.6024 deg"
+      },
+      "expected_SI": {
+        "theta_s": 2.9914524500162334,
+        "theta_l": 3.2917328571633533
+      },
+      "actual_SI": {
+        "theta_s": {
+          "value": 2.99145167143636,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_wrap (symbolic)"
+        },
+        "theta_l": {
+          "value": 3.2917336357432263,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_wrap (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "theta_s": {
+          "absolute_error": 7.785798734616378e-07,
+          "relative_error": 2.6026817623573217e-07,
+          "allowed_absolute_error": 0.005982904900032467,
+          "passed": true
+        },
+        "theta_l": {
+          "absolute_error": 7.785798730175486e-07,
+          "relative_error": 2.3652583815336972e-07,
+          "allowed_absolute_error": 0.0065834657143267064,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "asin((0.5-0.2)/(2*2)) = asin(0.075) = 4.3012 deg; theta_s = 180 - 2*4.3012 = 171.3976 deg; theta_l = 180 + 8.6024 = 188.6024 deg"
+      }
+    },
+    {
+      "id": "belts_chains-005",
+      "calculator": "belts_chains.belt_centrifugal_tension",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m": "0.5 kg/m",
+        "v": "20 m/s"
+      },
+      "solve_for": [
+        "T_c"
+      ],
+      "expected_as_specified": {
+        "T_c": "200 N"
+      },
+      "expected_SI": {
+        "T_c": 200.0
+      },
+      "actual_SI": {
+        "T_c": {
+          "value": 200.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_centrifugal_tension (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T_c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.4,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T_c = m v^2 = 0.5*400 = 200 N"
+      }
+    },
+    {
+      "id": "belts_chains-006",
+      "calculator": "belts_chains.belt_tension_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T2": "100 N",
+        "T_c": "50 N",
+        "mu": 0.3,
+        "theta": "180 deg"
+      },
+      "solve_for": [
+        "T1"
+      ],
+      "expected_as_specified": {
+        "T1": "178.317 N"
+      },
+      "expected_SI": {
+        "T1": 178.317
+      },
+      "actual_SI": {
+        "T1": {
+          "value": 178.31661976040675,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_tension_ratio (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T1": {
+          "absolute_error": 0.00038023959325528267,
+          "relative_error": 2.1323799371640543e-06,
+          "allowed_absolute_error": 0.356634,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T1 = T_c + (T2 - T_c) e^(mu theta) = 50 + 50 e^(0.3 pi) = 50 + 50*2.56633 = 50 + 128.3166 = 178.317 N"
+      }
+    },
+    {
+      "id": "belts_chains-007",
+      "calculator": "belts_chains.belt_tension_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T1": "178.317 N",
+        "T2": "100 N",
+        "T_c": "50 N",
+        "theta": "180 deg"
+      },
+      "solve_for": [
+        "mu"
+      ],
+      "expected_as_specified": {
+        "mu": 0.3
+      },
+      "expected_SI": {
+        "mu": 0.3
+      },
+      "actual_SI": {
+        "mu": {
+          "value": 0.3000009432436932,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_tension_ratio (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "mu": {
+          "absolute_error": 9.432436932077515e-07,
+          "relative_error": 3.1441456440258384e-06,
+          "allowed_absolute_error": 0.0006,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "mu = ln((T1 - T_c)/(T2 - T_c))/theta = ln(128.3166/50)/pi = ln(2.56633)/pi = 0.94248/3.14159 = 0.3000"
+      }
+    },
+    {
+      "id": "belts_chains-008",
+      "calculator": "belts_chains.belt_initial_tension",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T1": "600 N",
+        "T2": "200 N",
+        "T_c": "100 N"
+      },
+      "solve_for": [
+        "T_i"
+      ],
+      "expected_as_specified": {
+        "T_i": "300 N"
+      },
+      "expected_SI": {
+        "T_i": 300.0
+      },
+      "actual_SI": {
+        "T_i": {
+          "value": 300.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_initial_tension (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T_i": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.6,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T_i = (600 + 200)/2 - 100 = 400 - 100 = 300 N"
+      }
+    },
+    {
+      "id": "belts_chains-009",
+      "calculator": "belts_chains.belt_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T1": "600 N",
+        "T2": "200 N",
+        "v": "20 m/s"
+      },
+      "solve_for": [
+        "P"
+      ],
+      "expected_as_specified": {
+        "P": "8 kW"
+      },
+      "expected_SI": {
+        "P": 8000.0
+      },
+      "actual_SI": {
+        "P": {
+          "value": 8000.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 16.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = (600 - 200)*20 = 8000 W"
+      }
+    },
+    {
+      "id": "belts_chains-010",
+      "calculator": "belts_chains.belt_slip",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "n1": "1800 1/min",
+        "n2": "432 1/min",
+        "D1": "200 mm",
+        "D2": "800 mm"
+      },
+      "solve_for": [
+        "s"
+      ],
+      "expected_as_specified": {
+        "s": 0.04
+      },
+      "expected_SI": {
+        "s": 0.04
+      },
+      "actual_SI": {
+        "s": {
+          "value": 0.03999999999999989,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_slip (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "s": {
+          "absolute_error": 1.1102230246251565e-16,
+          "relative_error": 2.7755575615628914e-15,
+          "allowed_absolute_error": 8e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "n1 = 30, n2 = 7.2 rev/s; s = 1 - (7.2/30)*(0.8/0.2) = 1 - 0.96 = 0.04 (4% slip)"
+      }
+    },
+    {
+      "id": "belts_chains-011",
+      "calculator": "belts_chains.belt_slip",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "s": 0.04,
+        "n1": "1800 1/min",
+        "D1": "200 mm",
+        "D2": "800 mm"
+      },
+      "solve_for": [
+        "n2"
+      ],
+      "expected_as_specified": {
+        "n2": "7.2 Hz"
+      },
+      "expected_SI": {
+        "n2": 7.2
+      },
+      "actual_SI": {
+        "n2": {
+          "value": 7.199999999999999,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.belt_slip (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n2": {
+          "absolute_error": 8.881784197001252e-16,
+          "relative_error": 1.2335811384723962e-16,
+          "allowed_absolute_error": 0.014400000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "n2 = n1*D1/D2*(1 - s) = 30*0.25*0.96 = 7.2 rev/s"
+      }
+    },
+    {
+      "id": "belts_chains-012",
+      "calculator": "belts_chains.v_belt_selection",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K_s": 1.3,
+        "P": "5 kW",
+        "P_r": "2 kW",
+        "C_theta": 0.95,
+        "C_L": 0.98
+      },
+      "solve_for": [
+        "P_d",
+        "N_b"
+      ],
+      "expected_as_specified": {
+        "P_d": "6.5 kW",
+        "N_b": 3.4909
+      },
+      "expected_SI": {
+        "P_d": 6500.0,
+        "N_b": 3.4909
+      },
+      "actual_SI": {
+        "P_d": {
+          "value": 6500.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.v_belt_selection (symbolic)"
+        },
+        "N_b": {
+          "value": 3.490870032223416,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.v_belt_selection (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P_d": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 13.0,
+          "passed": true
+        },
+        "N_b": {
+          "absolute_error": 2.9967776583816885e-05,
+          "relative_error": 8.584541689483196e-06,
+          "allowed_absolute_error": 0.0069818,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P_d = 1.3*5000 = 6500 W; N_b = 6500/(2000*0.95*0.98) = 6500/1862 = 3.4909 -> use 4 belts"
+      }
+    },
+    {
+      "id": "belts_chains-013",
+      "calculator": "belts_chains.chain_length",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C_p": 30,
+        "p": "12.7 mm",
+        "N1": 17,
+        "N2": 51
+      },
+      "solve_for": [
+        "L",
+        "L_p",
+        "L_links"
+      ],
+      "expected_as_specified": {
+        "L_p": 94.9761,
+        "L_links": 96,
+        "L": "1.20620 m"
+      },
+      "expected_SI": {
+        "L_p": 94.9761,
+        "L_links": 96.0,
+        "L": 1.2062
+      },
+      "actual_SI": {
+        "L_p": {
+          "value": 94.97606073575452,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.chain_length (procedure)"
+        },
+        "L_links": {
+          "value": 96.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.chain_length (procedure)"
+        },
+        "L": {
+          "value": 1.2061959713440824,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.chain_length (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "L_p": {
+          "absolute_error": 3.92642454869474e-05,
+          "relative_error": 4.1341185294982e-07,
+          "allowed_absolute_error": 0.18995220000000002,
+          "passed": true
+        },
+        "L_links": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.192,
+          "passed": true
+        },
+        "L": {
+          "absolute_error": 4.028655917531765e-06,
+          "relative_error": 3.3399568210344596e-06,
+          "allowed_absolute_error": 0.0024124,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L_p = 2*30 + (17+51)/2 + (51-17)^2/(4*pi^2*30) = 60 + 34 + 1156/1184.35 = 94 + 0.97606 = 94.9761; links = ceil(94.9761/2)*2 = 96; L = 94.9761*0.0127 = 1.20620 m"
+      }
+    },
+    {
+      "id": "belts_chains-014",
+      "calculator": "belts_chains.chain_length",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p": "12.7 mm",
+        "N1": 17,
+        "N2": 51,
+        "L": "1.20620 m"
+      },
+      "solve_for": [
+        "C_p"
+      ],
+      "expected_as_specified": {
+        "C_p": 30
+      },
+      "expected_SI": {
+        "C_p": 30.0
+      },
+      "actual_SI": {
+        "C_p": {
+          "value": 30.000161231346464,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.chain_length (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "C_p": {
+          "absolute_error": 0.00016123134646406356,
+          "relative_error": 5.374378215468785e-06,
+          "allowed_absolute_error": 0.015,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: L_p = 94.9761 pitches; solve 2 C_p + 34 + 29.2818/C_p = 94.9761 -> 2 C_p^2 - 60.9761 C_p + 29.2818 = 0 -> C_p = 30 (the other root 0.488 is discarded by the nearest-to-typical choice)"
+      }
+    },
+    {
+      "id": "belts_chains-015",
+      "calculator": "belts_chains.chain_velocity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p": "12.7 mm",
+        "N": 17,
+        "n": "1200 1/min"
+      },
+      "solve_for": [
+        "v"
+      ],
+      "expected_as_specified": {
+        "v": "4.318 m/s"
+      },
+      "expected_SI": {
+        "v": 4.318
+      },
+      "actual_SI": {
+        "v": {
+          "value": 4.318,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.chain_velocity (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "v": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.008636,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "n = 20 rev/s; v = p N n = 0.0127*17*20 = 4.318 m/s"
+      }
+    },
+    {
+      "id": "belts_chains-016",
+      "calculator": "belts_chains.chordal_speed",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "N": 17
+      },
+      "solve_for": [
+        "delta_v"
+      ],
+      "expected_as_specified": {
+        "delta_v": 0.017124
+      },
+      "expected_SI": {
+        "delta_v": 0.017124
+      },
+      "actual_SI": {
+        "delta_v": {
+          "value": 0.01712420178169438,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.chordal_speed (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "delta_v": {
+          "absolute_error": 2.0178169438112015e-07,
+          "relative_error": 1.1783560755729977e-05,
+          "allowed_absolute_error": 3.4248e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark (Shigley chordal-action table, recalled; not re-read): delta_v/V = 0.017124 at N = 17 teeth. Verified by independent arithmetic: (pi/17)(1/sin(pi/17) - 1/tan(pi/17)) = 0.184800 x (5.442174 - 5.349525) = 0.184800 x 0.092649 = 0.017124."
+      }
+    },
+    {
+      "id": "belts_chains-017",
+      "calculator": "belts_chains.chordal_speed",
+      "classification": "reference landmark; original citation confidence retained in source; not a certified external benchmark",
+      "inputs": {
+        "N": 6
+      },
+      "solve_for": [
+        "delta_v"
+      ],
+      "expected_as_specified": {
+        "delta_v": 0.1403
+      },
+      "expected_SI": {
+        "delta_v": 0.1403
+      },
+      "actual_SI": {
+        "delta_v": {
+          "value": 0.14029786907948893,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.chordal_speed (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "delta_v": {
+          "absolute_error": 2.130920511073109e-06,
+          "relative_error": 1.5188314405367846e-05,
+          "allowed_absolute_error": 0.00028060000000000004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "cited",
+        "ref": "Landmark (Shigley chordal-action table, recalled; not re-read): delta_v/V = 0.1403 at N = 6 teeth. Verified by independent arithmetic: (pi/6)(1/sin(pi/6) - 1/tan(pi/6)) = 0.523599 x (2 - 1.732051) = 0.523599 x 0.267949 = 0.140298."
+      }
+    },
+    {
+      "id": "belts_chains-018",
+      "calculator": "belts_chains.rope_working_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F_break": "200 kN",
+        "n": 5
+      },
+      "solve_for": [
+        "F_work"
+      ],
+      "expected_as_specified": {
+        "F_work": "40 kN"
+      },
+      "expected_SI": {
+        "F_work": 40000.0
+      },
+      "actual_SI": {
+        "F_work": {
+          "value": 40000.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.rope_working_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "F_work": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 80.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "F_work = 200000/5 = 40000 N"
+      }
+    },
+    {
+      "id": "belts_chains-019",
+      "calculator": "belts_chains.rope_working_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F_work": "40 kN",
+        "F_break": "200 kN"
+      },
+      "solve_for": [
+        "n"
+      ],
+      "expected_as_specified": {
+        "n": 5
+      },
+      "expected_SI": {
+        "n": 5.0
+      },
+      "actual_SI": {
+        "n": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.rope_working_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "n": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "n = F_break/F_work = 200000/40000 = 5"
+      }
+    },
+    {
+      "id": "belts_chains-020",
+      "calculator": "belts_chains.rope_bending_stress",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E_r": "84 GPa",
+        "d_w": "2 mm",
+        "D": "600 mm"
+      },
+      "solve_for": [
+        "sigma_b"
+      ],
+      "expected_as_specified": {
+        "sigma_b": "280 MPa"
+      },
+      "expected_SI": {
+        "sigma_b": 280000000.0
+      },
+      "actual_SI": {
+        "sigma_b": {
+          "value": 280000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.rope_bending_stress (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_b": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 560000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma_b = E_r d_w/D = 84e9*0.002/0.6 = 2.8e8 Pa"
+      }
+    },
+    {
+      "id": "belts_chains-021",
+      "calculator": "belts_chains.rope_pressure",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T": "10 kN",
+        "d": "12 mm",
+        "D": "600 mm",
+        "Su": "1770 MPa"
+      },
+      "solve_for": [
+        "p",
+        "r"
+      ],
+      "expected_as_specified": {
+        "p": "2.7778 MPa",
+        "r": 0.0015694
+      },
+      "expected_SI": {
+        "p": 2777800.0,
+        "r": 0.0015694
+      },
+      "actual_SI": {
+        "p": {
+          "value": 2777777.777777778,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.rope_pressure (symbolic)"
+        },
+        "r": {
+          "value": 0.001569365976145637,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc belts_chains.rope_pressure (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "p": {
+          "absolute_error": 22.22222222201526,
+          "relative_error": 7.99993600043749e-06,
+          "allowed_absolute_error": 5555.6,
+          "passed": true
+        },
+        "r": {
+          "absolute_error": 3.4023854363031056e-08,
+          "relative_error": 2.167952998791325e-05,
+          "allowed_absolute_error": 3.1388000000000003e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "p = 2*10000/(0.012*0.6) = 20000/0.0072 = 2.7778e6 Pa; r = p/Su = 2.7778e6/1770e6 = 0.0015694"
+      }
+    }
+  ],
+  "passed": 21,
+  "failed": 0
+}

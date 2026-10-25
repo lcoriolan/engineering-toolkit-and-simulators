@@ -1,0 +1,1622 @@
+{
+  "section": "columns",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k columns",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "columns.euler_critical_load": {
+      "title": "Euler critical buckling load (P_cr = \u03c0\u00b2EI/(KL)\u00b2)",
+      "variables": [
+        {
+          "name": "P_cr",
+          "unit": "N",
+          "desc": "critical (Euler) buckling load",
+          "lo": null,
+          "hi": null,
+          "label": "Pcr",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "m^4",
+          "desc": "second moment of area about the buckling axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "effective length factor (1.0 pinned\u2013pinned; 0.5 fixed\u2013fixed; 0.7 fixed\u2013pinned; 2.0 fixed\u2013free)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "actual unsupported length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P_cr = pi**2*E*I/(K*L)**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P_cr"
+      ],
+      "assumptions": [
+        "Elastic buckling of a long, slender column: the material stays below its proportional limit. I must be the minimum second moment for the buckling axis. Short/intermediate columns buckle inelastically \u2014 use the Johnson or column_critical calculator."
+      ],
+      "method_references": [
+        "Euler critical load P_cr = \u03c0\u00b2EI/(KL)\u00b2"
+      ],
+      "synthetic_example": {
+        "E": 200000000000.0,
+        "I": 1e-06,
+        "K": 1.0,
+        "L": 2.0
+      }
+    },
+    "columns.slenderness_ratio": {
+      "title": "Slenderness ratio and radius of gyration (\u03bb = KL/r, r = \u221a(I/A))",
+      "variables": [
+        {
+          "name": "lam",
+          "unit": "",
+          "desc": "slenderness ratio KL/r",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "effective length factor (1.0 pinned\u2013pinned; 0.5 fixed\u2013fixed; 0.7 fixed\u2013pinned; 2.0 fixed\u2013free)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "unsupported length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radius of gyration about the buckling axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "m^4",
+          "desc": "second moment of area about the buckling axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "lam = K*L/r",
+        "r = sqrt(I/A)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "lam",
+        "r"
+      ],
+      "assumptions": [
+        "\u03bb is dimensionless (radians are not involved); enter it as a bare number."
+      ],
+      "method_references": [
+        "Slenderness ratio \u03bb = KL/r; radius of gyration r = \u221a(I/A)"
+      ],
+      "synthetic_example": {
+        "K": 1.0,
+        "L": 2.0,
+        "I": 1e-06,
+        "A": 0.001
+      }
+    },
+    "columns.euler_critical_stress": {
+      "title": "Euler critical stress (\u03c3_cr = \u03c0\u00b2E/\u03bb\u00b2)",
+      "variables": [
+        {
+          "name": "sigma_cr",
+          "unit": "Pa",
+          "desc": "critical (Euler) buckling stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3cr",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam",
+          "unit": "",
+          "desc": "slenderness ratio KL/r",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_cr = pi**2*E/lam**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_cr"
+      ],
+      "assumptions": [
+        "Valid for the elastic range (\u03bb at/above the transition; \u03c3_cr \u2264 proportional limit)."
+      ],
+      "method_references": [
+        "Euler critical stress \u03c3_cr = \u03c0\u00b2E/\u03bb\u00b2"
+      ],
+      "synthetic_example": {
+        "E": 200000000000.0,
+        "lam": 100.0
+      }
+    },
+    "columns.johnson_column": {
+      "title": "Johnson parabolic critical stress (intermediate columns)",
+      "variables": [
+        {
+          "name": "sigma_cr",
+          "unit": "Pa",
+          "desc": "Johnson critical stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3cr",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "Pa",
+          "desc": "yield (or compressive yield) strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam",
+          "unit": "",
+          "desc": "slenderness ratio KL/r",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_cr = Sy - Sy**2*lam**2/(4*pi**2*E)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_cr"
+      ],
+      "assumptions": [
+        "Johnson (parabolic) approximation for short/intermediate columns with \u03bb below the Euler\u2013Johnson transition \u03bb_t = \u03c0\u221a(2E/Sy). \u03c3_cr \u2264 Sy; do not apply beyond \u03bb_t (the formula turns negative) \u2014 use Euler there."
+      ],
+      "method_references": [
+        "Johnson parabolic formula (J. B. Johnson, tangent-parabola for intermediate columns)"
+      ],
+      "synthetic_example": {
+        "Sy": 250000000.0,
+        "E": 200000000000.0,
+        "lam": 50.0
+      }
+    },
+    "columns.column_critical": {
+      "title": "Column critical load/stress with the Euler\u2013Johnson transition",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Sy",
+          "unit": "Pa",
+          "desc": "yield strength",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "effective length factor (1.0 pinned\u2013pinned; 0.5 fixed\u2013fixed; 0.7 fixed\u2013pinned; 2.0 fixed\u2013free)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "unsupported length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "m^4",
+          "desc": "second moment of area about the buckling axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radius of gyration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam",
+          "unit": "",
+          "desc": "slenderness ratio KL/r",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam_t",
+          "unit": "",
+          "desc": "transition slenderness \u03c0\u221a(2E/Sy)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bbt",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_cr",
+          "unit": "Pa",
+          "desc": "critical stress (Johnson or Euler)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3cr",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_cr",
+          "unit": "N",
+          "desc": "critical load = \u03c3_cr\u00b7A",
+          "lo": null,
+          "hi": null,
+          "label": "Pcr",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _column_critical(values):\n    \"\"\"Critical load/stress of a concentrically loaded column, Euler or Johnson by slenderness.\n\n    Returns radius of gyration r, slenderness \u03bb = KL/r, the Euler\u2013Johnson transition slenderness\n    \u03bb_t = \u03c0\u00b7sqrt(2E/Sy), the critical stress \u03c3_cr (Johnson below \u03bb_t, Euler at/above) and P_cr = \u03c3_cr\u00b7A.\n    \"\"\"\n    E, Sy, K, L, I, A = values['E'], values['Sy'], values['K'], values['L'], values['I'], values['A']\n    r = math.sqrt(I / A)\n    lam = K * L / r\n    lam_t = math.sqrt(2 * PI ** 2 * E / Sy)\n    if lam < lam_t:\n        sigma_cr = Sy - Sy ** 2 * lam ** 2 / (4 * PI ** 2 * E)  # Johnson (short/intermediate)\n    else:\n        sigma_cr = PI ** 2 * E / lam ** 2                     # Euler (long/slender)\n    return {'r': r, 'lam': lam, 'lam_t': lam_t, 'sigma_cr': sigma_cr, 'P_cr': sigma_cr * A}\n",
+        "source": "columns.py",
+        "line": 31
+      },
+      "outputs": [
+        "r",
+        "lam",
+        "lam_t",
+        "sigma_cr",
+        "P_cr"
+      ],
+      "assumptions": [
+        "Chooses Johnson for \u03bb < \u03bb_t = \u03c0\u221a(2E/Sy) and Euler for \u03bb \u2265 \u03bb_t; the two curves meet at \u03c3_cr = Sy/2. Inelastic behaviour is idealized by the Johnson parabola \u2014 apply a safety factor and account for imperfections."
+      ],
+      "method_references": [
+        "Euler and Johnson column formulas with the tangent transition \u03bb_t = \u03c0\u221a(2E/Sy)"
+      ],
+      "synthetic_example": {
+        "E": 200000000000.0,
+        "Sy": 250000000.0,
+        "K": 1.0,
+        "L": 2.0,
+        "I": 1e-06,
+        "A": 0.001
+      }
+    },
+    "columns.secant_column": {
+      "title": "Secant formula: eccentrically loaded column maximum stress",
+      "variables": [
+        {
+          "name": "sigma_max",
+          "unit": "Pa",
+          "desc": "maximum compressive stress (extreme fibre)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3max",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P",
+          "unit": "N",
+          "desc": "compressive load",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "e",
+          "unit": "m",
+          "desc": "load eccentricity from the centroid",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m",
+          "desc": "extreme-fibre distance from the neutral axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "radius of gyration",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "effective length factor (1.0 pinned\u2013pinned; 0.5 fixed\u2013fixed; 0.7 fixed\u2013pinned; 2.0 fixed\u2013free)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "unsupported length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _secant_column(values):\n    \"\"\"Maximum compressive stress of an eccentrically loaded column (secant formula).\n\n    \u03c3_max = (P/A)[1 + (ec/r\u00b2)sec(arg)] with arg = KL/(2r)\u00b7\u221a(P/(EA)). Requires arg < \u03c0/2: beyond it\n    the column is past its first instability and the formula is not physical (this also keeps the\n    numeric inversion unique, since \u03c3_max is monotonic in every input over the physical range).\n    \"\"\"\n    P, A, e, c, r, E, K, L = (values[k] for k in ('P', 'A', 'e', 'c', 'r', 'E', 'K', 'L'))\n    arg = K * L / (2 * r) * math.sqrt(P / (E * A))\n    if arg >= PI / 2:\n        raise MechError('secant argument \u2265 \u03c0/2: the column is past its instability limit')\n    sigma_max = (P / A) * (1 + e * c / (r ** 2 * math.cos(arg)))\n    return {'sigma_max': sigma_max}\n",
+        "source": "columns.py",
+        "line": 48
+      },
+      "outputs": [
+        "sigma_max"
+      ],
+      "assumptions": [
+        "Effective length KL used in the secant argument (K = 1 for pinned\u2013pinned), all eccentricity in one plane, elastic material; \u03c3_max is at the concave extreme fibre. The secant argument must stay below \u03c0/2; beyond it the column is unstable. For e = 0 this does not reduce to Euler (it is a stress, not a buckling) \u2014 use column_critical for concentric load."
+      ],
+      "method_references": [
+        "Secant formula for an eccentrically loaded column"
+      ],
+      "synthetic_example": {
+        "P": 50000.0,
+        "A": 0.002,
+        "e": 0.01,
+        "c": 0.02,
+        "r": 0.025,
+        "E": 200000000000.0,
+        "K": 1.0,
+        "L": 1.5
+      }
+    },
+    "columns.lateral_torsional_buckling": {
+      "title": "Elastic lateral-torsional buckling moment of a doubly symmetric I-beam",
+      "variables": [
+        {
+          "name": "M_cr",
+          "unit": "N*m",
+          "desc": "elastic critical moment",
+          "lo": null,
+          "hi": null,
+          "label": "Mcr",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_b",
+          "unit": "",
+          "desc": "moment-gradient factor (1.0 for uniform moment)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G",
+          "unit": "Pa",
+          "desc": "shear modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I_y",
+          "unit": "m^4",
+          "desc": "second moment of area about the weak (y) axis",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "J",
+          "unit": "m^4",
+          "desc": "St-Venant torsion constant",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C_w",
+          "unit": "m^6",
+          "desc": "warping constant",
+          "lo": null,
+          "hi": null,
+          "label": "Cw",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "unbraced length (between lateral restraints)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "M_cr = C_b*pi/L*sqrt(E*I_y*G*J)*sqrt(1 + pi**2*E*C_w/(G*J*L**2))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "M_cr"
+      ],
+      "assumptions": [
+        "Doubly symmetric I-section under uniform moment about the strong axis, elastic, ends laterally supported but free to warp. C_b (user input) accounts for a non-uniform moment diagram. J and C_w are section properties the user must supply."
+      ],
+      "method_references": [
+        "Elastic lateral-torsional buckling of a doubly symmetric I-section under uniform moment (Timoshenko/Gere closed form, recalled)"
+      ],
+      "synthetic_example": {
+        "C_b": 1.0,
+        "E": 200000000000.0,
+        "G": 77000000000.0,
+        "I_y": 1e-06,
+        "J": 1e-07,
+        "C_w": 1e-09,
+        "L": 4.0
+      }
+    },
+    "columns.plate_buckling": {
+      "title": "Elastic buckling of a flat plate (\u03c3_cr = k\u03c0\u00b2E/(12(1\u2212\u03bd\u00b2))(t/b)\u00b2)",
+      "variables": [
+        {
+          "name": "sigma_cr",
+          "unit": "Pa",
+          "desc": "critical plate buckling stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3cr",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "desc": "plate buckling coefficient (4.0 for simply supported edges, uniaxial compression)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu",
+          "unit": "",
+          "desc": "Poisson ratio",
+          "lo": null,
+          "hi": 0.5,
+          "label": "\u03bd",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "plate thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "b",
+          "unit": "m",
+          "desc": "loaded-edge width",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_cr = k*pi**2*E/(12*(1 - nu**2))*(t/b)**2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_cr"
+      ],
+      "assumptions": [
+        "Rectangular plate, elastic; k is a user input from the edge-support and loading condition (standard tables). \u03c3_cr \u221d (t/b)\u00b2: halving thickness quarters the capacity. Plates carry load beyond the critical stress (post-buckling), unlike columns."
+      ],
+      "method_references": [
+        "Elastic plate buckling \u03c3_cr = k\u03c0\u00b2E/(12(1\u2212\u03bd\u00b2))(t/b)\u00b2"
+      ],
+      "synthetic_example": {
+        "k": 4.0,
+        "E": 200000000000.0,
+        "nu": 0.3,
+        "t": 0.01,
+        "b": 0.5
+      }
+    },
+    "columns.shell_buckling_axial": {
+      "title": "Axial buckling of a thin cylindrical shell (with knock-down factor)",
+      "variables": [
+        {
+          "name": "sigma_cr",
+          "unit": "Pa",
+          "desc": "classical (linear elastic) axial buckling stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3cr",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_des",
+          "unit": "Pa",
+          "desc": "knocked-down design buckling stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3des",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "gamma",
+          "unit": "",
+          "desc": "knock-down factor (empirical, from test data)",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu",
+          "unit": "",
+          "desc": "Poisson ratio",
+          "lo": null,
+          "hi": 0.5,
+          "label": "\u03bd",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "wall thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "m",
+          "desc": "mean radius",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_cr = E*t/(r*sqrt(3*(1 - nu**2)))",
+        "sigma_des = gamma*sigma_cr"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_cr",
+        "sigma_des"
+      ],
+      "assumptions": [
+        "Classical linear-elastic axial buckling of a perfect thin cylinder. Real shells buckle far below this because of imperfections, so a knock-down factor \u03b3 (typically 0.1\u20130.7 from test data) must be applied. Thin wall only (t/r small)."
+      ],
+      "method_references": [
+        "Classical axial buckling of a thin cylinder \u03c3_cr = Et/(r\u221a(3(1\u2212\u03bd\u00b2)))"
+      ],
+      "synthetic_example": {
+        "gamma": 0.5,
+        "E": 200000000000.0,
+        "nu": 0.3,
+        "t": 0.002,
+        "r": 0.2
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "columns-001",
+      "calculator": "columns.euler_critical_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "1e6 mm^4",
+        "K": 1,
+        "L": "2 m"
+      },
+      "solve_for": [
+        "P_cr"
+      ],
+      "expected_as_specified": {
+        "P_cr": "493.480 kN"
+      },
+      "expected_SI": {
+        "P_cr": 493480.0
+      },
+      "actual_SI": {
+        "P_cr": {
+          "value": 493480.22005446797,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc columns.euler_critical_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "P_cr": {
+          "absolute_error": 0.22005446796538308,
+          "relative_error": 4.4592378204868096e-07,
+          "allowed_absolute_error": 986.96,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P = \u03c0\u00b2EI/(KL)\u00b2 = 9.869604\u00b7200e9\u00b71e-6/(1\u00b72)\u00b2 = 1.9739208e12\u00b71e-6/4 = 493480 N = 493.480 kN"
+      }
+    },
+    {
+      "id": "columns-002",
+      "calculator": "columns.euler_critical_load",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P_cr": "493.480 kN",
+        "E": "200 GPa",
+        "K": 1,
+        "L": "2 m"
+      },
+      "solve_for": [
+        "I"
+      ],
+      "expected_as_specified": {
+        "I": "1e6 mm^4"
+      },
+      "expected_SI": {
+        "I": 1.0000000000000002e-06
+      },
+      "actual_SI": {
+        "I": {
+          "value": 9.99999554076417e-07,
+          "unit": "m^4",
+          "kind": "derived",
+          "method": "mechcalc columns.euler_critical_load (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "I": {
+          "absolute_error": 4.4592358315239387e-13,
+          "relative_error": 4.459235831523938e-07,
+          "allowed_absolute_error": 2.0000000000000005e-09,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "I = P_cr\u00b7(KL)\u00b2/(\u03c0\u00b2E) = 493480\u00b74/(9.869604\u00b7200e9) = 1.9739208e6/1.9739208e12 = 1e-6 m^4 = 1e6 mm^4"
+      }
+    },
+    {
+      "id": "columns-003",
+      "calculator": "columns.slenderness_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K": 1,
+        "L": "2 m",
+        "I": "1e6 mm^4",
+        "A": "1000 mm^2"
+      },
+      "solve_for": [
+        "lam",
+        "r"
+      ],
+      "expected_as_specified": {
+        "r": "31.6228 mm",
+        "lam": 63.2456
+      },
+      "expected_SI": {
+        "r": 0.0316228,
+        "lam": 63.2456
+      },
+      "actual_SI": {
+        "r": {
+          "value": 0.0316227766016838,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc columns.slenderness_ratio (symbolic)"
+        },
+        "lam": {
+          "value": 63.24555320336758,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc columns.slenderness_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "r": {
+          "absolute_error": 2.3398316201239666e-08,
+          "relative_error": 7.399191786065644e-07,
+          "allowed_absolute_error": 6.32456e-05,
+          "passed": true
+        },
+        "lam": {
+          "absolute_error": 4.679663242512788e-05,
+          "relative_error": 7.399191789646692e-07,
+          "allowed_absolute_error": 0.1264912,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = \u221a(I/A) = \u221a(1e-6/1e-3) = \u221a0.001 = 0.0316228 m = 31.6228 mm; \u03bb = KL/r = 2/0.0316228 = 63.2456"
+      }
+    },
+    {
+      "id": "columns-004",
+      "calculator": "columns.euler_critical_stress",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "200 GPa",
+        "lam": 100
+      },
+      "solve_for": [
+        "sigma_cr"
+      ],
+      "expected_as_specified": {
+        "sigma_cr": "197.392 MPa"
+      },
+      "expected_SI": {
+        "sigma_cr": 197392000.0
+      },
+      "actual_SI": {
+        "sigma_cr": {
+          "value": 197392088.02178717,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc columns.euler_critical_stress (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_cr": {
+          "absolute_error": 88.02178716659546,
+          "relative_error": 4.459237819496001e-07,
+          "allowed_absolute_error": 394784.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c3_cr = \u03c0\u00b2E/\u03bb\u00b2 = 9.869604\u00b7200e9/10000 = 1.9739208e12/1e4 = 197.392 MPa"
+      }
+    },
+    {
+      "id": "columns-005",
+      "calculator": "columns.johnson_column",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Sy": "250 MPa",
+        "E": "200 GPa",
+        "lam": 50
+      },
+      "solve_for": [
+        "sigma_cr"
+      ],
+      "expected_as_specified": {
+        "sigma_cr": "230.211 MPa"
+      },
+      "expected_SI": {
+        "sigma_cr": 230211000.0
+      },
+      "actual_SI": {
+        "sigma_cr": {
+          "value": 230210706.31985593,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc columns.johnson_column (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_cr": {
+          "absolute_error": 293.680144071579,
+          "relative_error": 1.2756998756426886e-06,
+          "allowed_absolute_error": 460422.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c3_cr = Sy \u2212 Sy\u00b2\u03bb\u00b2/(4\u03c0\u00b2E) = 250e6 \u2212 (250e6)\u00b2\u00b72500/(4\u00b79.869604\u00b7200e9) = 250e6 \u2212 1.5625e20/7.8956832e12 = 250e6 \u2212 19.7893e6 = 230.211 MPa"
+      }
+    },
+    {
+      "id": "columns-006",
+      "calculator": "columns.column_critical",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "200 GPa",
+        "Sy": "250 MPa",
+        "K": 1,
+        "L": "2 m",
+        "I": "1e6 mm^4",
+        "A": "1000 mm^2"
+      },
+      "solve_for": [
+        "r",
+        "lam",
+        "lam_t",
+        "sigma_cr",
+        "P_cr"
+      ],
+      "expected_as_specified": {
+        "r": "31.6228 mm",
+        "lam": 63.2456,
+        "lam_t": 125.6637,
+        "sigma_cr": "218.337 MPa",
+        "P_cr": "218.337 kN"
+      },
+      "expected_SI": {
+        "r": 0.0316228,
+        "lam": 63.2456,
+        "lam_t": 125.6637,
+        "sigma_cr": 218337000.0,
+        "P_cr": 218337.0
+      },
+      "actual_SI": {
+        "r": {
+          "value": 0.0316227766016838,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc columns.column_critical (procedure)"
+        },
+        "lam": {
+          "value": 63.24555320336758,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc columns.column_critical (procedure)"
+        },
+        "lam_t": {
+          "value": 125.66370614359172,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc columns.column_critical (procedure)"
+        },
+        "sigma_cr": {
+          "value": 218337130.11176944,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc columns.column_critical (procedure)"
+        },
+        "P_cr": {
+          "value": 218337.13011176945,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc columns.column_critical (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "r": {
+          "absolute_error": 2.3398316201239666e-08,
+          "relative_error": 7.399191786065644e-07,
+          "allowed_absolute_error": 6.32456e-05,
+          "passed": true
+        },
+        "lam": {
+          "absolute_error": 4.679663242512788e-05,
+          "relative_error": 7.399191789646692e-07,
+          "allowed_absolute_error": 0.1264912,
+          "passed": true
+        },
+        "lam_t": {
+          "absolute_error": 6.143591718910102e-06,
+          "relative_error": 4.88891519102979e-08,
+          "allowed_absolute_error": 0.25132740000000003,
+          "passed": true
+        },
+        "sigma_cr": {
+          "absolute_error": 130.11176943778992,
+          "relative_error": 5.959217605709977e-07,
+          "allowed_absolute_error": 436674.0,
+          "passed": true
+        },
+        "P_cr": {
+          "absolute_error": 0.1301117694529239,
+          "relative_error": 5.959217606403125e-07,
+          "allowed_absolute_error": 436.67400000000004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 0.0316228 m, \u03bb = 63.2456. \u03bb_t = \u03c0\u221a(2E/Sy) = \u03c0\u221a(2\u00b7200e9/250e6) = \u03c0\u221a1600 = 125.6637. \u03bb < \u03bb_t so Johnson: \u03c3_cr = 250e6 \u2212 (250e6)\u00b2\u00b763.2456\u00b2/(4\u03c0\u00b2\u00b7200e9) = 250e6 \u2212 6.25e16\u00b74000/7.8956832e12 = 250e6 \u2212 31.6629e6 = 218.337 MPa; P_cr = \u03c3_cr\u00b7A = 218.337e6\u00b71e-3 = 218.337 kN"
+      }
+    },
+    {
+      "id": "columns-007",
+      "calculator": "columns.secant_column",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "P": "50 kN",
+        "A": "2000 mm^2",
+        "e": "10 mm",
+        "c": "20 mm",
+        "r": "25 mm",
+        "E": "200 GPa",
+        "K": 1,
+        "L": "1.5 m"
+      },
+      "solve_for": [
+        "sigma_max"
+      ],
+      "expected_as_specified": {
+        "sigma_max": "33.4721 MPa"
+      },
+      "expected_SI": {
+        "sigma_max": 33472099.999999996
+      },
+      "actual_SI": {
+        "sigma_max": {
+          "value": 33472104.90991197,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc columns.secant_column (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_max": {
+          "absolute_error": 4.909911975264549,
+          "relative_error": 1.4668670251536502e-07,
+          "allowed_absolute_error": 66944.2,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "arg = KL/(2r)\u00b7\u221a(P/(EA)) = 1.5/0.05\u00b7\u221a(50000/(200e9\u00b70.002)) = 30\u00b7\u221a1.25e-4 = 30\u00b70.0111803 = 0.335410 rad; cos = 0.944481; \u03c3_max = (P/A)(1 + ec/(r\u00b2cos)) = 25e6\u00b7(1 + 0.0002/(0.000625\u00b70.944481)) = 25e6\u00b7(1 + 0.338812) = 33.4721 MPa"
+      }
+    },
+    {
+      "id": "columns-008",
+      "calculator": "columns.secant_column",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_max": "33.4721 MPa",
+        "P": "50 kN",
+        "A": "2000 mm^2",
+        "c": "20 mm",
+        "r": "25 mm",
+        "E": "200 GPa",
+        "K": 1,
+        "L": "1.5 m"
+      },
+      "solve_for": [
+        "e"
+      ],
+      "expected_as_specified": {
+        "e": "10 mm"
+      },
+      "expected_SI": {
+        "e": 0.01
+      },
+      "actual_SI": {
+        "e": {
+          "value": 0.009999994204613666,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc columns.secant_column (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "e": {
+          "absolute_error": 5.7953863340232115e-09,
+          "relative_error": 5.795386334023211e-07,
+          "allowed_absolute_error": 2e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c3_max = (P/A)(1 + ec/(r\u00b2cos arg)) \u2192 A\u03c3/P \u2212 1 = ec/(r\u00b2cos arg) \u2192 e = (r\u00b2/c)(A\u03c3/P \u2212 1)cos(arg). A\u03c3/P = 0.002\u00b733.4721e6/50000 = 1.338884; cos(arg) = 0.944481; e = (0.000625/0.02)\u00b70.338884\u00b70.944481 = 0.03125\u00b70.338884\u00b70.944481 = 0.010005 m = 10 mm"
+      }
+    },
+    {
+      "id": "columns-009",
+      "calculator": "columns.lateral_torsional_buckling",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C_b": 1,
+        "E": "200 GPa",
+        "G": "77 GPa",
+        "I_y": "1e6 mm^4",
+        "J": "1e5 mm^4",
+        "C_w": "1e-9 m^6",
+        "L": "4 m"
+      },
+      "solve_for": [
+        "M_cr"
+      ],
+      "expected_as_specified": {
+        "M_cr": "31.0672 kN*m"
+      },
+      "expected_SI": {
+        "M_cr": 31067.2
+      },
+      "actual_SI": {
+        "M_cr": {
+          "value": 31067.178727379058,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc columns.lateral_torsional_buckling (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "M_cr": {
+          "absolute_error": 0.02127262094290927,
+          "relative_error": 6.847292624668226e-07,
+          "allowed_absolute_error": 62.1344,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "M_cr = C_b\u00b7(\u03c0/L)\u00b7\u221a(E\u00b7I_y\u00b7G\u00b7J)\u00b7\u221a(1 + \u03c0\u00b2E\u00b7C_w/(G\u00b7J\u00b7L\u00b2)). E\u00b7I_y\u00b7G\u00b7J = 200e9\u00b71e-6\u00b777e9\u00b71e-7 = 1.54e9, \u221a = 39242.85; \u03c0/L = 0.785398; inner = 9.869604\u00b7200e9\u00b71e-9/(77e9\u00b71e-7\u00b716) = 1973.92/123200 = 0.016022, \u221a(1.016022) = 1.00798; M_cr = 0.785398\u00b739242.85\u00b71.00798 = 31067.2 N\u00b7m = 31.0672 kN\u00b7m"
+      }
+    },
+    {
+      "id": "columns-010",
+      "calculator": "columns.plate_buckling",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k": 4,
+        "E": "200 GPa",
+        "nu": 0.3,
+        "t": "10 mm",
+        "b": "500 mm"
+      },
+      "solve_for": [
+        "sigma_cr"
+      ],
+      "expected_as_specified": {
+        "sigma_cr": "289.219 MPa"
+      },
+      "expected_SI": {
+        "sigma_cr": 289219000.0
+      },
+      "actual_SI": {
+        "sigma_cr": {
+          "value": 289219176.58869916,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc columns.plate_buckling (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_cr": {
+          "absolute_error": 176.58869916200638,
+          "relative_error": 6.105708793751668e-07,
+          "allowed_absolute_error": 578438.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c3_cr = k\u03c0\u00b2E/(12(1\u2212\u03bd\u00b2))\u00b7(t/b)\u00b2 = 4\u00b79.869604\u00b7200e9/(12\u00b70.91)\u00b7(0.02)\u00b2 = 7.8956832e12/10.92\u00b74e-4 = 7.230845e11\u00b74e-4 = 289.219 MPa"
+      }
+    },
+    {
+      "id": "columns-011",
+      "calculator": "columns.plate_buckling",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "sigma_cr": "289.219 MPa",
+        "k": 4,
+        "E": "200 GPa",
+        "nu": 0.3,
+        "b": "500 mm"
+      },
+      "solve_for": [
+        "t"
+      ],
+      "expected_as_specified": {
+        "t": "10 mm"
+      },
+      "expected_SI": {
+        "t": 0.01
+      },
+      "actual_SI": {
+        "t": {
+          "value": 0.009999996947147002,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc columns.plate_buckling (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "t": {
+          "absolute_error": 3.0528529981754815e-09,
+          "relative_error": 3.0528529981754815e-07,
+          "allowed_absolute_error": 2e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "t = b\u00b7\u221a(\u03c3_cr\u00b712(1\u2212\u03bd\u00b2)/(k\u03c0\u00b2E)) = 0.5\u00b7\u221a(289.219e6\u00b710.92/7.8956832e12) = 0.5\u00b7\u221a(3.158271e9/7.8956832e12) = 0.5\u00b7\u221a4e-4 = 0.5\u00b70.02 = 0.010 m = 10 mm"
+      }
+    },
+    {
+      "id": "columns-012",
+      "calculator": "columns.shell_buckling_axial",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "gamma": 0.5,
+        "E": "200 GPa",
+        "nu": 0.3,
+        "t": "2 mm",
+        "r": "200 mm"
+      },
+      "solve_for": [
+        "sigma_cr",
+        "sigma_des"
+      ],
+      "expected_as_specified": {
+        "sigma_cr": "1.21046 GPa",
+        "sigma_des": "605.228 MPa"
+      },
+      "expected_SI": {
+        "sigma_cr": 1210460000.0,
+        "sigma_des": 605228000.0
+      },
+      "actual_SI": {
+        "sigma_cr": {
+          "value": 1210455065.3376048,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc columns.shell_buckling_axial (symbolic)"
+        },
+        "sigma_des": {
+          "value": 605227532.6688024,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc columns.shell_buckling_axial (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_cr": {
+          "absolute_error": 4934.662395238876,
+          "relative_error": 4.076683570906e-06,
+          "allowed_absolute_error": 2420920.0,
+          "passed": true
+        },
+        "sigma_des": {
+          "absolute_error": 467.33119761943817,
+          "relative_error": 7.721572657237242e-07,
+          "allowed_absolute_error": 1210456.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c3_cr = Et/(r\u221a(3(1\u2212\u03bd\u00b2))) = 200e9\u00b70.002/(0.2\u00b7\u221a(2.73)) = 4e8/(0.2\u00b71.652271) = 4e8/0.330454 = 1210.46 MPa; \u03c3_des = \u03b3\u03c3_cr = 0.5\u00b71210.46 = 605.23 MPa"
+      }
+    }
+  ],
+  "passed": 12,
+  "failed": 0
+}

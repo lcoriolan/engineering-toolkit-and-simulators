@@ -1,0 +1,5632 @@
+{
+  "section": "fea",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k fea",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "fea.spring_element": {
+      "title": "Spring element: force and elongation (\u03b4 = u\u2082 \u2212 u\u2081)",
+      "variables": [
+        {
+          "name": "k",
+          "unit": "N/m",
+          "desc": "spring stiffness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u1",
+          "unit": "m",
+          "desc": "nodal displacement 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u2",
+          "unit": "m",
+          "desc": "nodal displacement 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "delta",
+          "unit": "m",
+          "desc": "elongation u2 \u2212 u1",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b4",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F1",
+          "unit": "N",
+          "desc": "element force at node 1 (\u2212k\u03b4)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F2",
+          "unit": "N",
+          "desc": "element force at node 2 (+k\u03b4)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "delta = u2 - u1",
+        "F2 = k*delta",
+        "F1 = -k*delta"
+      ],
+      "procedure": null,
+      "outputs": [
+        "delta",
+        "F1",
+        "F2"
+      ],
+      "assumptions": [
+        "The 2\u00d72 element stiffness matrix is [[k, \u2212k], [\u2212k, k]] acting on [u1, u2]."
+      ],
+      "method_references": [
+        "Linear spring element: f = k\u00b7\u03b4"
+      ],
+      "synthetic_example": {
+        "k": 1000.0,
+        "u1": 0.0,
+        "u2": 0.05
+      }
+    },
+    "fea.bar_element": {
+      "title": "Bar (truss) element stiffness matrix (2\u00d72)",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "elastic modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "element length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_axial",
+          "unit": "N/m",
+          "desc": "axial stiffness EA/L",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_matrix",
+          "unit": "",
+          "desc": "element stiffness matrix [[k, \u2212k], [\u2212k, k]] in N/m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _bar_element(values):\n    \"\"\"1-D bar element stiffness matrix (2\u00d72) and axial stiffness EA/L.\"\"\"\n    E, A, L = values['E'], values['A'], values['L']\n    if L <= 0 or A <= 0:\n        raise MechError('length and area must be positive')\n    k = E * A / L\n    return {'k_axial': k, 'k_matrix': [[k, -k], [-k, k]]}\n",
+        "source": "fea.py",
+        "line": 271
+      },
+      "outputs": [
+        "k_axial",
+        "k_matrix"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "Bar element stiffness matrix k = EA/L [[1, \u22121], [\u22121, 1]]"
+      ],
+      "synthetic_example": {
+        "E": 200000000000.0,
+        "A": 0.0001,
+        "L": 2.0
+      }
+    },
+    "fea.beam_element": {
+      "title": "Euler\u2013Bernoulli beam element stiffness matrix (4\u00d74)",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "elastic modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "m^4",
+          "desc": "second moment of area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "element length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_flex",
+          "unit": "N/m",
+          "desc": "transverse stiffness coefficient 12EI/L\u00b3",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_matrix",
+          "unit": "",
+          "desc": "4\u00d74 element stiffness matrix [v_i, \u03b8_i, v_j, \u03b8_j] (rows: N/m and N)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _beam_element(values):\n    \"\"\"Euler\u2013Bernoulli beam element stiffness matrix (4\u00d74, DOF [v_i, \u03b8_i, v_j, \u03b8_j]) and 12EI/L\u00b3.\"\"\"\n    E, I, L = values['E'], values['I'], values['L']\n    if L <= 0 or I <= 0:\n        raise MechError('length and second moment must be positive')\n    k = E * I / L ** 3\n    m = [[12.0 * k, 6.0 * k * L, -12.0 * k, 6.0 * k * L],\n         [6.0 * k * L, 4.0 * k * L ** 2, -6.0 * k * L, 2.0 * k * L ** 2],\n         [-12.0 * k, -6.0 * k * L, 12.0 * k, -6.0 * k * L],\n         [6.0 * k * L, 2.0 * k * L ** 2, -6.0 * k * L, 4.0 * k * L ** 2]]\n    return {'k_flex': 12.0 * k, 'k_matrix': m}\n",
+        "source": "fea.py",
+        "line": 280
+      },
+      "outputs": [
+        "k_flex",
+        "k_matrix"
+      ],
+      "assumptions": [
+        "Flexural DOF only (no axial): [v_i, \u03b8_i, v_j, \u03b8_j]. Entries are 12, 6L, 4L\u00b2, 2L\u00b2 times EI/L\u00b3."
+      ],
+      "method_references": [
+        "Euler\u2013Bernoulli beam element stiffness matrix"
+      ],
+      "synthetic_example": {
+        "E": 200000000000.0,
+        "I": 8e-06,
+        "L": 2.0
+      }
+    },
+    "fea.truss_element_2d": {
+      "title": "2-D truss element stiffness matrix (global coordinates)",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "elastic modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "cross-sectional area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "element length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "theta",
+          "unit": "rad",
+          "desc": "orientation angle from +x",
+          "lo": 0.0,
+          "hi": 6.283185307179586,
+          "label": "\u03b8",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "kxx",
+          "unit": "N/m",
+          "desc": "stiffness entry (0,0) = (EA/L)cos\u00b2\u03b8",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_axial",
+          "unit": "N/m",
+          "desc": "axial stiffness EA/L",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_matrix",
+          "unit": "",
+          "desc": "4\u00d74 global stiffness matrix in N/m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _truss_element_2d(values):\n    \"\"\"2-D truss element stiffness matrix in global coordinates (4\u00d74) and axial stiffness EA/L.\"\"\"\n    E, A, L, theta = values['E'], values['A'], values['L'], values['theta']\n    if L <= 0 or A <= 0:\n        raise MechError('length and area must be positive')\n    c, s = math.cos(theta), math.sin(theta)\n    k = E * A / L\n    kxx, kc, kyy = k * c * c, k * c * s, k * s * s\n    m = [[kxx, kc, -kxx, -kc],\n         [kc, kyy, -kc, -kyy],\n         [-kxx, -kc, kxx, kc],\n         [-kc, -kyy, kc, kyy]]\n    return {'kxx': kxx, 'k_axial': k, 'k_matrix': m}\n",
+        "source": "fea.py",
+        "line": 293
+      },
+      "outputs": [
+        "kxx",
+        "k_axial",
+        "k_matrix"
+      ],
+      "assumptions": [
+        "Matrix = (EA/L)\u00b7[c\u00b2, cs, \u2212c\u00b2, \u2212cs; cs, s\u00b2, \u2212cs, \u2212s\u00b2; \u2212c\u00b2, \u2212cs, c\u00b2, cs; \u2212cs, \u2212s\u00b2, cs, s\u00b2], c = cos \u03b8, s = sin \u03b8."
+      ],
+      "method_references": [
+        "2-D truss element stiffness in global coordinates"
+      ],
+      "synthetic_example": {
+        "E": 200000000000.0,
+        "A": 0.0001,
+        "L": 2.0,
+        "theta": 0.7853981633974483
+      }
+    },
+    "fea.spring_system": {
+      "title": "1-D spring system by direct stiffness (K, displacements, reactions)",
+      "variables": [
+        {
+          "name": "springs",
+          "unit": "",
+          "desc": "springs [[i, j, k (N/m)], ...] (0-based node indices)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "fixed",
+          "unit": "",
+          "desc": "prescribed displacements [[node, u (m)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "loads",
+          "unit": "",
+          "desc": "nodal forces [[node, F (N)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "global stiffness matrix (N/m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "displacements",
+          "unit": "",
+          "desc": "nodal displacements [u0, u1, ...] in m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "reactions",
+          "unit": "",
+          "desc": "[[node, reaction force (N)], ...] at the fixed nodes",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _spring_system(values):\n    \"\"\"1-D spring direct stiffness: springs [[i, j, k (N/m)], ...], fixed [[node, u (m)], ...],\n    loads [[node, F (N)], ...].\"\"\"\n    springs = values['springs']\n    fixed = values.get('fixed') or []\n    loads = values.get('loads') or []\n    if not isinstance(springs, list) or not springs:\n        raise MechError('springs: give a non-empty list of [i, j, k (N/m)] rows')\n    elems = []\n    for row in springs:\n        if not isinstance(row, (list, tuple)) or len(row) != 3:\n            raise MechError('springs: each row must be [i, j, k (N/m)]')\n        i = _node_idx(row[0], 'springs')\n        j = _node_idx(row[1], 'springs')\n        k = float(row[2])\n        if k <= 0:\n            raise MechError('spring stiffness must be positive')\n        elems.append((i, j, k))\n    n = _max_node(springs, fixed, loads)\n    K, u, R = _axial_solve(elems, fixed, loads, n)\n    return {'K': K.tolist(), 'displacements': u.tolist(),\n            'reactions': [[int(node), float(R[int(node)])] for node, _ in fixed]}\n",
+        "source": "fea.py",
+        "line": 88
+      },
+      "outputs": [
+        "K",
+        "displacements",
+        "reactions"
+      ],
+      "assumptions": [
+        "Reactions are R = K\u00b7u \u2212 F (force the support applies to the structure). At least one fixed node is required or the system is a mechanism. The stored strain energy of the assembled system is \u00bdu\u1d40Ku (= \u00bdF\u1d40u)."
+      ],
+      "method_references": [
+        "Direct stiffness assembly of spring elements"
+      ],
+      "synthetic_example": {
+        "springs": [
+          [
+            0,
+            1,
+            1000.0
+          ],
+          [
+            1,
+            2,
+            2000.0
+          ]
+        ],
+        "fixed": [
+          [
+            0,
+            0.0
+          ]
+        ],
+        "loads": [
+          [
+            2,
+            500.0
+          ]
+        ]
+      }
+    },
+    "fea.bar_system": {
+      "title": "1-D bar (rod) system by direct stiffness",
+      "variables": [
+        {
+          "name": "bars",
+          "unit": "",
+          "desc": "bars [[i, j, E (Pa), A (m^2), L (m)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "fixed",
+          "unit": "",
+          "desc": "prescribed displacements [[node, u (m)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "loads",
+          "unit": "",
+          "desc": "nodal forces [[node, F (N)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "global stiffness matrix (N/m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "displacements",
+          "unit": "",
+          "desc": "nodal displacements [u0, u1, ...] in m",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "reactions",
+          "unit": "",
+          "desc": "[[node, reaction force (N)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "element_forces",
+          "unit": "",
+          "desc": "axial forces in N (tension positive), one per bar",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "element_stresses",
+          "unit": "",
+          "desc": "axial stresses in Pa (tension positive), one per bar",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _bar_system(values):\n    \"\"\"1-D bar (rod) direct stiffness: bars [[i, j, E (Pa), A (m^2), L (m)], ...].\"\"\"\n    bars = values['bars']\n    fixed = values.get('fixed') or []\n    loads = values.get('loads') or []\n    if not isinstance(bars, list) or not bars:\n        raise MechError('bars: give a non-empty list of [i, j, E, A, L] rows')\n    elems, meta = [], []\n    for row in bars:\n        if not isinstance(row, (list, tuple)) or len(row) != 5:\n            raise MechError('bars: each row must be [i, j, E, A, L]')\n        i = _node_idx(row[0], 'bars')\n        j = _node_idx(row[1], 'bars')\n        E, A, L = float(row[2]), float(row[3]), float(row[4])\n        if L <= 0 or A <= 0:\n            raise MechError('bar length and area must be positive')\n        k = E * A / L\n        elems.append((i, j, k))\n        meta.append((i, j, E, A))\n    n = _max_node(bars, fixed, loads)\n    K, u, R = _axial_solve(elems, fixed, loads, n)\n    forces = [k * (u[j] - u[i]) for (i, j, k), (i0, j0, E, A) in zip(elems, meta)]\n    stresses = [f / A for f, (i0, j0, E, A) in zip(forces, meta)]\n    return {'K': K.tolist(), 'displacements': u.tolist(),\n            'reactions': [[int(node), float(R[int(node)])] for node, _ in fixed],\n            'element_forces': [float(x) for x in forces], 'element_stresses': [float(x) for x in stresses]}\n",
+        "source": "fea.py",
+        "line": 112
+      },
+      "outputs": [
+        "K",
+        "displacements",
+        "reactions",
+        "element_forces",
+        "element_stresses"
+      ],
+      "assumptions": [
+        "Prismatic bars, axial deformation only. Cross-check: a single fixed-free bar recovers \u03b4 = PL/EA."
+      ],
+      "method_references": [
+        "Direct stiffness assembly of bar elements"
+      ],
+      "synthetic_example": {
+        "bars": [
+          [
+            0,
+            1,
+            200000000000.0,
+            0.0001,
+            2.0
+          ]
+        ],
+        "fixed": [
+          [
+            0,
+            0.0
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            50000.0
+          ]
+        ]
+      }
+    },
+    "fea.truss_fea": {
+      "title": "2-D plane truss by direct stiffness (K, displacements, reactions, member forces)",
+      "variables": [
+        {
+          "name": "nodes",
+          "unit": "",
+          "desc": "joint coordinates [[x (m), y (m)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "elements",
+          "unit": "",
+          "desc": "members [[i, j, E (Pa), A (m^2)], ...] (0-based)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "supports",
+          "unit": "",
+          "desc": "reaction components [[joint, 'x' or 'y'], ...] (zero displacement)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "loads",
+          "unit": "",
+          "desc": "joint loads [[joint, Fx (N), Fy (N)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "global stiffness matrix (N/m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "displacements",
+          "unit": "",
+          "desc": "[[ux (m), uy (m)], ...] per joint",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "reactions",
+          "unit": "",
+          "desc": "[[joint, component, force (N)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "element_forces",
+          "unit": "",
+          "desc": "member axial forces in N, tension positive",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "element_stresses",
+          "unit": "",
+          "desc": "member axial stresses in Pa, tension positive",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _truss_fea(values):\n    \"\"\"2-D plane truss by direct stiffness: nodes [[x, y] (m)], elements [[i, j, E (Pa), A (m^2)]],\n    supports [[node, 'x'|'y']] (zero displacement), loads [[node, Fx, Fy] (N)].\"\"\"\n    nodes = np.asarray(values['nodes'], dtype=float)\n    elements = values['elements']\n    supports = values.get('supports') or []\n    loads = values.get('loads') or []\n    if nodes.ndim != 2 or nodes.shape[1] != 2:\n        raise MechError('nodes: give [[x, y], ...] in m')\n    if not isinstance(elements, list) or not elements:\n        raise MechError('elements: give a non-empty list of [i, j, E, A] rows')\n    n = len(nodes)\n    K = np.zeros((2 * n, 2 * n))\n    member = []\n    for row in elements:\n        if not isinstance(row, (list, tuple)) or len(row) != 4:\n            raise MechError('elements: each member must be [i, j, E, A]')\n        i = _node_idx(row[0], 'elements', n)\n        j = _node_idx(row[1], 'elements', n)\n        E, A = float(row[2]), float(row[3])\n        d = nodes[j] - nodes[i]\n        L = float(np.hypot(*d))\n        if L <= 0:\n            raise MechError(f'member {i}-{j} has zero length')\n        c, s = d / L\n        k = E * A / L\n        ke = k * np.array([[c * c, c * s, -c * c, -c * s],\n                           [c * s, s * s, -c * s, -s * s],\n                           [-c * c, -c * s, c * c, c * s],\n                           [-c * s, -s * s, c * s, s * s]])\n        dof = [2 * i, 2 * i + 1, 2 * j, 2 * j + 1]\n        K[np.ix_(dof, dof)] += ke\n        member.append((i, j, E, A, c, s))\n    F = np.zeros(2 * n)\n    for row in loads:\n        node = _node_idx(row[0], 'loads', n)\n        F[2 * node] += float(row[1])\n        F[2 * node + 1] += float(row[2])\n    constrained = []\n    for row in supports:\n        node = _node_idx(row[0], 'supports', n)\n        comp = str(row[1])\n        if comp not in ('x', 'y'):\n            raise MechError(\"supports: component must be 'x' or 'y'\")\n        constrained.append(2 * node + (0 if comp == 'x' else 1))\n    constrained = sorted(set(constrained))\n    free = [d for d in range(2 * n) if d not in constrained]\n    u = np.zeros(2 * n)\n    if free:\n        Kff = K[np.ix_(free, free)]\n        if np.linalg.matrix_rank(Kff) < len(free):\n            raise MechError('truss is a mechanism (singular stiffness matrix)')\n        u[free] = np.linalg.solve(Kff, F[free])\n    R = K @ u - F\n    forces, stresses = [], []\n    for (i, j, E, A, c, s) in member:\n        N = (E * A / math.hypot(nodes[j][0] - nodes[i][0], nodes[j][1] - nodes[i][1])) * \\\n            ((u[2 * j] - u[2 * i]) * c + (u[2 * j + 1] - u[2 * i + 1]) * s)\n        forces.append(float(N))\n        stresses.append(float(N / A))\n    reactions = [[int(node), comp, float(R[2 * int(node) + (0 if comp == 'x' else 1)])]\n                 for node, comp in supports]\n    return {'K': K.tolist(),\n            'displacements': [[float(u[2 * i]), float(u[2 * i + 1])] for i in range(n)],\n            'reactions': reactions, 'element_forces': forces, 'element_stresses': stresses}\n",
+        "source": "fea.py",
+        "line": 140
+      },
+      "outputs": [
+        "K",
+        "displacements",
+        "reactions",
+        "element_forces",
+        "element_stresses"
+      ],
+      "assumptions": [
+        "Pin-jointed truss, loads at joints. Member forces match the method of joints for a statically determinate truss. Reactions are the support forces applied to the structure."
+      ],
+      "method_references": [
+        "Direct stiffness method for plane trusses"
+      ],
+      "synthetic_example": {
+        "nodes": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            0.01
+          ],
+          [
+            1,
+            2,
+            200000000000.0,
+            0.01
+          ],
+          [
+            0,
+            2,
+            200000000000.0,
+            0.01
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "x"
+          ],
+          [
+            0,
+            "y"
+          ],
+          [
+            1,
+            "y"
+          ]
+        ],
+        "loads": [
+          [
+            2,
+            0,
+            -12000
+          ]
+        ]
+      }
+    },
+    "fea.beam_fea": {
+      "title": "Euler\u2013Bernoulli beam by direct stiffness (K, displacements, reactions, end forces)",
+      "variables": [
+        {
+          "name": "elements",
+          "unit": "",
+          "desc": "beam elements [[i, j, E (Pa), I (m^4), L (m)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "supports",
+          "unit": "",
+          "desc": "restraints [[node, 'v' or 'theta'], ...] (zero displacement/rotation)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "loads",
+          "unit": "",
+          "desc": "nodal loads [[node, P (N), M (N\u00b7m)], ...]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "desc": "global stiffness matrix",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "displacements",
+          "unit": "",
+          "desc": "[[v (m), theta (rad)], ...] per node",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "reactions",
+          "unit": "",
+          "desc": "[[node, component, reaction], ...] (N for 'v', N\u00b7m for 'theta')",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "end_forces",
+          "unit": "",
+          "desc": "per-element [V_i, M_i, V_j, M_j] in local coordinates",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _beam_fea(values):\n    \"\"\"Euler\u2013Bernoulli beam assembly: elements [[i, j, E (Pa), I (m^4), L (m)]], supports\n    [[node, 'v'|'theta']] (zero), loads [[node, P (N), M (N\u00b7m)]]. 2 DOF per node (v, \u03b8).\"\"\"\n    elements = values['elements']\n    supports = values.get('supports') or []\n    loads = values.get('loads') or []\n    if not isinstance(elements, list) or not elements:\n        raise MechError('elements: give a non-empty list of [i, j, E, I, L] rows')\n    n_nodes = _max_node(elements, supports, loads)\n    n_dof = 2 * n_nodes\n    K = np.zeros((n_dof, n_dof))\n    F = np.zeros(n_dof)\n    elem = []\n    for row in elements:\n        if not isinstance(row, (list, tuple)) or len(row) != 5:\n            raise MechError('elements: each beam must be [i, j, E, I, L]')\n        i = _node_idx(row[0], 'elements')\n        j = _node_idx(row[1], 'elements')\n        E, I, L = float(row[2]), float(row[3]), float(row[4])\n        if L <= 0 or I <= 0:\n            raise MechError('beam length and second moment must be positive')\n        k = E * I / L ** 3\n        ke = k * np.array([[12.0, 6 * L, -12.0, 6 * L],\n                           [6 * L, 4 * L * L, -6 * L, 2 * L * L],\n                           [-12.0, -6 * L, 12.0, -6 * L],\n                           [6 * L, 2 * L * L, -6 * L, 4 * L * L]])\n        dof = [2 * i, 2 * i + 1, 2 * j, 2 * j + 1]\n        K[np.ix_(dof, dof)] += ke\n        elem.append((i, j, k, L))\n    for row in loads:\n        node = _node_idx(row[0], 'loads')\n        F[2 * node] += float(row[1])\n        F[2 * node + 1] += float(row[2])\n    constrained = []\n    for row in supports:\n        node = _node_idx(row[0], 'supports')\n        comp = str(row[1])\n        if comp not in ('v', 'theta'):\n            raise MechError(\"supports: component must be 'v' or 'theta'\")\n        constrained.append(2 * node + (0 if comp == 'v' else 1))\n    constrained = sorted(set(constrained))\n    free = [d for d in range(n_dof) if d not in constrained]\n    u = np.zeros(n_dof)\n    if free:\n        Kff = K[np.ix_(free, free)]\n        if np.linalg.matrix_rank(Kff) < len(free):\n            raise MechError('beam is a mechanism (singular stiffness matrix)')\n        u[free] = np.linalg.solve(Kff, F[free])\n    R = K @ u - F\n    end_forces = []\n    for (i, j, k, L) in elem:\n        ke = k * np.array([[12.0, 6 * L, -12.0, 6 * L],\n                           [6 * L, 4 * L * L, -6 * L, 2 * L * L],\n                           [-12.0, -6 * L, 12.0, -6 * L],\n                           [6 * L, 2 * L * L, -6 * L, 4 * L * L]])\n        ue = u[[2 * i, 2 * i + 1, 2 * j, 2 * j + 1]]\n        end_forces.append([float(x) for x in (ke @ ue)])\n    reactions = [[int(node), comp, float(R[2 * int(node) + (0 if comp == 'v' else 1)])]\n                 for node, comp in supports]\n    return {'K': K.tolist(),\n            'displacements': [[float(u[2 * i]), float(u[2 * i + 1])] for i in range(n_nodes)],\n            'reactions': reactions, 'end_forces': end_forces}\n",
+        "source": "fea.py",
+        "line": 207
+      },
+      "outputs": [
+        "K",
+        "displacements",
+        "reactions",
+        "end_forces"
+      ],
+      "assumptions": [
+        "Euler\u2013Bernoulli beam (flexure only, no shear deformation). A single-element cantilever recovers tip deflection PL\u00b3/3EI and rotation PL\u00b2/2EI. end_forces are the per-element nodal force vectors k_e\u00b7u_e = [V_i, M_i, V_j, M_j] in local coordinates (V = shear, M = bending moment at each end), positive in the element stiffness-matrix sense."
+      ],
+      "method_references": [
+        "Direct stiffness method for Euler\u2013Bernoulli beam elements"
+      ],
+      "synthetic_example": {
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            8e-06,
+            2.0
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "v"
+          ],
+          [
+            0,
+            "theta"
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            1000.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    "fea.shape_linear": {
+      "title": "Linear bar element shape functions (N\u2081, N\u2082 at natural coordinate \u03be)",
+      "variables": [
+        {
+          "name": "xi",
+          "unit": "",
+          "desc": "natural coordinate (\u22121 \u2264 \u03be \u2264 1)",
+          "lo": -1.0,
+          "hi": 1.0,
+          "label": "\u03be",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N1",
+          "unit": "",
+          "desc": "shape function at node 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N2",
+          "unit": "",
+          "desc": "shape function at node 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "N1 = (1 - xi)/2",
+        "N2 = (1 + xi)/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "N1",
+        "N2"
+      ],
+      "assumptions": [
+        "N1 + N2 = 1 and N_i = 1 at node i, 0 at the other node."
+      ],
+      "method_references": [
+        "Linear 1-D shape functions N1 = (1\u2212\u03be)/2, N2 = (1+\u03be)/2"
+      ],
+      "synthetic_example": {
+        "xi": 0.5
+      }
+    },
+    "fea.shape_quadratic": {
+      "title": "Quadratic bar element shape functions (N\u2081, N\u2082, N\u2083)",
+      "variables": [
+        {
+          "name": "xi",
+          "unit": "",
+          "desc": "natural coordinate (\u22121 \u2264 \u03be \u2264 1)",
+          "lo": -1.0,
+          "hi": 1.0,
+          "label": "\u03be",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N1",
+          "unit": "",
+          "desc": "shape function at node 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N2",
+          "unit": "",
+          "desc": "shape function at mid node",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N3",
+          "unit": "",
+          "desc": "shape function at node 3",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "N1 = xi*(xi - 1)/2",
+        "N2 = 1 - xi**2",
+        "N3 = xi*(xi + 1)/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "N1",
+        "N2",
+        "N3"
+      ],
+      "assumptions": [
+        "Lagrangian quadratic element (nodes at \u03be = \u22121, 0, +1)."
+      ],
+      "method_references": [
+        "Quadratic 1-D shape functions"
+      ],
+      "synthetic_example": {
+        "xi": 0.5
+      }
+    },
+    "fea.bar_strain_stress": {
+      "title": "Bar element strain and stress from nodal displacements (B matrix)",
+      "variables": [
+        {
+          "name": "eps",
+          "unit": "",
+          "desc": "axial strain (u2 \u2212 u1)/L",
+          "lo": null,
+          "hi": null,
+          "label": "\u03b5",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "Pa",
+          "desc": "axial stress E\u00b7\u03b5",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u1",
+          "unit": "m",
+          "desc": "nodal displacement 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u2",
+          "unit": "m",
+          "desc": "nodal displacement 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "element length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "elastic modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eps = (u2 - u1)/L",
+        "sigma = E*(u2 - u1)/L"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eps",
+        "sigma"
+      ],
+      "assumptions": [
+        "Constant-strain bar element: the strain-displacement matrix is B = [\u22121/L, 1/L]."
+      ],
+      "method_references": [
+        "\u03b5 = B\u00b7u with B = [\u22121/L, 1/L]; \u03c3 = E\u00b7\u03b5"
+      ],
+      "synthetic_example": {
+        "u1": 0.0,
+        "u2": 0.001,
+        "L": 2.0,
+        "E": 200000000000.0
+      }
+    },
+    "fea.element_strain_energy": {
+      "title": "Elastic strain energy of a spring/bar element (U = \u00bd k \u03b4\u00b2)",
+      "variables": [
+        {
+          "name": "U",
+          "unit": "J",
+          "desc": "strain energy",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "N/m",
+          "desc": "element stiffness (EA/L for a bar)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u1",
+          "unit": "m",
+          "desc": "nodal displacement 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "u2",
+          "unit": "m",
+          "desc": "nodal displacement 2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "U = k*(u2 - u1)**2/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "U"
+      ],
+      "assumptions": [
+        "Linear elastic element; U = \u00bd u\u1d40 k u for a bar element."
+      ],
+      "method_references": [
+        "U = \u00bd k \u03b4\u00b2"
+      ],
+      "synthetic_example": {
+        "k": 10000000.0,
+        "u1": 0.0,
+        "u2": 0.001
+      }
+    },
+    "fea.mesh_convergence": {
+      "title": "Richardson extrapolation and grid-convergence index (GCI)",
+      "variables": [
+        {
+          "name": "f1",
+          "unit": "",
+          "desc": "solution on the fine grid",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f2",
+          "unit": "",
+          "desc": "solution on the coarse grid",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h1",
+          "unit": "m",
+          "desc": "fine-grid spacing",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "h2",
+          "unit": "m",
+          "desc": "coarse-grid spacing",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "",
+          "desc": "observed order of accuracy",
+          "lo": 0.5,
+          "hi": 8.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Fs",
+          "unit": "",
+          "desc": "GCI safety factor (1.25 for 3+ grids with observed p, 3.0 for 2 grids)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "refinement ratio h2/h1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f_exact",
+          "unit": "",
+          "desc": "Richardson-extrapolated value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eps",
+          "unit": "",
+          "desc": "estimated relative error on the fine grid",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "GCI",
+          "unit": "",
+          "desc": "grid-convergence index",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "r = h2/h1",
+        "f_exact = f1 + (f1 - f2)/(r**p - 1)",
+        "eps = Abs(f1 - f2)/(Abs(f1)*(r**p - 1))",
+        "GCI = Fs*eps"
+      ],
+      "procedure": null,
+      "outputs": [
+        "r",
+        "f_exact",
+        "eps",
+        "GCI"
+      ],
+      "assumptions": [
+        "f1/f2 are the same field on two grids with h2/h1 > 1; p is the observed order (2 for a second-order scheme). GCI = Fs\u00b7|f1\u2212f2|/(|f1|(r^p \u2212 1)) bounds the fine-grid error. Fs is 1.25 when the observed order p is estimated from 3+ grids, 3.0 when only two grids are available (the safety factor depends on how p was obtained, not on r). A zero fine-grid solution (f1 = 0) leaves the relative error undefined."
+      ],
+      "method_references": [
+        "Richardson extrapolation; Roache grid-convergence index"
+      ],
+      "synthetic_example": {
+        "f1": 0.5,
+        "f2": 0.52,
+        "h1": 0.5,
+        "h2": 1.0,
+        "p": 2.0,
+        "Fs": 1.25
+      }
+    },
+    "fea.fd_heat_1d": {
+      "title": "Steady 1-D heat conduction nodes (finite differences)",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "rod length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k",
+          "unit": "W/(m*K)",
+          "desc": "thermal conductivity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_left",
+          "unit": "K",
+          "desc": "temperature at x = 0",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_right",
+          "unit": "K",
+          "desc": "temperature at x = L",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "q_gen",
+          "unit": "W/m^3",
+          "desc": "uniform internal heat generation",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of interior nodes",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nodes",
+          "unit": "",
+          "desc": "[[x (m), T (K)], ...] including both ends",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "T_max",
+          "unit": "K",
+          "desc": "maximum nodal temperature",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _fd_heat_1d(values):\n    \"\"\"Steady 1-D heat conduction with uniform generation by central finite differences.\n\n    k d\u00b2T/dx\u00b2 + q = 0 on [0, L], T(0) = T_left, T(L) = T_right; n interior nodes. Central differences are\n    exact for this constant-source quadratic, so the nodal values equal the closed form\n    T(x) = T_left + (T_right \u2212 T_left)x/L + q\u00b7x(L \u2212 x)/(2k).\n    \"\"\"\n    L, k, TL, TR, q = values['L'], values['k'], values['T_left'], values['T_right'], values['q_gen']\n    n = int(values['n'])\n    if L <= 0 or k <= 0 or n < 1 or n > 1000:\n        raise MechError('L and k must be positive and 1 <= n <= 1000')\n    dx = L / (n + 1)\n    a = k / dx ** 2\n    A = np.zeros((n, n))\n    b = np.full(n, -q)\n    for i in range(n):\n        A[i, i] = -2 * a\n        if i > 0:\n            A[i, i - 1] = a\n        if i < n - 1:\n            A[i, i + 1] = a\n    b[0] -= a * TL\n    b[-1] -= a * TR\n    T = np.linalg.solve(A, b)\n    nodes = [[0.0, float(TL)]] + [[(i + 1) * dx, float(T[i])] for i in range(n)] + [[L, float(TR)]]\n    return {'nodes': nodes, 'T_max': max([TL, TR] + [float(t) for t in T])}\n",
+        "source": "fea.py",
+        "line": 308
+      },
+      "outputs": [
+        "nodes",
+        "T_max"
+      ],
+      "assumptions": [
+        "Uniform k and q, steady state. Central differences are exact for the constant-source quadratic, so the nodes match T = T_left + (T_right \u2212 T_left)x/L + q\u00b7x(L \u2212 x)/(2k)."
+      ],
+      "method_references": [
+        "Central finite difference of k d\u00b2T/dx\u00b2 + q = 0"
+      ],
+      "synthetic_example": {
+        "L": 1.0,
+        "k": 50.0,
+        "T_left": 300.0,
+        "T_right": 300.0,
+        "q_gen": 10000.0,
+        "n": 5
+      }
+    },
+    "fea.fd_advection_diffusion": {
+      "title": "Steady 1-D advection-diffusion nodes (finite differences)",
+      "variables": [
+        {
+          "name": "u",
+          "unit": "m/s",
+          "desc": "flow velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m^2/s",
+          "desc": "diffusivity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c0",
+          "unit": "kg/m^3",
+          "desc": "concentration at x = 0",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "cL",
+          "unit": "kg/m^3",
+          "desc": "concentration at x = L",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "number of interior nodes",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nodes",
+          "unit": "",
+          "desc": "[[x (m), c (kg/m^3)], ...] including both ends",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "c_mid",
+          "unit": "kg/m^3",
+          "desc": "concentration at mid-length (interpolated)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _fd_advection_diffusion(values):\n    \"\"\"Steady 1-D advection-diffusion u dc/dx = D d\u00b2c/dx\u00b2, c(0)=c0, c(L)=cL, by central finite differences.\n\n    n interior nodes; central scheme needs a cell Peclet number |u \u0394x/D| < 2. The analytic solution is\n    c(x) = c0 + (cL \u2212 c0)(e^(Pe x/L) \u2212 1)/(e^Pe \u2212 1), Pe = uL/D (a convergence landmark, not a re-typed matrix).\n    \"\"\"\n    u, D, L = values['u'], values['D'], values['L']\n    c0, cL = values['c0'], values['cL']\n    n = int(values['n'])\n    if L <= 0 or D <= 0 or n < 1 or n > 1000:\n        raise MechError('L and D must be positive and 1 <= n <= 1000')\n    dx = L / (n + 1)\n    pe_cell = u * dx / D\n    if abs(pe_cell) >= 2.0:\n        raise MechError(f'cell Peclet number {pe_cell:.3f} >= 2: central differences oscillate; use more nodes')\n    lo = D / dx ** 2 + u / (2 * dx)   # coefficient of c_{i-1}\n    diag = -2 * D / dx ** 2            # coefficient of c_i\n    hi = D / dx ** 2 - u / (2 * dx)    # coefficient of c_{i+1}\n    A = np.zeros((n, n))\n    b = np.zeros(n)\n    for i in range(n):\n        A[i, i] = diag\n        if i > 0:\n            A[i, i - 1] = lo\n        if i < n - 1:\n            A[i, i + 1] = hi\n    b[0] = -lo * c0\n    b[-1] = -hi * cL\n    c = np.linalg.solve(A, b)\n    xs = [(i + 1) * dx for i in range(n)]\n    nodes = [[0.0, float(c0)]] + [[xs[i], float(c[i])] for i in range(n)] + [[L, float(cL)]]\n    allx = [0.0] + xs + [L]\n    allc = [float(c0)] + [float(x) for x in c] + [float(cL)]\n    c_mid = float(np.interp(L / 2, allx, allc))\n    return {'nodes': nodes, 'c_mid': c_mid}\n",
+        "source": "fea.py",
+        "line": 336
+      },
+      "outputs": [
+        "nodes",
+        "c_mid"
+      ],
+      "assumptions": [
+        "Central differences; the cell Peclet number |u \u0394x/D| must be < 2 or an error is raised. Converges to c = c0 + (cL \u2212 c0)(e^(Pe x/L) \u2212 1)/(e^Pe \u2212 1), Pe = uL/D."
+      ],
+      "method_references": [
+        "Central finite difference of u dc/dx = D d\u00b2c/dx\u00b2"
+      ],
+      "synthetic_example": {
+        "u": 0.01,
+        "D": 0.01,
+        "L": 1.0,
+        "c0": 0.0,
+        "cL": 1.0,
+        "n": 20
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "fea-001",
+      "calculator": "fea.spring_element",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k": "2 kN/m",
+        "u1": 0.0,
+        "u2": "30 mm"
+      },
+      "solve_for": [
+        "delta",
+        "F1",
+        "F2"
+      ],
+      "expected_as_specified": {
+        "delta": 0.03,
+        "F1": -60.0,
+        "F2": 60.0
+      },
+      "expected_SI": {
+        "delta": 0.03,
+        "F1": -60.0,
+        "F2": 60.0
+      },
+      "actual_SI": {
+        "delta": {
+          "value": 0.03,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fea.spring_element (symbolic)"
+        },
+        "F1": {
+          "value": -60.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fea.spring_element (symbolic)"
+        },
+        "F2": {
+          "value": 60.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc fea.spring_element (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "delta": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 6e-05,
+          "passed": true
+        },
+        "F1": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.12,
+          "passed": true
+        },
+        "F2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b4 = 0.03 m; F2 = k\u03b4 = 2000\u00b70.03 = 60 N; F1 = \u221260 N"
+      }
+    },
+    {
+      "id": "fea-002",
+      "calculator": "fea.bar_element",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "200 GPa",
+        "A": "100 mm^2",
+        "L": "2 m"
+      },
+      "solve_for": [
+        "k_axial",
+        "k_matrix"
+      ],
+      "expected_as_specified": {
+        "k_axial": 10000000.0,
+        "k_matrix": [
+          [
+            10000000.0,
+            -10000000.0
+          ],
+          [
+            -10000000.0,
+            10000000.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "k_axial": 10000000.0,
+        "k_matrix": [
+          [
+            10000000.0,
+            -10000000.0
+          ],
+          [
+            -10000000.0,
+            10000000.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "k_axial": {
+          "value": 10000000.0,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc fea.bar_element (procedure)"
+        },
+        "k_matrix": {
+          "value": [
+            [
+              10000000.0,
+              -10000000.0
+            ],
+            [
+              -10000000.0,
+              10000000.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.bar_element (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "k_axial": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 20000.0,
+          "passed": true
+        },
+        "k_matrix": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 20000.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 20000.0,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 20000.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 20000.0,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "k = EA/L = 200e9\u00b71e-4/2 = 1e7 N/m; matrix [[k, \u2212k], [\u2212k, k]]"
+      }
+    },
+    {
+      "id": "fea-003",
+      "calculator": "fea.beam_element",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "8e6 mm^4",
+        "L": "2 m"
+      },
+      "solve_for": [
+        "k_flex",
+        "k_matrix"
+      ],
+      "expected_as_specified": {
+        "k_flex": 2400000.0,
+        "k_matrix": [
+          [
+            2400000.0,
+            2400000.0,
+            -2400000.0,
+            2400000.0
+          ],
+          [
+            2400000.0,
+            3200000.0,
+            -2400000.0,
+            1600000.0
+          ],
+          [
+            -2400000.0,
+            -2400000.0,
+            2400000.0,
+            -2400000.0
+          ],
+          [
+            2400000.0,
+            1600000.0,
+            -2400000.0,
+            3200000.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "k_flex": 2400000.0,
+        "k_matrix": [
+          [
+            2400000.0,
+            2400000.0,
+            -2400000.0,
+            2400000.0
+          ],
+          [
+            2400000.0,
+            3200000.0,
+            -2400000.0,
+            1600000.0
+          ],
+          [
+            -2400000.0,
+            -2400000.0,
+            2400000.0,
+            -2400000.0
+          ],
+          [
+            2400000.0,
+            1600000.0,
+            -2400000.0,
+            3200000.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "k_flex": {
+          "value": 2400000.0000000005,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc fea.beam_element (procedure)"
+        },
+        "k_matrix": {
+          "value": [
+            [
+              2400000.0000000005,
+              2400000.0000000005,
+              -2400000.0000000005,
+              2400000.0000000005
+            ],
+            [
+              2400000.0000000005,
+              3200000.0000000005,
+              -2400000.0000000005,
+              1600000.0000000002
+            ],
+            [
+              -2400000.0000000005,
+              -2400000.0000000005,
+              2400000.0000000005,
+              -2400000.0000000005
+            ],
+            [
+              2400000.0000000005,
+              1600000.0000000002,
+              -2400000.0000000005,
+              3200000.0000000005
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.beam_element (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "k_flex": {
+          "absolute_error": 4.656612873077393e-10,
+          "relative_error": 1.940255363782247e-16,
+          "allowed_absolute_error": 4800.0,
+          "passed": true
+        },
+        "k_matrix": [
+          [
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.4551915228366853e-16,
+              "allowed_absolute_error": 6400.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.3283064365386963e-10,
+              "relative_error": 1.4551915228366853e-16,
+              "allowed_absolute_error": 3200.0,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.3283064365386963e-10,
+              "relative_error": 1.4551915228366853e-16,
+              "allowed_absolute_error": 3200.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.940255363782247e-16,
+              "allowed_absolute_error": 4800.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.656612873077393e-10,
+              "relative_error": 1.4551915228366853e-16,
+              "allowed_absolute_error": 6400.0,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "k = EI/L\u00b3 = 200e9\u00b78e-6/8 = 2e5; entries 12k = 2.4e6, 6kL = 2.4e6, 4kL\u00b2 = 3.2e6, 2kL\u00b2 = 1.6e6"
+      }
+    },
+    {
+      "id": "fea-004",
+      "calculator": "fea.truss_element_2d",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "200 GPa",
+        "A": "100 mm^2",
+        "L": "2 m",
+        "theta": "60 deg"
+      },
+      "solve_for": [
+        "kxx",
+        "k_axial",
+        "k_matrix"
+      ],
+      "expected_as_specified": {
+        "kxx": 2500000.0,
+        "k_axial": 10000000.0,
+        "k_matrix": [
+          [
+            2500000.0,
+            4330127.0,
+            -2500000.0,
+            -4330127.0
+          ],
+          [
+            4330127.0,
+            7500000.0,
+            -4330127.0,
+            -7500000.0
+          ],
+          [
+            -2500000.0,
+            -4330127.0,
+            2500000.0,
+            4330127.0
+          ],
+          [
+            -4330127.0,
+            -7500000.0,
+            4330127.0,
+            7500000.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "kxx": 2500000.0,
+        "k_axial": 10000000.0,
+        "k_matrix": [
+          [
+            2500000.0,
+            4330127.0,
+            -2500000.0,
+            -4330127.0
+          ],
+          [
+            4330127.0,
+            7500000.0,
+            -4330127.0,
+            -7500000.0
+          ],
+          [
+            -2500000.0,
+            -4330127.0,
+            2500000.0,
+            4330127.0
+          ],
+          [
+            -4330127.0,
+            -7500000.0,
+            4330127.0,
+            7500000.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "kxx": {
+          "value": 2500000.000000001,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc fea.truss_element_2d (procedure)"
+        },
+        "k_axial": {
+          "value": 10000000.0,
+          "unit": "N/m",
+          "kind": "derived",
+          "method": "mechcalc fea.truss_element_2d (procedure)"
+        },
+        "k_matrix": {
+          "value": [
+            [
+              2500000.000000001,
+              4330127.018922194,
+              -2500000.000000001,
+              -4330127.018922194
+            ],
+            [
+              4330127.018922194,
+              7499999.999999999,
+              -4330127.018922194,
+              -7499999.999999999
+            ],
+            [
+              -2500000.000000001,
+              -4330127.018922194,
+              2500000.000000001,
+              4330127.018922194
+            ],
+            [
+              -4330127.018922194,
+              -7499999.999999999,
+              4330127.018922194,
+              7499999.999999999
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.truss_element_2d (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "kxx": {
+          "absolute_error": 9.313225746154785e-10,
+          "relative_error": 3.725290298461914e-16,
+          "allowed_absolute_error": 5000.0,
+          "passed": true
+        },
+        "k_axial": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 20000.0,
+          "passed": true
+        },
+        "k_matrix": [
+          [
+            {
+              "absolute_error": 9.313225746154785e-10,
+              "relative_error": 3.725290298461914e-16,
+              "allowed_absolute_error": 5000.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.01892219390720129,
+              "relative_error": 4.369893517488353e-09,
+              "allowed_absolute_error": 8660.254,
+              "passed": true
+            },
+            {
+              "absolute_error": 9.313225746154785e-10,
+              "relative_error": 3.725290298461914e-16,
+              "allowed_absolute_error": 5000.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.01892219390720129,
+              "relative_error": 4.369893517488353e-09,
+              "allowed_absolute_error": 8660.254,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.01892219390720129,
+              "relative_error": 4.369893517488353e-09,
+              "allowed_absolute_error": 8660.254,
+              "passed": true
+            },
+            {
+              "absolute_error": 9.313225746154785e-10,
+              "relative_error": 1.241763432820638e-16,
+              "allowed_absolute_error": 15000.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.01892219390720129,
+              "relative_error": 4.369893517488353e-09,
+              "allowed_absolute_error": 8660.254,
+              "passed": true
+            },
+            {
+              "absolute_error": 9.313225746154785e-10,
+              "relative_error": 1.241763432820638e-16,
+              "allowed_absolute_error": 15000.0,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 9.313225746154785e-10,
+              "relative_error": 3.725290298461914e-16,
+              "allowed_absolute_error": 5000.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.01892219390720129,
+              "relative_error": 4.369893517488353e-09,
+              "allowed_absolute_error": 8660.254,
+              "passed": true
+            },
+            {
+              "absolute_error": 9.313225746154785e-10,
+              "relative_error": 3.725290298461914e-16,
+              "allowed_absolute_error": 5000.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.01892219390720129,
+              "relative_error": 4.369893517488353e-09,
+              "allowed_absolute_error": 8660.254,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.01892219390720129,
+              "relative_error": 4.369893517488353e-09,
+              "allowed_absolute_error": 8660.254,
+              "passed": true
+            },
+            {
+              "absolute_error": 9.313225746154785e-10,
+              "relative_error": 1.241763432820638e-16,
+              "allowed_absolute_error": 15000.0,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.01892219390720129,
+              "relative_error": 4.369893517488353e-09,
+              "allowed_absolute_error": 8660.254,
+              "passed": true
+            },
+            {
+              "absolute_error": 9.313225746154785e-10,
+              "relative_error": 1.241763432820638e-16,
+              "allowed_absolute_error": 15000.0,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "k = EA/L = 1e7; c = cos60\u00b0 = 0.5, s = 0.8660254; kxx = k c\u00b2 = 2.5e6, kc = k c s = 4.330127e6, kyy = k s\u00b2 = 7.5e6"
+      }
+    },
+    {
+      "id": "fea-005",
+      "calculator": "fea.truss_element_2d",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "E": "200 GPa",
+        "A": "100 mm^2",
+        "L": "2 m",
+        "kxx": "2.5 MN/m"
+      },
+      "solve_for": [
+        "theta"
+      ],
+      "expected_as_specified": {
+        "theta": "60 deg"
+      },
+      "expected_SI": {
+        "theta": 1.0471975511965976
+      },
+      "actual_SI": {
+        "theta": {
+          "value": 1.0471975511965979,
+          "unit": "rad",
+          "kind": "derived",
+          "method": "mechcalc fea.truss_element_2d (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "theta": {
+          "absolute_error": 2.220446049250313e-16,
+          "relative_error": 2.1203697876423447e-16,
+          "allowed_absolute_error": 0.0020943951023931952,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "cos\u00b2\u03b8 = kxx\u00b7L/(EA) = 2.5e6\u00b72/2e7 = 0.25 \u2192 cos \u03b8 = 0.5 \u2192 \u03b8 = 60\u00b0"
+      }
+    },
+    {
+      "id": "fea-006",
+      "calculator": "fea.spring_system",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "springs": [
+          [
+            0,
+            1,
+            1000.0
+          ],
+          [
+            1,
+            2,
+            2000.0
+          ]
+        ],
+        "fixed": [
+          [
+            0,
+            0.0
+          ]
+        ],
+        "loads": [
+          [
+            2,
+            500.0
+          ]
+        ]
+      },
+      "solve_for": [
+        "K",
+        "displacements",
+        "reactions"
+      ],
+      "expected_as_specified": {
+        "displacements": [
+          0.0,
+          0.5,
+          0.75
+        ],
+        "reactions": [
+          [
+            0,
+            -500.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "displacements": [
+          0.0,
+          0.5,
+          0.75
+        ],
+        "reactions": [
+          [
+            0,
+            -500.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "displacements": {
+          "value": [
+            0.0,
+            0.49999999999999994,
+            0.7499999999999999
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.spring_system (procedure)",
+          "unit": ""
+        },
+        "reactions": {
+          "value": [
+            [
+              0,
+              -499.99999999999994
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.spring_system (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "displacements": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          {
+            "absolute_error": 5.551115123125783e-17,
+            "relative_error": 1.1102230246251565e-16,
+            "allowed_absolute_error": 0.001,
+            "passed": true
+          },
+          {
+            "absolute_error": 1.1102230246251565e-16,
+            "relative_error": 1.4802973661668753e-16,
+            "allowed_absolute_error": 0.0015,
+            "passed": true
+          }
+        ],
+        "reactions": [
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 5.684341886080802e-14,
+              "relative_error": 1.1368683772161603e-16,
+              "allowed_absolute_error": 1.0,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Both springs carry 500 N: u1 = 500/1000 = 0.5 m, u2 = 0.5 + 500/2000 = 0.75 m; reaction at node 0 = \u2212500 N"
+      }
+    },
+    {
+      "id": "fea-007",
+      "calculator": "fea.spring_system",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "springs": [
+          [
+            0,
+            1,
+            1000.0
+          ],
+          [
+            0,
+            1,
+            3000.0
+          ]
+        ],
+        "fixed": [
+          [
+            1,
+            0.0
+          ]
+        ],
+        "loads": [
+          [
+            0,
+            200.0
+          ]
+        ]
+      },
+      "solve_for": [
+        "K",
+        "displacements",
+        "reactions"
+      ],
+      "expected_as_specified": {
+        "displacements": [
+          0.05,
+          0.0
+        ],
+        "reactions": [
+          [
+            1,
+            -200.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "displacements": [
+          0.05,
+          0.0
+        ],
+        "reactions": [
+          [
+            1,
+            -200.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "displacements": {
+          "value": [
+            0.05,
+            0.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.spring_system (procedure)",
+          "unit": ""
+        },
+        "reactions": {
+          "value": [
+            [
+              1,
+              -200.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.spring_system (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "displacements": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.0001,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          }
+        ],
+        "reactions": [
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.4,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Parallel k_eff = 4000 N/m; u0 = 200/4000 = 0.05 m; reaction \u2212200 N"
+      }
+    },
+    {
+      "id": "fea-008",
+      "calculator": "fea.bar_system",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "bars": [
+          [
+            0,
+            1,
+            200000000000.0,
+            0.0001,
+            2.0
+          ]
+        ],
+        "fixed": [
+          [
+            0,
+            0.0
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            50000.0
+          ]
+        ]
+      },
+      "solve_for": [
+        "K",
+        "displacements",
+        "reactions",
+        "element_forces",
+        "element_stresses"
+      ],
+      "expected_as_specified": {
+        "displacements": [
+          0.0,
+          0.005
+        ],
+        "element_forces": [
+          50000.0
+        ],
+        "element_stresses": [
+          500000000.0
+        ],
+        "reactions": [
+          [
+            0,
+            -50000.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "displacements": [
+          0.0,
+          0.005
+        ],
+        "element_forces": [
+          50000.0
+        ],
+        "element_stresses": [
+          500000000.0
+        ],
+        "reactions": [
+          [
+            0,
+            -50000.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "displacements": {
+          "value": [
+            0.0,
+            0.005
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.bar_system (procedure)",
+          "unit": ""
+        },
+        "element_forces": {
+          "value": [
+            50000.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.bar_system (procedure)",
+          "unit": ""
+        },
+        "element_stresses": {
+          "value": [
+            500000000.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.bar_system (procedure)",
+          "unit": ""
+        },
+        "reactions": {
+          "value": [
+            [
+              0,
+              -50000.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.bar_system (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "displacements": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": null,
+            "allowed_absolute_error": 1e-12,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 1e-05,
+            "passed": true
+          }
+        ],
+        "element_forces": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 100.0,
+            "passed": true
+          }
+        ],
+        "element_stresses": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 1000000.0,
+            "passed": true
+          }
+        ],
+        "reactions": [
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 100.0,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b4 = PL/EA = 50000\u00b72/(200e9\u00b71e-4) = 0.005 m (matches axial_deformation); N = 50 kN; \u03c3 = 50e3/1e-4 = 500 MPa"
+      }
+    },
+    {
+      "id": "fea-009",
+      "calculator": "fea.truss_fea",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "nodes": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            0.01
+          ],
+          [
+            1,
+            2,
+            200000000000.0,
+            0.01
+          ],
+          [
+            0,
+            2,
+            200000000000.0,
+            0.01
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "x"
+          ],
+          [
+            0,
+            "y"
+          ],
+          [
+            1,
+            "y"
+          ]
+        ],
+        "loads": [
+          [
+            2,
+            0,
+            -12000
+          ]
+        ]
+      },
+      "solve_for": [
+        "K",
+        "displacements",
+        "reactions",
+        "element_forces",
+        "element_stresses"
+      ],
+      "expected_as_specified": {
+        "element_forces": [
+          4000.0,
+          -7211.1026,
+          -7211.1026
+        ],
+        "reactions": [
+          [
+            0,
+            "x",
+            0.0
+          ],
+          [
+            0,
+            "y",
+            6000.0
+          ],
+          [
+            1,
+            "y",
+            6000.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "element_forces": [
+          4000.0,
+          -7211.1026,
+          -7211.1026
+        ],
+        "reactions": [
+          [
+            0,
+            "x",
+            0.0
+          ],
+          [
+            0,
+            "y",
+            6000.0
+          ],
+          [
+            1,
+            "y",
+            6000.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "element_forces": {
+          "value": [
+            4000.0,
+            -7211.102550927979,
+            -7211.102550927979
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.truss_fea (procedure)",
+          "unit": ""
+        },
+        "reactions": {
+          "value": [
+            [
+              0,
+              "x",
+              9.094947017729282e-13
+            ],
+            [
+              0,
+              "y",
+              6000.000000000001
+            ],
+            [
+              1,
+              "y",
+              6000.000000000001
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.truss_fea (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "element_forces": [
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 8.0,
+            "passed": true
+          },
+          {
+            "absolute_error": 4.90720212837914e-05,
+            "relative_error": 6.805064912513019e-09,
+            "allowed_absolute_error": 14.4222052,
+            "passed": true
+          },
+          {
+            "absolute_error": 4.90720212837914e-05,
+            "relative_error": 6.805064912513019e-09,
+            "allowed_absolute_error": 14.4222052,
+            "passed": true
+          }
+        ],
+        "reactions": [
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 9.094947017729282e-13,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 9.094947017729282e-13,
+              "relative_error": 1.5158245029548803e-16,
+              "allowed_absolute_error": 12.0,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 9.094947017729282e-13,
+              "relative_error": 1.5158245029548803e-16,
+              "allowed_absolute_error": 12.0,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Method-of-joints cross-check (statics.truss): apex 2F(3/\u221a13) = 12000 \u2192 F = 2000\u221a13 = 7211.10 N compression each rafter; chord T = F(2/\u221a13) = 4000 N; reactions 6000 N each"
+      }
+    },
+    {
+      "id": "fea-010",
+      "calculator": "fea.beam_fea",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            8e-06,
+            2.0
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "v"
+          ],
+          [
+            0,
+            "theta"
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            1000.0,
+            0.0
+          ]
+        ]
+      },
+      "solve_for": [
+        "K",
+        "displacements",
+        "reactions",
+        "end_forces"
+      ],
+      "expected_as_specified": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0016666667,
+            0.00125
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            -1000.0
+          ],
+          [
+            0,
+            "theta",
+            -2000.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0016666667,
+            0.00125
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            -1000.0
+          ],
+          [
+            0,
+            "theta",
+            -2000.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "displacements": {
+          "value": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0016666666666666668,
+              0.00125
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.beam_fea (procedure)",
+          "unit": ""
+        },
+        "reactions": {
+          "value": [
+            [
+              0,
+              "v",
+              -1000.0000000000005
+            ],
+            [
+              0,
+              "theta",
+              -2000.0000000000005
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.beam_fea (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "displacements": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 3.333333327242005e-11,
+              "relative_error": 1.999999956345204e-08,
+              "allowed_absolute_error": 3.3333334e-06,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 2.5e-06,
+              "passed": true
+            }
+          ]
+        ],
+        "reactions": [
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 4.547473508864641e-13,
+              "relative_error": 4.547473508864641e-16,
+              "allowed_absolute_error": 2.0,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 4.547473508864641e-13,
+              "relative_error": 2.2737367544323206e-16,
+              "allowed_absolute_error": 4.0,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Cantilever: tip v = PL\u00b3/3EI = 1000\u00b78/(3\u00b7200e9\u00b78e-6) = 1.6667e-3 m; \u03b8 = PL\u00b2/2EI = 1.25e-3 rad; base reaction \u22121000 N shear and \u2212PL = \u22122000 N\u00b7m moment"
+      }
+    },
+    {
+      "id": "fea-011",
+      "calculator": "fea.beam_fea",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            8e-06,
+            2.0
+          ],
+          [
+            1,
+            2,
+            200000000000.0,
+            8e-06,
+            2.0
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "v"
+          ],
+          [
+            2,
+            "v"
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            1000.0,
+            0.0
+          ]
+        ]
+      },
+      "solve_for": [
+        "K",
+        "displacements",
+        "reactions",
+        "end_forces"
+      ],
+      "expected_as_specified": {
+        "displacements": [
+          [
+            0.0,
+            0.000625
+          ],
+          [
+            0.0008333333,
+            0.0
+          ],
+          [
+            0.0,
+            -0.000625
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            -500.0
+          ],
+          [
+            2,
+            "v",
+            -500.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "displacements": [
+          [
+            0.0,
+            0.000625
+          ],
+          [
+            0.0008333333,
+            0.0
+          ],
+          [
+            0.0,
+            -0.000625
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            -500.0
+          ],
+          [
+            2,
+            "v",
+            -500.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "displacements": {
+          "value": [
+            [
+              0.0,
+              0.0006250000000000001
+            ],
+            [
+              0.0008333333333333334,
+              0.0
+            ],
+            [
+              0.0,
+              -0.000625
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.beam_fea (procedure)",
+          "unit": ""
+        },
+        "reactions": {
+          "value": [
+            [
+              0,
+              "v",
+              -500.0
+            ],
+            [
+              2,
+              "v",
+              -500.0000000000002
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.beam_fea (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "displacements": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 1.0842021724855044e-19,
+              "relative_error": 1.734723475976807e-16,
+              "allowed_absolute_error": 1.25e-06,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 3.333333338084027e-11,
+              "relative_error": 4.000000165700839e-08,
+              "allowed_absolute_error": 1.6666666e-06,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 1.25e-06,
+              "passed": true
+            }
+          ]
+        ],
+        "reactions": [
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 1.0,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.004,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 2.2737367544323206e-13,
+              "relative_error": 4.547473508864641e-16,
+              "allowed_absolute_error": 1.0,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Simply supported, midspan P: v = PL\u00b3/48EI = 1000\u00b764/(48\u00b7200e9\u00b78e-6) = 8.3333e-4 m; support rotations \u00b1PL\u00b2/16EI = \u00b16.25e-4 rad; reactions \u2212500 N each (500 N up)"
+      }
+    },
+    {
+      "id": "fea-012",
+      "calculator": "fea.shape_linear",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "xi": 0.5
+      },
+      "solve_for": [
+        "N1",
+        "N2"
+      ],
+      "expected_as_specified": {
+        "N1": 0.25,
+        "N2": 0.75
+      },
+      "expected_SI": {
+        "N1": 0.25,
+        "N2": 0.75
+      },
+      "actual_SI": {
+        "N1": {
+          "value": 0.25,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.shape_linear (symbolic)"
+        },
+        "N2": {
+          "value": 0.75,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.shape_linear (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "N1": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        },
+        "N2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0015,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "N1 = (1\u22120.5)/2 = 0.25; N2 = (1+0.5)/2 = 0.75"
+      }
+    },
+    {
+      "id": "fea-013",
+      "calculator": "fea.shape_linear",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "N1": 0.75
+      },
+      "solve_for": [
+        "xi",
+        "N2"
+      ],
+      "expected_as_specified": {
+        "xi": -0.5,
+        "N2": 0.25
+      },
+      "expected_SI": {
+        "xi": -0.5,
+        "N2": 0.25
+      },
+      "actual_SI": {
+        "xi": {
+          "value": -0.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.shape_linear (symbolic)"
+        },
+        "N2": {
+          "value": 0.25,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.shape_linear (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "xi": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "N2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0005,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "xi = 2N1 \u2212 1 = 0.5 \u2192 xi = \u22120.5 for N1 = 0.75; N2 = 1 \u2212 N1 = 0.25"
+      }
+    },
+    {
+      "id": "fea-014",
+      "calculator": "fea.shape_quadratic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "xi": 0.5
+      },
+      "solve_for": [
+        "N1",
+        "N2",
+        "N3"
+      ],
+      "expected_as_specified": {
+        "N1": -0.125,
+        "N2": 0.75,
+        "N3": 0.375
+      },
+      "expected_SI": {
+        "N1": -0.125,
+        "N2": 0.75,
+        "N3": 0.375
+      },
+      "actual_SI": {
+        "N1": {
+          "value": -0.125,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.shape_quadratic (symbolic)"
+        },
+        "N2": {
+          "value": 0.75,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.shape_quadratic (symbolic)"
+        },
+        "N3": {
+          "value": 0.375,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.shape_quadratic (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "N1": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00025,
+          "passed": true
+        },
+        "N2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0015,
+          "passed": true
+        },
+        "N3": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00075,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "N1 = 0.5\u00b7(\u22120.5)/2 = \u22120.125; N2 = 1 \u2212 0.25 = 0.75; N3 = 0.5\u00b71.5/2 = 0.375"
+      }
+    },
+    {
+      "id": "fea-015",
+      "calculator": "fea.shape_quadratic",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "xi": -0.5
+      },
+      "solve_for": [
+        "N1",
+        "N2",
+        "N3"
+      ],
+      "expected_as_specified": {
+        "N1": 0.375,
+        "N2": 0.75,
+        "N3": -0.125
+      },
+      "expected_SI": {
+        "N1": 0.375,
+        "N2": 0.75,
+        "N3": -0.125
+      },
+      "actual_SI": {
+        "N1": {
+          "value": 0.375,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.shape_quadratic (symbolic)"
+        },
+        "N2": {
+          "value": 0.75,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.shape_quadratic (symbolic)"
+        },
+        "N3": {
+          "value": -0.125,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.shape_quadratic (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "N1": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00075,
+          "passed": true
+        },
+        "N2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0015,
+          "passed": true
+        },
+        "N3": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00025,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "N1 = (\u22120.5)(\u22121.5)/2 = 0.375; N2 = 0.75; N3 = (\u22120.5)(0.5)/2 = \u22120.125"
+      }
+    },
+    {
+      "id": "fea-016",
+      "calculator": "fea.bar_strain_stress",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "u1": 0.0,
+        "u2": "1 mm",
+        "L": "2 m",
+        "E": "200 GPa"
+      },
+      "solve_for": [
+        "eps",
+        "sigma"
+      ],
+      "expected_as_specified": {
+        "eps": 0.0005,
+        "sigma": "100 MPa"
+      },
+      "expected_SI": {
+        "eps": 0.0005,
+        "sigma": 100000000.0
+      },
+      "actual_SI": {
+        "eps": {
+          "value": 0.0005,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.bar_strain_stress (symbolic)"
+        },
+        "sigma": {
+          "value": 100000000.0,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fea.bar_strain_stress (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eps": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1e-06,
+          "passed": true
+        },
+        "sigma": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 200000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b5 = (0.001 \u2212 0)/2 = 5e-4; \u03c3 = 200e9\u00b75e-4 = 100 MPa"
+      }
+    },
+    {
+      "id": "fea-017",
+      "calculator": "fea.element_strain_energy",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k": "10 MN/m",
+        "u1": 0.0,
+        "u2": "1 mm"
+      },
+      "solve_for": [
+        "U"
+      ],
+      "expected_as_specified": {
+        "U": 5.0
+      },
+      "expected_SI": {
+        "U": 5.0
+      },
+      "actual_SI": {
+        "U": {
+          "value": 5.0,
+          "unit": "J",
+          "kind": "derived",
+          "method": "mechcalc fea.element_strain_energy (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "U": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "U = \u00bd\u00b71e7\u00b7(0.001)\u00b2 = 5 J"
+      }
+    },
+    {
+      "id": "fea-018",
+      "calculator": "fea.mesh_convergence",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f1": 0.5,
+        "f2": 0.52,
+        "h1": "50 cm",
+        "h2": "1 m",
+        "p": 2.0,
+        "Fs": 1.25
+      },
+      "solve_for": [
+        "r",
+        "f_exact",
+        "eps",
+        "GCI"
+      ],
+      "expected_as_specified": {
+        "r": 2.0,
+        "f_exact": 0.4933333,
+        "eps": 0.0133333,
+        "GCI": 0.0166667
+      },
+      "expected_SI": {
+        "r": 2.0,
+        "f_exact": 0.4933333,
+        "eps": 0.0133333,
+        "GCI": 0.0166667
+      },
+      "actual_SI": {
+        "r": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.mesh_convergence (symbolic)"
+        },
+        "f_exact": {
+          "value": 0.49333333333333335,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.mesh_convergence (symbolic)"
+        },
+        "eps": {
+          "value": 0.013333333333333345,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.mesh_convergence (symbolic)"
+        },
+        "GCI": {
+          "value": 0.01666666666666668,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.mesh_convergence (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "r": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "f_exact": {
+          "absolute_error": 3.333333337129929e-08,
+          "relative_error": 6.756757220990209e-08,
+          "allowed_absolute_error": 0.0009866666,
+          "passed": true
+        },
+        "eps": {
+          "absolute_error": 3.333333334527844e-08,
+          "relative_error": 2.50000625091151e-06,
+          "allowed_absolute_error": 2.66666e-05,
+          "passed": true
+        },
+        "GCI": {
+          "absolute_error": 3.3333333319257585e-08,
+          "relative_error": 1.999995999163457e-06,
+          "allowed_absolute_error": 3.33334e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 1/0.5 = 2; f_exact = 0.5 + (0.5 \u2212 0.52)/(4 \u2212 1) = 0.5 \u2212 0.0066667 = 0.493333; \u03b5 = 0.02/(0.5\u00b73) = 0.013333; GCI = 1.25\u00b70.013333 = 0.016667"
+      }
+    },
+    {
+      "id": "fea-019",
+      "calculator": "fea.mesh_convergence",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f1": 0.5,
+        "f2": 0.52,
+        "h1": 0.5,
+        "h2": 1.0,
+        "Fs": 1.25,
+        "f_exact": 0.4933333
+      },
+      "solve_for": [
+        "p",
+        "r",
+        "eps",
+        "GCI"
+      ],
+      "expected_as_specified": {
+        "p": 2.0,
+        "r": 2.0
+      },
+      "expected_SI": {
+        "p": 2.0,
+        "r": 2.0
+      },
+      "actual_SI": {
+        "p": {
+          "value": 1.9999945899104998,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.mesh_convergence (numeric)"
+        },
+        "r": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.mesh_convergence (numeric)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "p": {
+          "absolute_error": 5.4100895001685245e-06,
+          "relative_error": 2.7050447500842623e-06,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        },
+        "r": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = h2/h1 = 2; r^p = 1 + (f1 \u2212 f2)/(f_exact \u2212 f1) = 1 + (\u22120.02)/(\u22120.0066667) = 4 \u2192 p = log4/log2 = 2"
+      }
+    },
+    {
+      "id": "fea-020",
+      "calculator": "fea.fd_heat_1d",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L": 1.0,
+        "k": 50.0,
+        "T_left": 300.0,
+        "T_right": 300.0,
+        "q_gen": 10000.0,
+        "n": 5
+      },
+      "solve_for": [
+        "nodes",
+        "T_max"
+      ],
+      "expected_as_specified": {
+        "T_max": 325.0,
+        "nodes": [
+          [
+            0.0,
+            300.0
+          ],
+          [
+            0.1666667,
+            313.8889
+          ],
+          [
+            0.3333333,
+            322.2222
+          ],
+          [
+            0.5,
+            325.0
+          ],
+          [
+            0.6666667,
+            322.2222
+          ],
+          [
+            0.8333333,
+            313.8889
+          ],
+          [
+            1.0,
+            300.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "T_max": 325.0,
+        "nodes": [
+          [
+            0.0,
+            300.0
+          ],
+          [
+            0.1666667,
+            313.8889
+          ],
+          [
+            0.3333333,
+            322.2222
+          ],
+          [
+            0.5,
+            325.0
+          ],
+          [
+            0.6666667,
+            322.2222
+          ],
+          [
+            0.8333333,
+            313.8889
+          ],
+          [
+            1.0,
+            300.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "T_max": {
+          "value": 325.0,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc fea.fd_heat_1d (procedure)"
+        },
+        "nodes": {
+          "value": [
+            [
+              0.0,
+              300.0
+            ],
+            [
+              0.16666666666666666,
+              313.8888888888889
+            ],
+            [
+              0.3333333333333333,
+              322.22222222222223
+            ],
+            [
+              0.5,
+              325.0
+            ],
+            [
+              0.6666666666666666,
+              322.22222222222223
+            ],
+            [
+              0.8333333333333333,
+              313.8888888888889
+            ],
+            [
+              1.0,
+              300.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.fd_heat_1d (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T_max": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.65,
+          "passed": true
+        },
+        "nodes": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.6,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 3.3333333343543714e-08,
+              "relative_error": 1.9999996006127027e-07,
+              "allowed_absolute_error": 0.00033333340000000003,
+              "passed": true
+            },
+            {
+              "absolute_error": 1.1111111064110446e-05,
+              "relative_error": 3.53982286857243e-08,
+              "allowed_absolute_error": 0.6277777999999999,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 3.333333331578814e-08,
+              "relative_error": 1.000000099473654e-07,
+              "allowed_absolute_error": 0.0006666666,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.222222224190773e-05,
+              "relative_error": 6.896552205871517e-08,
+              "allowed_absolute_error": 0.6444444,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.001,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.65,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 3.333333331578814e-08,
+              "relative_error": 4.999999747368234e-08,
+              "allowed_absolute_error": 0.0013333333999999998,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.222222224190773e-05,
+              "relative_error": 6.896552205871517e-08,
+              "allowed_absolute_error": 0.6444444,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 3.3333333204765836e-08,
+              "relative_error": 4.000000144571906e-08,
+              "allowed_absolute_error": 0.0016666666000000002,
+              "passed": true
+            },
+            {
+              "absolute_error": 1.1111111064110446e-05,
+              "relative_error": 3.53982286857243e-08,
+              "allowed_absolute_error": 0.6277777999999999,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.002,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.6,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Closed form T = 300 + q\u00b7x(L\u2212x)/(2k) = 300 + 100x(1\u2212x): T(0.5) = 300 + 25 = 325 K; T(1/3) = 300 + 22.222 = 322.222 K"
+      }
+    },
+    {
+      "id": "fea-021",
+      "calculator": "fea.fd_heat_1d",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L": "2 m",
+        "k": 40.0,
+        "T_left": 300.0,
+        "T_right": 300.0,
+        "q_gen": 4000.0,
+        "n": 5
+      },
+      "solve_for": [
+        "nodes",
+        "T_max"
+      ],
+      "expected_as_specified": {
+        "T_max": 350.0
+      },
+      "expected_SI": {
+        "T_max": 350.0
+      },
+      "actual_SI": {
+        "T_max": {
+          "value": 350.0,
+          "unit": "K",
+          "kind": "derived",
+          "method": "mechcalc fea.fd_heat_1d (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T_max": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.7000000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Center peak = qL\u00b2/(8k) = 4000\u00b74/(8\u00b740) = 50 K above the ends: T_max = 350 K"
+      }
+    },
+    {
+      "id": "fea-022",
+      "calculator": "fea.fd_advection_diffusion",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "u": 0.01,
+        "D": 0.01,
+        "L": 1.0,
+        "c0": 0.0,
+        "cL": 1.0,
+        "n": 20
+      },
+      "solve_for": [
+        "nodes",
+        "c_mid"
+      ],
+      "expected_as_specified": {
+        "c_mid": 0.37754
+      },
+      "expected_SI": {
+        "c_mid": 0.37754
+      },
+      "actual_SI": {
+        "c_mid": {
+          "value": 0.3777904899191709,
+          "unit": "kg/m^3",
+          "kind": "derived",
+          "method": "mechcalc fea.fd_advection_diffusion (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "c_mid": {
+          "absolute_error": 0.00025048991917092644,
+          "relative_error": 0.000663479152330684,
+          "allowed_absolute_error": 0.00037754,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Analytic c(L/2) = (e^(Pe/2) \u2212 1)/(e^Pe \u2212 1), Pe = uL/D = 1 \u2192 (e^0.5 \u2212 1)/(e \u2212 1) = 0.64872/1.71828 = 0.37754"
+      }
+    },
+    {
+      "id": "fea-023",
+      "calculator": "fea.fd_advection_diffusion",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "u": 0.01,
+        "D": 0.01,
+        "L": 1.0,
+        "c0": 2.0,
+        "cL": 0.0,
+        "n": 40
+      },
+      "solve_for": [
+        "nodes",
+        "c_mid"
+      ],
+      "expected_as_specified": {
+        "c_mid": 1.24492
+      },
+      "expected_SI": {
+        "c_mid": 1.24492
+      },
+      "actual_SI": {
+        "c_mid": {
+          "value": 1.2447876047569935,
+          "unit": "kg/m^3",
+          "kind": "derived",
+          "method": "mechcalc fea.fd_advection_diffusion (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "c_mid": {
+          "absolute_error": 0.0001323952430065667,
+          "relative_error": 0.00010634839427960566,
+          "allowed_absolute_error": 0.00124492,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Reversed ends: c(L/2) = 2 + (0 \u2212 2)\u00b70.37754 = 1.24492"
+      }
+    },
+    {
+      "id": "fea-024",
+      "calculator": "fea.truss_fea",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "nodes": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            0.001
+          ],
+          [
+            1,
+            2,
+            200000000000.0,
+            0.001
+          ],
+          [
+            0,
+            3,
+            200000000000.0,
+            0.001
+          ],
+          [
+            1,
+            3,
+            200000000000.0,
+            0.001
+          ],
+          [
+            1,
+            4,
+            200000000000.0,
+            0.001
+          ],
+          [
+            2,
+            4,
+            200000000000.0,
+            0.001
+          ],
+          [
+            3,
+            4,
+            200000000000.0,
+            0.001
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "x"
+          ],
+          [
+            0,
+            "y"
+          ],
+          [
+            2,
+            "y"
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            0,
+            -10
+          ]
+        ]
+      },
+      "solve_for": [
+        "K",
+        "displacements",
+        "reactions",
+        "element_forces",
+        "element_stresses"
+      ],
+      "expected_as_specified": {
+        "element_forces": [
+          2.5,
+          2.5,
+          -5.590169944,
+          5.590169944,
+          5.590169944,
+          -5.590169944,
+          -5.0
+        ],
+        "reactions": [
+          [
+            0,
+            "x",
+            0.0
+          ],
+          [
+            0,
+            "y",
+            5.0
+          ],
+          [
+            2,
+            "y",
+            5.0
+          ]
+        ],
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            2.5e-08,
+            -1.77254249e-07
+          ],
+          [
+            5e-08,
+            0.0
+          ],
+          [
+            5e-08,
+            -9.4877124e-08
+          ],
+          [
+            0.0,
+            -9.4877124e-08
+          ]
+        ]
+      },
+      "expected_SI": {
+        "element_forces": [
+          2.5,
+          2.5,
+          -5.590169944,
+          5.590169944,
+          5.590169944,
+          -5.590169944,
+          -5.0
+        ],
+        "reactions": [
+          [
+            0,
+            "x",
+            0.0
+          ],
+          [
+            0,
+            "y",
+            5.0
+          ],
+          [
+            2,
+            "y",
+            5.0
+          ]
+        ],
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            2.5e-08,
+            -1.77254249e-07
+          ],
+          [
+            5e-08,
+            0.0
+          ],
+          [
+            5e-08,
+            -9.4877124e-08
+          ],
+          [
+            0.0,
+            -9.4877124e-08
+          ]
+        ]
+      },
+      "actual_SI": {
+        "element_forces": {
+          "value": [
+            2.4999999999999987,
+            2.5,
+            -5.590169943749475,
+            5.590169943749475,
+            5.590169943749475,
+            -5.5901699437494745,
+            -5.0
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.truss_fea (procedure)",
+          "unit": ""
+        },
+        "reactions": {
+          "value": [
+            [
+              0,
+              "x",
+              1.7763568394002505e-15
+            ],
+            [
+              0,
+              "y",
+              5.000000000000001
+            ],
+            [
+              2,
+              "y",
+              5.0
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.truss_fea (procedure)",
+          "unit": ""
+        },
+        "displacements": {
+          "value": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              2.4999999999999986e-08,
+              -1.7725424859373688e-07
+            ],
+            [
+              4.9999999999999985e-08,
+              0.0
+            ],
+            [
+              4.999999999999998e-08,
+              -9.487712429686843e-08
+            ],
+            [
+              -2.7085762835074596e-23,
+              -9.487712429686843e-08
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.truss_fea (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "element_forces": [
+          {
+            "absolute_error": 1.3322676295501878e-15,
+            "relative_error": 5.329070518200751e-16,
+            "allowed_absolute_error": 0.005,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.005,
+            "passed": true
+          },
+          {
+            "absolute_error": 2.505249341311355e-10,
+            "relative_error": 4.481526262006168e-11,
+            "allowed_absolute_error": 0.011180339888,
+            "passed": true
+          },
+          {
+            "absolute_error": 2.505249341311355e-10,
+            "relative_error": 4.481526262006168e-11,
+            "allowed_absolute_error": 0.011180339888,
+            "passed": true
+          },
+          {
+            "absolute_error": 2.505249341311355e-10,
+            "relative_error": 4.481526262006168e-11,
+            "allowed_absolute_error": 0.011180339888,
+            "passed": true
+          },
+          {
+            "absolute_error": 2.505258223095552e-10,
+            "relative_error": 4.4815421502247485e-11,
+            "allowed_absolute_error": 0.011180339888,
+            "passed": true
+          },
+          {
+            "absolute_error": 0.0,
+            "relative_error": 0.0,
+            "allowed_absolute_error": 0.01,
+            "passed": true
+          }
+        ],
+        "reactions": [
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 1.7763568394002505e-15,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 8.881784197001252e-16,
+              "relative_error": 1.7763568394002506e-16,
+              "allowed_absolute_error": 0.01,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.004,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.01,
+              "passed": true
+            }
+          ]
+        ],
+        "displacements": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 1.3234889800848443e-23,
+              "relative_error": 5.293955920339377e-16,
+              "allowed_absolute_error": 5e-11,
+              "passed": true
+            },
+            {
+              "absolute_error": 4.062631271756293e-16,
+              "relative_error": 2.2919796251294902e-09,
+              "allowed_absolute_error": 3.5450849800000005e-10,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 1.3234889800848443e-23,
+              "relative_error": 2.6469779601696886e-16,
+              "allowed_absolute_error": 1e-10,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 1.9852334701272664e-23,
+              "relative_error": 3.970466940254533e-16,
+              "allowed_absolute_error": 1e-10,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.968684382259322e-16,
+              "relative_error": 3.1289780477107655e-09,
+              "allowed_absolute_error": 1.89754248e-10,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 2.7085762835074596e-23,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 2.968684382259322e-16,
+              "relative_error": 3.1289780477107655e-09,
+              "allowed_absolute_error": 1.89754248e-10,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "7-member bridge, 10 N down at the midspan bottom node. Method of joints (linear equilibrium solve): bottom chords +2.5 N tension, end diagonals \u22122\u221a5 = \u22125.59017 N compression, inner verticals +2\u221a5 tension, top chord \u22125 N compression; reactions 5 N each end (R0x = 0). Displacements from virtual work \u03a3N\u00b7n\u00b7L/(EA) (unit loads) and energy \u00bdP\u00b7u = \u00bd\u03a3N\u00b2L/(EA): u1y = \u2212\u03a3N\u00b2L/(EA)/P = \u22121.77254249e-7 m, u1x = N(0-1)L/(EA) = 2.5e-8 m."
+      }
+    },
+    {
+      "id": "fea-025",
+      "calculator": "fea.beam_fea",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            8e-06,
+            2.0
+          ],
+          [
+            1,
+            2,
+            200000000000.0,
+            8e-06,
+            2.0
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "v"
+          ],
+          [
+            0,
+            "theta"
+          ]
+        ],
+        "loads": [
+          [
+            2,
+            -1000.0,
+            0.0
+          ]
+        ]
+      },
+      "solve_for": [
+        "K",
+        "displacements",
+        "reactions",
+        "end_forces"
+      ],
+      "expected_as_specified": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            -0.0041666667,
+            -0.00375
+          ],
+          [
+            -0.0133333333,
+            -0.005
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            1000.0
+          ],
+          [
+            0,
+            "theta",
+            4000.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            -0.0041666667,
+            -0.00375
+          ],
+          [
+            -0.0133333333,
+            -0.005
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            1000.0
+          ],
+          [
+            0,
+            "theta",
+            4000.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "displacements": {
+          "value": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              -0.004166666666666676,
+              -0.0037500000000000085
+            ],
+            [
+              -0.013333333333333364,
+              -0.005000000000000011
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.beam_fea (procedure)",
+          "unit": ""
+        },
+        "reactions": {
+          "value": [
+            [
+              0,
+              "v",
+              1000.0000000000036
+            ],
+            [
+              0,
+              "theta",
+              4000.00000000001
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.beam_fea (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "displacements": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 3.333332394828137e-11,
+              "relative_error": 7.999997683587547e-09,
+              "allowed_absolute_error": 8.3333334e-06,
+              "passed": true
+            },
+            {
+              "absolute_error": 8.673617379884035e-18,
+              "relative_error": 2.312964634635743e-15,
+              "allowed_absolute_error": 7.5e-06,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 3.3333363846921316e-11,
+              "relative_error": 2.5000022947691046e-09,
+              "allowed_absolute_error": 2.66666666e-05,
+              "passed": true
+            },
+            {
+              "absolute_error": 1.1275702593849246e-17,
+              "relative_error": 2.2551405187698492e-15,
+              "allowed_absolute_error": 1e-05,
+              "passed": true
+            }
+          ]
+        ],
+        "reactions": [
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 3.637978807091713e-12,
+              "relative_error": 3.637978807091713e-15,
+              "allowed_absolute_error": 2.0,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 1.000444171950221e-11,
+              "relative_error": 2.5011104298755525e-15,
+              "allowed_absolute_error": 8.0,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two-element cantilever (L = 4 m total), 1 kN down at the tip. Exact Euler\u2013Bernoulli shape v(x) = \u2212P\u00b7x\u00b2(3L\u2212x)/(6EI), \u03b8 = v': tip v = PL\u00b3/3EI = 0.0133333 m down, \u03b8 = PL\u00b2/2EI = 0.005 rad; midspan (x=2) v = \u22120.0041667 m, \u03b8 = \u22120.00375 rad; base reactions +1000 N up and +PL = +4000 N\u00b7m"
+      }
+    },
+    {
+      "id": "fea-026",
+      "calculator": "fea.beam_fea",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            8e-06,
+            2.0
+          ],
+          [
+            1,
+            2,
+            200000000000.0,
+            8e-06,
+            2.0
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "v"
+          ],
+          [
+            0,
+            "theta"
+          ],
+          [
+            2,
+            "v"
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            -1000.0,
+            0.0
+          ]
+        ]
+      },
+      "solve_for": [
+        "K",
+        "displacements",
+        "reactions",
+        "end_forces"
+      ],
+      "expected_as_specified": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            -0.0003645833,
+            -7.8125e-05
+          ],
+          [
+            0.0,
+            0.0003125
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            687.5
+          ],
+          [
+            0,
+            "theta",
+            750.0
+          ],
+          [
+            2,
+            "v",
+            312.5
+          ]
+        ]
+      },
+      "expected_SI": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            -0.0003645833,
+            -7.8125e-05
+          ],
+          [
+            0.0,
+            0.0003125
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            687.5
+          ],
+          [
+            0,
+            "theta",
+            750.0
+          ],
+          [
+            2,
+            "v",
+            312.5
+          ]
+        ]
+      },
+      "actual_SI": {
+        "displacements": {
+          "value": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              -0.00036458333333333335,
+              -7.8125e-05
+            ],
+            [
+              0.0,
+              0.0003125
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.beam_fea (procedure)",
+          "unit": ""
+        },
+        "reactions": {
+          "value": [
+            [
+              0,
+              "v",
+              687.5
+            ],
+            [
+              0,
+              "theta",
+              750.0
+            ],
+            [
+              2,
+              "v",
+              312.5
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.beam_fea (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "displacements": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 3.333333332663016e-11,
+              "relative_error": 9.142857976937002e-08,
+              "allowed_absolute_error": 7.291666e-07,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 1.5625e-07,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 6.25e-07,
+              "passed": true
+            }
+          ]
+        ],
+        "reactions": [
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 1.375,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 1.5,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.004,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 0.625,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Propped cantilever (fixed at 0, roller at 2), 1 kN down at midspan. By superposition of a cantilever (P at a=L/2 and redundant prop R_B at the tip, zero tip deflection): R_B = 5P/16 = 312.5 N, R_A = 11P/16 = 687.5 N, M_A = 3PL/16 = 750 N\u00b7m; midspan v = \u22127PL\u00b3/768EI = \u22120.000364583 m, \u03b8 = \u2212P/(8EI) = \u22120.000078125 rad, tip rotation +P/(2EI) = 0.0003125 rad"
+      }
+    },
+    {
+      "id": "fea-027",
+      "calculator": "fea.beam_fea",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            8e-06,
+            2.0
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "v"
+          ],
+          [
+            0,
+            "theta"
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            -1000.0,
+            0.0
+          ]
+        ]
+      },
+      "solve_for": [
+        "K",
+        "displacements",
+        "reactions",
+        "end_forces"
+      ],
+      "expected_as_specified": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            -0.0016666667,
+            -0.00125
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            1000.0
+          ],
+          [
+            0,
+            "theta",
+            2000.0
+          ]
+        ]
+      },
+      "expected_SI": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            -0.0016666667,
+            -0.00125
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            1000.0
+          ],
+          [
+            0,
+            "theta",
+            2000.0
+          ]
+        ]
+      },
+      "actual_SI": {
+        "displacements": {
+          "value": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              -0.0016666666666666668,
+              -0.00125
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.beam_fea (procedure)",
+          "unit": ""
+        },
+        "reactions": {
+          "value": [
+            [
+              0,
+              "v",
+              1000.0000000000005
+            ],
+            [
+              0,
+              "theta",
+              2000.0000000000005
+            ]
+          ],
+          "kind": "derived",
+          "method": "mechcalc fea.beam_fea (procedure)",
+          "unit": ""
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "displacements": [
+          [
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 3.333333327242005e-11,
+              "relative_error": 1.999999956345204e-08,
+              "allowed_absolute_error": 3.3333334e-06,
+              "passed": true
+            },
+            {
+              "absolute_error": 0.0,
+              "relative_error": 0.0,
+              "allowed_absolute_error": 2.5e-06,
+              "passed": true
+            }
+          ]
+        ],
+        "reactions": [
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 4.547473508864641e-13,
+              "relative_error": 4.547473508864641e-16,
+              "allowed_absolute_error": 2.0,
+              "passed": true
+            }
+          ],
+          [
+            {
+              "absolute_error": 0,
+              "relative_error": null,
+              "allowed_absolute_error": 1e-12,
+              "passed": true
+            },
+            {
+              "passed": true
+            },
+            {
+              "absolute_error": 4.547473508864641e-13,
+              "relative_error": 2.2737367544323206e-16,
+              "allowed_absolute_error": 4.0,
+              "passed": true
+            }
+          ]
+        ]
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Downward tip load (sign check): v = PL\u00b3/3EI = \u22121000\u00b78/(3\u00b7200e9\u00b78e-6) = \u22120.0016667 m, \u03b8 = PL\u00b2/2EI = \u22120.00125 rad; base reaction +1000 N up and +PL = +2000 N\u00b7m"
+      }
+    },
+    {
+      "id": "fea-028",
+      "calculator": "fea.mesh_convergence",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f1": -0.5,
+        "f2": -0.52,
+        "h1": "0.5 m",
+        "h2": "1 m",
+        "p": 2,
+        "Fs": 3
+      },
+      "solve_for": [
+        "r",
+        "f_exact",
+        "eps",
+        "GCI"
+      ],
+      "expected_as_specified": {
+        "r": 2.0,
+        "f_exact": -0.4933333,
+        "eps": 0.0133333,
+        "GCI": 0.04
+      },
+      "expected_SI": {
+        "r": 2.0,
+        "f_exact": -0.4933333,
+        "eps": 0.0133333,
+        "GCI": 0.04
+      },
+      "actual_SI": {
+        "r": {
+          "value": 2.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.mesh_convergence (symbolic)"
+        },
+        "f_exact": {
+          "value": -0.49333333333333335,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.mesh_convergence (symbolic)"
+        },
+        "eps": {
+          "value": 0.013333333333333345,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.mesh_convergence (symbolic)"
+        },
+        "GCI": {
+          "value": 0.040000000000000036,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fea.mesh_convergence (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "r": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.001,
+          "passed": true
+        },
+        "f_exact": {
+          "absolute_error": 3.333333337129929e-08,
+          "relative_error": 6.756757220990209e-08,
+          "allowed_absolute_error": 0.00024666665,
+          "passed": true
+        },
+        "eps": {
+          "absolute_error": 3.333333334527844e-08,
+          "relative_error": 2.50000625091151e-06,
+          "allowed_absolute_error": 6.66665e-06,
+          "passed": true
+        },
+        "GCI": {
+          "absolute_error": 3.469446951953614e-17,
+          "relative_error": 8.673617379884035e-16,
+          "allowed_absolute_error": 2e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Signed quantities: r = 1/0.5 = 2; Richardson f_exact = f1 + (f1 \u2212 f2)/(r^p \u2212 1) = \u22120.5 + 0.02/3 = \u22120.493333; eps = |f1 \u2212 f2|/(|f1|(r^p \u2212 1)) = 0.02/(0.5\u00b73) = 0.013333; GCI (2 grids, Fs = 3) = 0.04"
+      }
+    }
+  ],
+  "passed": 28,
+  "failed": 0
+}

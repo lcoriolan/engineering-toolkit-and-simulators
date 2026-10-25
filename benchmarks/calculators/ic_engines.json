@@ -1,0 +1,1858 @@
+{
+  "section": "ic_engines",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k ic_engines",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "ic_engines.displacement_volume": {
+      "title": "Engine displacement (swept) volume",
+      "variables": [
+        {
+          "name": "V_d",
+          "unit": "m^3",
+          "desc": "swept (displacement) volume per cylinder",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "B",
+          "unit": "m",
+          "desc": "bore (cylinder) diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S",
+          "unit": "m",
+          "desc": "stroke",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N_cyl",
+          "unit": "",
+          "desc": "number of cylinders (positive integer)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": true,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_total",
+          "unit": "m^3",
+          "desc": "total engine displacement",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "V_d = pi/4*B**2*S",
+        "V_total = V_d*N_cyl"
+      ],
+      "procedure": null,
+      "outputs": [
+        "V_d",
+        "V_total"
+      ],
+      "assumptions": [
+        "V_d = (\u03c0/4) B\u00b2 S is the volume swept by one piston; total = V_d \u00d7 N_cyl."
+      ],
+      "method_references": [
+        "Cylinder swept-volume definition"
+      ],
+      "synthetic_example": {
+        "B": 0.086,
+        "S": 0.086,
+        "N_cyl": 4.0
+      }
+    },
+    "ic_engines.compression_ratio": {
+      "title": "Engine compression ratio",
+      "variables": [
+        {
+          "name": "r",
+          "unit": "",
+          "desc": "compression ratio",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_d",
+          "unit": "m^3",
+          "desc": "swept (displacement) volume",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_c",
+          "unit": "m^3",
+          "desc": "clearance volume (at TDC)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "r = 1 + V_d/V_c"
+      ],
+      "procedure": null,
+      "outputs": [
+        "r"
+      ],
+      "assumptions": [
+        "r = (V_d + V_c)/V_c = 1 + V_d/V_c, with V_c the combustion-chamber volume at TDC."
+      ],
+      "method_references": [
+        "Compression-ratio definition"
+      ],
+      "synthetic_example": {
+        "V_d": 0.0005,
+        "V_c": 6.25e-05
+      }
+    },
+    "ic_engines.engine_power": {
+      "title": "Indicated, brake and friction power",
+      "variables": [
+        {
+          "name": "IP",
+          "unit": "W",
+          "desc": "indicated power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "BP",
+          "unit": "W",
+          "desc": "brake power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "FP",
+          "unit": "W",
+          "desc": "friction power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "IP = BP + FP"
+      ],
+      "procedure": null,
+      "outputs": [
+        "IP"
+      ],
+      "assumptions": [
+        "Friction (and pumping) power is the difference between the cylinder indicated power and the brake power delivered at the shaft: IP = BP + FP."
+      ],
+      "method_references": [
+        "IP = BP + FP power balance"
+      ],
+      "synthetic_example": {
+        "BP": 75000.0,
+        "FP": 15000.0
+      }
+    },
+    "ic_engines.mep": {
+      "title": "Mean effective pressure (work per cycle / displacement)",
+      "variables": [
+        {
+          "name": "mep",
+          "unit": "Pa",
+          "desc": "mean effective pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_cycle",
+          "unit": "J",
+          "desc": "net work per cycle",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_d",
+          "unit": "m^3",
+          "desc": "swept (displacement) volume",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "mep = W_cycle/V_d"
+      ],
+      "procedure": null,
+      "outputs": [
+        "mep"
+      ],
+      "assumptions": [
+        "MEP is the constant pressure that would do the same net work over one cycle: MEP = W_cycle/V_d."
+      ],
+      "method_references": [
+        "Mean effective pressure definition"
+      ],
+      "synthetic_example": {
+        "W_cycle": 1200.0,
+        "V_d": 0.002
+      }
+    },
+    "ic_engines.indicated_power": {
+      "title": "Indicated power from MEP and engine speed",
+      "variables": [
+        {
+          "name": "IP",
+          "unit": "W",
+          "desc": "indicated power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "MEP",
+          "unit": "Pa",
+          "desc": "indicated mean effective pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_d",
+          "unit": "m^3",
+          "desc": "total engine displacement (all cylinders)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "Hz",
+          "desc": "engine speed in rev/s",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_rev",
+          "unit": "",
+          "desc": "engine cycle (two-stroke = 1 rev/power stroke, four-stroke = 2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "two-stroke",
+            "four-stroke"
+          ]
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _indicated_power(values):\n    \"\"\"Indicated power IP = MEP \u00b7 V_d \u00b7 N / n_rev (V_d = total engine displacement).\"\"\"\n    return {'IP': values['MEP'] * values['V_d'] * values['N'] / _n_rev(values)}\n",
+        "source": "ic_engines.py",
+        "line": 42
+      },
+      "outputs": [
+        "IP"
+      ],
+      "assumptions": [
+        "N in rev/s (3000 rpm = 50 rev/s); cycles per second are N/n_rev. V_d is the TOTAL displacement of all cylinders (multiply a per-cylinder swept volume by the cylinder count)."
+      ],
+      "method_references": [
+        "IP = MEP \u00b7 V_d \u00b7 N / n_rev"
+      ],
+      "synthetic_example": {
+        "MEP": 800000.0,
+        "V_d": 0.002,
+        "N": 50.0,
+        "n_rev": "four-stroke"
+      }
+    },
+    "ic_engines.brake_mep": {
+      "title": "Brake mean effective pressure from torque",
+      "variables": [
+        {
+          "name": "BMEP",
+          "unit": "Pa",
+          "desc": "brake mean effective pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "brake torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_d",
+          "unit": "m^3",
+          "desc": "total engine displacement (all cylinders)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_rev",
+          "unit": "",
+          "desc": "engine cycle (two-stroke = 1 rev/power stroke, four-stroke = 2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "two-stroke",
+            "four-stroke"
+          ]
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _brake_mep(values):\n    \"\"\"Brake mean effective pressure BMEP = 2\u03c0 n_rev T / V_d (V_d = total engine displacement).\"\"\"\n    return {'BMEP': 2.0 * PI * _n_rev(values) * values['T'] / values['V_d']}\n",
+        "source": "ic_engines.py",
+        "line": 47
+      },
+      "outputs": [
+        "BMEP"
+      ],
+      "assumptions": [
+        "BMEP = BP/(V_d N/n_rev) = 2\u03c0 n_rev T / V_d, so a four-stroke gives 4\u03c0 T/V_d and a two-stroke 2\u03c0 T/V_d. V_d is the TOTAL displacement of all cylinders."
+      ],
+      "method_references": [
+        "BMEP from torque (recalled)"
+      ],
+      "synthetic_example": {
+        "T": 250.0,
+        "V_d": 0.002,
+        "n_rev": "four-stroke"
+      }
+    },
+    "ic_engines.brake_thermal_efficiency": {
+      "title": "Brake thermal efficiency",
+      "variables": [
+        {
+          "name": "eta_bth",
+          "unit": "",
+          "desc": "brake thermal efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7bth",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "BP",
+          "unit": "W",
+          "desc": "brake power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_dot_f",
+          "unit": "kg/s",
+          "desc": "fuel mass flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "LHV",
+          "unit": "J/kg",
+          "desc": "fuel lower heating value",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eta_bth = BP/(m_dot_f*LHV)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eta_bth"
+      ],
+      "assumptions": [
+        "\u03b7_bth = brake power / fuel-energy rate. LHV is the lower heating value (water vapour in the exhaust); use HHV for a gross figure."
+      ],
+      "method_references": [
+        "\u03b7_bth = BP/(\u1e41_f LHV)"
+      ],
+      "synthetic_example": {
+        "BP": 75000.0,
+        "m_dot_f": 0.005,
+        "LHV": 44000000.0
+      }
+    },
+    "ic_engines.mechanical_efficiency": {
+      "title": "Mechanical efficiency",
+      "variables": [
+        {
+          "name": "eta_m",
+          "unit": "",
+          "desc": "mechanical efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7m",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "BP",
+          "unit": "W",
+          "desc": "brake power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "IP",
+          "unit": "W",
+          "desc": "indicated power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "eta_m = BP/IP"
+      ],
+      "procedure": null,
+      "outputs": [
+        "eta_m"
+      ],
+      "assumptions": [
+        "\u03b7_m = BP/IP = 1 \u2212 FP/IP; the share of indicated power delivered at the shaft."
+      ],
+      "method_references": [
+        "\u03b7_m = BP/IP"
+      ],
+      "synthetic_example": {
+        "BP": 75000.0,
+        "IP": 90000.0
+      }
+    },
+    "ic_engines.volumetric_efficiency": {
+      "title": "Volumetric efficiency",
+      "variables": [
+        {
+          "name": "eta_v",
+          "unit": "",
+          "desc": "volumetric efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7v",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_dot_a",
+          "unit": "kg/s",
+          "desc": "actual air mass flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho_a",
+          "unit": "kg/m^3",
+          "desc": "intake air density",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_d",
+          "unit": "m^3",
+          "desc": "total engine displacement (all cylinders)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "Hz",
+          "desc": "engine speed in rev/s",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_rev",
+          "unit": "",
+          "desc": "engine cycle (two-stroke = 1 rev/power stroke, four-stroke = 2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "two-stroke",
+            "four-stroke"
+          ]
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _volumetric_efficiency(values):\n    \"\"\"Volumetric efficiency \u03b7_v = \u1e41_a / (\u03c1_a V_d N / n_rev) (V_d = total engine displacement).\"\"\"\n    n = _n_rev(values)\n    return {'eta_v': values['m_dot_a'] / (values['rho_a'] * values['V_d'] * values['N'] / n)}\n",
+        "source": "ic_engines.py",
+        "line": 52
+      },
+      "outputs": [
+        "eta_v"
+      ],
+      "assumptions": [
+        "\u03b7_v compares the actual inducted air to the ideal charge \u03c1_a V_d N/n_rev the swept volume could draw at intake conditions. V_d is the TOTAL displacement of all cylinders."
+      ],
+      "method_references": [
+        "\u03b7_v = \u1e41_a / (\u03c1_a V_d N / n_rev)"
+      ],
+      "synthetic_example": {
+        "m_dot_a": 0.05,
+        "rho_a": 1.18,
+        "V_d": 0.002,
+        "N": 50.0,
+        "n_rev": "four-stroke"
+      }
+    },
+    "ic_engines.bsfc": {
+      "title": "Brake specific fuel consumption",
+      "variables": [
+        {
+          "name": "bsfc",
+          "unit": "kg/J",
+          "desc": "brake specific fuel consumption",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_dot_f",
+          "unit": "kg/s",
+          "desc": "fuel mass flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "BP",
+          "unit": "W",
+          "desc": "brake power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "bsfc = m_dot_f/BP"
+      ],
+      "procedure": null,
+      "outputs": [
+        "bsfc"
+      ],
+      "assumptions": [
+        "BSFC = \u1e41_f/BP in kg per joule of shaft work (multiply by 3.6e9 for g/kWh)."
+      ],
+      "method_references": [
+        "BSFC = \u1e41_f/BP"
+      ],
+      "synthetic_example": {
+        "m_dot_f": 0.005,
+        "BP": 75000.0
+      }
+    },
+    "ic_engines.piston_speed": {
+      "title": "Mean piston speed",
+      "variables": [
+        {
+          "name": "S_p",
+          "unit": "m/s",
+          "desc": "mean piston speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S",
+          "unit": "m",
+          "desc": "stroke",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "Hz",
+          "desc": "engine speed in rev/s",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "S_p = 2*S*N"
+      ],
+      "procedure": null,
+      "outputs": [
+        "S_p"
+      ],
+      "assumptions": [
+        "Mean piston speed = 2 \u00d7 stroke \u00d7 revolutions per second (N in rev/s)."
+      ],
+      "method_references": [
+        "Mean piston speed S_p = 2 S N"
+      ],
+      "synthetic_example": {
+        "S": 0.086,
+        "N": 50.0
+      }
+    },
+    "ic_engines.air_fuel_ratio": {
+      "title": "Air-fuel ratio",
+      "variables": [
+        {
+          "name": "AF",
+          "unit": "",
+          "desc": "air-fuel ratio (mass)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_air",
+          "unit": "kg",
+          "desc": "air mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m_fuel",
+          "unit": "kg",
+          "desc": "fuel mass",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "AF = m_air/m_fuel"
+      ],
+      "procedure": null,
+      "outputs": [
+        "AF"
+      ],
+      "assumptions": [
+        "Mass basis. The fuel-air ratio is the reciprocal, FA = 1/AF."
+      ],
+      "method_references": [
+        "AF = m_air/m_fuel"
+      ],
+      "synthetic_example": {
+        "m_air": 14.7,
+        "m_fuel": 1.0
+      }
+    },
+    "ic_engines.equivalence_ratio": {
+      "title": "Equivalence ratio and excess-air ratio",
+      "variables": [
+        {
+          "name": "phi",
+          "unit": "",
+          "desc": "equivalence ratio AF_stoich/AF_actual",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c6",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam",
+          "unit": "",
+          "desc": "excess-air (lambda) ratio AF_actual/AF_stoich",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "AF_stoich",
+          "unit": "",
+          "desc": "stoichiometric air-fuel ratio",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "AF_actual",
+          "unit": "",
+          "desc": "actual air-fuel ratio",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "phi = AF_stoich/AF_actual",
+        "lam = AF_actual/AF_stoich"
+      ],
+      "procedure": null,
+      "outputs": [
+        "phi",
+        "lam"
+      ],
+      "assumptions": [
+        "\u03c6 = 1 (\u03bb = 1) is stoichiometric; \u03c6 > 1 (\u03bb < 1) is fuel-rich; \u03c6 < 1 (\u03bb > 1) is fuel-lean. \u03bb = 1/\u03c6."
+      ],
+      "method_references": [
+        "Equivalence ratio \u03c6 = AF_st/AF; excess-air ratio \u03bb = AF/AF_st"
+      ],
+      "synthetic_example": {
+        "AF_stoich": 14.7,
+        "AF_actual": 14.7
+      }
+    },
+    "ic_engines.heat_balance": {
+      "title": "Engine heat (energy) balance",
+      "variables": [
+        {
+          "name": "Q_fuel",
+          "unit": "W",
+          "desc": "fuel-energy input rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "BP",
+          "unit": "W",
+          "desc": "brake power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q_coolant",
+          "unit": "W",
+          "desc": "heat rejected to the coolant",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q_exhaust",
+          "unit": "W",
+          "desc": "heat rejected in the exhaust",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q_misc",
+          "unit": "W",
+          "desc": "unaccounted and other losses",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q_fuel = BP + Q_coolant + Q_exhaust + Q_misc"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q_fuel"
+      ],
+      "assumptions": [
+        "First-law split of the fuel energy rate into brake power, coolant and exhaust heat, and the residual (radiation, oil, unaccounted) losses."
+      ],
+      "method_references": [
+        "Engine energy balance"
+      ],
+      "synthetic_example": {
+        "BP": 75000.0,
+        "Q_coolant": 90000.0,
+        "Q_exhaust": 80000.0,
+        "Q_misc": 15000.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "ic_engines-001",
+      "calculator": "ic_engines.displacement_volume",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "B": "90 mm",
+        "S": "85 mm",
+        "N_cyl": 6
+      },
+      "solve_for": [
+        "V_d",
+        "V_total"
+      ],
+      "expected_as_specified": {
+        "V_d": "5.4075e-4 m^3",
+        "V_total": "3.2445e-3 m^3"
+      },
+      "expected_SI": {
+        "V_d": 0.00054075,
+        "V_total": 0.0032445
+      },
+      "actual_SI": {
+        "V_d": {
+          "value": 0.0005407466354991432,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.displacement_volume (symbolic)"
+        },
+        "V_total": {
+          "value": 0.0032444798129948587,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.displacement_volume (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V_d": {
+          "absolute_error": 3.3645008568452053e-09,
+          "relative_error": 6.221915592871392e-06,
+          "allowed_absolute_error": 1.0815e-06,
+          "passed": true
+        },
+        "V_total": {
+          "absolute_error": 2.0187005141288072e-08,
+          "relative_error": 6.221915592938226e-06,
+          "allowed_absolute_error": 6.489e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V_d = (\u03c0/4)\u00b70.09\u00b2\u00b70.085 = 0.785398\u00b70.0006885 = 5.4075e-4 m\u00b3; V_total = 6\u00b7V_d = 3.2445e-3 m\u00b3"
+      }
+    },
+    {
+      "id": "ic_engines-002",
+      "calculator": "ic_engines.compression_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V_d": "500 cm^3",
+        "V_c": "50 cm^3"
+      },
+      "solve_for": [
+        "r"
+      ],
+      "expected_as_specified": {
+        "r": 11.0
+      },
+      "expected_SI": {
+        "r": 11.0
+      },
+      "actual_SI": {
+        "r": {
+          "value": 11.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.compression_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "r": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.022,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 1 + 500/50 = 1 + 10 = 11"
+      }
+    },
+    {
+      "id": "ic_engines-003",
+      "calculator": "ic_engines.compression_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "V_d": "5e-4 m^3",
+        "r": 9.0
+      },
+      "solve_for": [
+        "V_c"
+      ],
+      "expected_as_specified": {
+        "V_c": "6.25e-5 m^3"
+      },
+      "expected_SI": {
+        "V_c": 6.25e-05
+      },
+      "actual_SI": {
+        "V_c": {
+          "value": 6.25e-05,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.compression_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "V_c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.25e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V_c = V_d/(r \u2212 1) = 5e-4/8 = 6.25e-5 m\u00b3"
+      }
+    },
+    {
+      "id": "ic_engines-004",
+      "calculator": "ic_engines.engine_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "BP": "90 kW",
+        "FP": "20 kW"
+      },
+      "solve_for": [
+        "IP"
+      ],
+      "expected_as_specified": {
+        "IP": "110 kW"
+      },
+      "expected_SI": {
+        "IP": 110000.0
+      },
+      "actual_SI": {
+        "IP": {
+          "value": 110000.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.engine_power (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "IP": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 220.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "IP = BP + FP = 90 + 20 = 110 kW"
+      }
+    },
+    {
+      "id": "ic_engines-005",
+      "calculator": "ic_engines.mep",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W_cycle": "2.4 kJ",
+        "V_d": "3 L"
+      },
+      "solve_for": [
+        "mep"
+      ],
+      "expected_as_specified": {
+        "mep": "800 kPa"
+      },
+      "expected_SI": {
+        "mep": 800000.0
+      },
+      "actual_SI": {
+        "mep": {
+          "value": 799999.9999999998,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.mep (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "mep": {
+          "absolute_error": 2.3283064365386963e-10,
+          "relative_error": 2.9103830456733706e-16,
+          "allowed_absolute_error": 1600.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "MEP = 2.4e3/3.0e-3 = 800 000 Pa = 800 kPa"
+      }
+    },
+    {
+      "id": "ic_engines-006",
+      "calculator": "ic_engines.indicated_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "MEP": "800 kPa",
+        "V_d": "2 L",
+        "N": "50 1/s",
+        "n_rev": "four-stroke"
+      },
+      "solve_for": [
+        "IP"
+      ],
+      "expected_as_specified": {
+        "IP": "40 kW"
+      },
+      "expected_SI": {
+        "IP": 40000.0
+      },
+      "actual_SI": {
+        "IP": {
+          "value": 40000.000000000015,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.indicated_power (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "IP": {
+          "absolute_error": 1.4551915228366852e-11,
+          "relative_error": 3.637978807091713e-16,
+          "allowed_absolute_error": 80.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "IP = 800e3\u00b72e-3\u00b750/2 = 40 000 W = 40 kW (3000 rpm four-stroke)"
+      }
+    },
+    {
+      "id": "ic_engines-007",
+      "calculator": "ic_engines.indicated_power",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "MEP": "800 kPa",
+        "V_d": "2 L",
+        "N": "50 1/s",
+        "n_rev": "two-stroke"
+      },
+      "solve_for": [
+        "IP"
+      ],
+      "expected_as_specified": {
+        "IP": "80 kW"
+      },
+      "expected_SI": {
+        "IP": 80000.0
+      },
+      "actual_SI": {
+        "IP": {
+          "value": 80000.00000000003,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.indicated_power (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "IP": {
+          "absolute_error": 2.9103830456733704e-11,
+          "relative_error": 3.637978807091713e-16,
+          "allowed_absolute_error": 160.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "IP = 800e3\u00b72e-3\u00b750/1 = 80 000 W = 80 kW (two-stroke, one power stroke per revolution)"
+      }
+    },
+    {
+      "id": "ic_engines-008",
+      "calculator": "ic_engines.brake_mep",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T": "250 N*m",
+        "V_d": "2 L",
+        "n_rev": "four-stroke"
+      },
+      "solve_for": [
+        "BMEP"
+      ],
+      "expected_as_specified": {
+        "BMEP": "1.5708 MPa"
+      },
+      "expected_SI": {
+        "BMEP": 1570800.0
+      },
+      "actual_SI": {
+        "BMEP": {
+          "value": 1570796.326794896,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.brake_mep (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "BMEP": {
+          "absolute_error": 3.6732051039580256,
+          "relative_error": 2.3384295288757485e-06,
+          "allowed_absolute_error": 3141.6,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "BMEP = 2\u03c0\u00b72\u00b7250/2e-3 = 4\u03c0\u00b7250/0.002 = 1 570 796 Pa = 1.5708 MPa (four-stroke)"
+      }
+    },
+    {
+      "id": "ic_engines-009",
+      "calculator": "ic_engines.brake_mep",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "T": "300 N*m",
+        "V_d": "2.5 L",
+        "n_rev": "two-stroke"
+      },
+      "solve_for": [
+        "BMEP"
+      ],
+      "expected_as_specified": {
+        "BMEP": "753.98 kPa"
+      },
+      "expected_SI": {
+        "BMEP": 753980.0
+      },
+      "actual_SI": {
+        "BMEP": {
+          "value": 753982.2368615501,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.brake_mep (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "BMEP": {
+          "absolute_error": 2.236861550132744,
+          "relative_error": 2.966738574143537e-06,
+          "allowed_absolute_error": 1507.96,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "BMEP = 2\u03c0\u00b71\u00b7300/2.5e-3 = 600\u03c0/0.0025 = 753 982 Pa = 753.98 kPa (two-stroke)"
+      }
+    },
+    {
+      "id": "ic_engines-010",
+      "calculator": "ic_engines.brake_thermal_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "BP": "100 kW",
+        "m_dot_f": "6 g/s",
+        "LHV": "43 MJ/kg"
+      },
+      "solve_for": [
+        "eta_bth"
+      ],
+      "expected_as_specified": {
+        "eta_bth": "0.38760"
+      },
+      "expected_SI": {
+        "eta_bth": 0.3876
+      },
+      "actual_SI": {
+        "eta_bth": {
+          "value": 0.3875968992248062,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.brake_thermal_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta_bth": {
+          "absolute_error": 3.100775193776162e-06,
+          "relative_error": 7.999936000454494e-06,
+          "allowed_absolute_error": 0.0007752,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b7_bth = 100e3/(0.006\u00b743e6) = 100e3/258e3 = 0.38760"
+      }
+    },
+    {
+      "id": "ic_engines-011",
+      "calculator": "ic_engines.mechanical_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "BP": "88 kW",
+        "IP": "100 kW"
+      },
+      "solve_for": [
+        "eta_m"
+      ],
+      "expected_as_specified": {
+        "eta_m": 0.88
+      },
+      "expected_SI": {
+        "eta_m": 0.88
+      },
+      "actual_SI": {
+        "eta_m": {
+          "value": 0.88,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.mechanical_efficiency (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta_m": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00176,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b7_m = 88/100 = 0.88"
+      }
+    },
+    {
+      "id": "ic_engines-012",
+      "calculator": "ic_engines.volumetric_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m_dot_a": "0.05 kg/s",
+        "rho_a": "1.18 kg/m^3",
+        "V_d": "2 L",
+        "N": "50 1/s",
+        "n_rev": "four-stroke"
+      },
+      "solve_for": [
+        "eta_v"
+      ],
+      "expected_as_specified": {
+        "eta_v": "0.84746"
+      },
+      "expected_SI": {
+        "eta_v": 0.84746
+      },
+      "actual_SI": {
+        "eta_v": {
+          "value": 0.8474576271186439,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.volumetric_efficiency (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta_v": {
+          "absolute_error": 2.372881356071943e-06,
+          "relative_error": 2.7999921601868443e-06,
+          "allowed_absolute_error": 0.00169492,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b7_v = 0.05/(1.18\u00b72e-3\u00b750/2) = 0.05/0.059 = 0.84746"
+      }
+    },
+    {
+      "id": "ic_engines-013",
+      "calculator": "ic_engines.volumetric_efficiency",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m_dot_a": "0.05 kg/s",
+        "rho_a": "1.18 kg/m^3",
+        "V_d": "2 L",
+        "N": "50 1/s",
+        "n_rev": "two-stroke"
+      },
+      "solve_for": [
+        "eta_v"
+      ],
+      "expected_as_specified": {
+        "eta_v": "0.42373"
+      },
+      "expected_SI": {
+        "eta_v": 0.42373
+      },
+      "actual_SI": {
+        "eta_v": {
+          "value": 0.42372881355932196,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.volumetric_efficiency (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "eta_v": {
+          "absolute_error": 1.1864406780359715e-06,
+          "relative_error": 2.7999921601868443e-06,
+          "allowed_absolute_error": 0.00084746,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03b7_v = 0.05/(1.18\u00b72e-3\u00b750/1) = 0.05/0.118 = 0.42373 (two-stroke)"
+      }
+    },
+    {
+      "id": "ic_engines-014",
+      "calculator": "ic_engines.bsfc",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m_dot_f": "20 kg/h",
+        "BP": "80 kW"
+      },
+      "solve_for": [
+        "bsfc"
+      ],
+      "expected_as_specified": {
+        "bsfc": "6.9444e-8"
+      },
+      "expected_SI": {
+        "bsfc": 6.9444e-08
+      },
+      "actual_SI": {
+        "bsfc": {
+          "value": 6.944444444444445e-08,
+          "unit": "kg/J",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.bsfc (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "bsfc": {
+          "absolute_error": 4.4444444445671276e-13,
+          "relative_error": 6.4000409604388106e-06,
+          "allowed_absolute_error": 1.38888e-10,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "BSFC = (20/3600)/80 000 = 0.0055556/80 000 = 6.9444e-8 kg/J (= 250 g/kWh)"
+      }
+    },
+    {
+      "id": "ic_engines-015",
+      "calculator": "ic_engines.piston_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "S": "90 mm",
+        "N": "40 1/s"
+      },
+      "solve_for": [
+        "S_p"
+      ],
+      "expected_as_specified": {
+        "S_p": "7.2 m/s"
+      },
+      "expected_SI": {
+        "S_p": 7.2
+      },
+      "actual_SI": {
+        "S_p": {
+          "value": 7.199999999999999,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.piston_speed (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "S_p": {
+          "absolute_error": 8.881784197001252e-16,
+          "relative_error": 1.2335811384723962e-16,
+          "allowed_absolute_error": 0.014400000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "S_p = 2\u00b70.09\u00b740 = 7.2 m/s"
+      }
+    },
+    {
+      "id": "ic_engines-016",
+      "calculator": "ic_engines.air_fuel_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "m_air": "15.5 kg",
+        "m_fuel": "1 kg"
+      },
+      "solve_for": [
+        "AF"
+      ],
+      "expected_as_specified": {
+        "AF": 15.5
+      },
+      "expected_SI": {
+        "AF": 15.5
+      },
+      "actual_SI": {
+        "AF": {
+          "value": 15.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.air_fuel_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "AF": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.031,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "AF = 15.5/1 = 15.5"
+      }
+    },
+    {
+      "id": "ic_engines-017",
+      "calculator": "ic_engines.equivalence_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "AF_stoich": 15.0,
+        "AF_actual": 18.0
+      },
+      "solve_for": [
+        "phi",
+        "lam"
+      ],
+      "expected_as_specified": {
+        "phi": "0.83333",
+        "lam": 1.2
+      },
+      "expected_SI": {
+        "phi": 0.83333,
+        "lam": 1.2
+      },
+      "actual_SI": {
+        "phi": {
+          "value": 0.8333333333333334,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.equivalence_ratio (symbolic)"
+        },
+        "lam": {
+          "value": 1.2,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.equivalence_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "phi": {
+          "absolute_error": 3.3333333333551707e-06,
+          "relative_error": 4.000016000090205e-06,
+          "allowed_absolute_error": 0.0016666600000000001,
+          "passed": true
+        },
+        "lam": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0024,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03c6 = 15.0/18.0 = 0.83333; \u03bb = 18.0/15.0 = 1.2 (lean)"
+      }
+    },
+    {
+      "id": "ic_engines-018",
+      "calculator": "ic_engines.equivalence_ratio",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "AF_stoich": 14.7,
+        "phi": 0.8
+      },
+      "solve_for": [
+        "AF_actual",
+        "lam"
+      ],
+      "expected_as_specified": {
+        "AF_actual": 18.375
+      },
+      "expected_SI": {
+        "AF_actual": 18.375
+      },
+      "actual_SI": {
+        "AF_actual": {
+          "value": 18.374999999999996,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.equivalence_ratio (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "AF_actual": {
+          "absolute_error": 3.552713678800501e-15,
+          "relative_error": 1.9334496211159188e-16,
+          "allowed_absolute_error": 0.03675,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "AF_actual = AF_st/\u03c6 = 14.7/0.8 = 18.375 (lean)"
+      }
+    },
+    {
+      "id": "ic_engines-019",
+      "calculator": "ic_engines.heat_balance",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "BP": "80 kW",
+        "Q_coolant": "100 kW",
+        "Q_exhaust": "85 kW",
+        "Q_misc": "20 kW"
+      },
+      "solve_for": [
+        "Q_fuel"
+      ],
+      "expected_as_specified": {
+        "Q_fuel": "285 kW"
+      },
+      "expected_SI": {
+        "Q_fuel": 285000.0
+      },
+      "actual_SI": {
+        "Q_fuel": {
+          "value": 285000.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc ic_engines.heat_balance (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Q_fuel": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 570.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q_fuel = 80 + 100 + 85 + 20 = 285 kW"
+      }
+    }
+  ],
+  "passed": 19,
+  "failed": 0
+}

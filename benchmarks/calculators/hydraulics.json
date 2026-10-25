@@ -1,0 +1,2303 @@
+{
+  "section": "hydraulics",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k hydraulics",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "hydraulics.cylinder_force": {
+      "title": "Hydraulic cylinder extension and retraction force (F = p\u00b7A)",
+      "variables": [
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "gauge pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "bore diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "rod diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_bore",
+          "unit": "m^2",
+          "desc": "piston (cap-end) area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_ann",
+          "unit": "m^2",
+          "desc": "annulus (rod-end) area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_ext",
+          "unit": "N",
+          "desc": "extension force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "F_ret",
+          "unit": "N",
+          "desc": "retraction force",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "A_bore = pi*D**2/4",
+        "A_ann = pi*(D**2 - d**2)/4",
+        "F_ext = p*A_bore",
+        "F_ret = p*A_ann"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A_bore",
+        "A_ann",
+        "F_ext",
+        "F_ret"
+      ],
+      "assumptions": [
+        "Double-acting cylinder; extension acts on the full bore, retraction on the annulus (bore minus rod). Friction and seal drag neglected."
+      ],
+      "method_references": [
+        "F = p\u00b7A; annulus area = \u03c0(D\u00b2 \u2212 d\u00b2)/4"
+      ],
+      "synthetic_example": {
+        "p": 10000000.0,
+        "D": 0.05,
+        "d": 0.02
+      }
+    },
+    "hydraulics.cylinder_speed": {
+      "title": "Cylinder extension and retraction speeds from flow rate (v = Q/A)",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "flow rate into the cylinder",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "bore diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "rod diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_bore",
+          "unit": "m^2",
+          "desc": "piston (cap-end) area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_ann",
+          "unit": "m^2",
+          "desc": "annulus (rod-end) area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_ext",
+          "unit": "m/s",
+          "desc": "extension speed Q/A_bore",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v_ret",
+          "unit": "m/s",
+          "desc": "retraction speed Q/A_ann",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _cylinder_speed(v):\n    \"\"\"Extension and retraction speeds of a double-acting cylinder from the flow rate and geometry.\"\"\"\n    D, d, Q = v['D'], v['d'], v['Q']\n    if D <= 0:\n        raise MechError('D: bore diameter must be positive')\n    if d < 0:\n        raise MechError('d: rod diameter must be non-negative')\n    if d > D:\n        raise MechError(f'd = {d:g} exceeds the bore D = {D:g}: the rod cannot be larger than the bore')\n    A_bore = PI * D * D / 4.0\n    A_ann = PI * (D * D - d * d) / 4.0\n    v_ext = Q / A_bore\n    warnings = []\n    if A_ann <= 1e-12 * A_bore:\n        warnings.append('d \u2248 D: the annulus area is \u2248 0, so the retraction speed is unbounded')\n        v_ret = None\n    else:\n        v_ret = Q / A_ann\n    return {'A_bore': A_bore, 'A_ann': A_ann, 'v_ext': v_ext, 'v_ret': v_ret, '_warnings': warnings}\n",
+        "source": "hydraulics.py",
+        "line": 28
+      },
+      "outputs": [
+        "v_ret",
+        "v_ext",
+        "A_bore",
+        "A_ann"
+      ],
+      "assumptions": [
+        "Incompressible flow; extension uses the full bore area, retraction the annulus (bore minus rod). Leakage neglected. The rod must be smaller than the bore; when d \u2248 D the annulus vanishes and the retraction speed is unbounded (a warning is raised)."
+      ],
+      "method_references": [
+        "Q = A\u00b7v; bore area \u03c0D\u00b2/4, annulus area \u03c0(D\u00b2 \u2212 d\u00b2)/4"
+      ],
+      "synthetic_example": {
+        "Q": 0.0003333333333333333,
+        "D": 0.05,
+        "d": 0.02
+      }
+    },
+    "hydraulics.pump": {
+      "title": "Pump displacement, flow, efficiencies and drive torque",
+      "variables": [
+        {
+          "name": "D_p",
+          "unit": "m^3/revolution",
+          "desc": "displacement per revolution (cc/rev = cm\u00b3/rev)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "Hz",
+          "desc": "pump shaft speed in rev/s (Hz); 1500 rpm = 25 rev/s",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dp",
+          "unit": "Pa",
+          "desc": "pressure rise across the pump",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394p",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q_th",
+          "unit": "m^3/s",
+          "desc": "theoretical (geometric) flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q_act",
+          "unit": "m^3/s",
+          "desc": "actual delivered flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta_v",
+          "unit": "",
+          "desc": "volumetric efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7v",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta_mech",
+          "unit": "",
+          "desc": "mechanical (torque) efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7m",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta_o",
+          "unit": "",
+          "desc": "overall efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7o",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T",
+          "unit": "N*m",
+          "desc": "shaft drive torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_shaft",
+          "unit": "W",
+          "desc": "shaft input power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Q_th = D_p*n",
+        "eta_v = Q_act/Q_th",
+        "eta_o = eta_v*eta_mech",
+        "T = D_p*dp/(2*pi*eta_mech)",
+        "P_shaft = T*2*pi*n"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Q_th",
+        "eta_v",
+        "eta_o",
+        "T",
+        "P_shaft"
+      ],
+      "assumptions": [
+        "Displacement per revolution, so flow = D\u00b7n with n in rev/s. Volumetric efficiency accounts for internal leakage; overall = volumetric \u00d7 mechanical. The shaft torque is the ideal D\u00b7\u0394p/(2\u03c0) divided by the mechanical efficiency; shaft power = T\u00b72\u03c0\u00b7n = \u0394p\u00b7Q_th/\u03b7m."
+      ],
+      "method_references": [
+        "Q_th = D\u00b7n; \u03b7v = Q_act/Q_th; \u03b7o = \u03b7v\u00b7\u03b7m; T = D\u00b7\u0394p/(2\u03c0\u00b7\u03b7m)"
+      ],
+      "synthetic_example": {
+        "D_p": 2.5e-05,
+        "n": 25.0,
+        "dp": 10000000.0,
+        "Q_act": 0.0006,
+        "eta_mech": 0.9
+      }
+    },
+    "hydraulics.hydraulic_motor": {
+      "title": "Hydraulic motor torque and speed",
+      "variables": [
+        {
+          "name": "D_m",
+          "unit": "m^3/revolution",
+          "desc": "displacement per revolution (cc/rev)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dp",
+          "unit": "Pa",
+          "desc": "pressure drop across the motor",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394p",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "flow rate into the motor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta_mech",
+          "unit": "",
+          "desc": "mechanical efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7m",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta_v",
+          "unit": "",
+          "desc": "volumetric efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7v",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_ideal",
+          "unit": "N*m",
+          "desc": "ideal (theoretical) torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n_th",
+          "unit": "Hz",
+          "desc": "theoretical speed Q/D_m in rev/s (Hz)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "Hz",
+          "desc": "actual shaft speed \u03b7v\u00b7Q/D_m in rev/s (Hz)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "T_act",
+          "unit": "N*m",
+          "desc": "actual output torque",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T_ideal = D_m*dp/(2*pi)",
+        "n_th = Q/D_m",
+        "n = eta_v*Q/D_m",
+        "T_act = eta_mech*T_ideal"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T_ideal",
+        "n_th",
+        "n",
+        "T_act"
+      ],
+      "assumptions": [
+        "Ideal torque T = D\u00b7\u0394p/(2\u03c0) (the 2\u03c0 converts per-revolution displacement to per-radian work); actual torque reduced by the mechanical efficiency. Theoretical speed n_th = Q/D is reduced by internal leakage: actual speed n = \u03b7v\u00b7Q/D."
+      ],
+      "method_references": [
+        "T = D\u00b7\u0394p/(2\u03c0); n_th = Q/D; n = \u03b7v\u00b7Q/D"
+      ],
+      "synthetic_example": {
+        "D_m": 2.5e-05,
+        "dp": 10000000.0,
+        "Q": 0.0006,
+        "eta_mech": 0.9,
+        "eta_v": 0.95
+      }
+    },
+    "hydraulics.accumulator": {
+      "title": "Gas-charged accumulator volume (polytropic, Boyle when n = 1)",
+      "variables": [
+        {
+          "name": "dV",
+          "unit": "m^3",
+          "desc": "usable oil volume delivered",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394V",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P0",
+          "unit": "Pa",
+          "desc": "gas precharge pressure (absolute)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P1",
+          "unit": "Pa",
+          "desc": "minimum system pressure (absolute)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P2",
+          "unit": "Pa",
+          "desc": "maximum system pressure (absolute)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "desc": "polytropic exponent (1 = isothermal/Boyle, 1.4 = adiabatic air)",
+          "lo": 1.0,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V0",
+          "unit": "m^3",
+          "desc": "gas volume at precharge",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V1",
+          "unit": "m^3",
+          "desc": "gas volume at P1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V2",
+          "unit": "m^3",
+          "desc": "gas volume at P2",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _accumulator(v):\n    \"\"\"Gas-charged accumulator sizing with the polytropic gas law P\u00b7V^n = const (pressures ABSOLUTE).\"\"\"\n    dV, P0, P1, P2, n = v['dV'], v['P0'], v['P1'], v['P2'], v['n']\n    if n <= 0:\n        raise MechError('n: polytropic exponent must be positive')\n    if not (P0 < P1 < P2):\n        raise MechError(f'P0 < P1 < P2 is required (precharge below the minimum system pressure below the '\n                        f'maximum); got P0 = {P0:g}, P1 = {P1:g}, P2 = {P2:g}')\n    V0 = dV / ((P0 / P1) ** (1.0 / n) - (P0 / P2) ** (1.0 / n))\n    V1 = V0 * (P0 / P1) ** (1.0 / n)\n    V2 = V0 * (P0 / P2) ** (1.0 / n)\n    return {'V0': V0, 'V1': V1, 'V2': V2}\n",
+        "source": "hydraulics.py",
+        "line": 49
+      },
+      "outputs": [
+        "V0",
+        "V1",
+        "V2"
+      ],
+      "assumptions": [
+        "Polytropic gas law P\u00b7V^n = const with ABSOLUTE pressures (gauge inputs shift the compression ratio and give roughly \u22124 % volume errors). n = 1 for slow (isothermal) cycling, n = 1.4 for fast (adiabatic) cycling of air. Precharge must be below the minimum system pressure (P0 < P1 < P2, enforced); the usable volume is V1 \u2212 V2."
+      ],
+      "method_references": [
+        "Polytropic accumulator sizing; \u0394V = V0[(P0/P1)^(1/n) \u2212 (P0/P2)^(1/n)]"
+      ],
+      "synthetic_example": {
+        "dV": 0.001,
+        "P0": 9000000.0,
+        "P1": 10000000.0,
+        "P2": 20000000.0,
+        "n": 1.4
+      }
+    },
+    "hydraulics.line_pressure_drop": {
+      "title": "Line pressure drop (Darcy\u2013Weisbach)",
+      "variables": [
+        {
+          "name": "f",
+          "unit": "",
+          "desc": "Darcy friction factor (user input; see fluid_dynamics)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "desc": "line length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "line inner diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "fluid density",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "v",
+          "unit": "m/s",
+          "desc": "mean flow velocity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dp",
+          "unit": "Pa",
+          "desc": "pressure drop",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394p",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "v = 4*Q/(pi*D**2)",
+        "dp = f*(L/D)*rho*v**2/2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "v",
+        "dp"
+      ],
+      "assumptions": [
+        "Darcy\u2013Weisbach loss with the Darcy friction factor f (not Fanning, which is f/4). Minor (fitting) losses add via K\u00b7\u03c1v\u00b2/2."
+      ],
+      "method_references": [
+        "Darcy\u2013Weisbach: \u0394p = f (L/D) \u03c1v\u00b2/2"
+      ],
+      "synthetic_example": {
+        "f": 0.02,
+        "L": 10.0,
+        "D": 0.02,
+        "rho": 870.0,
+        "Q": 0.0002
+      }
+    },
+    "hydraulics.hydraulic_power_heat": {
+      "title": "Hydraulic power and heat generation",
+      "variables": [
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q",
+          "unit": "m^3/s",
+          "desc": "flow rate",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "desc": "system efficiency",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u03b7",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_hyd",
+          "unit": "W",
+          "desc": "hydraulic power p\u00b7Q",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "P_heat",
+          "unit": "W",
+          "desc": "heat (power loss)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "P_hyd = p*Q",
+        "P_heat = P_hyd*(1 - eta)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "P_hyd",
+        "P_heat"
+      ],
+      "assumptions": [
+        "Hydraulic power P = p\u00b7Q; the inefficiency (1 \u2212 \u03b7) of that power is dissipated as heat into the oil (sizing the cooler)."
+      ],
+      "method_references": [
+        "P = p\u00b7Q; heat = P(1 \u2212 \u03b7)"
+      ],
+      "synthetic_example": {
+        "p": 10000000.0,
+        "Q": 0.0006,
+        "eta": 0.8
+      }
+    },
+    "hydraulics.pneumatic_consumption": {
+      "title": "Pneumatic cylinder air consumption and free air delivery",
+      "variables": [
+        {
+          "name": "D",
+          "unit": "m",
+          "desc": "bore diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "d",
+          "unit": "m",
+          "desc": "rod diameter",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "s",
+          "unit": "m",
+          "desc": "stroke",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_gauge",
+          "unit": "Pa",
+          "desc": "supply gauge pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_atm",
+          "unit": "Pa",
+          "desc": "atmospheric pressure (for free-air reference)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "TR",
+          "unit": "",
+          "desc": "temperature ratio T_ref/T_supply (1 = same temperature)",
+          "lo": null,
+          "hi": null,
+          "label": "TR",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "N",
+          "unit": "Hz",
+          "desc": "cycles per second",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_bore",
+          "unit": "m^2",
+          "desc": "piston area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A_ann",
+          "unit": "m^2",
+          "desc": "annulus area",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_cycle",
+          "unit": "m^3",
+          "desc": "working volume per full cycle (out + return) at pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V_free",
+          "unit": "m^3",
+          "desc": "free air delivered per cycle (at p_atm and T_ref)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Q_free",
+          "unit": "m^3/s",
+          "desc": "free air delivery (FAD)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "A_bore = pi*D**2/4",
+        "A_ann = pi*(D**2 - d**2)/4",
+        "V_cycle = (A_bore + A_ann)*s",
+        "V_free = V_cycle*(p_gauge + p_atm)/p_atm*TR",
+        "Q_free = V_free*N"
+      ],
+      "procedure": null,
+      "outputs": [
+        "A_bore",
+        "A_ann",
+        "V_cycle",
+        "V_free",
+        "Q_free"
+      ],
+      "assumptions": [
+        "Isothermal Boyle expansion of the compressed working volume to atmospheric pressure; one cycle = one extension plus one retraction. The temperature ratio TR = T_ref/T_supply converts the delivered air to a reference temperature (set 1 to ignore temperature); FAD is typically quoted at standard reference conditions."
+      ],
+      "method_references": [
+        "V_free = V_work\u00b7(p_abs/p_atm)\u00b7(T_ref/T_supply); FAD = V_free\u00b7N"
+      ],
+      "synthetic_example": {
+        "D": 0.05,
+        "d": 0.02,
+        "s": 0.1,
+        "p_gauge": 600000.0,
+        "p_atm": 101325.0,
+        "TR": 1.0,
+        "N": 0.5
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "hydraulics-001",
+      "calculator": "hydraulics.cylinder_force",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p": "80 bar",
+        "D": "40 mm",
+        "d": "16 mm"
+      },
+      "solve_for": [
+        "A_bore",
+        "A_ann",
+        "F_ext",
+        "F_ret"
+      ],
+      "expected_as_specified": {
+        "A_bore": "0.001256637 m^2",
+        "A_ann": "0.001055575 m^2",
+        "F_ext": "10053.10 N",
+        "F_ret": "8444.601 N"
+      },
+      "expected_SI": {
+        "A_bore": 0.001256637,
+        "A_ann": 0.001055575,
+        "F_ext": 10053.1,
+        "F_ret": 8444.601
+      },
+      "actual_SI": {
+        "A_bore": {
+          "value": 0.0012566370614359172,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        },
+        "A_ann": {
+          "value": 0.0010555751316061704,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        },
+        "F_ext": {
+          "value": 10053.096491487338,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        },
+        "F_ret": {
+          "value": 8444.601052849364,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "A_bore": {
+          "absolute_error": 6.143591733433207e-11,
+          "relative_error": 4.8889152025869105e-08,
+          "allowed_absolute_error": 1.256637e-07,
+          "passed": true
+        },
+        "A_ann": {
+          "absolute_error": 1.3160617040597344e-10,
+          "relative_error": 1.246772331724164e-07,
+          "allowed_absolute_error": 1.0555750000000001e-07,
+          "passed": true
+        },
+        "F_ext": {
+          "absolute_error": 0.003508512661937857,
+          "relative_error": 3.489980863552394e-07,
+          "allowed_absolute_error": 1.0053100000000001,
+          "passed": true
+        },
+        "F_ret": {
+          "absolute_error": 5.284936378302518e-05,
+          "relative_error": 6.258361263371139e-09,
+          "allowed_absolute_error": 0.8444601,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A_bore = pi 0.04^2/4 = 1.25664e-3; A_ann = pi(0.04^2 - 0.016^2)/4 = pi 0.001344/4 = 1.05558e-3; F_ext = 8e6 x 1.25664e-3 = 10053.1 N; F_ret = 8e6 x 1.05558e-3 = 8444.60 N"
+      }
+    },
+    {
+      "id": "hydraulics-002",
+      "calculator": "hydraulics.cylinder_force",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "F_ext": "10 kN",
+        "D": "50 mm",
+        "d": "20 mm"
+      },
+      "solve_for": [
+        "p",
+        "A_bore",
+        "A_ann",
+        "F_ret"
+      ],
+      "expected_as_specified": {
+        "p": "5092958 Pa",
+        "A_bore": "0.001963495 m^2",
+        "A_ann": "0.001649336 m^2",
+        "F_ret": "8400 N"
+      },
+      "expected_SI": {
+        "p": 5092958.0,
+        "A_bore": 0.001963495,
+        "A_ann": 0.001649336,
+        "F_ret": 8400.0
+      },
+      "actual_SI": {
+        "p": {
+          "value": 5092958.17894065,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        },
+        "A_bore": {
+          "value": 0.001963495408493621,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        },
+        "A_ann": {
+          "value": 0.0016493361431346417,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        },
+        "F_ret": {
+          "value": 8400.0,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "p": {
+          "absolute_error": 0.17894065007567406,
+          "relative_error": 3.513491571610723e-08,
+          "allowed_absolute_error": 2546.4790000000003,
+          "passed": true
+        },
+        "A_bore": {
+          "absolute_error": 4.0849362087369556e-10,
+          "relative_error": 2.0804413602973043e-07,
+          "allowed_absolute_error": 9.817475e-07,
+          "passed": true
+        },
+        "A_ann": {
+          "absolute_error": 1.4313464172591162e-10,
+          "relative_error": 8.678319137271703e-08,
+          "allowed_absolute_error": 8.24668e-07,
+          "passed": true
+        },
+        "F_ret": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 4.2,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A_bore = pi 0.05^2/4 = 1.96350e-3; p = F_ext/A_bore = 10000/1.96350e-3 = 5.09296e6 Pa; A_ann = pi(0.05^2 - 0.02^2)/4 = 1.64934e-3; F_ret = p A_ann = 10000 x 0.84 = 8400 N"
+      }
+    },
+    {
+      "id": "hydraulics-003",
+      "calculator": "hydraulics.cylinder_force",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p": "1500 psi",
+        "D": "2 in",
+        "d": "1 in"
+      },
+      "solve_for": [
+        "A_bore",
+        "A_ann",
+        "F_ext",
+        "F_ret"
+      ],
+      "expected_as_specified": {
+        "A_bore": "3.141593 in^2",
+        "A_ann": "2.356194 in^2",
+        "F_ext": "4712.389 lbf",
+        "F_ret": "3534.292 lbf"
+      },
+      "expected_SI": {
+        "A_bore": 0.00202683013988,
+        "A_ann": 0.00152012212104,
+        "F_ext": 20961.750609315815,
+        "F_ret": 15721.314069042264
+      },
+      "actual_SI": {
+        "A_bore": {
+          "value": 0.0020268299163899908,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        },
+        "A_ann": {
+          "value": 0.001520122437292493,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        },
+        "F_ext": {
+          "value": 20961.750522062568,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        },
+        "F_ret": {
+          "value": 15721.312891546926,
+          "unit": "N",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_force (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "A_bore": {
+          "absolute_error": 2.2349000905128036e-10,
+          "relative_error": 1.1026578135675063e-07,
+          "allowed_absolute_error": 1.01341506994e-06,
+          "passed": true
+        },
+        "A_ann": {
+          "absolute_error": 3.162524931602656e-10,
+          "relative_error": 2.080441359171194e-07,
+          "allowed_absolute_error": 7.6006106052e-07,
+          "passed": true
+        },
+        "F_ext": {
+          "absolute_error": 8.725324732949957e-05,
+          "relative_error": 4.162498111714129e-09,
+          "allowed_absolute_error": 10.480875304657907,
+          "passed": true
+        },
+        "F_ret": {
+          "absolute_error": 0.0011774953381973319,
+          "relative_error": 7.489802271147328e-08,
+          "allowed_absolute_error": 7.860657034521132,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A_bore = pi (2 in)^2/4 = 3.141593 in^2; A_ann = pi (4 - 1)/4 = 2.356194 in^2; F_ext = 1500 psi x 3.141593 in^2 = 4712.39 lbf; F_ret = 1500 x 2.356194 = 3534.29 lbf (imperial case exercising unit conversion)"
+      }
+    },
+    {
+      "id": "hydraulics-004",
+      "calculator": "hydraulics.cylinder_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Q": "40 L/min",
+        "D": "50 mm",
+        "d": "20 mm"
+      },
+      "solve_for": [
+        "v_ret",
+        "v_ext",
+        "A_bore",
+        "A_ann"
+      ],
+      "expected_as_specified": {
+        "A_bore": "0.001963495 m^2",
+        "A_ann": "0.001649336 m^2",
+        "v_ext": "0.3395305 m/s",
+        "v_ret": "0.4042030 m/s"
+      },
+      "expected_SI": {
+        "A_bore": 0.001963495,
+        "A_ann": 0.001649336,
+        "v_ext": 0.3395305,
+        "v_ret": 0.404203
+      },
+      "actual_SI": {
+        "A_bore": {
+          "value": 0.001963495408493621,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_speed (procedure)"
+        },
+        "A_ann": {
+          "value": 0.0016493361431346417,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_speed (procedure)"
+        },
+        "v_ext": {
+          "value": 0.33953054526271015,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_speed (procedure)"
+        },
+        "v_ret": {
+          "value": 0.4042030300746549,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.cylinder_speed (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "A_bore": {
+          "absolute_error": 4.0849362087369556e-10,
+          "relative_error": 2.0804413602973043e-07,
+          "allowed_absolute_error": 9.817475e-07,
+          "passed": true
+        },
+        "A_ann": {
+          "absolute_error": 1.4313464172591162e-10,
+          "relative_error": 8.678319137271703e-08,
+          "allowed_absolute_error": 8.24668e-07,
+          "passed": true
+        },
+        "v_ext": {
+          "absolute_error": 4.526271013549632e-08,
+          "relative_error": 1.3330970306201158e-07,
+          "allowed_absolute_error": 0.00016976525,
+          "passed": true
+        },
+        "v_ret": {
+          "absolute_error": 3.00746549330988e-08,
+          "relative_error": 7.440482859627167e-08,
+          "allowed_absolute_error": 0.0002021015,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q = 40/60000 = 6.66667e-4 m^3/s; A_bore = pi 0.05^2/4 = 1.96350e-3; A_ann = pi(0.05^2 - 0.02^2)/4 = 1.64934e-3; v_ext = Q/A_bore = 0.339531 m/s; v_ret = Q/A_ann = 0.404203 m/s"
+      }
+    },
+    {
+      "id": "hydraulics-005",
+      "calculator": "hydraulics.pump",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "D_p": "25 cm^3/revolution",
+        "n": 25.0,
+        "dp": "10 MPa",
+        "Q_act": "36 L/min",
+        "eta_mech": 0.9
+      },
+      "solve_for": [
+        "Q_th",
+        "eta_v",
+        "eta_o",
+        "T",
+        "P_shaft"
+      ],
+      "expected_as_specified": {
+        "Q_th": "0.000625 m^3/s",
+        "eta_v": 0.96,
+        "eta_o": 0.864,
+        "T": "44.20971 N*m",
+        "P_shaft": "6944.444 W"
+      },
+      "expected_SI": {
+        "Q_th": 0.000625,
+        "eta_v": 0.96,
+        "eta_o": 0.864,
+        "T": 44.20971,
+        "P_shaft": 6944.444
+      },
+      "actual_SI": {
+        "Q_th": {
+          "value": 0.0006250000000000001,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pump (symbolic)"
+        },
+        "eta_v": {
+          "value": 0.9600000000000001,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pump (symbolic)"
+        },
+        "eta_o": {
+          "value": 0.864,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pump (symbolic)"
+        },
+        "T": {
+          "value": 44.209706414415386,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pump (symbolic)"
+        },
+        "P_shaft": {
+          "value": 6944.444444444446,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pump (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Q_th": {
+          "absolute_error": 1.0842021724855044e-19,
+          "relative_error": 1.734723475976807e-16,
+          "allowed_absolute_error": 3.125e-07,
+          "passed": true
+        },
+        "eta_v": {
+          "absolute_error": 1.1102230246251565e-16,
+          "relative_error": 1.1564823173178715e-16,
+          "allowed_absolute_error": 0.00048,
+          "passed": true
+        },
+        "eta_o": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.000432,
+          "passed": true
+        },
+        "T": {
+          "absolute_error": 3.585584614995696e-06,
+          "relative_error": 8.110400667626402e-08,
+          "allowed_absolute_error": 0.022104855,
+          "passed": true
+        },
+        "P_shaft": {
+          "absolute_error": 0.0004444444457476493,
+          "relative_error": 6.400000428366177e-08,
+          "allowed_absolute_error": 3.4722220000000004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q_th = D n = 25e-6 x 25 = 6.25e-4 m^3/s; Q_act = 36/60000 = 6e-4; eta_v = 6e-4/6.25e-4 = 0.96; eta_o = 0.96 x 0.9 = 0.864; T = D dp/(2 pi eta_m) = 25e-6 x 10e6/(2 pi x 0.9) = 250/5.65487 = 44.2097 N m; P_shaft = T 2pi n = dp Q_th/eta_m = 10e6 x 6.25e-4/0.9 = 6944.44 W"
+      }
+    },
+    {
+      "id": "hydraulics-006",
+      "calculator": "hydraulics.pump",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "D_p": "20 cm^3/revolution",
+        "n": "1200 1/min",
+        "dp": "15 MPa",
+        "Q_act": "20 L/min",
+        "eta_mech": 0.85
+      },
+      "solve_for": [
+        "Q_th",
+        "eta_v",
+        "eta_o",
+        "T",
+        "P_shaft"
+      ],
+      "expected_as_specified": {
+        "Q_th": "0.0004 m^3/s",
+        "eta_v": 0.8333333,
+        "eta_o": 0.7083333,
+        "T": "56.17233 N*m",
+        "P_shaft": "7058.824 W"
+      },
+      "expected_SI": {
+        "Q_th": 0.0004,
+        "eta_v": 0.8333333,
+        "eta_o": 0.7083333,
+        "T": 56.17233,
+        "P_shaft": 7058.824
+      },
+      "actual_SI": {
+        "Q_th": {
+          "value": 0.0004000000000000001,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pump (symbolic)"
+        },
+        "eta_v": {
+          "value": 0.8333333333333334,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pump (symbolic)"
+        },
+        "eta_o": {
+          "value": 0.7083333333333334,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pump (symbolic)"
+        },
+        "T": {
+          "value": 56.17233285596307,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pump (symbolic)"
+        },
+        "P_shaft": {
+          "value": 7058.823529411766,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pump (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "Q_th": {
+          "absolute_error": 5.421010862427522e-20,
+          "relative_error": 1.3552527156068805e-16,
+          "allowed_absolute_error": 2.0000000000000002e-07,
+          "passed": true
+        },
+        "eta_v": {
+          "absolute_error": 3.333333331578814e-08,
+          "relative_error": 4.0000001578945826e-08,
+          "allowed_absolute_error": 0.00041666665000000006,
+          "passed": true
+        },
+        "eta_o": {
+          "absolute_error": 3.333333331578814e-08,
+          "relative_error": 4.705882571917505e-08,
+          "allowed_absolute_error": 0.00035416665000000006,
+          "passed": true
+        },
+        "T": {
+          "absolute_error": 2.855963067815992e-06,
+          "relative_error": 5.084288061072047e-08,
+          "allowed_absolute_error": 0.028086165000000003,
+          "passed": true
+        },
+        "P_shaft": {
+          "absolute_error": 0.0004705882338384981,
+          "relative_error": 6.666666201600977e-08,
+          "allowed_absolute_error": 3.5294119999999998,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "n = 1200/60 = 20 rev/s (speed given in 1/min = rev/min); Q_th = 20e-6 x 20 = 4e-4; Q_act = 20/60000 = 3.33333e-4; eta_v = 3.33333e-4/4e-4 = 0.83333; eta_o = 0.83333 x 0.85 = 0.70833; T = 20e-6 x 15e6/(2 pi x 0.85) = 300/5.34071 = 56.1723 N m; P_shaft = 15e6 x 4e-4/0.85 = 7058.82 W"
+      }
+    },
+    {
+      "id": "hydraulics-007",
+      "calculator": "hydraulics.hydraulic_motor",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "D_m": "25 cm^3/revolution",
+        "dp": "10 MPa",
+        "Q": "36 L/min",
+        "eta_mech": 0.9,
+        "eta_v": 0.95
+      },
+      "solve_for": [
+        "T_ideal",
+        "n_th",
+        "n",
+        "T_act"
+      ],
+      "expected_as_specified": {
+        "T_ideal": "39.78874 N*m",
+        "n_th": "24 Hz",
+        "n": "22.8 Hz",
+        "T_act": "35.80986 N*m"
+      },
+      "expected_SI": {
+        "T_ideal": 39.78874,
+        "n_th": 24.0,
+        "n": 22.8,
+        "T_act": 35.80986
+      },
+      "actual_SI": {
+        "T_ideal": {
+          "value": 39.788735772973844,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.hydraulic_motor (symbolic)"
+        },
+        "n_th": {
+          "value": 24.000000000000004,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.hydraulic_motor (symbolic)"
+        },
+        "n": {
+          "value": 22.8,
+          "unit": "Hz",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.hydraulic_motor (symbolic)"
+        },
+        "T_act": {
+          "value": 35.80986219567646,
+          "unit": "N*m",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.hydraulic_motor (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "T_ideal": {
+          "absolute_error": 4.227026153102997e-06,
+          "relative_error": 1.0623674318671558e-07,
+          "allowed_absolute_error": 0.019894369999999998,
+          "passed": true
+        },
+        "n_th": {
+          "absolute_error": 3.552713678800501e-15,
+          "relative_error": 1.4802973661668753e-16,
+          "allowed_absolute_error": 0.012,
+          "passed": true
+        },
+        "n": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0114,
+          "passed": true
+        },
+        "T_act": {
+          "absolute_error": 2.1956764584274424e-06,
+          "relative_error": 6.131485737245112e-08,
+          "allowed_absolute_error": 0.01790493,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T_ideal = D dp/(2pi) = 25e-6 x 10e6/(2pi) = 250/6.28319 = 39.7887 N m; n_th = Q/D = 6e-4/25e-6 = 24 rev/s; n = eta_v Q/D = 0.95 x 24 = 22.8 rev/s; T_act = 0.9 x 39.7887 = 35.8099 N m"
+      }
+    },
+    {
+      "id": "hydraulics-008",
+      "calculator": "hydraulics.accumulator",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dV": "1 L",
+        "P0": "90 bar",
+        "P1": "100 bar",
+        "P2": "200 bar",
+        "n": 1.4
+      },
+      "solve_for": [
+        "V0",
+        "V1",
+        "V2"
+      ],
+      "expected_as_specified": {
+        "V0": "2.761026 L",
+        "V1": "2.560864 L",
+        "V2": "1.560864 L"
+      },
+      "expected_SI": {
+        "V0": 0.002761026000000001,
+        "V1": 0.002560864000000001,
+        "V2": 0.0015608640000000003
+      },
+      "actual_SI": {
+        "V0": {
+          "value": 0.0027610258736390156,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.accumulator (procedure)"
+        },
+        "V1": {
+          "value": 0.0025608642337565713,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.accumulator (procedure)"
+        },
+        "V2": {
+          "value": 0.0015608642337565709,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.accumulator (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "V0": {
+          "absolute_error": 1.2636098547721963e-10,
+          "relative_error": 4.5765952757134335e-08,
+          "allowed_absolute_error": 1.3805130000000005e-06,
+          "passed": true
+        },
+        "V1": {
+          "absolute_error": 2.3375657052376875e-10,
+          "relative_error": 9.128035324162809e-08,
+          "allowed_absolute_error": 1.2804320000000005e-06,
+          "passed": true
+        },
+        "V2": {
+          "absolute_error": 2.3375657052376875e-10,
+          "relative_error": 1.4976101090406897e-07,
+          "allowed_absolute_error": 7.804320000000002e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "(P0/P1)^(1/1.4) = 0.9^0.714286 = 0.927505; (P0/P2)^(1/1.4) = 0.45^0.714286 = 0.565320. V0 = 0.001/(0.927505 - 0.565320) = 0.001/0.362185 = 2.76103e-3 m^3; V1 = V0 x 0.927505 = 2.56086e-3; V2 = V0 x 0.565320 = 1.56086e-3"
+      }
+    },
+    {
+      "id": "hydraulics-009",
+      "calculator": "hydraulics.accumulator",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dV": "1 L",
+        "P0": "100 kPa",
+        "P1": "150 kPa",
+        "P2": "300 kPa",
+        "n": 1.0
+      },
+      "solve_for": [
+        "V0",
+        "V1",
+        "V2"
+      ],
+      "expected_as_specified": {
+        "V0": "3 L",
+        "V1": "2 L",
+        "V2": "1 L"
+      },
+      "expected_SI": {
+        "V0": 0.003000000000000001,
+        "V1": 0.0020000000000000005,
+        "V2": 0.0010000000000000002
+      },
+      "actual_SI": {
+        "V0": {
+          "value": 0.003000000000000001,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.accumulator (procedure)"
+        },
+        "V1": {
+          "value": 0.0020000000000000005,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.accumulator (procedure)"
+        },
+        "V2": {
+          "value": 0.0010000000000000002,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.accumulator (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "V0": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 3.000000000000001e-07,
+          "passed": true
+        },
+        "V1": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 2.0000000000000004e-07,
+          "passed": true
+        },
+        "V2": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 1.0000000000000002e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Isothermal Boyle (n=1): V0 = 0.001/((100/150) - (100/300)) = 0.001/(0.666667 - 0.333333) = 0.003 m^3; V1 = 0.003 x 2/3 = 0.002; V2 = 0.003 x 1/3 = 0.001"
+      }
+    },
+    {
+      "id": "hydraulics-010",
+      "calculator": "hydraulics.accumulator",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "dV": "1 L",
+        "P0": "95 bar",
+        "P1": "100 bar",
+        "P2": "200 bar",
+        "n": 1.4
+      },
+      "solve_for": [
+        "V0",
+        "V1",
+        "V2"
+      ],
+      "expected_as_specified": {
+        "V0": "2.656429 L",
+        "V1": "2.560864 L",
+        "V2": "1.560864 L"
+      },
+      "expected_SI": {
+        "V0": 0.002656429000000001,
+        "V1": 0.002560864000000001,
+        "V2": 0.0015608640000000003
+      },
+      "actual_SI": {
+        "V0": {
+          "value": 0.0026564293203541643,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.accumulator (procedure)"
+        },
+        "V1": {
+          "value": 0.002560864233756571,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.accumulator (procedure)"
+        },
+        "V2": {
+          "value": 0.0015608642337565707,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.accumulator (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "V0": {
+          "absolute_error": 3.203541633356455e-10,
+          "relative_error": 1.2059579357688287e-07,
+          "allowed_absolute_error": 1.3282145000000006e-06,
+          "passed": true
+        },
+        "V1": {
+          "absolute_error": 2.337565700900879e-10,
+          "relative_error": 9.128035307227865e-08,
+          "allowed_absolute_error": 1.2804320000000005e-06,
+          "passed": true
+        },
+        "V2": {
+          "absolute_error": 2.337565703069283e-10,
+          "relative_error": 1.4976101076514564e-07,
+          "allowed_absolute_error": 7.804320000000002e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "(P0/P1)^(1/1.4) = 0.95^0.714286 = 0.964025; (P0/P2)^(1/1.4) = 0.475^0.714286 = 0.587580. V0 = 0.001/(0.964025 - 0.587580) = 0.001/0.376445 = 2.65643e-3; V1 = V0 x 0.964025 = 2.56086e-3; V2 = V0 x 0.587580 = 1.56086e-3 (precharge close to P1, so V0 is sensitive to the pressure ratios)"
+      }
+    },
+    {
+      "id": "hydraulics-011",
+      "calculator": "hydraulics.line_pressure_drop",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f": 0.02,
+        "L": "10 m",
+        "D": "20 mm",
+        "rho": "870 kg/m^3",
+        "Q": "12 L/min"
+      },
+      "solve_for": [
+        "v",
+        "dp"
+      ],
+      "expected_as_specified": {
+        "v": "0.6366198 m/s",
+        "dp": "1762.989 Pa"
+      },
+      "expected_SI": {
+        "v": 0.6366198,
+        "dp": 1762.989
+      },
+      "actual_SI": {
+        "v": {
+          "value": 0.6366197723675815,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.line_pressure_drop (symbolic)"
+        },
+        "dp": {
+          "value": 1762.988595376678,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.line_pressure_drop (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "v": {
+          "absolute_error": 2.7632418464484942e-08,
+          "relative_error": 4.340489954048703e-08,
+          "allowed_absolute_error": 0.0003183099,
+          "passed": true
+        },
+        "dp": {
+          "absolute_error": 0.00040462332208335283,
+          "relative_error": 2.295098393032247e-07,
+          "allowed_absolute_error": 0.8814945000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "v = 4Q/(pi D^2) = 4 x 2e-4/(pi x 4e-4) = 8e-4/1.25664e-3 = 0.636620 m/s; dp = f(L/D) rho v^2/2 = 0.02 x 500 x 870 x 0.405285/2 = 1762.99 Pa"
+      }
+    },
+    {
+      "id": "hydraulics-012",
+      "calculator": "hydraulics.hydraulic_power_heat",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p": "150 bar",
+        "Q": "20 L/min",
+        "eta": 0.75
+      },
+      "solve_for": [
+        "P_hyd",
+        "P_heat"
+      ],
+      "expected_as_specified": {
+        "P_hyd": "5000 W",
+        "P_heat": "1250 W"
+      },
+      "expected_SI": {
+        "P_hyd": 5000.0,
+        "P_heat": 1250.0
+      },
+      "actual_SI": {
+        "P_hyd": {
+          "value": 5000.000000000002,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.hydraulic_power_heat (symbolic)"
+        },
+        "P_heat": {
+          "value": 1250.000000000001,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.hydraulic_power_heat (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "P_hyd": {
+          "absolute_error": 1.8189894035458565e-12,
+          "relative_error": 3.637978807091713e-16,
+          "allowed_absolute_error": 0.5,
+          "passed": true
+        },
+        "P_heat": {
+          "absolute_error": 9.094947017729282e-13,
+          "relative_error": 7.275957614183426e-16,
+          "allowed_absolute_error": 0.125,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "P_hyd = p Q = 15e6 x (20/60000) = 15e6 x 3.3333e-4 = 5000 W; P_heat = 5000 x 0.25 = 1250 W"
+      }
+    },
+    {
+      "id": "hydraulics-013",
+      "calculator": "hydraulics.hydraulic_power_heat",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Q": "20 L/min",
+        "eta": 0.75,
+        "P_hyd": "5000 W"
+      },
+      "solve_for": [
+        "p",
+        "P_heat"
+      ],
+      "expected_as_specified": {
+        "p": "15 MPa",
+        "P_heat": "1250 W"
+      },
+      "expected_SI": {
+        "p": 15000000.0,
+        "P_heat": 1250.0
+      },
+      "actual_SI": {
+        "p": {
+          "value": 14999999.999999996,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.hydraulic_power_heat (symbolic)"
+        },
+        "P_heat": {
+          "value": 1250.0,
+          "unit": "W",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.hydraulic_power_heat (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0001,
+      "comparison": {
+        "p": {
+          "absolute_error": 3.725290298461914e-09,
+          "relative_error": 2.483526865641276e-16,
+          "allowed_absolute_error": 1500.0,
+          "passed": true
+        },
+        "P_heat": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.125,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "p = P_hyd/Q = 5000/3.3333e-4 = 15e6 Pa; P_heat = P_hyd(1 - eta) = 5000 x 0.25 = 1250 W"
+      }
+    },
+    {
+      "id": "hydraulics-014",
+      "calculator": "hydraulics.pneumatic_consumption",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "D": "50 mm",
+        "d": "20 mm",
+        "s": "100 mm",
+        "p_gauge": "6 bar",
+        "p_atm": "101325 Pa",
+        "TR": 1.0,
+        "N": 0.5
+      },
+      "solve_for": [
+        "A_bore",
+        "A_ann",
+        "V_cycle",
+        "V_free",
+        "Q_free"
+      ],
+      "expected_as_specified": {
+        "A_bore": "0.001963495 m^2",
+        "A_ann": "0.001649336 m^2",
+        "V_cycle": "0.0003612832 m^3",
+        "V_free": "0.002500636 m^3",
+        "Q_free": "0.001250318 m^3/s"
+      },
+      "expected_SI": {
+        "A_bore": 0.001963495,
+        "A_ann": 0.001649336,
+        "V_cycle": 0.0003612832,
+        "V_free": 0.002500636,
+        "Q_free": 0.001250318
+      },
+      "actual_SI": {
+        "A_bore": {
+          "value": 0.001963495408493621,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pneumatic_consumption (symbolic)"
+        },
+        "A_ann": {
+          "value": 0.0016493361431346417,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pneumatic_consumption (symbolic)"
+        },
+        "V_cycle": {
+          "value": 0.0003612831551628263,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pneumatic_consumption (symbolic)"
+        },
+        "V_free": {
+          "value": 0.002500635665379414,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pneumatic_consumption (symbolic)"
+        },
+        "Q_free": {
+          "value": 0.001250317832689707,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pneumatic_consumption (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "A_bore": {
+          "absolute_error": 4.0849362087369556e-10,
+          "relative_error": 2.0804413602973043e-07,
+          "allowed_absolute_error": 9.817475e-07,
+          "passed": true
+        },
+        "A_ann": {
+          "absolute_error": 1.4313464172591162e-10,
+          "relative_error": 8.678319137271703e-08,
+          "allowed_absolute_error": 8.24668e-07,
+          "passed": true
+        },
+        "V_cycle": {
+          "absolute_error": 4.4837173741613806e-11,
+          "relative_error": 1.241053382543495e-07,
+          "allowed_absolute_error": 1.8064160000000002e-07,
+          "passed": true
+        },
+        "V_free": {
+          "absolute_error": 3.346205860142726e-10,
+          "relative_error": 1.3381419207524508e-07,
+          "allowed_absolute_error": 1.250318e-06,
+          "passed": true
+        },
+        "Q_free": {
+          "absolute_error": 1.673102930071363e-10,
+          "relative_error": 1.3381419207524508e-07,
+          "allowed_absolute_error": 6.25159e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A_bore = pi 0.05^2/4 = 1.96350e-3; A_ann = pi(0.05^2 - 0.02^2)/4 = 1.64934e-3; V_cycle = (1.96350 + 1.64934)e-3 x 0.1 = 3.61283e-4; compression ratio = (6e5 + 101325)/101325 = 6.92154; V_free = 3.61283e-4 x 6.92154 x 1 = 2.50064e-3; Q_free = V_free x 0.5 = 1.25032e-3"
+      }
+    },
+    {
+      "id": "hydraulics-015",
+      "calculator": "hydraulics.pneumatic_consumption",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "D": "50 mm",
+        "d": "20 mm",
+        "s": "100 mm",
+        "p_gauge": "6 bar",
+        "p_atm": "101325 Pa",
+        "TR": 1.2,
+        "N": 0.5
+      },
+      "solve_for": [
+        "A_bore",
+        "A_ann",
+        "V_cycle",
+        "V_free",
+        "Q_free"
+      ],
+      "expected_as_specified": {
+        "V_cycle": "0.0003612832 m^3",
+        "V_free": "0.003000763 m^3",
+        "Q_free": "0.001500381 m^3/s"
+      },
+      "expected_SI": {
+        "V_cycle": 0.0003612832,
+        "V_free": 0.003000763,
+        "Q_free": 0.001500381
+      },
+      "actual_SI": {
+        "V_cycle": {
+          "value": 0.0003612831551628263,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pneumatic_consumption (symbolic)"
+        },
+        "V_free": {
+          "value": 0.0030007627984552964,
+          "unit": "m^3",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pneumatic_consumption (symbolic)"
+        },
+        "Q_free": {
+          "value": 0.0015003813992276482,
+          "unit": "m^3/s",
+          "kind": "derived",
+          "method": "mechcalc hydraulics.pneumatic_consumption (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "V_cycle": {
+          "absolute_error": 4.4837173741613806e-11,
+          "relative_error": 1.241053382543495e-07,
+          "allowed_absolute_error": 1.8064160000000002e-07,
+          "passed": true
+        },
+        "V_free": {
+          "absolute_error": 2.0154470366934296e-10,
+          "relative_error": 6.716448572224562e-08,
+          "allowed_absolute_error": 1.5003815e-06,
+          "passed": true
+        },
+        "Q_free": {
+          "absolute_error": 3.9922764811899103e-10,
+          "relative_error": 2.6608418003093283e-07,
+          "allowed_absolute_error": 7.501905000000001e-07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "V_free = V_cycle x (p_abs/p_atm) x TR = 3.61283e-4 x 6.92154 x 1.2 = 3.00076e-3; Q_free = 3.00076e-3 x 0.5 = 1.50038e-3 (temperature-ratio option)"
+      }
+    }
+  ],
+  "passed": 15,
+  "failed": 0
+}

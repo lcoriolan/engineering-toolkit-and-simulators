@@ -1,0 +1,1126 @@
+{
+  "section": "fea",
+  "cases": [
+    {
+      "calc": "fea.spring_element",
+      "inputs": {
+        "k": "2 kN/m",
+        "u1": 0.0,
+        "u2": "30 mm"
+      },
+      "expect": {
+        "delta": 0.03,
+        "F1": -60.0,
+        "F2": 60.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "δ = 0.03 m; F2 = kδ = 2000·0.03 = 60 N; F1 = −60 N"
+      }
+    },
+    {
+      "calc": "fea.bar_element",
+      "inputs": {
+        "E": "200 GPa",
+        "A": "100 mm^2",
+        "L": "2 m"
+      },
+      "expect": {
+        "k_axial": 10000000.0,
+        "k_matrix": [
+          [
+            10000000.0,
+            -10000000.0
+          ],
+          [
+            -10000000.0,
+            10000000.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "k = EA/L = 200e9·1e-4/2 = 1e7 N/m; matrix [[k, −k], [−k, k]]"
+      }
+    },
+    {
+      "calc": "fea.beam_element",
+      "inputs": {
+        "E": "200 GPa",
+        "I": "8e6 mm^4",
+        "L": "2 m"
+      },
+      "expect": {
+        "k_flex": 2400000.0,
+        "k_matrix": [
+          [
+            2400000.0,
+            2400000.0,
+            -2400000.0,
+            2400000.0
+          ],
+          [
+            2400000.0,
+            3200000.0,
+            -2400000.0,
+            1600000.0
+          ],
+          [
+            -2400000.0,
+            -2400000.0,
+            2400000.0,
+            -2400000.0
+          ],
+          [
+            2400000.0,
+            1600000.0,
+            -2400000.0,
+            3200000.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "k = EI/L³ = 200e9·8e-6/8 = 2e5; entries 12k = 2.4e6, 6kL = 2.4e6, 4kL² = 3.2e6, 2kL² = 1.6e6"
+      }
+    },
+    {
+      "calc": "fea.truss_element_2d",
+      "inputs": {
+        "E": "200 GPa",
+        "A": "100 mm^2",
+        "L": "2 m",
+        "theta": "60 deg"
+      },
+      "expect": {
+        "kxx": 2500000.0,
+        "k_axial": 10000000.0,
+        "k_matrix": [
+          [
+            2500000.0,
+            4330127.0,
+            -2500000.0,
+            -4330127.0
+          ],
+          [
+            4330127.0,
+            7500000.0,
+            -4330127.0,
+            -7500000.0
+          ],
+          [
+            -2500000.0,
+            -4330127.0,
+            2500000.0,
+            4330127.0
+          ],
+          [
+            -4330127.0,
+            -7500000.0,
+            4330127.0,
+            7500000.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "k = EA/L = 1e7; c = cos60° = 0.5, s = 0.8660254; kxx = k c² = 2.5e6, kc = k c s = 4.330127e6, kyy = k s² = 7.5e6"
+      }
+    },
+    {
+      "calc": "fea.truss_element_2d",
+      "inputs": {
+        "E": "200 GPa",
+        "A": "100 mm^2",
+        "L": "2 m",
+        "kxx": "2.5 MN/m"
+      },
+      "solve_for": [
+        "theta"
+      ],
+      "expect": {
+        "theta": "60 deg"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "cos²θ = kxx·L/(EA) = 2.5e6·2/2e7 = 0.25 → cos θ = 0.5 → θ = 60°"
+      }
+    },
+    {
+      "calc": "fea.spring_system",
+      "inputs": {
+        "springs": [
+          [
+            0,
+            1,
+            1000.0
+          ],
+          [
+            1,
+            2,
+            2000.0
+          ]
+        ],
+        "fixed": [
+          [
+            0,
+            0.0
+          ]
+        ],
+        "loads": [
+          [
+            2,
+            500.0
+          ]
+        ]
+      },
+      "expect": {
+        "displacements": [
+          0.0,
+          0.5,
+          0.75
+        ],
+        "reactions": [
+          [
+            0,
+            -500.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Both springs carry 500 N: u1 = 500/1000 = 0.5 m, u2 = 0.5 + 500/2000 = 0.75 m; reaction at node 0 = −500 N"
+      }
+    },
+    {
+      "calc": "fea.spring_system",
+      "inputs": {
+        "springs": [
+          [
+            0,
+            1,
+            1000.0
+          ],
+          [
+            0,
+            1,
+            3000.0
+          ]
+        ],
+        "fixed": [
+          [
+            1,
+            0.0
+          ]
+        ],
+        "loads": [
+          [
+            0,
+            200.0
+          ]
+        ]
+      },
+      "expect": {
+        "displacements": [
+          0.05,
+          0.0
+        ],
+        "reactions": [
+          [
+            1,
+            -200.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Parallel k_eff = 4000 N/m; u0 = 200/4000 = 0.05 m; reaction −200 N"
+      }
+    },
+    {
+      "calc": "fea.bar_system",
+      "inputs": {
+        "bars": [
+          [
+            0,
+            1,
+            200000000000.0,
+            0.0001,
+            2.0
+          ]
+        ],
+        "fixed": [
+          [
+            0,
+            0.0
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            50000.0
+          ]
+        ]
+      },
+      "expect": {
+        "displacements": [
+          0.0,
+          0.005
+        ],
+        "element_forces": [
+          50000.0
+        ],
+        "element_stresses": [
+          500000000.0
+        ],
+        "reactions": [
+          [
+            0,
+            -50000.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "δ = PL/EA = 50000·2/(200e9·1e-4) = 0.005 m (matches axial_deformation); N = 50 kN; σ = 50e3/1e-4 = 500 MPa"
+      }
+    },
+    {
+      "calc": "fea.truss_fea",
+      "inputs": {
+        "nodes": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            0.01
+          ],
+          [
+            1,
+            2,
+            200000000000.0,
+            0.01
+          ],
+          [
+            0,
+            2,
+            200000000000.0,
+            0.01
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "x"
+          ],
+          [
+            0,
+            "y"
+          ],
+          [
+            1,
+            "y"
+          ]
+        ],
+        "loads": [
+          [
+            2,
+            0,
+            -12000
+          ]
+        ]
+      },
+      "expect": {
+        "element_forces": [
+          4000.0,
+          -7211.1026,
+          -7211.1026
+        ],
+        "reactions": [
+          [
+            0,
+            "x",
+            0.0
+          ],
+          [
+            0,
+            "y",
+            6000.0
+          ],
+          [
+            1,
+            "y",
+            6000.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Method-of-joints cross-check (statics.truss): apex 2F(3/√13) = 12000 → F = 2000√13 = 7211.10 N compression each rafter; chord T = F(2/√13) = 4000 N; reactions 6000 N each"
+      }
+    },
+    {
+      "calc": "fea.beam_fea",
+      "inputs": {
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            8e-06,
+            2.0
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "v"
+          ],
+          [
+            0,
+            "theta"
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            1000.0,
+            0.0
+          ]
+        ]
+      },
+      "expect": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0016666667,
+            0.00125
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            -1000.0
+          ],
+          [
+            0,
+            "theta",
+            -2000.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Cantilever: tip v = PL³/3EI = 1000·8/(3·200e9·8e-6) = 1.6667e-3 m; θ = PL²/2EI = 1.25e-3 rad; base reaction −1000 N shear and −PL = −2000 N·m moment"
+      }
+    },
+    {
+      "calc": "fea.beam_fea",
+      "inputs": {
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            8e-06,
+            2.0
+          ],
+          [
+            1,
+            2,
+            200000000000.0,
+            8e-06,
+            2.0
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "v"
+          ],
+          [
+            2,
+            "v"
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            1000.0,
+            0.0
+          ]
+        ]
+      },
+      "expect": {
+        "displacements": [
+          [
+            0.0,
+            0.000625
+          ],
+          [
+            0.0008333333,
+            0.0
+          ],
+          [
+            0.0,
+            -0.000625
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            -500.0
+          ],
+          [
+            2,
+            "v",
+            -500.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Simply supported, midspan P: v = PL³/48EI = 1000·64/(48·200e9·8e-6) = 8.3333e-4 m; support rotations ±PL²/16EI = ±6.25e-4 rad; reactions −500 N each (500 N up)"
+      }
+    },
+    {
+      "calc": "fea.shape_linear",
+      "inputs": {
+        "xi": 0.5
+      },
+      "expect": {
+        "N1": 0.25,
+        "N2": 0.75
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "N1 = (1−0.5)/2 = 0.25; N2 = (1+0.5)/2 = 0.75"
+      }
+    },
+    {
+      "calc": "fea.shape_linear",
+      "inputs": {
+        "N1": 0.75
+      },
+      "solve_for": [
+        "xi",
+        "N2"
+      ],
+      "expect": {
+        "xi": -0.5,
+        "N2": 0.25
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "xi = 2N1 − 1 = 0.5 → xi = −0.5 for N1 = 0.75; N2 = 1 − N1 = 0.25"
+      }
+    },
+    {
+      "calc": "fea.shape_quadratic",
+      "inputs": {
+        "xi": 0.5
+      },
+      "expect": {
+        "N1": -0.125,
+        "N2": 0.75,
+        "N3": 0.375
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "N1 = 0.5·(−0.5)/2 = −0.125; N2 = 1 − 0.25 = 0.75; N3 = 0.5·1.5/2 = 0.375"
+      }
+    },
+    {
+      "calc": "fea.shape_quadratic",
+      "inputs": {
+        "xi": -0.5
+      },
+      "expect": {
+        "N1": 0.375,
+        "N2": 0.75,
+        "N3": -0.125
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "N1 = (−0.5)(−1.5)/2 = 0.375; N2 = 0.75; N3 = (−0.5)(0.5)/2 = −0.125"
+      }
+    },
+    {
+      "calc": "fea.bar_strain_stress",
+      "inputs": {
+        "u1": 0.0,
+        "u2": "1 mm",
+        "L": "2 m",
+        "E": "200 GPa"
+      },
+      "expect": {
+        "eps": 0.0005,
+        "sigma": "100 MPa"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ε = (0.001 − 0)/2 = 5e-4; σ = 200e9·5e-4 = 100 MPa"
+      }
+    },
+    {
+      "calc": "fea.element_strain_energy",
+      "inputs": {
+        "k": "10 MN/m",
+        "u1": 0.0,
+        "u2": "1 mm"
+      },
+      "expect": {
+        "U": 5.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "U = ½·1e7·(0.001)² = 5 J"
+      }
+    },
+    {
+      "calc": "fea.mesh_convergence",
+      "inputs": {
+        "f1": 0.5,
+        "f2": 0.52,
+        "h1": "50 cm",
+        "h2": "1 m",
+        "p": 2.0,
+        "Fs": 1.25
+      },
+      "expect": {
+        "r": 2.0,
+        "f_exact": 0.4933333,
+        "eps": 0.0133333,
+        "GCI": 0.0166667
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 1/0.5 = 2; f_exact = 0.5 + (0.5 − 0.52)/(4 − 1) = 0.5 − 0.0066667 = 0.493333; ε = 0.02/(0.5·3) = 0.013333; GCI = 1.25·0.013333 = 0.016667"
+      }
+    },
+    {
+      "calc": "fea.mesh_convergence",
+      "inputs": {
+        "f1": 0.5,
+        "f2": 0.52,
+        "h1": 0.5,
+        "h2": 1.0,
+        "Fs": 1.25,
+        "f_exact": 0.4933333
+      },
+      "solve_for": [
+        "p",
+        "r",
+        "eps",
+        "GCI"
+      ],
+      "expect": {
+        "p": 2.0,
+        "r": 2.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r = h2/h1 = 2; r^p = 1 + (f1 − f2)/(f_exact − f1) = 1 + (−0.02)/(−0.0066667) = 4 → p = log4/log2 = 2"
+      }
+    },
+    {
+      "calc": "fea.fd_heat_1d",
+      "inputs": {
+        "L": 1.0,
+        "k": 50.0,
+        "T_left": 300.0,
+        "T_right": 300.0,
+        "q_gen": 10000.0,
+        "n": 5
+      },
+      "expect": {
+        "T_max": 325.0,
+        "nodes": [
+          [
+            0.0,
+            300.0
+          ],
+          [
+            0.1666667,
+            313.8889
+          ],
+          [
+            0.3333333,
+            322.2222
+          ],
+          [
+            0.5,
+            325.0
+          ],
+          [
+            0.6666667,
+            322.2222
+          ],
+          [
+            0.8333333,
+            313.8889
+          ],
+          [
+            1.0,
+            300.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Closed form T = 300 + q·x(L−x)/(2k) = 300 + 100x(1−x): T(0.5) = 300 + 25 = 325 K; T(1/3) = 300 + 22.222 = 322.222 K"
+      }
+    },
+    {
+      "calc": "fea.fd_heat_1d",
+      "inputs": {
+        "L": "2 m",
+        "k": 40.0,
+        "T_left": 300.0,
+        "T_right": 300.0,
+        "q_gen": 4000.0,
+        "n": 5
+      },
+      "expect": {
+        "T_max": 350.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Center peak = qL²/(8k) = 4000·4/(8·40) = 50 K above the ends: T_max = 350 K"
+      }
+    },
+    {
+      "calc": "fea.fd_advection_diffusion",
+      "inputs": {
+        "u": 0.01,
+        "D": 0.01,
+        "L": 1.0,
+        "c0": 0.0,
+        "cL": 1.0,
+        "n": 20
+      },
+      "expect": {
+        "c_mid": 0.37754
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Analytic c(L/2) = (e^(Pe/2) − 1)/(e^Pe − 1), Pe = uL/D = 1 → (e^0.5 − 1)/(e − 1) = 0.64872/1.71828 = 0.37754"
+      }
+    },
+    {
+      "calc": "fea.fd_advection_diffusion",
+      "inputs": {
+        "u": 0.01,
+        "D": 0.01,
+        "L": 1.0,
+        "c0": 2.0,
+        "cL": 0.0,
+        "n": 40
+      },
+      "expect": {
+        "c_mid": 1.24492
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Reversed ends: c(L/2) = 2 + (0 − 2)·0.37754 = 1.24492"
+      }
+    },
+    {
+      "calc": "fea.truss_fea",
+      "inputs": {
+        "nodes": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            0.001
+          ],
+          [
+            1,
+            2,
+            200000000000.0,
+            0.001
+          ],
+          [
+            0,
+            3,
+            200000000000.0,
+            0.001
+          ],
+          [
+            1,
+            3,
+            200000000000.0,
+            0.001
+          ],
+          [
+            1,
+            4,
+            200000000000.0,
+            0.001
+          ],
+          [
+            2,
+            4,
+            200000000000.0,
+            0.001
+          ],
+          [
+            3,
+            4,
+            200000000000.0,
+            0.001
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "x"
+          ],
+          [
+            0,
+            "y"
+          ],
+          [
+            2,
+            "y"
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            0,
+            -10
+          ]
+        ]
+      },
+      "expect": {
+        "element_forces": [
+          2.5,
+          2.5,
+          -5.590169944,
+          5.590169944,
+          5.590169944,
+          -5.590169944,
+          -5.0
+        ],
+        "reactions": [
+          [
+            0,
+            "x",
+            0.0
+          ],
+          [
+            0,
+            "y",
+            5.0
+          ],
+          [
+            2,
+            "y",
+            5.0
+          ]
+        ],
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            2.5e-08,
+            -1.77254249e-07
+          ],
+          [
+            5e-08,
+            0.0
+          ],
+          [
+            5e-08,
+            -9.4877124e-08
+          ],
+          [
+            0.0,
+            -9.4877124e-08
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "7-member bridge, 10 N down at the midspan bottom node. Method of joints (linear equilibrium solve): bottom chords +2.5 N tension, end diagonals −2√5 = −5.59017 N compression, inner verticals +2√5 tension, top chord −5 N compression; reactions 5 N each end (R0x = 0). Displacements from virtual work ΣN·n·L/(EA) (unit loads) and energy ½P·u = ½ΣN²L/(EA): u1y = −ΣN²L/(EA)/P = −1.77254249e-7 m, u1x = N(0-1)L/(EA) = 2.5e-8 m."
+      }
+    },
+    {
+      "calc": "fea.beam_fea",
+      "inputs": {
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            8e-06,
+            2.0
+          ],
+          [
+            1,
+            2,
+            200000000000.0,
+            8e-06,
+            2.0
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "v"
+          ],
+          [
+            0,
+            "theta"
+          ]
+        ],
+        "loads": [
+          [
+            2,
+            -1000.0,
+            0.0
+          ]
+        ]
+      },
+      "expect": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            -0.0041666667,
+            -0.00375
+          ],
+          [
+            -0.0133333333,
+            -0.005
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            1000.0
+          ],
+          [
+            0,
+            "theta",
+            4000.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Two-element cantilever (L = 4 m total), 1 kN down at the tip. Exact Euler–Bernoulli shape v(x) = −P·x²(3L−x)/(6EI), θ = v': tip v = PL³/3EI = 0.0133333 m down, θ = PL²/2EI = 0.005 rad; midspan (x=2) v = −0.0041667 m, θ = −0.00375 rad; base reactions +1000 N up and +PL = +4000 N·m"
+      }
+    },
+    {
+      "calc": "fea.beam_fea",
+      "inputs": {
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            8e-06,
+            2.0
+          ],
+          [
+            1,
+            2,
+            200000000000.0,
+            8e-06,
+            2.0
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "v"
+          ],
+          [
+            0,
+            "theta"
+          ],
+          [
+            2,
+            "v"
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            -1000.0,
+            0.0
+          ]
+        ]
+      },
+      "expect": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            -0.0003645833,
+            -7.8125e-05
+          ],
+          [
+            0.0,
+            0.0003125
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            687.5
+          ],
+          [
+            0,
+            "theta",
+            750.0
+          ],
+          [
+            2,
+            "v",
+            312.5
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Propped cantilever (fixed at 0, roller at 2), 1 kN down at midspan. By superposition of a cantilever (P at a=L/2 and redundant prop R_B at the tip, zero tip deflection): R_B = 5P/16 = 312.5 N, R_A = 11P/16 = 687.5 N, M_A = 3PL/16 = 750 N·m; midspan v = −7PL³/768EI = −0.000364583 m, θ = −P/(8EI) = −0.000078125 rad, tip rotation +P/(2EI) = 0.0003125 rad"
+      }
+    },
+    {
+      "calc": "fea.beam_fea",
+      "inputs": {
+        "elements": [
+          [
+            0,
+            1,
+            200000000000.0,
+            8e-06,
+            2.0
+          ]
+        ],
+        "supports": [
+          [
+            0,
+            "v"
+          ],
+          [
+            0,
+            "theta"
+          ]
+        ],
+        "loads": [
+          [
+            1,
+            -1000.0,
+            0.0
+          ]
+        ]
+      },
+      "expect": {
+        "displacements": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            -0.0016666667,
+            -0.00125
+          ]
+        ],
+        "reactions": [
+          [
+            0,
+            "v",
+            1000.0
+          ],
+          [
+            0,
+            "theta",
+            2000.0
+          ]
+        ]
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Downward tip load (sign check): v = PL³/3EI = −1000·8/(3·200e9·8e-6) = −0.0016667 m, θ = PL²/2EI = −0.00125 rad; base reaction +1000 N up and +PL = +2000 N·m"
+      }
+    },
+    {
+      "calc": "fea.mesh_convergence",
+      "inputs": {
+        "f1": -0.5,
+        "f2": -0.52,
+        "h1": "0.5 m",
+        "h2": "1 m",
+        "p": 2,
+        "Fs": 3
+      },
+      "expect": {
+        "r": 2.0,
+        "f_exact": -0.4933333,
+        "eps": 0.0133333,
+        "GCI": 0.04
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Signed quantities: r = 1/0.5 = 2; Richardson f_exact = f1 + (f1 − f2)/(r^p − 1) = −0.5 + 0.02/3 = −0.493333; eps = |f1 − f2|/(|f1|(r^p − 1)) = 0.02/(0.5·3) = 0.013333; GCI (2 grids, Fs = 3) = 0.04"
+      }
+    }
+  ]
+}

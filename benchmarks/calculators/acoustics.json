@@ -1,0 +1,1926 @@
+{
+  "section": "acoustics",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k acoustics",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "acoustics.spl": {
+      "title": "Sound pressure level (re 20 \u00b5Pa)",
+      "variables": [
+        {
+          "name": "spl",
+          "unit": "",
+          "desc": "sound pressure level",
+          "lo": null,
+          "hi": null,
+          "label": "Lp",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "RMS sound pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p_ref",
+          "unit": "Pa",
+          "desc": "reference pressure (20 \u00b5Pa)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "spl = 20*log(p/p_ref)/log(10)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "spl"
+      ],
+      "assumptions": [
+        "p is the RMS sound pressure; p_ref = 20 \u00b5Pa is the standard hearing-threshold reference."
+      ],
+      "method_references": [
+        "Lp = 20 log10(p/p_ref), p_ref = 20 \u00b5Pa (standard)"
+      ],
+      "synthetic_example": {
+        "p": 0.02,
+        "p_ref": 2e-05
+      }
+    },
+    "acoustics.power_level": {
+      "title": "Sound power level (re 1 pW)",
+      "variables": [
+        {
+          "name": "Lw",
+          "unit": "",
+          "desc": "sound power level",
+          "lo": null,
+          "hi": null,
+          "label": "Lw",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W",
+          "unit": "W",
+          "desc": "sound power",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "W_ref",
+          "unit": "W",
+          "desc": "reference power (1 pW)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Lw = 10*log(W/W_ref)/log(10)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Lw"
+      ],
+      "assumptions": [
+        "W_ref = 1 pW is the standard reference for sound power."
+      ],
+      "method_references": [
+        "Lw = 10 log10(W/W_ref), W_ref = 1 pW (standard)"
+      ],
+      "synthetic_example": {
+        "W": 0.01,
+        "W_ref": 1e-12
+      }
+    },
+    "acoustics.intensity_level": {
+      "title": "Sound intensity level (re 1 pW/m\u00b2)",
+      "variables": [
+        {
+          "name": "Li",
+          "unit": "",
+          "desc": "sound intensity level",
+          "lo": null,
+          "hi": null,
+          "label": "Li",
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I",
+          "unit": "W/m^2",
+          "desc": "sound intensity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "I_ref",
+          "unit": "W/m^2",
+          "desc": "reference intensity (1 pW/m\u00b2)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "Li = 10*log(I/I_ref)/log(10)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "Li"
+      ],
+      "assumptions": [
+        "I_ref = 1 pW/m\u00b2 is the standard reference intensity."
+      ],
+      "method_references": [
+        "Li = 10 log10(I/I_ref), I_ref = 1 pW/m\u00b2 (standard)"
+      ],
+      "synthetic_example": {
+        "I": 1e-06,
+        "I_ref": 1e-12
+      }
+    },
+    "acoustics.pressure_intensity": {
+      "title": "Plane-wave relation between RMS sound pressure and intensity (I = p\u00b2/\u03c1c)",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "W/m^2",
+          "desc": "sound intensity",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "p",
+          "unit": "Pa",
+          "desc": "RMS sound pressure",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "medium density (air \u2248 1.2 kg/m\u00b3)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m/s",
+          "desc": "speed of sound in the medium",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "I = p**2/(rho*c)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "I"
+      ],
+      "assumptions": [
+        "Plane progressive wave (free field). In air at standard conditions \u03c1c \u2248 400 rayl, so the intensity level and sound pressure level are numerically nearly equal."
+      ],
+      "method_references": [
+        "I = p_rms\u00b2/(\u03c1c) for a plane progressive wave"
+      ],
+      "synthetic_example": {
+        "p": 0.1,
+        "rho": 1.2,
+        "c": 343.0
+      }
+    },
+    "acoustics.add_levels": {
+      "title": "Add (combine) sound levels in dB",
+      "variables": [
+        {
+          "name": "levels",
+          "unit": "",
+          "desc": "list of sound levels in dB",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "L_total",
+          "unit": "",
+          "desc": "combined level",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _add_levels(values):\n    \"\"\"Total level of incoherent sources: L_total = 10 log10(sum 10^(L_i/10)) dB.\"\"\"\n    levels = values['levels']\n    if not isinstance(levels, list) or not levels:\n        raise MechError('levels: give a non-empty list of sound levels in dB')\n    total = 10.0 * math.log10(sum(10.0 ** (_number(L, 'levels') / 10.0) for L in levels))\n    return {'L_total': total}\n",
+        "source": "acoustics.py",
+        "line": 31
+      },
+      "outputs": [
+        "L_total"
+      ],
+      "assumptions": [
+        "Incoherent sources (energies add). Two equal levels add 3 dB; a level 10 dB below another adds only ~0.4 dB."
+      ],
+      "method_references": [
+        "L_total = 10 log10(\u03a3 10^(Li/10))"
+      ],
+      "synthetic_example": {
+        "levels": [
+          80.0,
+          80.0,
+          75.0
+        ]
+      }
+    },
+    "acoustics.wave_speed": {
+      "title": "Wave speed, frequency and wavelength (c = f\u00b7\u03bb)",
+      "variables": [
+        {
+          "name": "c",
+          "unit": "m/s",
+          "desc": "wave speed",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "desc": "frequency",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "lam",
+          "unit": "m",
+          "desc": "wavelength",
+          "lo": null,
+          "hi": null,
+          "label": "\u03bb",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "c = f*lam"
+      ],
+      "procedure": null,
+      "outputs": [
+        "c"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "c = f \u03bb"
+      ],
+      "synthetic_example": {
+        "f": 500.0,
+        "lam": 0.686
+      }
+    },
+    "acoustics.mass_law": {
+      "title": "Sound transmission loss of a limp panel (normal-incidence mass law)",
+      "variables": [
+        {
+          "name": "TL",
+          "unit": "",
+          "desc": "transmission loss",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho_s",
+          "unit": "kg/m^2",
+          "desc": "surface mass density of the panel",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1s",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "desc": "frequency",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "rho",
+          "unit": "kg/m^3",
+          "desc": "air density (\u2248 1.2 kg/m\u00b3)",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "c",
+          "unit": "m/s",
+          "desc": "speed of sound in air (\u2248 343 m/s)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "TL = 10*log(1 + (pi*f*rho_s/(rho*c))**2)/log(10)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "TL"
+      ],
+      "assumptions": [
+        "Limp, thin, uniform panel; normal incidence; below the coincidence frequency. The field-incidence empirical form is TL \u2248 20 log10(f\u00b7\u03c1s) \u2212 47 dB."
+      ],
+      "method_references": [
+        "Normal-incidence mass law: TL = 10 log10(1 + (\u03c0 f \u03c1s/\u03c1c)\u00b2)"
+      ],
+      "synthetic_example": {
+        "rho_s": 20.0,
+        "f": 1000.0,
+        "rho": 1.2,
+        "c": 343.0
+      }
+    },
+    "acoustics.noise_reduction": {
+      "title": "Noise reduction between two rooms (level difference)",
+      "variables": [
+        {
+          "name": "NR",
+          "unit": "",
+          "desc": "noise reduction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L1",
+          "unit": "",
+          "desc": "source-side sound level",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "L2",
+          "unit": "",
+          "desc": "receiver-side sound level",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "NR = L1 - L2"
+      ],
+      "procedure": null,
+      "outputs": [
+        "NR"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "NR = L1 \u2212 L2"
+      ],
+      "synthetic_example": {
+        "L1": 95.0,
+        "L2": 62.0
+      }
+    },
+    "acoustics.room_noise_reduction": {
+      "title": "Room-to-room noise reduction from transmission loss and absorption",
+      "variables": [
+        {
+          "name": "NR",
+          "unit": "",
+          "desc": "noise reduction",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "TL",
+          "unit": "",
+          "desc": "transmission loss of the partition",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "total absorption in the receiving room (sabins)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "S",
+          "unit": "m^2",
+          "desc": "area of the common partition",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "NR = TL + 10*log(A/S)/log(10)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "NR"
+      ],
+      "assumptions": [
+        "Diffuse field in the receiving room; A in metric sabins (m\u00b2)."
+      ],
+      "method_references": [
+        "NR = TL + 10 log10(A/S)"
+      ],
+      "synthetic_example": {
+        "TL": 40.0,
+        "A": 100.0,
+        "S": 20.0
+      }
+    },
+    "acoustics.reverberation_sabine": {
+      "title": "Reverberation time (Sabine)",
+      "variables": [
+        {
+          "name": "T60",
+          "unit": "s",
+          "desc": "reverberation time (time for sound to decay 60 dB)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "k_sabine",
+          "unit": "s/m",
+          "desc": "Sabine constant (0.161 s/m in SI)",
+          "lo": 0.1,
+          "hi": 0.2,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "V",
+          "unit": "m^3",
+          "desc": "room volume",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "total absorption (metric sabins)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "T60 = k_sabine*V/A"
+      ],
+      "procedure": null,
+      "outputs": [
+        "T60"
+      ],
+      "assumptions": [
+        "Diffuse field, uniform absorption. The constant is 0.161 s/m in SI (0.049 s/ft imperial)."
+      ],
+      "method_references": [
+        "Sabine reverberation time: T60 = 0.161 V/A (metric)"
+      ],
+      "synthetic_example": {
+        "k_sabine": 0.161,
+        "V": 500.0,
+        "A": 50.0
+      }
+    },
+    "acoustics.total_absorption": {
+      "title": "Total absorption of a room (\u03a3 \u03b1\u00b7S)",
+      "variables": [
+        {
+          "name": "surfaces",
+          "unit": "",
+          "desc": "rows [alpha (0..1), area (m^2)] for each surface",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "m^2",
+          "desc": "total absorption (metric sabins)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "mean_alpha",
+          "unit": "",
+          "desc": "mean absorption coefficient (area-weighted)",
+          "lo": null,
+          "hi": 1.0,
+          "label": "\u1fb1",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _total_absorption(values):\n    \"\"\"Total absorption A = sum(alpha_i S_i) and the mean absorption coefficient of the room surfaces.\"\"\"\n    surfaces = values['surfaces']\n    if not isinstance(surfaces, list) or not surfaces:\n        raise MechError('surfaces: give a non-empty list of [alpha (0..1), area (m^2)] rows')\n    for row in surfaces:\n        if not isinstance(row, (list, tuple)) or len(row) != 2:\n            raise MechError('surfaces: each row must be [alpha, area]')\n        a = _number(row[0], 'surfaces alpha')\n        S = _number(row[1], 'surfaces area')\n        if not 0.0 <= a <= 1.0:\n            raise MechError('surfaces: absorption coefficient alpha must be in 0..1')\n        if S < 0:\n            raise MechError('surfaces: areas must be non-negative')\n    A = sum(float(a) * float(S) for a, S in surfaces)\n    S_tot = sum(float(S) for _, S in surfaces)\n    return {'A': A, 'mean_alpha': A / S_tot if S_tot > 0 else 0.0}\n",
+        "source": "acoustics.py",
+        "line": 40
+      },
+      "outputs": [
+        "A",
+        "mean_alpha"
+      ],
+      "assumptions": [],
+      "method_references": [
+        "A = \u03a3 \u03b1_i S_i"
+      ],
+      "synthetic_example": {
+        "surfaces": [
+          [
+            0.03,
+            200.0
+          ],
+          [
+            0.5,
+            40.0
+          ],
+          [
+            0.8,
+            20.0
+          ]
+        ]
+      }
+    },
+    "acoustics.a_weighting": {
+      "title": "A-weighting of a frequency (IEC 61672 analytic form)",
+      "variables": [
+        {
+          "name": "f",
+          "unit": "Hz",
+          "desc": "frequency",
+          "lo": 0.5,
+          "hi": 20000.0,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "A",
+          "unit": "",
+          "desc": "A-weighting at this frequency in dB",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _a_weighting(values):\n    \"\"\"A-weighting A(f) in dB from the IEC 61672 analytic transfer function (rounded poles).\"\"\"\n    f = values['f']\n    if f <= 0:\n        raise MechError('f: frequency must be positive')\n    r = (_F4 ** 2 * f ** 4) / ((f ** 2 + _F1 ** 2) * (f ** 2 + _F4 ** 2)\n                               * math.sqrt(f ** 2 + _F2 ** 2) * math.sqrt(f ** 2 + _F3 ** 2))\n    return {'A': 20.0 * math.log10(r) + 2.0}\n",
+        "source": "acoustics.py",
+        "line": 59
+      },
+      "outputs": [
+        "A"
+      ],
+      "assumptions": [
+        "Analytic IEC 61672 transfer function with rounded pole frequencies 20.6, 107.7, 737.9 and 12194 Hz (recalled). A(1000 Hz) = 0 dB by definition."
+      ],
+      "method_references": [
+        "IEC 61672-1 A-weighting transfer function (poles recalled, not re-read)"
+      ],
+      "synthetic_example": {
+        "f": 1000.0
+      }
+    },
+    "acoustics.noise_dose": {
+      "title": "Noise-exposure dose and time-weighted average (OSHA or NIOSH/ISO)",
+      "variables": [
+        {
+          "name": "standard",
+          "unit": "",
+          "desc": "exchange-rate convention",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "text",
+          "choices": [
+            "OSHA",
+            "NIOSH/ISO"
+          ]
+        },
+        {
+          "name": "levels",
+          "unit": "",
+          "desc": "list of exposure levels in dB(A)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "durations",
+          "unit": "",
+          "desc": "list of exposure durations in hours (same order as levels)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "exchange_rate",
+          "unit": "",
+          "desc": "exchange rate (5 dB OSHA, 3 dB NIOSH/ISO)",
+          "lo": null,
+          "hi": null,
+          "label": "Q",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "criterion",
+          "unit": "",
+          "desc": "criterion level (90 dBA OSHA, 85 dBA NIOSH/ISO)",
+          "lo": null,
+          "hi": null,
+          "label": "Lc",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dose",
+          "unit": "",
+          "desc": "noise dose in percent (100 % = full allowed exposure)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "twa",
+          "unit": "",
+          "desc": "time-weighted average level",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": true,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _noise_dose(values):\n    \"\"\"OSHA or NIOSH/ISO noise-exposure dose and time-weighted average.\n\n    Reference duration for a level L: T = 8 h / 2^((L - criterion)/exchange_rate). Dose = 100 sum(C/T).\n    TWA = criterion + exchange_rate * log2(dose/100). OSHA: 5 dB exchange, 90 dBA criterion;\n    NIOSH/ISO: 3 dB exchange, 85 dBA criterion. Every entered level is counted (no threshold is applied).\n    \"\"\"\n    standard = values['standard']\n    er, crit = (5.0, 90.0) if standard == 'OSHA' else (3.0, 85.0)\n    levels = values['levels']\n    durations = values['durations']\n    if not isinstance(levels, list) or not isinstance(durations, list) or not levels \\\n            or len(levels) != len(durations):\n        raise MechError('levels/durations: give matching non-empty lists of level [dB] and duration [h]')\n    for L in levels:\n        _number(L, 'levels')  # reject non-numeric level entries\n    for C in durations:\n        C = _number(C, 'durations')\n        if C < 0:\n            raise MechError('durations: negative durations are not allowed')\n    dose = 0.0\n    for L, C in zip(levels, durations):\n        T = 8.0 / (2.0 ** ((float(L) - crit) / er))\n        dose += float(C) / T\n    dose *= 100.0\n    if dose <= 0:\n        raise MechError('total exposure is zero (dose = 0); TWA is undefined')\n    twa = crit + er * math.log2(dose / 100.0)\n    return {'exchange_rate': er, 'criterion': crit, 'dose': dose, 'twa': twa}\n",
+        "source": "acoustics.py",
+        "line": 69
+      },
+      "outputs": [
+        "exchange_rate",
+        "criterion",
+        "dose",
+        "twa"
+      ],
+      "assumptions": [
+        "OSHA: 5 dB exchange rate, 90 dBA criterion, 8 h reference. NIOSH/ISO: 3 dB exchange rate, 85 dBA criterion. Reference duration T = 8 h / 2^((L \u2212 criterion)/exchange_rate). Every entered level is counted \u2014 no threshold (OSHA 80/90 dBA) is applied.",
+        "The \"3 dB / 85 dBA\" convention is the NIOSH/ISO criterion."
+      ],
+      "method_references": [
+        "Dose = 100 \u03a3(Ci/Ti); TWA = criterion + Q\u00b7log2(dose/100) (OSHA/NIOSH/ISO conventions)"
+      ],
+      "synthetic_example": {
+        "standard": "OSHA",
+        "levels": [
+          90.0
+        ],
+        "durations": [
+          8.0
+        ]
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "acoustics-001",
+      "calculator": "acoustics.spl",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p": "0.02 Pa",
+        "p_ref": "20 uPa"
+      },
+      "solve_for": [
+        "spl"
+      ],
+      "expected_as_specified": {
+        "spl": 60.0
+      },
+      "expected_SI": {
+        "spl": 60.0
+      },
+      "actual_SI": {
+        "spl": {
+          "value": 59.99999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.spl (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "spl": {
+          "absolute_error": 7.105427357601002e-15,
+          "relative_error": 1.1842378929335003e-16,
+          "allowed_absolute_error": 0.12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Lp = 20 log10(0.02/20e-6) = 20 log10(1000) = 20\u00b73 = 60 dB"
+      }
+    },
+    {
+      "id": "acoustics-002",
+      "calculator": "acoustics.spl",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "spl": 80.0,
+        "p_ref": "20 uPa"
+      },
+      "solve_for": [
+        "p"
+      ],
+      "expected_as_specified": {
+        "p": "0.2 Pa"
+      },
+      "expected_SI": {
+        "p": 0.2
+      },
+      "actual_SI": {
+        "p": {
+          "value": 0.20000000000000018,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc acoustics.spl (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "p": {
+          "absolute_error": 1.6653345369377348e-16,
+          "relative_error": 8.326672684688674e-16,
+          "allowed_absolute_error": 0.0004,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "p = p_ref\u00b710^(Lp/20) = 20e-6\u00b710^4 = 0.2 Pa"
+      }
+    },
+    {
+      "id": "acoustics-003",
+      "calculator": "acoustics.power_level",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "W": "5 mW",
+        "W_ref": "1 pW"
+      },
+      "solve_for": [
+        "Lw"
+      ],
+      "expected_as_specified": {
+        "Lw": 96.9897
+      },
+      "expected_SI": {
+        "Lw": 96.9897
+      },
+      "actual_SI": {
+        "Lw": {
+          "value": 96.98970004336017,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.power_level (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Lw": {
+          "absolute_error": 4.336017411787907e-08,
+          "relative_error": 4.4705957558255226e-10,
+          "allowed_absolute_error": 0.1939794,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Lw = 10 log10(5e-3/1e-12) = 10 log10(5e9) = 10\u00b79.69897 = 96.990 dB"
+      }
+    },
+    {
+      "id": "acoustics-004",
+      "calculator": "acoustics.intensity_level",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "I": "1 uW/m^2",
+        "I_ref": "1 pW/m^2"
+      },
+      "solve_for": [
+        "Li"
+      ],
+      "expected_as_specified": {
+        "Li": 60.0
+      },
+      "expected_SI": {
+        "Li": 60.0
+      },
+      "actual_SI": {
+        "Li": {
+          "value": 59.99999999999999,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.intensity_level (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "Li": {
+          "absolute_error": 7.105427357601002e-15,
+          "relative_error": 1.1842378929335003e-16,
+          "allowed_absolute_error": 0.12,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Li = 10 log10(1e-6/1e-12) = 10 log10(1e6) = 60 dB"
+      }
+    },
+    {
+      "id": "acoustics-005",
+      "calculator": "acoustics.pressure_intensity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "p": "0.1 Pa",
+        "rho": 1.2,
+        "c": "343 m/s"
+      },
+      "solve_for": [
+        "I"
+      ],
+      "expected_as_specified": {
+        "I": "2.42954e-5 W/m^2"
+      },
+      "expected_SI": {
+        "I": 2.42954e-05
+      },
+      "actual_SI": {
+        "I": {
+          "value": 2.4295432458697772e-05,
+          "unit": "W/m^2",
+          "kind": "derived",
+          "method": "mechcalc acoustics.pressure_intensity (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "I": {
+          "absolute_error": 3.245869777113424e-11,
+          "relative_error": 1.3360017851582702e-06,
+          "allowed_absolute_error": 1.2147700000000001e-08,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "I = p\u00b2/(\u03c1c) = 0.01/(1.2\u00b7343) = 0.01/411.6 = 2.4295e-5 W/m\u00b2"
+      }
+    },
+    {
+      "id": "acoustics-006",
+      "calculator": "acoustics.add_levels",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "levels": [
+          80.0,
+          80.0,
+          75.0
+        ]
+      },
+      "solve_for": [
+        "L_total"
+      ],
+      "expected_as_specified": {
+        "L_total": 83.6478
+      },
+      "expected_SI": {
+        "L_total": 83.6478
+      },
+      "actual_SI": {
+        "L_total": {
+          "value": 83.64781263458073,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.add_levels (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "L_total": {
+          "absolute_error": 1.2634580727421962e-05,
+          "relative_error": 1.5104498537226276e-07,
+          "allowed_absolute_error": 0.16729560000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "L = 10 log10(10^8 + 10^8 + 10^7.5) = 10 log10(2.3162e8) = 10\u00b78.36478 = 83.648 dB"
+      }
+    },
+    {
+      "id": "acoustics-007",
+      "calculator": "acoustics.add_levels",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "levels": [
+          80.0,
+          80.0
+        ]
+      },
+      "solve_for": [
+        "L_total"
+      ],
+      "expected_as_specified": {
+        "L_total": 83.0103
+      },
+      "expected_SI": {
+        "L_total": 83.0103
+      },
+      "actual_SI": {
+        "L_total": {
+          "value": 83.01029995663981,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.add_levels (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "L_total": {
+          "absolute_error": 4.3360188328733784e-08,
+          "relative_error": 5.223470861897112e-10,
+          "allowed_absolute_error": 0.16602060000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Two equal levels add 3 dB: 80 + 10 log10(2) = 80 + 3.0103 = 83.010 dB"
+      }
+    },
+    {
+      "id": "acoustics-008",
+      "calculator": "acoustics.wave_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f": "500 Hz",
+        "lam": "686 mm"
+      },
+      "solve_for": [
+        "c"
+      ],
+      "expected_as_specified": {
+        "c": "343 m/s"
+      },
+      "expected_SI": {
+        "c": 343.0
+      },
+      "actual_SI": {
+        "c": {
+          "value": 343.0,
+          "unit": "m/s",
+          "kind": "derived",
+          "method": "mechcalc acoustics.wave_speed (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "c": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.686,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "c = f \u03bb = 500\u00b70.686 = 343 m/s"
+      }
+    },
+    {
+      "id": "acoustics-009",
+      "calculator": "acoustics.wave_speed",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "c": "343 m/s",
+        "f": "1 kHz"
+      },
+      "solve_for": [
+        "lam"
+      ],
+      "expected_as_specified": {
+        "lam": "0.343 m"
+      },
+      "expected_SI": {
+        "lam": 0.343
+      },
+      "actual_SI": {
+        "lam": {
+          "value": 0.343,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc acoustics.wave_speed (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "lam": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.0006860000000000001,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "\u03bb = c/f = 343/1000 = 0.343 m"
+      }
+    },
+    {
+      "id": "acoustics-010",
+      "calculator": "acoustics.mass_law",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "rho_s": "20 kg/m^2",
+        "f": "1 kHz",
+        "rho": 1.2,
+        "c": "343 m/s"
+      },
+      "solve_for": [
+        "TL"
+      ],
+      "expected_as_specified": {
+        "TL": 43.6743
+      },
+      "expected_SI": {
+        "TL": 43.6743
+      },
+      "actual_SI": {
+        "TL": {
+          "value": 43.674276411055914,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.mass_law (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "TL": {
+          "absolute_error": 2.3588944088714925e-05,
+          "relative_error": 5.401104102118391e-07,
+          "allowed_absolute_error": 0.021837150000000003,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "x = \u03c0\u00b71000\u00b720/(1.2\u00b7343) = 152.65; TL = 10 log10(1 + 152.65\u00b2) = 10 log10(23302) = 43.674 dB"
+      }
+    },
+    {
+      "id": "acoustics-011",
+      "calculator": "acoustics.noise_reduction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "L1": 95.0,
+        "L2": 62.0
+      },
+      "solve_for": [
+        "NR"
+      ],
+      "expected_as_specified": {
+        "NR": 33.0
+      },
+      "expected_SI": {
+        "NR": 33.0
+      },
+      "actual_SI": {
+        "NR": {
+          "value": 33.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.noise_reduction (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "NR": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.066,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "NR = 95 \u2212 62 = 33 dB"
+      }
+    },
+    {
+      "id": "acoustics-012",
+      "calculator": "acoustics.room_noise_reduction",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "TL": 40.0,
+        "A": "100 m^2",
+        "S": "20 m^2"
+      },
+      "solve_for": [
+        "NR"
+      ],
+      "expected_as_specified": {
+        "NR": 46.9897
+      },
+      "expected_SI": {
+        "NR": 46.9897
+      },
+      "actual_SI": {
+        "NR": {
+          "value": 46.989700043360195,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.room_noise_reduction (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "NR": {
+          "absolute_error": 4.336019543416114e-08,
+          "relative_error": 9.227595714414253e-10,
+          "allowed_absolute_error": 0.0939794,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "NR = 40 + 10 log10(100/20) = 40 + 10\u00b70.69897 = 46.990 dB"
+      }
+    },
+    {
+      "id": "acoustics-013",
+      "calculator": "acoustics.reverberation_sabine",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k_sabine": 0.161,
+        "V": "500 m^3",
+        "A": "50 m^2"
+      },
+      "solve_for": [
+        "T60"
+      ],
+      "expected_as_specified": {
+        "T60": "1.61 s"
+      },
+      "expected_SI": {
+        "T60": 1.61
+      },
+      "actual_SI": {
+        "T60": {
+          "value": 1.61,
+          "unit": "s",
+          "kind": "derived",
+          "method": "mechcalc acoustics.reverberation_sabine (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "T60": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.00322,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T60 = 0.161\u00b7500/50 = 0.161\u00b710 = 1.61 s"
+      }
+    },
+    {
+      "id": "acoustics-014",
+      "calculator": "acoustics.reverberation_sabine",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "k_sabine": 0.161,
+        "V": "500 m^3",
+        "T60": "2.3 s"
+      },
+      "solve_for": [
+        "A"
+      ],
+      "expected_as_specified": {
+        "A": "35.0 m^2"
+      },
+      "expected_SI": {
+        "A": 35.0
+      },
+      "actual_SI": {
+        "A": {
+          "value": 35.0,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc acoustics.reverberation_sabine (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.07,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 0.161\u00b7500/2.3 = 80.5/2.3 = 35.0 m\u00b2"
+      }
+    },
+    {
+      "id": "acoustics-015",
+      "calculator": "acoustics.total_absorption",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "surfaces": [
+          [
+            0.03,
+            200.0
+          ],
+          [
+            0.5,
+            40.0
+          ],
+          [
+            0.8,
+            20.0
+          ]
+        ]
+      },
+      "solve_for": [
+        "A",
+        "mean_alpha"
+      ],
+      "expected_as_specified": {
+        "A": 42.0,
+        "mean_alpha": 0.161538
+      },
+      "expected_SI": {
+        "A": 42.0,
+        "mean_alpha": 0.161538
+      },
+      "actual_SI": {
+        "A": {
+          "value": 42.0,
+          "unit": "m^2",
+          "kind": "derived",
+          "method": "mechcalc acoustics.total_absorption (procedure)"
+        },
+        "mean_alpha": {
+          "value": 0.16153846153846155,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.total_absorption (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.084,
+          "passed": true
+        },
+        "mean_alpha": {
+          "absolute_error": 4.6153846156027356e-07,
+          "relative_error": 2.8571510205665144e-06,
+          "allowed_absolute_error": 0.000323076,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A = 0.03\u00b7200 + 0.5\u00b740 + 0.8\u00b720 = 6 + 20 + 16 = 42 m\u00b2; \u1fb1 = 42/260 = 0.16154"
+      }
+    },
+    {
+      "id": "acoustics-016",
+      "calculator": "acoustics.a_weighting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f": 1000.0
+      },
+      "solve_for": [
+        "A"
+      ],
+      "expected_as_specified": {
+        "A": 0.0
+      },
+      "expected_SI": {
+        "A": 0.0
+      },
+      "actual_SI": {
+        "A": {
+          "value": 0.00014152769487818517,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.a_weighting (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "A": {
+          "absolute_error": 0.00014152769487818517,
+          "relative_error": null,
+          "allowed_absolute_error": 0.05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "A(1 kHz) = 0 dB by definition of the A-weighting (rounded pole frequencies give ~0.0001 dB)"
+      }
+    },
+    {
+      "id": "acoustics-017",
+      "calculator": "acoustics.a_weighting",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "f": 100.0
+      },
+      "solve_for": [
+        "A"
+      ],
+      "expected_as_specified": {
+        "A": -19.145
+      },
+      "expected_SI": {
+        "A": -19.145
+      },
+      "actual_SI": {
+        "A": {
+          "value": -19.144954291317546,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.a_weighting (procedure)"
+        }
+      },
+      "relative_tolerance": 0.0005,
+      "comparison": {
+        "A": {
+          "absolute_error": 4.5708682453238225e-05,
+          "relative_error": 2.387499736392699e-06,
+          "allowed_absolute_error": 0.0095725,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "R_A(100) = 12194\u00b2\u00b7100\u2074/((100\u00b2+20.6\u00b2)(100\u00b2+12194\u00b2)\u221a(100\u00b2+107.7\u00b2)\u221a(100\u00b2+737.9\u00b2)) = 0.087650; 20 log10(R_A) = \u221221.145; A = \u221221.145 + 2 = \u221219.145 dB"
+      }
+    },
+    {
+      "id": "acoustics-018",
+      "calculator": "acoustics.noise_dose",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "standard": "OSHA",
+        "levels": [
+          90.0
+        ],
+        "durations": [
+          8.0
+        ]
+      },
+      "solve_for": [
+        "exchange_rate",
+        "criterion",
+        "dose",
+        "twa"
+      ],
+      "expected_as_specified": {
+        "exchange_rate": 5.0,
+        "criterion": 90.0,
+        "dose": 100.0,
+        "twa": 90.0
+      },
+      "expected_SI": {
+        "exchange_rate": 5.0,
+        "criterion": 90.0,
+        "dose": 100.0,
+        "twa": 90.0
+      },
+      "actual_SI": {
+        "exchange_rate": {
+          "value": 5.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.noise_dose (procedure)"
+        },
+        "criterion": {
+          "value": 90.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.noise_dose (procedure)"
+        },
+        "dose": {
+          "value": 100.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.noise_dose (procedure)"
+        },
+        "twa": {
+          "value": 90.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.noise_dose (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "exchange_rate": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.01,
+          "passed": true
+        },
+        "criterion": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.18,
+          "passed": true
+        },
+        "dose": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.2,
+          "passed": true
+        },
+        "twa": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.18,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T = 8/2^((90\u221290)/5) = 8 h; dose = 100\u00b78/8 = 100 %; TWA = 90 + 5\u00b7log2(1) = 90 dB"
+      }
+    },
+    {
+      "id": "acoustics-019",
+      "calculator": "acoustics.noise_dose",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "standard": "NIOSH/ISO",
+        "levels": [
+          85.0
+        ],
+        "durations": [
+          8.0
+        ]
+      },
+      "solve_for": [
+        "exchange_rate",
+        "criterion",
+        "dose",
+        "twa"
+      ],
+      "expected_as_specified": {
+        "dose": 100.0,
+        "twa": 85.0
+      },
+      "expected_SI": {
+        "dose": 100.0,
+        "twa": 85.0
+      },
+      "actual_SI": {
+        "dose": {
+          "value": 100.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.noise_dose (procedure)"
+        },
+        "twa": {
+          "value": 85.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.noise_dose (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dose": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.2,
+          "passed": true
+        },
+        "twa": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.17,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "NIOSH/ISO: T = 8/2^0 = 8 h; dose = 100 %; TWA = 85 dB"
+      }
+    },
+    {
+      "id": "acoustics-020",
+      "calculator": "acoustics.noise_dose",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "standard": "OSHA",
+        "levels": [
+          80.0,
+          90.0
+        ],
+        "durations": [
+          4.0,
+          4.0
+        ]
+      },
+      "solve_for": [
+        "exchange_rate",
+        "criterion",
+        "dose",
+        "twa"
+      ],
+      "expected_as_specified": {
+        "dose": 62.5,
+        "twa": 86.6096
+      },
+      "expected_SI": {
+        "dose": 62.5,
+        "twa": 86.6096
+      },
+      "actual_SI": {
+        "dose": {
+          "value": 62.5,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.noise_dose (procedure)"
+        },
+        "twa": {
+          "value": 86.60964047443682,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.noise_dose (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dose": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.125,
+          "passed": true
+        },
+        "twa": {
+          "absolute_error": 4.0474436815429726e-05,
+          "relative_error": 4.6732044502491326e-07,
+          "allowed_absolute_error": 0.17321920000000002,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "All levels are counted (no threshold): T(80) = 8/2^((80\u221290)/5) = 32 h, T(90) = 8 h; dose = 100(4/32 + 4/8) = 62.5 %; TWA = 90 + 5\u00b7log2(0.625) = 90 \u2212 3.39036 = 86.6096 dB"
+      }
+    },
+    {
+      "id": "acoustics-021",
+      "calculator": "acoustics.noise_dose",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "standard": "OSHA",
+        "levels": [
+          95.0,
+          85.0
+        ],
+        "durations": [
+          4.0,
+          4.0
+        ]
+      },
+      "solve_for": [
+        "exchange_rate",
+        "criterion",
+        "dose",
+        "twa"
+      ],
+      "expected_as_specified": {
+        "dose": 125.0,
+        "twa": 91.6096
+      },
+      "expected_SI": {
+        "dose": 125.0,
+        "twa": 91.6096
+      },
+      "actual_SI": {
+        "dose": {
+          "value": 125.0,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.noise_dose (procedure)"
+        },
+        "twa": {
+          "value": 91.60964047443682,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc acoustics.noise_dose (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dose": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 0.25,
+          "passed": true
+        },
+        "twa": {
+          "absolute_error": 4.0474436815429726e-05,
+          "relative_error": 4.4181436023549633e-07,
+          "allowed_absolute_error": 0.1832192,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "T(95) = 8/2^1 = 4 h, T(85) = 8/2^-1 = 16 h; dose = 100(4/4 + 4/16) = 125 %; TWA = 90 + 5\u00b7log2(1.25) = 90 + 5\u00b70.32193 = 91.610 dB"
+      }
+    }
+  ],
+  "passed": 21,
+  "failed": 0
+}

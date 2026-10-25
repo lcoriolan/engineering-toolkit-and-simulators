@@ -1,0 +1,360 @@
+{
+  "cases": 1232,
+  "passed": 1232,
+  "failed": 0,
+  "calculators": 827,
+  "sections": [
+    {
+      "section": "acoustics",
+      "calculators": 13,
+      "cases": 21,
+      "passed": 21,
+      "failed": 0
+    },
+    {
+      "section": "aerospace",
+      "calculators": 14,
+      "cases": 20,
+      "passed": 20,
+      "failed": 0
+    },
+    {
+      "section": "automotive",
+      "calculators": 17,
+      "cases": 26,
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "section": "beams",
+      "calculators": 11,
+      "cases": 17,
+      "passed": 17,
+      "failed": 0
+    },
+    {
+      "section": "bearings",
+      "calculators": 12,
+      "cases": 18,
+      "passed": 18,
+      "failed": 0
+    },
+    {
+      "section": "belts_chains",
+      "calculators": 14,
+      "cases": 21,
+      "passed": 21,
+      "failed": 0
+    },
+    {
+      "section": "bolted",
+      "calculators": 13,
+      "cases": 22,
+      "passed": 22,
+      "failed": 0
+    },
+    {
+      "section": "clutches_brakes",
+      "calculators": 16,
+      "cases": 25,
+      "passed": 25,
+      "failed": 0
+    },
+    {
+      "section": "columns",
+      "calculators": 9,
+      "cases": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "section": "combustion",
+      "calculators": 8,
+      "cases": 19,
+      "passed": 19,
+      "failed": 0
+    },
+    {
+      "section": "compressible",
+      "calculators": 15,
+      "cases": 17,
+      "passed": 17,
+      "failed": 0
+    },
+    {
+      "section": "controls",
+      "calculators": 10,
+      "cases": 30,
+      "passed": 30,
+      "failed": 0
+    },
+    {
+      "section": "cycles",
+      "calculators": 21,
+      "cases": 28,
+      "passed": 28,
+      "failed": 0
+    },
+    {
+      "section": "design_fund",
+      "calculators": 8,
+      "cases": 11,
+      "passed": 11,
+      "failed": 0
+    },
+    {
+      "section": "economics",
+      "calculators": 17,
+      "cases": 35,
+      "passed": 35,
+      "failed": 0
+    },
+    {
+      "section": "electrical",
+      "calculators": 13,
+      "cases": 20,
+      "passed": 20,
+      "failed": 0
+    },
+    {
+      "section": "ergonomics",
+      "calculators": 4,
+      "cases": 14,
+      "passed": 14,
+      "failed": 0
+    },
+    {
+      "section": "fatigue",
+      "calculators": 12,
+      "cases": 22,
+      "passed": 22,
+      "failed": 0
+    },
+    {
+      "section": "fea",
+      "calculators": 15,
+      "cases": 28,
+      "passed": 28,
+      "failed": 0
+    },
+    {
+      "section": "fluid_dynamics",
+      "calculators": 30,
+      "cases": 35,
+      "passed": 35,
+      "failed": 0
+    },
+    {
+      "section": "fluid_statics",
+      "calculators": 12,
+      "cases": 16,
+      "passed": 16,
+      "failed": 0
+    },
+    {
+      "section": "fracture",
+      "calculators": 9,
+      "cases": 14,
+      "passed": 14,
+      "failed": 0
+    },
+    {
+      "section": "gears",
+      "calculators": 24,
+      "cases": 28,
+      "passed": 28,
+      "failed": 0
+    },
+    {
+      "section": "heat_transfer",
+      "calculators": 60,
+      "cases": 79,
+      "passed": 79,
+      "failed": 0
+    },
+    {
+      "section": "hvac",
+      "calculators": 17,
+      "cases": 25,
+      "passed": 25,
+      "failed": 0
+    },
+    {
+      "section": "hydraulics",
+      "calculators": 8,
+      "cases": 15,
+      "passed": 15,
+      "failed": 0
+    },
+    {
+      "section": "ic_engines",
+      "calculators": 14,
+      "cases": 19,
+      "passed": 19,
+      "failed": 0
+    },
+    {
+      "section": "instrumentation",
+      "calculators": 19,
+      "cases": 31,
+      "passed": 31,
+      "failed": 0
+    },
+    {
+      "section": "kinematics",
+      "calculators": 10,
+      "cases": 13,
+      "passed": 13,
+      "failed": 0
+    },
+    {
+      "section": "kinetics",
+      "calculators": 18,
+      "cases": 21,
+      "passed": 21,
+      "failed": 0
+    },
+    {
+      "section": "manufacturing",
+      "calculators": 42,
+      "cases": 58,
+      "passed": 58,
+      "failed": 0
+    },
+    {
+      "section": "materials_mech",
+      "calculators": 39,
+      "cases": 53,
+      "passed": 53,
+      "failed": 0
+    },
+    {
+      "section": "materials_sci",
+      "calculators": 24,
+      "cases": 33,
+      "passed": 33,
+      "failed": 0
+    },
+    {
+      "section": "math",
+      "calculators": 23,
+      "cases": 31,
+      "passed": 31,
+      "failed": 0
+    },
+    {
+      "section": "mechanisms",
+      "calculators": 24,
+      "cases": 33,
+      "passed": 33,
+      "failed": 0
+    },
+    {
+      "section": "metrology",
+      "calculators": 15,
+      "cases": 30,
+      "passed": 30,
+      "failed": 0
+    },
+    {
+      "section": "power_screws",
+      "calculators": 4,
+      "cases": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "section": "pressure_vessels",
+      "calculators": 10,
+      "cases": 16,
+      "passed": 16,
+      "failed": 0
+    },
+    {
+      "section": "reliability",
+      "calculators": 10,
+      "cases": 14,
+      "passed": 14,
+      "failed": 0
+    },
+    {
+      "section": "renewables",
+      "calculators": 13,
+      "cases": 35,
+      "passed": 35,
+      "failed": 0
+    },
+    {
+      "section": "robotics",
+      "calculators": 12,
+      "cases": 22,
+      "passed": 22,
+      "failed": 0
+    },
+    {
+      "section": "section_props",
+      "calculators": 16,
+      "cases": 22,
+      "passed": 22,
+      "failed": 0
+    },
+    {
+      "section": "shafts",
+      "calculators": 8,
+      "cases": 14,
+      "passed": 14,
+      "failed": 0
+    },
+    {
+      "section": "springs",
+      "calculators": 12,
+      "cases": 24,
+      "passed": 24,
+      "failed": 0
+    },
+    {
+      "section": "statics",
+      "calculators": 18,
+      "cases": 22,
+      "passed": 22,
+      "failed": 0
+    },
+    {
+      "section": "thermo",
+      "calculators": 36,
+      "cases": 44,
+      "passed": 44,
+      "failed": 0
+    },
+    {
+      "section": "tribology",
+      "calculators": 7,
+      "cases": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "section": "turbomachinery",
+      "calculators": 24,
+      "cases": 28,
+      "passed": 28,
+      "failed": 0
+    },
+    {
+      "section": "vibrations",
+      "calculators": 22,
+      "cases": 26,
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "section": "welded",
+      "calculators": 5,
+      "cases": 7,
+      "passed": 7,
+      "failed": 0
+    }
+  ],
+  "uncovered_calculators": [],
+  "interpretation": "Numerical verification against declared references, not broad physical validation."
+}

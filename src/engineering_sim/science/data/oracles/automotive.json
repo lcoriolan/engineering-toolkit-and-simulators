@@ -1,0 +1,537 @@
+{
+  "section": "automotive",
+  "cases": [
+    {
+      "calc": "automotive.rolling_resistance",
+      "inputs": {
+        "C_rr": 0.012,
+        "N": "12 kN"
+      },
+      "expect": {
+        "F_rr": "144 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = C_rr·N = 0.012 × 12000 = 144 N"
+      }
+    },
+    {
+      "calc": "automotive.road_load",
+      "inputs": {
+        "C_rr": 0.015,
+        "W": "15 kN",
+        "theta": "5 deg",
+        "rho": 1.225,
+        "Cd": 0.3,
+        "A": "2.0 m^2",
+        "v": "20 m/s"
+      },
+      "expect": {
+        "F_t": "1678.480 N",
+        "P_req": "33569.60 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "rolling = 0.015·15000·cos5° = 224.144; aero = ½·1.225·0.3·2·400 = 147.0; grade = 15000·sin5° = 1307.34; F_t = 1678.48 N; P = 1678.48·20 = 33569.6 W"
+      }
+    },
+    {
+      "calc": "automotive.road_load",
+      "inputs": {
+        "C_rr": 0.015,
+        "W": "15 kN",
+        "theta": "-6 deg",
+        "rho": 1.225,
+        "Cd": 0.32,
+        "A": "2.2 m^2",
+        "v": "20 m/s"
+      },
+      "expect": {
+        "F_t": "-1171.680 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Downhill: rolling = 0.015·15000·cos(−6°) = 223.83; aero = ½·1.225·0.32·2.2·400 = 172.48; grade = 15000·sin(−6°) = −1568.0; F_t = 223.83 + 172.48 − 1568.0 = −1171.68 N (negative = braking, not drive)"
+      }
+    },
+    {
+      "calc": "automotive.gradeability",
+      "inputs": {
+        "F_avail": "3.5 kN",
+        "W": "15 kN",
+        "C_rr": 0.02
+      },
+      "expect": {
+        "theta": "0.2154589 rad",
+        "grade_pct": 21.88561
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "W·sinθ + C_rr·W·cosθ = F_avail ⇒ θ = asin((F/W)/√(1+C_rr²)) − atan(C_rr) = asin(0.233333/1.000200) − atan(0.02) = asin(0.233287) − 0.019997 = 0.235456 − 0.019997 = 0.215459 rad; grade = 100·tanθ = 21.8856 %"
+      }
+    },
+    {
+      "calc": "automotive.gradeability",
+      "inputs": {
+        "theta": "0.21545892603449684 rad",
+        "W": "15 kN",
+        "C_rr": 0.02
+      },
+      "solve_for": [
+        "F_avail",
+        "grade_pct"
+      ],
+      "expect": {
+        "F_avail": "3.5 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: F_avail = W·√(1+C_rr²)·sin(θ + atan(C_rr)) = 15000·1.000200·sin(0.235456) = 15003·0.233287 = 3500 N"
+      }
+    },
+    {
+      "calc": "automotive.acceleration",
+      "inputs": {
+        "F_t": "4 kN",
+        "F_rr": "300 N",
+        "F_d": "500 N",
+        "k_m": 1.05,
+        "m": "1400 kg"
+      },
+      "expect": {
+        "a": "2.176871 m/s^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a = (4000 − 300 − 500)/(1.05·1400) = 3200/1470 = 2.17687 m/s²"
+      }
+    },
+    {
+      "calc": "automotive.top_speed",
+      "inputs": {
+        "torque_curve": [
+          [
+            1000,
+            150
+          ],
+          [
+            6000,
+            150
+          ]
+        ],
+        "gear_ratios": [
+          12,
+          6,
+          3
+        ],
+        "r_wheel": 0.3,
+        "m": 1000,
+        "Cd": 0.3,
+        "A": 2.0,
+        "C_rr": 0.01,
+        "rho": 1.2,
+        "eta_driveline": 1.0,
+        "g": 9.81
+      },
+      "expect": {
+        "v_max": "62.40326 m/s",
+        "P_max_wheel": "93604.89 W",
+        "gear_at_top": 3,
+        "omega_e_top": "624.0326 rad/s"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Flat torque curve: in top gear (i=3) tractive force F = ηTi/r = 150·3/0.3 = 1500 N constant. Balance 1500 = 0.01·1000·9.81 + ½·1.2·0.3·2·v² = 98.1 + 0.36v² → v = sqrt(1401.9/0.36) = 62.4033 m/s (below the 62.83 m/s redline). Lower gears are redline-limited at 15.7 and 31.4 m/s, so gear 3 wins. P = 1500·62.4033 = 93604.9 W; ωe = v·i/r = 624.03 rad/s"
+      }
+    },
+    {
+      "calc": "automotive.top_speed",
+      "inputs": {
+        "torque_curve": [
+          [
+            1000,
+            5
+          ],
+          [
+            4000,
+            320
+          ],
+          [
+            6000,
+            320
+          ]
+        ],
+        "gear_ratios": [
+          10,
+          6,
+          3.2
+        ],
+        "r_wheel": 0.3,
+        "m": 1200,
+        "Cd": 0.25,
+        "A": 1.8,
+        "C_rr": 0.01,
+        "rho": 1.225,
+        "eta_driveline": 0.9,
+        "g": 9.81
+      },
+      "expect": {
+        "v_max": "58.90486 m/s",
+        "gear_at_top": 3
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Peaky curve. Gear 3 (i=3.2) reaches its redline at v = 6000·2π/60·0.3/3.2 = 58.9049 m/s, where the engine still makes 320 N·m: tractive 0.9·320·3.2/0.3 = 3072 N vs road load 0.01·1200·9.81 + ½·1.225·0.25·1.8·58.9049² = 1074 N, so the top speed is the gear-3 redline (dense sweep of the best-gear force envelope; gears 1 and 2 redline at 18.85 and 31.42 m/s)"
+      }
+    },
+    {
+      "calc": "automotive.top_speed",
+      "inputs": {
+        "torque_curve": [
+          [
+            1000,
+            300
+          ],
+          [
+            7000,
+            300
+          ]
+        ],
+        "gear_ratios": [
+          10,
+          7,
+          5.5
+        ],
+        "r_wheel": 0.3,
+        "m": 1200,
+        "Cd": 0.25,
+        "A": 1.8,
+        "C_rr": 0.01,
+        "rho": 1.225,
+        "eta_driveline": 0.9,
+        "g": 9.81
+      },
+      "expect": {
+        "v_max": "39.98391 m/s",
+        "P_max_wheel": "197920.3 W",
+        "gear_at_top": 3,
+        "omega_e_top": "733.0383 rad/s"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Flat 300 N·m to 7000 rpm. Top gear (i=5.5) reaches its redline at v = 7000·2π/60·0.3/5.5 = 39.9839 m/s with tractive 0.9·300·5.5/0.3 = 4950 N vs road load 0.01·1200·9.81 + ½·1.225·0.25·1.8·39.9839² = 558.4 N, so it is redline-limited (dense sweep confirms 39.9839 m/s in gear 3); P = 4950·39.9839 = 197920 W; ωe = 7000·2π/60 = 733.04 rad/s"
+      }
+    },
+    {
+      "calc": "automotive.gear_ratio",
+      "inputs": {
+        "T_in": "200 N*m",
+        "omega_in": "1500 rpm",
+        "i": 4,
+        "eta": 0.95
+      },
+      "expect": {
+        "T_out": "760 N*m",
+        "omega_out": "39.26991 rad/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T_out = 200·4·0.95 = 760 N·m; ω_out = (1500·2π/60)/4 = 157.080/4 = 39.2699 rad/s"
+      }
+    },
+    {
+      "calc": "automotive.vehicle_speed",
+      "inputs": {
+        "omega_e": "3000 rpm",
+        "r_wheel": "0.3 m",
+        "i_total": 4
+      },
+      "expect": {
+        "v": "23.56194 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ωe = 314.159 rad/s; v = 314.159·0.3/4 = 23.5619 m/s"
+      }
+    },
+    {
+      "calc": "automotive.tractive_effort",
+      "inputs": {
+        "T_e": "300 N*m",
+        "i_g": 3.0,
+        "i_d": 4.5,
+        "eta": 0.92,
+        "r_wheel": "0.32 m"
+      },
+      "expect": {
+        "F_t": "11643.75 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F_t = T·i_g·i_d·η/r = 300·3·4.5·0.92/0.32 = 3726/0.32 = 11643.75 N"
+      }
+    },
+    {
+      "calc": "automotive.engine_power",
+      "inputs": {
+        "P_wheel": "35 kW",
+        "eta": 0.87
+      },
+      "expect": {
+        "P_eng": "40229.89 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "P_eng = P_wheel/η = 35000/0.87 = 40229.9 W"
+      }
+    },
+    {
+      "calc": "automotive.braking_distance",
+      "inputs": {
+        "mu": 0.8,
+        "g": 9.81,
+        "v": "25 m/s",
+        "t_r": "0.8 s"
+      },
+      "expect": {
+        "a_dec": "7.848 m/s^2",
+        "d": "59.81906 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a = 0.8·9.81 = 7.848 m/s²; d = 25·0.8 + 25²/(2·7.848) = 20 + 39.8191 = 59.8191 m"
+      }
+    },
+    {
+      "calc": "automotive.braking_distance",
+      "inputs": {
+        "mu": 0.8,
+        "g": 9.81,
+        "d": "59.8190621814475 m",
+        "t_r": "0.8 s"
+      },
+      "solve_for": [
+        "v",
+        "a_dec"
+      ],
+      "expect": {
+        "v": "25 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: v = μ·g·(−t_r + √(t_r² + 2d/(μ·g))) = 7.848·(−0.8 + √(0.64 + 15.2447)) = 7.848·(−0.8 + 3.9853) = 25.0 m/s"
+      }
+    },
+    {
+      "calc": "automotive.weight_transfer",
+      "inputs": {
+        "W": "12 kN",
+        "l_f": "1.2 m",
+        "l_r": "1.4 m",
+        "h": "0.5 m",
+        "a": "2.5 m/s^2",
+        "g": 9.81
+      },
+      "expect": {
+        "delta_W": "588.0969 N",
+        "W_f_dyn": "5873.442 N",
+        "W_r_dyn": "6126.558 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ΔW = 12000·2.5·0.5/(9.81·2.6) = 15000/25.506 = 588.097 N; W_f = 12000·1.4/2.6 − ΔW = 6461.54 − 588.10 = 5873.44 N; W_r = 12000·1.2/2.6 + ΔW = 5538.46 + 588.10 = 6126.56 N"
+      }
+    },
+    {
+      "calc": "automotive.weight_transfer",
+      "inputs": {
+        "W": "12 kN",
+        "l_f": "1.2 m",
+        "l_r": "1.4 m",
+        "h": "0.5 m",
+        "a": "-5 m/s^2",
+        "g": 9.81
+      },
+      "expect": {
+        "delta_W": "-1176.194 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Braking is negative acceleration: ΔW = 12000·(−5)·0.5/(9.81·2.6) = −1176.19 N (forward transfer, front axle gains)"
+      }
+    },
+    {
+      "calc": "automotive.brake_distribution",
+      "inputs": {
+        "W": "12 kN",
+        "l_f": "1.2 m",
+        "l_r": "1.4 m",
+        "h": "0.5 m",
+        "mu": 0.85
+      },
+      "expect": {
+        "a_g": 0.85,
+        "delta_W": "1961.538 N",
+        "W_f_dyn": "8423.077 N",
+        "W_r_dyn": "3576.923 N",
+        "F_bf": "7159.615 N",
+        "F_br": "3040.385 N",
+        "front_frac": 0.7019231
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L = 2.6; a_g = μ = 0.85; ΔW = 12000·0.85·0.5/2.6 = 1961.54 N; W_f = 12000·1.4/2.6 + 1961.54 = 8423.08 N; W_r = 12000·1.2/2.6 − 1961.54 = 3576.92 N; F_bf = 0.85·8423.08 = 7159.6 N; F_br = 0.85·3576.92 = 3040.4 N; front_frac = (1.4 + 0.85·0.5)/2.6 = 0.70192"
+      }
+    },
+    {
+      "calc": "automotive.brake_distribution",
+      "inputs": {
+        "W": "15 kN",
+        "l_f": "1.0 m",
+        "l_r": "1.6 m",
+        "h": "0.6 m",
+        "mu": 0.7
+      },
+      "expect": {
+        "front_frac": 0.7769231,
+        "F_bf": "8157.692 N",
+        "F_br": "2342.308 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Second geometry: L = 2.6; ΔW = 15000·0.7·0.6/2.6 = 2423.08 N; W_f = 15000·1.6/2.6 + 2423.08 = 11653.85 N; W_r = 15000·1.0/2.6 − 2423.08 = 3346.15 N; F_bf = 0.7·11653.85 = 8157.69 N; F_br = 0.7·3346.15 = 2342.31 N; front_frac = (1.6 + 0.7·0.6)/2.6 = 0.77692"
+      }
+    },
+    {
+      "calc": "automotive.brake_distribution",
+      "inputs": {
+        "W": "12 kN",
+        "l_f": "1.2 m",
+        "l_r": "1.4 m",
+        "h": "0.5 m",
+        "front_frac": 0.7019231
+      },
+      "solve_for": [
+        "mu",
+        "a_g",
+        "delta_W",
+        "W_f_dyn",
+        "W_r_dyn",
+        "F_bf",
+        "F_br"
+      ],
+      "expect": {
+        "mu": 0.85
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: μ = (front_frac·L − l_r)/h = (0.701923·2.6 − 1.4)/0.5 = (1.825 − 1.4)/0.5 = 0.85 (front_frac given, mu and the remaining outputs solved)"
+      }
+    },
+    {
+      "calc": "automotive.tyre_lateral_force",
+      "inputs": {
+        "C_alpha": "70 kN/rad",
+        "alpha": "3 deg"
+      },
+      "expect": {
+        "F_y": "3665.191 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F_y = C_α·α = 70000·3° = 70000·0.0523599 = 3665.19 N"
+      }
+    },
+    {
+      "calc": "automotive.understeer_gradient",
+      "inputs": {
+        "W_f": "8 kN",
+        "W_r": "6 kN",
+        "C_af": "50 kN/rad",
+        "C_ar": "50 kN/rad",
+        "a_y": "3 m/s^2",
+        "g": 9.81
+      },
+      "expect": {
+        "alpha_f": "0.04892966 rad",
+        "alpha_r": "0.03669725 rad",
+        "K_us": "0.04 rad"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "αf = 8000·3/(9.81·50000) = 24000/490500 = 0.048930 rad; αr = 18000/490500 = 0.036697 rad; K_us = 8000/50000 − 6000/50000 = 0.04 rad"
+      }
+    },
+    {
+      "calc": "automotive.understeer_gradient",
+      "inputs": {
+        "W_f": "5 kN",
+        "W_r": "9 kN",
+        "C_af": "50 kN/rad",
+        "C_ar": "50 kN/rad",
+        "a_y": "3 m/s^2",
+        "g": 9.81
+      },
+      "expect": {
+        "K_us": "-0.08 rad"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Oversteer case: K_us = 5000/50000 − 9000/50000 = −0.08 rad (negative = oversteer, exercises the signed output)"
+      }
+    },
+    {
+      "calc": "automotive.rollover_threshold",
+      "inputs": {
+        "track": "1.4 m",
+        "h": "0.5 m",
+        "g": 9.81
+      },
+      "expect": {
+        "a_y_roll": "13.734 m/s^2",
+        "a_y_g": 1.4
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "a_y = 9.81·1.4/(2·0.5) = 13.734 m/s²; in g: 1.4/1.0 = 1.4"
+      }
+    },
+    {
+      "calc": "automotive.suspension_frequency",
+      "inputs": {
+        "k_s": "25 kN/m",
+        "k_t": "200 kN/m",
+        "m": "350 kg"
+      },
+      "expect": {
+        "k_ride": "22222.22 N/m",
+        "f_n": "1.268177 Hz"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "k_ride = 25000·200000/225000 = 22222.2 N/m; f_n = √(22222.2/350)/(2π) = 7.9680/6.28319 = 1.26818 Hz"
+      }
+    },
+    {
+      "calc": "automotive.fuel_consumption",
+      "inputs": {
+        "bsfc": "220 g/kWh",
+        "P": "50 kW",
+        "rho_f": "750 kg/m^3",
+        "v": "20 m/s"
+      },
+      "expect": {
+        "m_dot_f": "0.003055556 kg/s",
+        "V_dot": "4.074074e-6 m^3/s",
+        "economy": "4909091 m/m^3"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "bsfc = 220/3.6e9 = 6.1111e-8 kg/J; m_dot = 6.1111e-8·50000 = 3.05556e-3 kg/s; V_dot = 3.05556e-3/750 = 4.07407e-6 m³/s; economy = 20/4.07407e-6 = 4.90909e6 m/m³"
+      }
+    }
+  ]
+}

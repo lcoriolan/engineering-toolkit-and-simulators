@@ -1,0 +1,1748 @@
+{
+  "PROJECT": "Engineering simulation reference data",
+  "DESCRIPTION": "Cited resin library for science toolkit compounding screens.",
+  "records": [
+    {
+      "id": "pet",
+      "name": "PET (bottle / recycled)",
+      "class": "polyester",
+      "density_g_cm3": {
+        "value": 1.39,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "rPET engine / generic PET datasheets (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": 78,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "rPET engine / generic PET datasheets (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": 250,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "rPET engine / generic PET datasheets (recalled) Tm (recalled)"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 75,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "rPET engine / generic PET datasheets (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 55,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "rPET engine / generic PET datasheets (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 2.8,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "rPET engine / generic PET datasheets (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "semicrystalline (opaque as moulded; clear only when quenched amorphous)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "yes (hydrolytic)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 160,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 4,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -40,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.004,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 270,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 290,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "COOH / OH",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": 40,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "typical end-group content (recalled)"
+      },
+      "mark_houwink_K": {
+        "value": 0.00021,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "Mark-Houwink K (recalled)"
+      },
+      "mark_houwink_a": {
+        "value": 0.82,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Mark-Houwink a (recalled)"
+      },
+      "degradation": {
+        "value": "hydrolysis (dominant), thermal (>300 C), oxidative",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes (bottle grade)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "low",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Recycled bottle flake: ~2 % isophthalic + ~2.5 % DEG comonomer lowers observed Tm to ~245-252 C. Mark-Houwink K/a match the rPET engine constants (phenol/TCE 60/40) so compound.screen reproduces rpet.screen."
+    },
+    {
+      "id": "pbt",
+      "name": "PBT",
+      "class": "polyester",
+      "density_g_cm3": {
+        "value": 1.31,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Celanese Celanex / DuPont Crastin PBT datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": 45,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Celanese Celanex / DuPont Crastin PBT datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": 223,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Celanese Celanex / DuPont Crastin PBT datasheet (recalled) Tm (recalled)"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 55,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Celanese Celanex / DuPont Crastin PBT datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 55,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Celanese Celanex / DuPont Crastin PBT datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 2.6,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Celanese Celanex / DuPont Crastin PBT datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "semicrystalline (opaque)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "yes (hydrolytic, milder than PET)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 120,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 4,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -40,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.02,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 240,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 270,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "COOH / OH",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": 30,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "typical end-group content (recalled)"
+      },
+      "mark_houwink_K": {
+        "value": 0.000117,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "Mark-Houwink K (recalled)"
+      },
+      "mark_houwink_a": {
+        "value": 0.83,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Mark-Houwink a (recalled)"
+      },
+      "degradation": {
+        "value": "hydrolysis, thermal, oxidative",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes (some grades)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "low-mid",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Fast-crystallising; standard connector resin. HDT-A ~55 C unfilled, ~205 C with 30 % glass."
+    },
+    {
+      "id": "pa6",
+      "name": "PA6 (polyamide 6)",
+      "class": "polyamide",
+      "density_g_cm3": {
+        "value": 1.14,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "BASF Ultramid PA6 datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": 47,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "BASF Ultramid PA6 datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": 220,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "BASF Ultramid PA6 datasheet (recalled) Tm (recalled)"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 65,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "BASF Ultramid PA6 datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 80,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "BASF Ultramid PA6 datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 3.0,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "BASF Ultramid PA6 datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "semicrystalline (opaque)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "yes (moisture uptake, hydrolytic at melt)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 80,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 4,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -30,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.2,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 240,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 270,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "NH2 / COOH",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": 45,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "typical end-group content (recalled)"
+      },
+      "mark_houwink_K": {
+        "value": 0.00029,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "Mark-Houwink K (recalled)"
+      },
+      "mark_houwink_a": {
+        "value": 0.78,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Mark-Houwink a (recalled)"
+      },
+      "degradation": {
+        "value": "hydrolysis at melt, oxidative (yellowing), thermal",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "low-mid",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Caprolactam ring opening gives NH2/COOH ends. Dry-state properties quoted; 2.5 % water plasticises to Tg ~10 C."
+    },
+    {
+      "id": "pa66",
+      "name": "PA66 (polyamide 66)",
+      "class": "polyamide",
+      "density_g_cm3": {
+        "value": 1.14,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "BASF Ultramid / DuPont Zytel PA66 datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": 50,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "BASF Ultramid / DuPont Zytel PA66 datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": 262,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "BASF Ultramid / DuPont Zytel PA66 datasheet (recalled) Tm (recalled)"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 70,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "BASF Ultramid / DuPont Zytel PA66 datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 82,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "BASF Ultramid / DuPont Zytel PA66 datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 3.2,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "BASF Ultramid / DuPont Zytel PA66 datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "semicrystalline (opaque)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "yes (moisture uptake, hydrolytic at melt)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 80,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 4,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -30,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.2,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 270,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 300,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "NH2 / COOH",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": 50,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "typical end-group content (recalled)"
+      },
+      "mark_houwink_K": {
+        "value": 0.000116,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "Mark-Houwink K (recalled)"
+      },
+      "mark_houwink_a": {
+        "value": 0.72,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Mark-Houwink a (recalled)"
+      },
+      "degradation": {
+        "value": "hydrolysis at melt, oxidative, thermal",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "mid",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Higher Tm than PA6. Dry-state properties quoted."
+    },
+    {
+      "id": "pp",
+      "name": "PP homopolymer",
+      "class": "polyolefin",
+      "density_g_cm3": {
+        "value": 0.905,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "LyondellBasell / Borealis PP datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": -10,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "LyondellBasell / Borealis PP datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": 165,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "LyondellBasell / Borealis PP datasheet (recalled) Tm (recalled)"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 55,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "LyondellBasell / Borealis PP datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 32,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "LyondellBasell / Borealis PP datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 1.5,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "LyondellBasell / Borealis PP datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "semicrystalline (translucent to opaque)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "no",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 80,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 2,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -20,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 200,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 250,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "none (saturated C-H)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": null,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "not applicable / not published",
+        "note": "no reactive end groups or value not known"
+      },
+      "mark_houwink_K": {
+        "value": null,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "mark_houwink_a": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "degradation": {
+        "value": "oxidative (needs stabiliser), UV, thermal",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "low",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "No hydrolysable bonds; drying is optional (condensation prevention)."
+    },
+    {
+      "id": "hdpe",
+      "name": "HDPE",
+      "class": "polyolefin",
+      "density_g_cm3": {
+        "value": 0.952,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Dow / LyondellBasell HDPE datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": -120,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Dow / LyondellBasell HDPE datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": 130,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Dow / LyondellBasell HDPE datasheet (recalled) Tm (recalled)"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 45,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Dow / LyondellBasell HDPE datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 25,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Dow / LyondellBasell HDPE datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 1.0,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Dow / LyondellBasell HDPE datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "semicrystalline (translucent)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "no",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 80,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 2,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -20,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 190,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 260,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "none (saturated C-H)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": null,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "not applicable / not published",
+        "note": "no reactive end groups or value not known"
+      },
+      "mark_houwink_K": {
+        "value": null,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "mark_houwink_a": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "degradation": {
+        "value": "oxidative, UV, thermal",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "low",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Lowest modulus/HDT of the set; used for toughness and chemical resistance."
+    },
+    {
+      "id": "pc",
+      "name": "PC (polycarbonate)",
+      "class": "polycarbonate",
+      "density_g_cm3": {
+        "value": 1.2,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Covestro Makrolon PC datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": 147,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Covestro Makrolon PC datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "amorphous polymer: no melting point",
+        "note": "no crystalline melting point"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 128,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Covestro Makrolon PC datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 65,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Covestro Makrolon PC datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 2.4,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Covestro Makrolon PC datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "amorphous (transparent)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "yes (carbonate hydrolysis)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 120,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 4,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -40,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.02,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 270,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 320,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "phenolic OH (ends)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": 30,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "typical end-group content (recalled)"
+      },
+      "mark_houwink_K": {
+        "value": null,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "mark_houwink_a": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "degradation": {
+        "value": "hydrolysis, UV (yellowing), thermal",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "mid",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Amorphous: HDT ceiling is set by Tg (147 C), not Tm. Needs thorough drying."
+    },
+    {
+      "id": "abs",
+      "name": "ABS",
+      "class": "styrenic (SAN + butadiene)",
+      "density_g_cm3": {
+        "value": 1.05,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "INEOS Styrolution / SABIC ABS datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": 105,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "INEOS Styrolution / SABIC ABS datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "amorphous polymer: no melting point",
+        "note": "no crystalline melting point"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 85,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "INEOS Styrolution / SABIC ABS datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 45,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "INEOS Styrolution / SABIC ABS datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 2.3,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "INEOS Styrolution / SABIC ABS datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "amorphous (opaque in natural)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "mild (polar SAN phase)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 80,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 3,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -30,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 220,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 250,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "none",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": null,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "not applicable / not published",
+        "note": "no reactive end groups or value not known"
+      },
+      "mark_houwink_K": {
+        "value": null,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "mark_houwink_a": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "degradation": {
+        "value": "oxidative, UV (butadiene embrittlement)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes (some grades)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "low-mid",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Two-phase SAN/butadiene; not transparent in natural. HDT ceiling set by SAN Tg ~105 C."
+    },
+    {
+      "id": "pps",
+      "name": "PPS",
+      "class": "polyarylene sulfide",
+      "density_g_cm3": {
+        "value": 1.35,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Solvay Ryton / Syensqo PPS datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": 85,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Solvay Ryton / Syensqo PPS datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": 280,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Solvay Ryton / Syensqo PPS datasheet (recalled) Tm (recalled)"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 105,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Solvay Ryton / Syensqo PPS datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 90,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Solvay Ryton / Syensqo PPS datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 3.4,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Solvay Ryton / Syensqo PPS datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "semicrystalline (opaque)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "no",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 130,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 3,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -40,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.05,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 300,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 340,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "none (or Cl/Na ends in some grades)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": null,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "not applicable / not published",
+        "note": "no reactive end groups or value not known"
+      },
+      "mark_houwink_K": {
+        "value": null,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "mark_houwink_a": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "degradation": {
+        "value": "oxidative crosslinking, thermal",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes (some grades)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "high",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Inherently flame-retardant; HDT-A ~105 C unfilled, >260 C glass-filled. High Tm gives high HDT ceiling."
+    },
+    {
+      "id": "peek",
+      "name": "PEEK",
+      "class": "polyaryletherketone",
+      "density_g_cm3": {
+        "value": 1.32,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Victrex PEEK datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": 143,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Victrex PEEK datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": 343,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Victrex PEEK datasheet (recalled) Tm (recalled)"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 152,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Victrex PEEK datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 100,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Victrex PEEK datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 3.6,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Victrex PEEK datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "semicrystalline (opaque)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "no",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 150,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 3,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -40,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 360,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 400,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "OH / F (fluorine-terminated)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": null,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "not applicable / not published",
+        "note": "no reactive end groups or value not known"
+      },
+      "mark_houwink_K": {
+        "value": null,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "mark_houwink_a": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "degradation": {
+        "value": "thermal, oxidative",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "very high",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Highest continuous-use temperature; unfilled HDT-A ~152 C, >300 C with carbon fibre. Very high cost."
+    },
+    {
+      "id": "pla",
+      "name": "PLA (polylactic acid)",
+      "class": "polyester",
+      "density_g_cm3": {
+        "value": 1.24,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "NatureWorks Ingeo PLA datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": 60,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "NatureWorks Ingeo PLA datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": 155,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "NatureWorks Ingeo PLA datasheet (recalled) Tm (recalled)"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 55,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "NatureWorks Ingeo PLA datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 60,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "NatureWorks Ingeo PLA datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 3.5,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "NatureWorks Ingeo PLA datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "semicrystalline (clear amorphous quench; slow crystallisation)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "yes (hydrolytic)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 80,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 4,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -40,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.025,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 170,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 210,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "COOH / OH",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": 20,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "typical end-group content (recalled)"
+      },
+      "mark_houwink_K": {
+        "value": 0.000174,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "Mark-Houwink K (recalled)"
+      },
+      "mark_houwink_a": {
+        "value": 0.74,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "Mark-Houwink a (recalled)"
+      },
+      "degradation": {
+        "value": "hydrolysis, thermal, UV",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "low",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Low Tm/Tg limit HDT; crystallisation is slow unless nucleated/annealed."
+    },
+    {
+      "id": "pmma",
+      "name": "PMMA",
+      "class": "acrylic",
+      "density_g_cm3": {
+        "value": 1.19,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Roehm / Mitsubishi Chemical PMMA datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": 105,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Roehm / Mitsubishi Chemical PMMA datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": null,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "amorphous polymer: no melting point",
+        "note": "no crystalline melting point"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 95,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Roehm / Mitsubishi Chemical PMMA datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 70,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Roehm / Mitsubishi Chemical PMMA datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 3.1,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Roehm / Mitsubishi Chemical PMMA datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "amorphous (transparent)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "mild",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 80,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 3,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -30,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.1,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 220,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 260,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "none",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": null,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "not applicable / not published",
+        "note": "no reactive end groups or value not known"
+      },
+      "mark_houwink_K": {
+        "value": null,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "mark_houwink_a": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "degradation": {
+        "value": "thermal (depolymerisation), UV (stable)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "low-mid",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Optically clear but brittle; HDT ceiling set by Tg ~105 C."
+    },
+    {
+      "id": "pom",
+      "name": "POM (acetal copolymer)",
+      "class": "polyoxymethylene",
+      "density_g_cm3": {
+        "value": 1.41,
+        "unit": "g/cm3",
+        "kind": "unverified",
+        "source": "Celanese Hostaform / DuPont Delrin POM datasheet (recalled) density (recalled)"
+      },
+      "tg_c": {
+        "value": -60,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Celanese Hostaform / DuPont Delrin POM datasheet (recalled) Tg (recalled)"
+      },
+      "tm_c": {
+        "value": 165,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Celanese Hostaform / DuPont Delrin POM datasheet (recalled) Tm (recalled)"
+      },
+      "hdt_1p8_mpa_c": {
+        "value": 105,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "Celanese Hostaform / DuPont Delrin POM datasheet (recalled) HDT-A 1.8 MPa unfilled (recalled)"
+      },
+      "tensile_yield_mpa": {
+        "value": 70,
+        "unit": "MPa",
+        "kind": "unverified",
+        "source": "Celanese Hostaform / DuPont Delrin POM datasheet (recalled) tensile yield (recalled)"
+      },
+      "modulus_gpa": {
+        "value": 3.0,
+        "unit": "GPa",
+        "kind": "unverified",
+        "source": "Celanese Hostaform / DuPont Delrin POM datasheet (recalled) tensile modulus (recalled)"
+      },
+      "clarity": {
+        "value": "semicrystalline (opaque)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "morphology (recalled)"
+      },
+      "moisture_sensitive": {
+        "value": "no",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "chemistry (recalled)"
+      },
+      "drying_temp_c": {
+        "value": 80,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_time_h": {
+        "value": 3,
+        "unit": "h",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_dewpoint_c": {
+        "value": -30,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "drying_max_moisture_pct": {
+        "value": 0.2,
+        "unit": "wt%",
+        "kind": "unverified",
+        "source": "supplier drying guide (recalled)"
+      },
+      "melt_temp_min_c": {
+        "value": 190,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "melt_temp_max_c": {
+        "value": 220,
+        "unit": "degC",
+        "kind": "unverified",
+        "source": "supplier processing guide (recalled)"
+      },
+      "end_groups": {
+        "value": "hemiacetal OH (copolymer, stabilised)",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "end-group chemistry (recalled)"
+      },
+      "end_group_mmol_kg": {
+        "value": null,
+        "unit": "mmol/kg",
+        "kind": "unverified",
+        "source": "not applicable / not published",
+        "note": "no reactive end groups or value not known"
+      },
+      "mark_houwink_K": {
+        "value": null,
+        "unit": "dL/g",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "mark_houwink_a": {
+        "value": null,
+        "unit": "-",
+        "kind": "unverified",
+        "source": "not a condensation polyester/polyamide",
+        "note": "no Mark-Houwink constants used"
+      },
+      "degradation": {
+        "value": "thermal (formaldehyde release above ~230 C), oxidative",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "degradation modes (recalled)"
+      },
+      "food_contact": {
+        "value": "yes",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "food-contact grade availability (recalled)"
+      },
+      "price_band": {
+        "value": "low",
+        "unit": "-",
+        "kind": "unverified",
+        "source": "approximate price band (recalled)"
+      },
+      "notes": "Very high crystallinity gives HDT-A ~105 C despite low Tm. Must not be overheated (formaldehyde)."
+    }
+  ]
+}

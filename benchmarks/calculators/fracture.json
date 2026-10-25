@@ -1,0 +1,1545 @@
+{
+  "section": "fracture",
+  "command": "python tools/benchmark_report.py --output benchmarks",
+  "test": "python -m pytest tests/test_mechanics_oracles.py -k fracture",
+  "backend_versions": "../backend-versions.json",
+  "calculators": {
+    "fracture.stress_intensity": {
+      "title": "Stress intensity factor (K = Y \u03c3 \u221a(\u03c0 a))",
+      "variables": [
+        {
+          "name": "K",
+          "unit": "Pa*m^0.5",
+          "desc": "mode-I stress intensity factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Y",
+          "unit": "",
+          "desc": "dimensionless geometry factor (centre crack in an infinite plate Y = 1; edge crack in a semi-infinite plate Y = 1.12; embedded penny crack Y = 2/pi)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "Pa",
+          "desc": "remote (applied) stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "crack length (half-length for a centre crack)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "K = Y*sigma*sqrt(pi*a)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "K"
+      ],
+      "assumptions": [
+        "Linear-elastic mode-I loading; small-scale yielding. Y accounts for geometry and finite width and is a user input."
+      ],
+      "method_references": [
+        "Stress intensity factor definition"
+      ],
+      "synthetic_example": {
+        "Y": 1.12,
+        "sigma": 100000000.0,
+        "a": 0.01
+      }
+    },
+    "fracture.critical_crack_length": {
+      "title": "Critical crack length for fracture",
+      "variables": [
+        {
+          "name": "a_c",
+          "unit": "m",
+          "desc": "critical crack length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_Ic",
+          "unit": "Pa*m^0.5",
+          "desc": "plane-strain fracture toughness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Y",
+          "unit": "",
+          "desc": "dimensionless geometry factor (centre crack in an infinite plate Y = 1; edge crack in a semi-infinite plate Y = 1.12; embedded penny crack Y = 2/pi)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "Pa",
+          "desc": "applied stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "a_c = (K_Ic/(Y*sigma))**2/pi"
+      ],
+      "procedure": null,
+      "outputs": [
+        "a_c"
+      ],
+      "assumptions": [
+        "Fracture occurs when K = Y sigma sqrt(pi a) reaches K_Ic; solving for a gives a_c."
+      ],
+      "method_references": [
+        "Critical crack length from K_Ic"
+      ],
+      "synthetic_example": {
+        "K_Ic": 50000000.0,
+        "Y": 1.0,
+        "sigma": 200000000.0
+      }
+    },
+    "fracture.critical_stress": {
+      "title": "Critical (fracture) stress for a given crack",
+      "variables": [
+        {
+          "name": "sigma_c",
+          "unit": "Pa",
+          "desc": "critical (fracture) stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3c",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_Ic",
+          "unit": "Pa*m^0.5",
+          "desc": "plane-strain fracture toughness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Y",
+          "unit": "",
+          "desc": "dimensionless geometry factor (centre crack in an infinite plate Y = 1; edge crack in a semi-infinite plate Y = 1.12; embedded penny crack Y = 2/pi)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "crack length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "sigma_c = K_Ic/(Y*sqrt(pi*a))"
+      ],
+      "procedure": null,
+      "outputs": [
+        "sigma_c"
+      ],
+      "assumptions": [
+        "Fracture stress at which K reaches K_Ic for the given crack length."
+      ],
+      "method_references": [
+        "Critical stress from K_Ic"
+      ],
+      "synthetic_example": {
+        "K_Ic": 50000000.0,
+        "Y": 1.0,
+        "a": 0.01
+      }
+    },
+    "fracture.energy_release_rate": {
+      "title": "Energy release rate G and J-integral (LEFM equivalence)",
+      "variables": [
+        {
+          "name": "G_plane_strain",
+          "unit": "J/m^2",
+          "desc": "energy release rate G in plane strain",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "G_plane_stress",
+          "unit": "J/m^2",
+          "desc": "energy release rate G in plane stress",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "Pa*m^0.5",
+          "desc": "stress intensity factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "E",
+          "unit": "Pa",
+          "desc": "Young's modulus",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "nu",
+          "unit": "",
+          "desc": "Poisson's ratio",
+          "lo": null,
+          "hi": 0.5,
+          "label": "\u03bd",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "G_plane_strain = K**2*(1 - nu**2)/E",
+        "G_plane_stress = K**2/E"
+      ],
+      "procedure": null,
+      "outputs": [
+        "G_plane_strain",
+        "G_plane_stress"
+      ],
+      "assumptions": [
+        "G = K^2/E' with E' = E (plane stress) or E/(1 - nu^2) (plane strain). In LEFM the J-integral equals G, so J = G here."
+      ],
+      "method_references": [
+        "Irwin relation G = K^2/E' ; J = G in LEFM"
+      ],
+      "synthetic_example": {
+        "K": 50000000.0,
+        "E": 200000000000.0,
+        "nu": 0.3
+      }
+    },
+    "fracture.plastic_zone_size": {
+      "title": "Irwin plastic zone radius",
+      "variables": [
+        {
+          "name": "r_y_stress",
+          "unit": "m",
+          "desc": "Irwin plastic zone radius ahead of the crack tip (plane stress)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "r_y_strain",
+          "unit": "m",
+          "desc": "Irwin plastic zone radius ahead of the crack tip (plane strain)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K",
+          "unit": "Pa*m^0.5",
+          "desc": "stress intensity factor",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma_ys",
+          "unit": "Pa",
+          "desc": "yield strength",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3ys",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [
+        "r_y_stress = K**2/(2*pi*sigma_ys**2)",
+        "r_y_strain = K**2/(6*pi*sigma_ys**2)"
+      ],
+      "procedure": null,
+      "outputs": [
+        "r_y_stress",
+        "r_y_strain"
+      ],
+      "assumptions": [
+        "First-order Irwin radius: r_y = K^2/(2 pi sigma_ys^2) in plane stress and one third of that in plane strain (from the von Mises constraint). The corrected (Irwin) plastic zone size ahead of the tip is 2 r_y (and 2 r_y_strain in plane strain). Valid for small-scale yielding (r_y << a and r_y << remaining ligament)."
+      ],
+      "method_references": [
+        "Irwin plastic zone size"
+      ],
+      "synthetic_example": {
+        "K": 50000000.0,
+        "sigma_ys": 500000000.0
+      }
+    },
+    "fracture.paris_growth_rate": {
+      "title": "Paris-law crack growth rate (da/dN = C \u0394K^m)",
+      "variables": [
+        {
+          "name": "dadN",
+          "unit": "m",
+          "desc": "crack growth per cycle da/dN (m/cycle)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "DK",
+          "unit": "Pa*m^0.5",
+          "desc": "stress-intensity range \u0394K",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394K",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "Paris constant (SI: m/cycle per (Pa\u00b7\u221am)^m; a typical steel C \u2248 1e-11 in MPa units is 1e-29 in SI for m = 3)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "",
+          "desc": "Paris exponent",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dsigma",
+          "unit": "Pa",
+          "desc": "stress range \u0394\u03c3",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Y",
+          "unit": "",
+          "desc": "dimensionless geometry factor (centre crack in an infinite plate Y = 1; edge crack in a semi-infinite plate Y = 1.12; embedded penny crack Y = 2/pi)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a",
+          "unit": "m",
+          "desc": "crack length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _paris_growth(v):\n    \"\"\"Paris-law crack growth rate: da/dN = C dK^m, with dK = Y dsigma sqrt(pi a).\"\"\"\n    DK = v['Y'] * v['dsigma'] * math.sqrt(PI * v['a'])\n    return {'dadN': v['C'] * DK ** v['m'], 'DK': DK}\n",
+        "source": "fracture.py",
+        "line": 31
+      },
+      "outputs": [
+        "dadN",
+        "DK"
+      ],
+      "assumptions": [
+        "Region II (Paris) crack growth. C carries units that depend on m (kept as a bare number), so keep dsigma in Pa and enter C in SI."
+      ],
+      "method_references": [
+        "Paris law, da/dN = C dK^m"
+      ],
+      "synthetic_example": {
+        "C": 1e-29,
+        "m": 3.0,
+        "dsigma": 50000000.0,
+        "Y": 1.0,
+        "a": 0.005
+      }
+    },
+    "fracture.paris_cycles": {
+      "title": "Paris-law cycles to failure (constant Y)",
+      "variables": [
+        {
+          "name": "N_f",
+          "unit": "",
+          "desc": "number of cycles to grow the crack from a0 to ac",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "Paris constant (SI: m/cycle per (Pa\u00b7\u221am)^m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "",
+          "desc": "Paris exponent",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dsigma",
+          "unit": "Pa",
+          "desc": "stress range \u0394\u03c3",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Y",
+          "unit": "",
+          "desc": "dimensionless geometry factor (centre crack in an infinite plate Y = 1; edge crack in a semi-infinite plate Y = 1.12; embedded penny crack Y = 2/pi)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a0",
+          "unit": "m",
+          "desc": "initial crack length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ac",
+          "unit": "m",
+          "desc": "final (critical) crack length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _paris_cycles(v):\n    \"\"\"Cycles to failure under the Paris law with a constant geometry factor Y.\n\n    Closed form of N_f = integral_{a0}^{ac} da / (C (Y dsigma sqrt(pi a))^m) for m != 2 and m = 2.\n    \"\"\"\n    C, m, dsigma, Y = v['C'], v['m'], v['dsigma'], v['Y']\n    a0, ac = v['a0'], v['ac']\n    if ac <= a0:\n        raise MechError('ac (final crack length) must be greater than a0 (initial crack length)')\n    DKbase = Y * dsigma * math.sqrt(PI)\n    if abs(m - 2.0) < 1e-9:\n        Nf = math.log(ac / a0) / (C * DKbase ** 2)\n    else:\n        Nf = (ac ** (1 - m / 2) - a0 ** (1 - m / 2)) / (C * DKbase ** m * (1 - m / 2))\n    return {'N_f': Nf}\n",
+        "source": "fracture.py",
+        "line": 37
+      },
+      "outputs": [
+        "N_f"
+      ],
+      "assumptions": [
+        "Constant Y over the growth interval (closed form). For m = 2 the closed form is logarithmic; otherwise it is a power law. For a crack-length-dependent Y use paris_cycles_ya."
+      ],
+      "method_references": [
+        "Integrated Paris law (constant geometry factor)"
+      ],
+      "synthetic_example": {
+        "C": 1e-29,
+        "m": 3.0,
+        "dsigma": 50000000.0,
+        "Y": 1.0,
+        "a0": 0.002,
+        "ac": 0.005
+      }
+    },
+    "fracture.paris_cycles_ya": {
+      "title": "Paris-law cycles to failure (Y(a) table, numeric integration)",
+      "variables": [
+        {
+          "name": "N_f",
+          "unit": "",
+          "desc": "number of cycles to grow the crack from a0 to ac",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "C",
+          "unit": "",
+          "desc": "Paris constant (SI: m/cycle per (Pa\u00b7\u221am)^m)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "m",
+          "unit": "",
+          "desc": "Paris exponent",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "dsigma",
+          "unit": "Pa",
+          "desc": "stress range \u0394\u03c3",
+          "lo": null,
+          "hi": null,
+          "label": "\u0394\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Y_table",
+          "unit": "",
+          "desc": "[[a (m), Y], ...] geometry factor vs crack length, spanning [a0, ac]",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "json",
+          "choices": null
+        },
+        {
+          "name": "a0",
+          "unit": "m",
+          "desc": "initial crack length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "ac",
+          "unit": "m",
+          "desc": "final (critical) crack length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _paris_cycles_ya(v):\n    \"\"\"Cycles to failure with a crack-length-dependent geometry factor Y(a) given as a table.\n\n    N_f = integral_{a0}^{ac} da / (C (Y(a) dsigma sqrt(pi a))^m), with Y(a) linearly interpolated from\n    Y_table. The integral is evaluated per table segment with scipy.integrate.quad (the integrand is\n    ~a^(-m/2), so a uniform trapezoid is inaccurate; integrating segment-by-segment across the table\n    breakpoints keeps Y piecewise-linear and the quadrature convergent).\n    \"\"\"\n    C, m, dsigma = v['C'], v['m'], v['dsigma']\n    a0, ac = v['a0'], v['ac']\n    Ytab = v['Y_table']\n    if ac <= a0:\n        raise MechError('ac (final crack length) must be greater than a0 (initial crack length)')\n    if not isinstance(Ytab, list) or len(Ytab) < 2:\n        raise MechError('Y_table: [[a (m), Y], ...] with strictly increasing crack lengths')\n    Ya = np.array([float(r[0]) for r in Ytab])\n    Yv = np.array([float(r[1]) for r in Ytab])\n    if np.any(np.diff(Ya) <= 0):\n        raise MechError('Y_table crack lengths must be strictly increasing')\n    if a0 < Ya[0] or ac > Ya[-1]:\n        raise MechError('Y_table must span [a0, ac]')\n\n    def integrand(a):\n        Y = np.interp(a, Ya, Yv)\n        return 1.0 / (C * (Y * dsigma * np.sqrt(PI * a)) ** m)\n\n    breaks = [a0] + [x for x in Ya if a0 < x < ac] + [ac]\n    total = 0.0\n    for x0, x1 in zip(breaks[:-1], breaks[1:]):\n        seg, _ = integrate.quad(integrand, x0, x1, limit=200)\n        total += seg\n    return {'N_f': float(total)}\n",
+        "source": "fracture.py",
+        "line": 54
+      },
+      "outputs": [
+        "N_f"
+      ],
+      "assumptions": [
+        "Y(a) is linearly interpolated from the table and the Paris integral evaluated per table segment with adaptive quadrature (scipy.integrate.quad). With a constant-Y table the result matches paris_cycles."
+      ],
+      "method_references": [
+        "Integrated Paris law with variable geometry factor"
+      ],
+      "synthetic_example": {
+        "C": 1e-29,
+        "m": 3.0,
+        "dsigma": 50000000.0,
+        "Y_table": [
+          [
+            0.002,
+            1.0
+          ],
+          [
+            0.005,
+            1.0
+          ]
+        ],
+        "a0": 0.002,
+        "ac": 0.005
+      }
+    },
+    "fracture.leak_before_break": {
+      "title": "Leak-before-break criterion",
+      "variables": [
+        {
+          "name": "margin",
+          "unit": "",
+          "desc": "LBB margin a_c/t; satisfied when > 1",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "a_c",
+          "unit": "m",
+          "desc": "critical through-thickness crack half-length",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "K_Ic",
+          "unit": "Pa*m^0.5",
+          "desc": "plane-strain fracture toughness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "Y",
+          "unit": "",
+          "desc": "dimensionless geometry factor (centre crack in an infinite plate Y = 1; edge crack in a semi-infinite plate Y = 1.12; embedded penny crack Y = 2/pi)",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "sigma",
+          "unit": "Pa",
+          "desc": "operating (hoop) stress",
+          "lo": null,
+          "hi": null,
+          "label": "\u03c3",
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        },
+        {
+          "name": "t",
+          "unit": "m",
+          "desc": "wall thickness",
+          "lo": null,
+          "hi": null,
+          "label": null,
+          "integer": false,
+          "signed": false,
+          "source": null,
+          "kind": "scalar",
+          "choices": null
+        }
+      ],
+      "equations": [],
+      "procedure": {
+        "python": "def _leak_before_break(v):\n    \"\"\"Leak-before-break: critical through-wall crack half-length vs wall thickness.\n\n    a_c = (K_Ic/(Y sigma))^2 / pi is the critical half-length. A through-wall crack of total length ~2t\n    (half-length ~t) leaks detectably, so leak-before-break holds when the crack half-length reaches t\n    before the critical half-length a_c, i.e. margin = a_c/t > 1.\n    \"\"\"\n    K_Ic, Y, sigma, t = v['K_Ic'], v['Y'], v['sigma'], v['t']\n    ac = (K_Ic / (Y * sigma)) ** 2 / PI\n    return {'margin': ac / t, 'a_c': ac}\n",
+        "source": "fracture.py",
+        "line": 88
+      },
+      "outputs": [
+        "margin",
+        "a_c"
+      ],
+      "assumptions": [
+        "a_c is the critical half-length from K_Ic. A through-wall crack of total length ~2t (half-length ~t) leaks detectably, so leak-before-break holds when the crack grows through the wall (half-length t) before reaching a_c, i.e. margin = a_c/t > 1. Use the geometry factor Y for a long through-thickness crack."
+      ],
+      "method_references": [
+        "Leak-before-break criterion (simplified)"
+      ],
+      "synthetic_example": {
+        "K_Ic": 50000000.0,
+        "Y": 1.0,
+        "sigma": 200000000.0,
+        "t": 0.005
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "fracture-001",
+      "calculator": "fracture.stress_intensity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Y": 1.12,
+        "sigma": "100 MPa",
+        "a": "10 mm"
+      },
+      "solve_for": [
+        "K"
+      ],
+      "expected_as_specified": {
+        "K": "19.851 MPa*m^0.5"
+      },
+      "expected_SI": {
+        "K": 19851000.0
+      },
+      "actual_SI": {
+        "K": {
+          "value": 19851483.13014178,
+          "unit": "Pa*m^0.5",
+          "kind": "derived",
+          "method": "mechcalc fracture.stress_intensity (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "K": {
+          "absolute_error": 483.1301417797804,
+          "relative_error": 2.4337823876871715e-05,
+          "allowed_absolute_error": 39702.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "K = Y sigma sqrt(pi a) = 1.12 x 100e6 x sqrt(pi x 0.01) = 1.12 x 100e6 x 0.177245 = 1.9851e7 Pa\u00b7m^0.5"
+      }
+    },
+    {
+      "id": "fracture-002",
+      "calculator": "fracture.stress_intensity",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "Y": 1.12,
+        "sigma": "100 MPa",
+        "K": "19.851 MPa*m^0.5"
+      },
+      "solve_for": [
+        "a"
+      ],
+      "expected_as_specified": {
+        "a": "10 mm"
+      },
+      "expected_SI": {
+        "a": 0.01
+      },
+      "actual_SI": {
+        "a": {
+          "value": 0.009999513261291776,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fracture.stress_intensity (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "a": {
+          "absolute_error": 4.867387082239938e-07,
+          "relative_error": 4.867387082239938e-05,
+          "allowed_absolute_error": 1e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a = (K/(Y sigma))^2/pi = (19.851e6/(1.12 x 100e6))^2/pi = (0.177241)^2/pi = 0.0314145/3.14159 = 0.010 m"
+      }
+    },
+    {
+      "id": "fracture-003",
+      "calculator": "fracture.critical_crack_length",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K_Ic": "50 MPa*m^0.5",
+        "Y": 1,
+        "sigma": "200 MPa"
+      },
+      "solve_for": [
+        "a_c"
+      ],
+      "expected_as_specified": {
+        "a_c": "19.894 mm"
+      },
+      "expected_SI": {
+        "a_c": 0.019894
+      },
+      "actual_SI": {
+        "a_c": {
+          "value": 0.019894367886486918,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fracture.critical_crack_length (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "a_c": {
+          "absolute_error": 3.678864869197107e-07,
+          "relative_error": 1.8492333714673305e-05,
+          "allowed_absolute_error": 3.9788e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a_c = (K_Ic/(Y sigma))^2/pi = (50e6/(1 x 200e6))^2/pi = (0.25)^2/pi = 0.0625/3.14159 = 0.019894 m"
+      }
+    },
+    {
+      "id": "fracture-004",
+      "calculator": "fracture.critical_crack_length",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K_Ic": "50 MPa*m^0.5",
+        "Y": 1,
+        "a_c": "19.894 mm"
+      },
+      "solve_for": [
+        "sigma"
+      ],
+      "expected_as_specified": {
+        "sigma": "200 MPa"
+      },
+      "expected_SI": {
+        "sigma": 200000000.0
+      },
+      "actual_SI": {
+        "sigma": {
+          "value": 200001849.22482243,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fracture.critical_crack_length (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "sigma": {
+          "absolute_error": 1849.2248224318027,
+          "relative_error": 9.246124112159014e-06,
+          "allowed_absolute_error": 200000.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma = K_Ic/(Y sqrt(pi a_c)) = 50e6/sqrt(pi x 0.019894) = 50e6/0.25000 = 200 MPa"
+      }
+    },
+    {
+      "id": "fracture-005",
+      "calculator": "fracture.critical_stress",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K_Ic": "50 MPa*m^0.5",
+        "Y": 1,
+        "a": "10 mm"
+      },
+      "solve_for": [
+        "sigma_c"
+      ],
+      "expected_as_specified": {
+        "sigma_c": "282.09 MPa"
+      },
+      "expected_SI": {
+        "sigma_c": 282090000.0
+      },
+      "actual_SI": {
+        "sigma_c": {
+          "value": 282094791.77387816,
+          "unit": "Pa",
+          "kind": "derived",
+          "method": "mechcalc fracture.critical_stress (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "sigma_c": {
+          "absolute_error": 4791.773878157139,
+          "relative_error": 1.6986684668570807e-05,
+          "allowed_absolute_error": 564180.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "sigma_c = K_Ic/(Y sqrt(pi a)) = 50e6/sqrt(pi x 0.01) = 50e6/0.177245 = 2.8209e8 Pa"
+      }
+    },
+    {
+      "id": "fracture-006",
+      "calculator": "fracture.energy_release_rate",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K": "50 MPa*m^0.5",
+        "E": "200 GPa",
+        "nu": 0.3
+      },
+      "solve_for": [
+        "G_plane_strain",
+        "G_plane_stress"
+      ],
+      "expected_as_specified": {
+        "G_plane_strain": "11.375 kJ/m^2",
+        "G_plane_stress": "12.5 kJ/m^2"
+      },
+      "expected_SI": {
+        "G_plane_strain": 11375.0,
+        "G_plane_stress": 12500.0
+      },
+      "actual_SI": {
+        "G_plane_strain": {
+          "value": 11375.0,
+          "unit": "J/m^2",
+          "kind": "derived",
+          "method": "mechcalc fracture.energy_release_rate (symbolic)"
+        },
+        "G_plane_stress": {
+          "value": 12500.0,
+          "unit": "J/m^2",
+          "kind": "derived",
+          "method": "mechcalc fracture.energy_release_rate (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "G_plane_strain": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 22.75,
+          "passed": true
+        },
+        "G_plane_stress": {
+          "absolute_error": 0.0,
+          "relative_error": 0.0,
+          "allowed_absolute_error": 25.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "G_plane_stress = K^2/E = (50e6)^2/200e9 = 2.5e15/2e11 = 12500 J/m^2; G_plane_strain = 12500 x (1 - 0.3^2) = 12500 x 0.91 = 11375 J/m^2"
+      }
+    },
+    {
+      "id": "fracture-007",
+      "calculator": "fracture.plastic_zone_size",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K": "50 MPa*m^0.5",
+        "sigma_ys": "500 MPa"
+      },
+      "solve_for": [
+        "r_y_stress",
+        "r_y_strain"
+      ],
+      "expected_as_specified": {
+        "r_y_stress": "1.5915 mm",
+        "r_y_strain": "0.53052 mm"
+      },
+      "expected_SI": {
+        "r_y_stress": 0.0015915,
+        "r_y_strain": 0.00053052
+      },
+      "actual_SI": {
+        "r_y_stress": {
+          "value": 0.0015915494309189533,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fracture.plastic_zone_size (symbolic)"
+        },
+        "r_y_strain": {
+          "value": 0.0005305164769729844,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fracture.plastic_zone_size (symbolic)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "r_y_stress": {
+          "absolute_error": 4.943091895331063e-08,
+          "relative_error": 3.105932702061617e-05,
+          "allowed_absolute_error": 3.1830000000000003e-06,
+          "passed": true
+        },
+        "r_y_strain": {
+          "absolute_error": 3.523027015625048e-09,
+          "relative_error": 6.640705375150885e-06,
+          "allowed_absolute_error": 1.0610400000000001e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "r_y_stress = K^2/(2 pi sigma_ys^2) = (50e6)^2/(2 pi x (500e6)^2) = 2.5e15/1.57080e18 = 1.5915e-3 m; r_y_strain = r_y_stress/3 = 0.53052 mm (plane-strain is one third of plane-stress)"
+      }
+    },
+    {
+      "id": "fracture-008",
+      "calculator": "fracture.paris_growth_rate",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": 1e-29,
+        "m": 3,
+        "dsigma": "50 MPa",
+        "Y": 1,
+        "a": "5 mm"
+      },
+      "solve_for": [
+        "dadN",
+        "DK"
+      ],
+      "expected_as_specified": {
+        "dadN": "2.4609e-9 m",
+        "DK": "6.2666 MPa*m^0.5"
+      },
+      "expected_SI": {
+        "dadN": 2.4609e-09,
+        "DK": 6266600.0
+      },
+      "actual_SI": {
+        "dadN": {
+          "value": 2.4608765540191275e-09,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fracture.paris_growth_rate (procedure)"
+        },
+        "DK": {
+          "value": 6266570.686577501,
+          "unit": "Pa*m^0.5",
+          "kind": "derived",
+          "method": "mechcalc fracture.paris_growth_rate (procedure)"
+        }
+      },
+      "relative_tolerance": 0.002,
+      "comparison": {
+        "dadN": {
+          "absolute_error": 2.3445980872536412e-14,
+          "relative_error": 9.527400899076115e-06,
+          "allowed_absolute_error": 4.9218e-12,
+          "passed": true
+        },
+        "DK": {
+          "absolute_error": 29.313422499224544,
+          "relative_error": 4.677723566084407e-06,
+          "allowed_absolute_error": 12533.2,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "DK = Y dsigma sqrt(pi a) = 1 x 50e6 x sqrt(pi x 0.005) = 50e6 x 0.125331 = 6.2666e6 Pa\u00b7m^0.5; dadN = C DK^m = 1e-29 x (6.2666e6)^3 = 1e-29 x 2.4609e20 = 2.4609e-9 m/cycle"
+      }
+    },
+    {
+      "id": "fracture-009",
+      "calculator": "fracture.paris_cycles",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": 1e-29,
+        "m": 3,
+        "dsigma": "50 MPa",
+        "Y": 1,
+        "a0": "2 mm",
+        "ac": "5 mm"
+      },
+      "solve_for": [
+        "N_f"
+      ],
+      "expected_as_specified": {
+        "N_f": 2361511.5
+      },
+      "expected_SI": {
+        "N_f": 2361511.5
+      },
+      "actual_SI": {
+        "N_f": {
+          "value": 2361511.507495442,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fracture.paris_cycles (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "N_f": {
+          "absolute_error": 0.007495441939681768,
+          "relative_error": 3.1740018795935434e-09,
+          "allowed_absolute_error": 2361.5115,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "DKbase = Y dsigma sqrt(pi) = 50e6 x 1.772454 = 8.86227e7; N_f = (ac^(1-m/2) - a0^(1-m/2))/(C DKbase^m (1-m/2)) = (0.005^-0.5 - 0.002^-0.5)/(1e-29 x 8.86227e7^3 x (-0.5)) = (14.1421 - 22.3607)/(1e-29 x 6.9607e23 x (-0.5)) = (-8.2186)/(-3.4804e-6) = 2.3615e6 cycles"
+      }
+    },
+    {
+      "id": "fracture-010",
+      "calculator": "fracture.paris_cycles",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": 1e-19,
+        "m": 2,
+        "dsigma": "100 MPa",
+        "Y": 1,
+        "a0": "1 mm",
+        "ac": "10 mm"
+      },
+      "solve_for": [
+        "N_f"
+      ],
+      "expected_as_specified": {
+        "N_f": 732.94
+      },
+      "expected_SI": {
+        "N_f": 732.94
+      },
+      "actual_SI": {
+        "N_f": {
+          "value": 732.9355988794279,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fracture.paris_cycles (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "N_f": {
+          "absolute_error": 0.004401120572197215,
+          "relative_error": 6.004748781888305e-06,
+          "allowed_absolute_error": 0.73294,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "m = 2 logarithmic case: N_f = ln(ac/a0)/(C (Y dsigma)^2 pi) = ln(10)/(1e-19 x (100e6)^2 x pi) = 2.302585/(1e-19 x 1e16 x 3.14159) = 2.302585/3.14159e-3 = 732.94 cycles"
+      }
+    },
+    {
+      "id": "fracture-011",
+      "calculator": "fracture.paris_cycles_ya",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": 1e-29,
+        "m": 3,
+        "dsigma": "50 MPa",
+        "Y_table": [
+          [
+            0.002,
+            1.0
+          ],
+          [
+            0.005,
+            1.0
+          ]
+        ],
+        "a0": "2 mm",
+        "ac": "5 mm"
+      },
+      "solve_for": [
+        "N_f"
+      ],
+      "expected_as_specified": {
+        "N_f": "2.3615e6"
+      },
+      "expected_SI": {
+        "N_f": 2361500.0
+      },
+      "actual_SI": {
+        "N_f": {
+          "value": 2361511.507495441,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fracture.paris_cycles_ya (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "N_f": {
+          "absolute_error": 11.50749544100836,
+          "relative_error": 4.872960169810866e-06,
+          "allowed_absolute_error": 2361.5,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Constant-Y table reproduces the closed-form integral (cross-check with the paris_cycles oracle): N_f = integral_{0.002}^{0.005} da/(C (Y dsigma sqrt(pi a))^3) = 2.3615e6 cycles (adaptive quadrature per segment)."
+      }
+    },
+    {
+      "id": "fracture-012",
+      "calculator": "fracture.paris_cycles_ya",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "C": 1e-29,
+        "m": 3,
+        "dsigma": "50 MPa",
+        "Y_table": [
+          [
+            0.0001,
+            1.12
+          ],
+          [
+            0.01,
+            1.2
+          ],
+          [
+            0.03,
+            1.5
+          ]
+        ],
+        "a0": "0.1 mm",
+        "ac": "30 mm"
+      },
+      "solve_for": [
+        "N_f"
+      ],
+      "expected_as_specified": {
+        "N_f": "1.8620e7"
+      },
+      "expected_SI": {
+        "N_f": 18620000.0
+      },
+      "actual_SI": {
+        "N_f": {
+          "value": 18620333.64461248,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fracture.paris_cycles_ya (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "N_f": {
+          "absolute_error": 333.64461247995496,
+          "relative_error": 1.7918615063370298e-05,
+          "allowed_absolute_error": 18620.0,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "Piecewise-linear Y(a) with a breakpoint at 10 mm. N_f = sum over segments of integral da/(C (Y(a) dsigma sqrt(pi a))^3) with Y interpolated between [0.1 mm, 1.12], [10 mm, 1.2], [30 mm, 1.5]; each segment integrated with scipy.integrate.quad. Reference (independent scipy quad, not mechcalc) = 1.8620e7 cycles. Sanity check: constant Y = 1.12 gives (1/(C (1.12 dsigma sqrt(pi))^3)) 2 (a0^-1/2 - ac^-1/2) = 1.927e7; the rising Y (1.12 -> 1.5) reduces it to 1.8620e7."
+      }
+    },
+    {
+      "id": "fracture-013",
+      "calculator": "fracture.leak_before_break",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K_Ic": "50 MPa*m^0.5",
+        "Y": 1,
+        "sigma": "200 MPa",
+        "t": "5 mm"
+      },
+      "solve_for": [
+        "margin",
+        "a_c"
+      ],
+      "expected_as_specified": {
+        "margin": 3.9789,
+        "a_c": "19.894 mm"
+      },
+      "expected_SI": {
+        "margin": 3.9789,
+        "a_c": 0.019894
+      },
+      "actual_SI": {
+        "margin": {
+          "value": 3.978873577297384,
+          "unit": "",
+          "kind": "derived",
+          "method": "mechcalc fracture.leak_before_break (procedure)"
+        },
+        "a_c": {
+          "value": 0.019894367886486918,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fracture.leak_before_break (procedure)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "margin": {
+          "absolute_error": 2.6422702616102356e-05,
+          "relative_error": 6.640705374878071e-06,
+          "allowed_absolute_error": 0.0039789,
+          "passed": true
+        },
+        "a_c": {
+          "absolute_error": 3.678864869197107e-07,
+          "relative_error": 1.8492333714673305e-05,
+          "allowed_absolute_error": 1.9894e-05,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "a_c = (K_Ic/(Y sigma))^2/pi = 0.019894 m; margin = a_c/t = 0.019894/0.005 = 3.9789 (> 1 so leak-before-break holds)"
+      }
+    },
+    {
+      "id": "fracture-014",
+      "calculator": "fracture.leak_before_break",
+      "classification": "analytical reference (independently specified expected value)",
+      "inputs": {
+        "K_Ic": "50 MPa*m^0.5",
+        "Y": 1,
+        "sigma": "200 MPa",
+        "margin": 3.9789
+      },
+      "solve_for": [
+        "t"
+      ],
+      "expected_as_specified": {
+        "t": "5 mm"
+      },
+      "expected_SI": {
+        "t": 0.005
+      },
+      "actual_SI": {
+        "t": {
+          "value": 0.004999966796473124,
+          "unit": "m",
+          "kind": "derived",
+          "method": "mechcalc fracture.leak_before_break (numeric inversion)"
+        }
+      },
+      "relative_tolerance": 0.001,
+      "comparison": {
+        "t": {
+          "absolute_error": 3.320352687588568e-08,
+          "relative_error": 6.640705375177136e-06,
+          "allowed_absolute_error": 5e-06,
+          "passed": true
+        }
+      },
+      "passed": true,
+      "source": {
+        "kind": "hand",
+        "derivation": "t = a_c/margin = 0.019894/3.9789 = 0.005 m"
+      }
+    }
+  ],
+  "passed": 14,
+  "failed": 0
+}

@@ -1,0 +1,982 @@
+{
+  "section": "manufacturing",
+  "cases": [
+    {
+      "calc": "manufacturing.cutting_speed",
+      "inputs": {
+        "omega": "1000 rpm",
+        "D": "50 mm"
+      },
+      "expect": {
+        "v": "2.618 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ω = 1000·2π/60 = 104.72 rad/s; v = ω·D/2 = 104.72·0.025 = 2.618 m/s"
+      }
+    },
+    {
+      "calc": "manufacturing.cutting_speed",
+      "inputs": {
+        "v": "2.618 m/s",
+        "D": "50 mm"
+      },
+      "solve_for": [
+        "omega"
+      ],
+      "expect": {
+        "omega": "1000 rpm"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "ω = 2v/D = 5.236/0.05 = 104.72 rad/s = 1000 rpm"
+      }
+    },
+    {
+      "calc": "manufacturing.feed_rate",
+      "inputs": {
+        "f": "0.2 mm",
+        "n": "25 Hz"
+      },
+      "expect": {
+        "f_m": "5 mm/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "f_m = 0.0002 m · 25 s⁻¹ = 0.005 m/s"
+      }
+    },
+    {
+      "calc": "manufacturing.milling_feed_rate",
+      "inputs": {
+        "f_z": "0.15 mm",
+        "z": 6,
+        "n": "20 Hz"
+      },
+      "expect": {
+        "f_m": "18 mm/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "f_m = f_z·z·n = 0.00015 · 6 · 20 = 0.018 m/s"
+      }
+    },
+    {
+      "calc": "manufacturing.milling_feed_rate",
+      "inputs": {
+        "f_m": "18 mm/s",
+        "z": 6,
+        "n": "20 Hz"
+      },
+      "solve_for": [
+        "f_z"
+      ],
+      "expect": {
+        "f_z": "0.15 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "f_z = f_m/(z·n) = 0.018/120 = 0.00015 m"
+      }
+    },
+    {
+      "calc": "manufacturing.mrr",
+      "inputs": {
+        "v": "2.618 m/s",
+        "f": "0.2 mm",
+        "d": "1 mm"
+      },
+      "expect": {
+        "MRR": "5.236e-7 m^3/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "MRR = 2.618 · 0.0002 · 0.001 = 5.236e-7 m³/s"
+      }
+    },
+    {
+      "calc": "manufacturing.milling_mrr",
+      "inputs": {
+        "f_m": "18 mm/s",
+        "a_e": "10 mm",
+        "a_p": "5 mm"
+      },
+      "expect": {
+        "MRR": "9e-7 m^3/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "MRR = 0.018 · 0.010 · 0.005 = 9e-7 m³/s"
+      }
+    },
+    {
+      "calc": "manufacturing.drilling_mrr",
+      "inputs": {
+        "D": "12 mm",
+        "f_m": "0.5 mm/s"
+      },
+      "expect": {
+        "MRR": "5.6548668e-8 m^3/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "MRR = πD²/4 · f_m = π·0.012²/4 · 0.0005 = 1.13097e-4 · 0.0005 = 5.6549e-8 m³/s"
+      }
+    },
+    {
+      "calc": "manufacturing.machining_time",
+      "inputs": {
+        "L": "100 mm",
+        "f": "0.2 mm",
+        "n": "25 Hz"
+      },
+      "expect": {
+        "t": "20 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "t = 0.1/(0.0002·25) = 0.1/0.005 = 20 s"
+      }
+    },
+    {
+      "calc": "manufacturing.cutting_force_power",
+      "inputs": {
+        "u": "2.5 GJ/m^3",
+        "f": "0.2 mm",
+        "d": "1 mm",
+        "v": "2.618 m/s"
+      },
+      "expect": {
+        "F_c": "500 N",
+        "P_c": "1309 W"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F_c = 2.5e9·2e-4·1e-3 = 500 N; P_c = 500·2.618 = 1309 W"
+      }
+    },
+    {
+      "calc": "manufacturing.chip_thickness_ratio",
+      "inputs": {
+        "t0": "0.2 mm",
+        "tc": "0.5 mm"
+      },
+      "expect": {
+        "r": 0.4
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "r = 0.2/0.5 = 0.4"
+      }
+    },
+    {
+      "calc": "manufacturing.shear_angle_merchant",
+      "inputs": {
+        "r": 0.4,
+        "alpha": "10 deg"
+      },
+      "expect": {
+        "phi": "22.9443 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "tan φ = 0.4·cos10°/(1 − 0.4·sin10°) = 0.393923/0.930541 = 0.42333 → φ = 22.944°"
+      }
+    },
+    {
+      "calc": "manufacturing.merchant_friction_angle",
+      "inputs": {
+        "F_c": "600 N",
+        "F_t": "250 N",
+        "alpha": "10 deg"
+      },
+      "expect": {
+        "beta": "32.6199 deg",
+        "mu": 0.6400153
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 600 sin10° + 250 cos10° = 104.19 + 246.20 = 350.39; N = 600 cos10° − 250 sin10° = 590.88 − 43.41 = 547.47; μ = 0.64002 → β = 32.620°"
+      }
+    },
+    {
+      "calc": "manufacturing.taylor_tool_life",
+      "inputs": {
+        "V1": "3 m/s",
+        "T1": "300 s",
+        "V2": "3.5 m/s",
+        "n": 0.2
+      },
+      "expect": {
+        "T2": "138.7993 s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "T2 = T1·(V1/V2)^(1/n) = 300·(3/3.5)^5 = 300·0.462660 = 138.80 s"
+      }
+    },
+    {
+      "calc": "manufacturing.taylor_tool_life",
+      "inputs": {
+        "V1": "3 m/s",
+        "T1": "300 s",
+        "V2": "3.5 m/s",
+        "T2": "138.7993 s"
+      },
+      "solve_for": [
+        "n"
+      ],
+      "expect": {
+        "n": 0.2
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "n = ln(V2/V1)/ln(T1/T2) = ln(1.166667)/ln(2.161374) = 0.154151/0.770760 = 0.2"
+      }
+    },
+    {
+      "calc": "manufacturing.surface_roughness",
+      "inputs": {
+        "f": "0.2 mm",
+        "r_n": "0.8 mm"
+      },
+      "expect": {
+        "R_a": "1.5625 um",
+        "R_t": "6.25 um"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "R_a = (2e-4)²/(32·8e-4) = 4e-8/0.0256 = 1.5625e-6 m; R_t = (2e-4)²/(8·8e-4) = 4e-8/0.0064 = 6.25e-6 m"
+      }
+    },
+    {
+      "calc": "manufacturing.grinding",
+      "inputs": {
+        "omega_s": "2000 rpm",
+        "D_s": "150 mm",
+        "v_w": "0.2 m/s",
+        "d": "0.02 mm",
+        "b": "10 mm"
+      },
+      "expect": {
+        "v_s": "15.708 m/s",
+        "MRR": "4e-8 m^3/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "ωs = 209.44 rad/s; v_s = 209.44·0.075 = 15.708 m/s; MRR = 0.2·2e-5·0.01 = 4e-8 m³/s"
+      }
+    },
+    {
+      "calc": "manufacturing.rolling_force",
+      "inputs": {
+        "w": "0.3 m",
+        "sigma_f": "150 MPa",
+        "R": "250 mm",
+        "h0": "20 mm",
+        "hf": "18 mm"
+      },
+      "expect": {
+        "F": "1.00623 MN",
+        "L": "22.3607 mm",
+        "dh": "2 mm",
+        "p": "150 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "dh = 0.002; L = √(0.25·0.002) = 0.022361 m; F = 0.3·150e6·0.022361 = 1.00623e6 N; p = F/(0.3·0.022361) = 150 MPa"
+      }
+    },
+    {
+      "calc": "manufacturing.rolling_max_draft",
+      "inputs": {
+        "mu": 0.2,
+        "R": "250 mm"
+      },
+      "expect": {
+        "dh_max": "10 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Δh_max = 0.2²·0.25 = 0.01 m"
+      }
+    },
+    {
+      "calc": "manufacturing.flow_stress",
+      "inputs": {
+        "K": "600 MPa",
+        "epsilon": 0.3,
+        "n": 0.2
+      },
+      "expect": {
+        "sigma_f": "471.602 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "σf = 600e6·0.3^0.2 = 600e6·0.786003 = 471.6 MPa"
+      }
+    },
+    {
+      "calc": "manufacturing.forging_force",
+      "inputs": {
+        "K_f": 5.0,
+        "sigma_f": "400 MPa",
+        "A": "5000 mm^2"
+      },
+      "expect": {
+        "F": "10 MN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 5·400e6·0.005 = 10e6 N"
+      }
+    },
+    {
+      "calc": "manufacturing.forging_upset_force",
+      "inputs": {
+        "sigma_f": "400 MPa",
+        "r": "50 mm",
+        "mu": 0.2,
+        "h": "30 mm"
+      },
+      "expect": {
+        "F": "3.83972 MN"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = Y_f·πr²(1 + 2μr/(3h)) = 400e6·π·0.0025·(1 + 2·0.2·0.05/(3·0.03)) = 3.14159e6·(1 + 0.222222) = 3.83972e6 N"
+      }
+    },
+    {
+      "calc": "manufacturing.extrusion",
+      "inputs": {
+        "A0": "1000 mm^2",
+        "Af": "100 mm^2",
+        "sigma_f": "400 MPa"
+      },
+      "expect": {
+        "R": 10.0,
+        "p": "921.034 MPa"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = 1e-3/1e-4 = 10; p = 400e6·ln10 = 400e6·2.302585 = 921.03 MPa"
+      }
+    },
+    {
+      "calc": "manufacturing.drawing",
+      "inputs": {
+        "A0": "1000 mm^2",
+        "Af": "100 mm^2",
+        "sigma_f": "400 MPa"
+      },
+      "expect": {
+        "F": "92.1034 kN",
+        "r": 0.9
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 1e-4·400e6·ln10 = 92103.4 N; r = 1 − 0.1 = 0.9"
+      }
+    },
+    {
+      "calc": "manufacturing.drawing_max_reduction",
+      "inputs": {
+        "sigma_allow": "400 MPa",
+        "sigma_f": "400 MPa"
+      },
+      "expect": {
+        "r_max": 0.6321206
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Ideal limit landmark: r_max = 1 − exp(−1) = 1 − 1/e = 0.632121"
+      }
+    },
+    {
+      "calc": "manufacturing.bend_allowance",
+      "inputs": {
+        "alpha": "90 deg",
+        "R": "2 mm",
+        "K": 0.33,
+        "t": "2 mm"
+      },
+      "expect": {
+        "BA": "4.17832 mm"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "BA = (π/2)(0.002 + 0.33·0.002) = 1.570796·0.00266 = 4.1783e-3 m"
+      }
+    },
+    {
+      "calc": "manufacturing.bend_force",
+      "inputs": {
+        "K_b": 1.33,
+        "L": "0.5 m",
+        "t": "2 mm",
+        "S_ut": "450 MPa",
+        "W": "20 mm"
+      },
+      "expect": {
+        "F": "59.85 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 1.33·0.5·0.002²·450e6/0.02 = 59850 N"
+      }
+    },
+    {
+      "calc": "manufacturing.springback",
+      "inputs": {
+        "sigma_y": "210 MPa",
+        "E": "70 GPa",
+        "R_i": "10 mm",
+        "t": "2 mm",
+        "theta_i": "90 deg"
+      },
+      "expect": {
+        "ratio": 0.9550135,
+        "R_f": "10.47106 mm",
+        "theta_f": "1.506292 rad",
+        "theta_sb": "3.695828 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Al, R_i = 5t. x = σ_y·R_i/(E·t) = 210e6·0.01/(70e9·0.002) = 0.015. R_i/R_f = 1 − 3x + 4x³ = 1 − 0.045 + 0.0000135 = 0.9550135 → R_f = 10.47106 mm. Neutral axis keeps its length: θ_f/θ_i = (R_i + t/2)/(R_f + t/2) = 5.5/5.73553 = 0.958934 → θ_f = 90°·0.958934 = 86.3042° = 1.506292 rad; θ_sb = 90° − 86.3042° = 3.6958° (NOT θ_i(1 − R_i/R_f) = 4.05°)"
+      }
+    },
+    {
+      "calc": "manufacturing.springback",
+      "inputs": {
+        "sigma_y": "350 MPa",
+        "E": "200 GPa",
+        "R_i": "10 mm",
+        "t": "2 mm",
+        "theta_i": "60 deg"
+      },
+      "expect": {
+        "ratio": 0.9737527,
+        "R_f": "10.26955 mm",
+        "theta_f": "1.022150 rad",
+        "theta_sb": "1.435096 deg"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Second geometry (steel, 60° bend). x = 350e6·0.01/(200e9·0.002) = 0.00875. R_i/R_f = 1 − 0.02625 + 4·6.698e-7 = 0.9737527 → R_f = 10.26955 mm. θ_f/θ_i = (10 + 1)/(10.26955 + 1) = 11/11.26955 = 0.9760816 → θ_f = 60°·0.9760816 = 58.5649° = 1.022150 rad; θ_sb = 1.4351°"
+      }
+    },
+    {
+      "calc": "manufacturing.blanking_punching_force",
+      "inputs": {
+        "P_per": "62.8319 mm",
+        "t": "2 mm",
+        "tau_s": "300 MPa"
+      },
+      "expect": {
+        "F": "37.6991 kN"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "P_per = π·0.02 = 0.062832 m; F = 0.062832·0.002·300e6 = 37699 N"
+      }
+    },
+    {
+      "calc": "manufacturing.blanking_clearance",
+      "inputs": {
+        "k": 0.06,
+        "t": "2 mm"
+      },
+      "expect": {
+        "c": "0.12 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "c = 0.06·0.002 = 0.00012 m"
+      }
+    },
+    {
+      "calc": "manufacturing.blank_diameter",
+      "inputs": {
+        "d_p": "50 mm",
+        "h": "30 mm"
+      },
+      "expect": {
+        "D_b": "92.1954 mm"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "D_b = √(0.05² + 4·0.05·0.03) = √0.0085 = 0.092195 m"
+      }
+    },
+    {
+      "calc": "manufacturing.draw_ratio",
+      "inputs": {
+        "D_b": "92.1954 mm",
+        "d_p": "50 mm",
+        "LDR": 2.0
+      },
+      "expect": {
+        "DR": 1.84391,
+        "margin": 1.08465
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "DR = 0.0921954/0.05 = 1.84391; margin = 2/1.84391 = 1.08465"
+      }
+    },
+    {
+      "calc": "manufacturing.pattern_dimension",
+      "inputs": {
+        "L_c": "100 mm",
+        "s": 0.02
+      },
+      "expect": {
+        "L_p": "102 mm",
+        "delta": "2 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L_p = 0.1·1.02 = 0.102 m; allowance = 0.1·0.02 = 0.002 m"
+      }
+    },
+    {
+      "calc": "manufacturing.pattern_dimension",
+      "inputs": {
+        "L_c": "200 mm",
+        "s": 0.01
+      },
+      "expect": {
+        "L_p": "202 mm",
+        "delta": "2 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Cast iron (s = 1 %): L_p = 0.2·1.01 = 0.202 m; allowance = 0.2·0.01 = 0.002 m"
+      }
+    },
+    {
+      "calc": "manufacturing.chvorinov",
+      "inputs": {
+        "C": "5e5 s/m^2",
+        "V": "100 cm^3",
+        "A": "0.02 m^2"
+      },
+      "expect": {
+        "t_s": "12.5 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "V/A = 1e-4/0.02 = 0.005 m; t = 5e5·0.005² = 12.5 s"
+      }
+    },
+    {
+      "calc": "manufacturing.riser_sizing",
+      "inputs": {
+        "D": "50 mm",
+        "H": "75 mm",
+        "M_c": "5 mm"
+      },
+      "expect": {
+        "M_r": "9.375 mm",
+        "ratio": 1.875
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "M = 0.05·0.075/(4·0.075 + 2·0.05) = 0.00375/0.4 = 0.009375 m; ratio = 1.875"
+      }
+    },
+    {
+      "calc": "manufacturing.gating_velocity",
+      "inputs": {
+        "g": "9.80665 m/s^2",
+        "h": "200 mm"
+      },
+      "expect": {
+        "v": "1.98057 m/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "v = √(2·9.80665·0.2) = √3.92266 = 1.98057 m/s"
+      }
+    },
+    {
+      "calc": "manufacturing.weld_heat_input",
+      "inputs": {
+        "V": "25 V",
+        "I": "200 A",
+        "eta": 0.8,
+        "v": "5 mm/s"
+      },
+      "expect": {
+        "H": "800 kJ/m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "H = 25·200·0.8/0.005 = 4000/0.005 = 800000 J/m"
+      }
+    },
+    {
+      "calc": "manufacturing.weld_melting_efficiency",
+      "inputs": {
+        "A_m": "30 mm^2",
+        "rho": "7800 kg/m^3",
+        "v": "5 mm/s",
+        "c": "500 J/(kg*K)",
+        "T_m": "1800 K",
+        "T_0": "300 K",
+        "L_f": "270 kJ/kg",
+        "V": "25 V",
+        "I": "200 A",
+        "eta": 0.8
+      },
+      "expect": {
+        "eta_m": 0.29835
+      },
+      "rel_tol": 0.001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Q_melt = 3e-5·7800·0.005·(500·1500 + 270000) = 0.00117·1020000 = 1193.4 W; Q_in = 25·200·0.8 = 4000 W; ηm = 0.29835"
+      }
+    },
+    {
+      "calc": "manufacturing.weld_cooling_rate",
+      "inputs": {
+        "k": "40 W/(m*K)",
+        "T_c": "550 degC",
+        "T_0": "25 degC",
+        "H": "800 kJ/m"
+      },
+      "expect": {
+        "R": "86.5901 K/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "T_c = 823.15 K, T_0 = 298.15 K; R = 2π·40·525²/800000 = 2π·40·275625/800000 = 86.590 K/s"
+      }
+    },
+    {
+      "calc": "manufacturing.weld_cooling_rate",
+      "inputs": {
+        "k": "35 W/(m*K)",
+        "T_c": "500 degC",
+        "T_0": "25 degC",
+        "H": "700 kJ/m"
+      },
+      "expect": {
+        "R": "70.8822 K/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Second geometry: T_c = 773.15 K, T_0 = 298.15 K; R = 2π·35·475²/700000 = 2π·35·225625/700000 = 70.882 K/s"
+      }
+    },
+    {
+      "calc": "manufacturing.weld_cooling_rate",
+      "inputs": {
+        "k": "30 W/(m*K)",
+        "T_0": "50 degC",
+        "H": "600 kJ/m",
+        "R": "95.0332 K/s"
+      },
+      "solve_for": [
+        "T_c"
+      ],
+      "expect": {
+        "T_c": "600 degC"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "T_c − T_0 = √(R·H/(2πk)) = √(95.0332·600000/(2π·30)) = √302522.6 = 550 K → T_c = 323.15 + 550 = 873.15 K = 600 °C"
+      }
+    },
+    {
+      "calc": "manufacturing.injection_clamping_force",
+      "inputs": {
+        "P_inj": "35 MPa",
+        "A_proj": "0.02 m^2"
+      },
+      "expect": {
+        "F": "700 kN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "F = 35e6·0.02 = 700000 N"
+      }
+    },
+    {
+      "calc": "manufacturing.injection_cooling_time",
+      "inputs": {
+        "s": "3 mm",
+        "alpha": "1.1e-7 m^2/s",
+        "T_m": "500 K",
+        "T_w": "320 K",
+        "T_e": "380 K",
+        "profile": "mean"
+      },
+      "expect": {
+        "t": "7.36637 s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "s²/(π²α) = 9e-6/(9.8696·1.1e-7) = 8.2900 s; (8/π²)(180/60) = 0.81057·3 = 2.43171; ln = 0.888665 → t = 8.2900·0.888665 = 7.3664 s"
+      }
+    },
+    {
+      "calc": "manufacturing.injection_cooling_time",
+      "inputs": {
+        "s": "2.5 mm",
+        "alpha": "1.2e-7 m^2/s",
+        "T_m": "510 K",
+        "T_w": "325 K",
+        "T_e": "375 K",
+        "profile": "centreline"
+      },
+      "expect": {
+        "t": "8.17903 s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "Centreline form: s²/(π²α) = 6.25e-6/(9.8696·1.2e-7) = 5.2772 s; (4/π)(185/50) = 1.27324·3.7 = 4.71099; ln = 1.55002 → t = 5.2772·1.55002 = 8.1790 s"
+      }
+    },
+    {
+      "calc": "manufacturing.pm_density",
+      "inputs": {
+        "m": "50 g",
+        "V": "8 cm^3",
+        "rho_theory": "8000 kg/m^3"
+      },
+      "expect": {
+        "rho": "6250 kg/m^3",
+        "rho_rel": 0.78125
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "ρ = 0.05/8e-6 = 6250 kg/m³; ρ_rel = 6250/8000 = 0.78125"
+      }
+    },
+    {
+      "calc": "manufacturing.pm_heckel",
+      "inputs": {
+        "A": 0.6,
+        "K": "5e-9 1/Pa",
+        "P": "300 MPa"
+      },
+      "expect": {
+        "rho_rel": 0.8775436
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "ρ_rel = 1 − exp(−(0.6 + 5e-9·300e6)) = 1 − exp(−2.1) = 1 − 0.122456 = 0.877544"
+      }
+    },
+    {
+      "calc": "manufacturing.am_layer_count",
+      "inputs": {
+        "H": "50 mm",
+        "L_t": "0.2 mm"
+      },
+      "expect": {
+        "N": 250,
+        "H_built": "50 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "H/L_t = 0.05/0.0002 = 250 exactly → N = 250, H_built = 250·0.0002 = 0.05 m"
+      }
+    },
+    {
+      "calc": "manufacturing.am_layer_count",
+      "inputs": {
+        "H": "50.05 mm",
+        "L_t": "0.2 mm"
+      },
+      "expect": {
+        "N": 251,
+        "H_built": "50.2 mm"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "H/L_t = 0.05005/0.0002 = 250.25 → ceil = 251 layers; H_built = 251·0.0002 = 0.0502 m (the 0.05 mm overshoot is the rounded-up half-layer)"
+      }
+    },
+    {
+      "calc": "manufacturing.am_build_time",
+      "inputs": {
+        "V": "10 cm^3",
+        "A_e": "0.12 mm^2",
+        "v": "50 mm/s"
+      },
+      "expect": {
+        "t": "1666.67 s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "t = 1e-5/(1.2e-7·0.05) = 1e-5/6e-9 = 1666.7 s"
+      }
+    },
+    {
+      "calc": "manufacturing.cutting_speed",
+      "inputs": {
+        "v": "2 m/s",
+        "omega": "1200 rpm"
+      },
+      "solve_for": [
+        "D"
+      ],
+      "expect": {
+        "D": "0.03183099 m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "D = 2v/ω = 2·2/(1200·2π/60 = 125.66371 rad/s) = 0.03183099 m"
+      }
+    },
+    {
+      "calc": "manufacturing.taylor_tool_life",
+      "inputs": {
+        "V1": "2.5 m/s",
+        "T1": "7 min",
+        "V2": "1.8 m/s",
+        "T2": "30 min"
+      },
+      "solve_for": [
+        "n"
+      ],
+      "expect": {
+        "n": 0.2257314
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "V1 T1^n = V2 T2^n → n = ln(V1/V2)/ln(T2/T1) = ln(1.38889)/ln(4.28571) = 0.2257314"
+      }
+    },
+    {
+      "calc": "manufacturing.chvorinov",
+      "inputs": {
+        "t_s": "4 min",
+        "V": "200 cm^3",
+        "A": "300 cm^2"
+      },
+      "solve_for": [
+        "C"
+      ],
+      "expect": {
+        "C": "5400000 s/m^2"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "C = t_s/(V/A)² = 240/(2e-4/0.03)² = 240/4.44444e-5 = 5400000 s/m²"
+      }
+    },
+    {
+      "calc": "manufacturing.gating_velocity",
+      "inputs": {
+        "v": "1.8 m/s",
+        "g": "9.80665 m/s^2"
+      },
+      "solve_for": [
+        "h"
+      ],
+      "expect": {
+        "h": "0.165194 m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "h = v²/(2g) = 3.24/19.6133 = 0.165194 m"
+      }
+    },
+    {
+      "calc": "manufacturing.bend_allowance",
+      "inputs": {
+        "BA": "6 mm",
+        "alpha": "60 deg",
+        "K": 0.4,
+        "t": "3 mm"
+      },
+      "solve_for": [
+        "R"
+      ],
+      "expect": {
+        "R": "0.004529578 m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "R = BA/α − K t = 0.006/1.047198 − 0.4·0.003 = 0.0057296 − 0.0012 = 0.004529578 m"
+      }
+    },
+    {
+      "calc": "manufacturing.blank_diameter",
+      "inputs": {
+        "D_b": "120 mm",
+        "d_p": "70 mm"
+      },
+      "solve_for": [
+        "h"
+      ],
+      "expect": {
+        "h": "0.03392857 m"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "h = (D_b² − d_p²)/(4 d_p) = (0.0144 − 0.0049)/0.28 = 0.03392857 m"
+      }
+    },
+    {
+      "calc": "manufacturing.weld_heat_input",
+      "inputs": {
+        "H": "1.2 MJ/m",
+        "V": "28 V",
+        "I": "220 A",
+        "eta": 0.85
+      },
+      "solve_for": [
+        "v"
+      ],
+      "expect": {
+        "v": "0.004363333 m/s"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "hand",
+        "derivation": "v = V I η/H = 28·220·0.85/1.2e6 = 5236/1.2e6 = 0.004363333 m/s"
+      }
+    }
+  ]
+}

@@ -1,0 +1,325 @@
+{
+  "section": "aerospace",
+  "cases": [
+    {
+      "calc": "aerospace.level_flight_cl",
+      "inputs": {
+        "W": "9 kN",
+        "rho": 1.225,
+        "V": "50 m/s",
+        "S": "18 m^2"
+      },
+      "expect": {
+        "C_L": 0.3265306
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "C_L = 2W/(ρV²S) = 2·9000/(1.225·2500·18) = 18000/55125 = 0.326531"
+      }
+    },
+    {
+      "calc": "aerospace.wing_loading",
+      "inputs": {
+        "W": "10 kN",
+        "S": "20 m^2"
+      },
+      "expect": {
+        "W_S": "500 N/m^2"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "W/S = 10000/20 = 500 N/m²"
+      }
+    },
+    {
+      "calc": "aerospace.stall_speed",
+      "inputs": {
+        "W": "9 kN",
+        "rho": 1.225,
+        "S": "18 m^2",
+        "C_Lmax": 1.4
+      },
+      "expect": {
+        "v_stall": "24.14726 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v = sqrt(2·9000/(1.225·18·1.4)) = sqrt(18000/30.87) = sqrt(583.09) = 24.147 m/s"
+      }
+    },
+    {
+      "calc": "aerospace.aspect_ratio",
+      "inputs": {
+        "b": "10 m",
+        "S": "20 m^2"
+      },
+      "expect": {
+        "AR": 5.0
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "AR = 10²/20 = 5"
+      }
+    },
+    {
+      "calc": "aerospace.induced_drag",
+      "inputs": {
+        "C_L": 0.4,
+        "e": 0.85,
+        "AR": 8,
+        "q": "1500 Pa",
+        "S": "16 m^2"
+      },
+      "expect": {
+        "C_Di": 0.0074896,
+        "D_i": "179.7515 N"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "C_Di = 0.16/(π·0.85·8) = 0.16/21.3628 = 0.0074896; D_i = 0.0074896·1500·16 = 179.75 N"
+      }
+    },
+    {
+      "calc": "aerospace.glide_ratio",
+      "inputs": {
+        "C_L": 0.6,
+        "C_D": 0.04,
+        "h": "1500 m"
+      },
+      "expect": {
+        "L_D": 15.0,
+        "gamma": "0.0665682 rad",
+        "d": "22500 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "L/D = 0.6/0.04 = 15; γ = atan(0.04/0.6) = 0.066568 rad; glide distance d = h·(L/D) = 1500·15 = 22500 m"
+      }
+    },
+    {
+      "calc": "aerospace.thrust_to_weight",
+      "inputs": {
+        "T": "50 kN",
+        "W": "40 kN"
+      },
+      "expect": {
+        "T_W": 1.25
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "T/W = 50000/40000 = 1.25"
+      }
+    },
+    {
+      "calc": "aerospace.specific_impulse",
+      "inputs": {
+        "F": "2 MN",
+        "mdot": "800 kg/s",
+        "g0": 9.80665
+      },
+      "expect": {
+        "v_e": "2500 m/s",
+        "I_sp": "254.9291 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v_e = 2e6/800 = 2500 m/s; I_sp = 2500/9.80665 = 254.929 s"
+      }
+    },
+    {
+      "calc": "aerospace.specific_impulse",
+      "inputs": {
+        "mdot": "800 kg/s",
+        "g0": 9.80665,
+        "I_sp": "254.9291 s"
+      },
+      "solve_for": [
+        "F",
+        "v_e"
+      ],
+      "expect": {
+        "F": "2 MN"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: F = I_sp·mdot·g0 = 254.929·800·9.80665 = 2e6 N"
+      }
+    },
+    {
+      "calc": "aerospace.rocket_equation",
+      "inputs": {
+        "m0": "30 t",
+        "mf": "10 t"
+      },
+      "expect": {
+        "R": 3.0,
+        "m_p_frac": 0.6666667
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "R = 30000/10000 = 3; propellant fraction m_p/m0 = (30000 − 10000)/30000 = 2/3 = 0.66667 (= 1 − 1/R)"
+      }
+    },
+    {
+      "calc": "aerospace.rocket_equation",
+      "inputs": {
+        "m0": "30 t",
+        "R": 3.0
+      },
+      "solve_for": [
+        "mf",
+        "m_p_frac"
+      ],
+      "expect": {
+        "mf": "10 t"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: mf = m0/R = 30000/3 = 10000 kg"
+      }
+    },
+    {
+      "calc": "aerospace.orbital_velocity",
+      "inputs": {
+        "GM": 398600441800000.0,
+        "r": "6378.1 km"
+      },
+      "expect": {
+        "v": "7905.389 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v = sqrt(3.986e14/6.3781e6) = sqrt(6.24952e7) = 7905.4 m/s (surface circular orbit, first cosmic velocity ≈ 7.9 km/s)"
+      }
+    },
+    {
+      "calc": "aerospace.orbital_velocity",
+      "inputs": {
+        "GM": 398600441800000.0,
+        "v": "7905.389 m/s"
+      },
+      "solve_for": [
+        "r"
+      ],
+      "expect": {
+        "r": "6378.1 km"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: r = GM/v² = 3.986e14/6.24952e7 = 6.3781e6 m"
+      }
+    },
+    {
+      "calc": "aerospace.escape_velocity",
+      "inputs": {
+        "GM": 398600441800000.0,
+        "r": "6378.1 km"
+      },
+      "expect": {
+        "v_esc": "11179.91 m/s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "v_esc = sqrt(2·3.986e14/6.3781e6) = sqrt(2)·7905.39 = 11179.9 m/s ≈ 11.2 km/s"
+      }
+    },
+    {
+      "calc": "aerospace.orbital_period",
+      "inputs": {
+        "GM": 398600441800000.0,
+        "r": "6778.1 km"
+      },
+      "expect": {
+        "T": "5553.58 s"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "400 km LEO: r³ = 3.11428e20; r³/GM = 7.81307e5; sqrt = 883.915; T = 2π·883.915 = 5553.6 s = 92.56 min (LEO ≈ 90 min)"
+      }
+    },
+    {
+      "calc": "aerospace.geopotential_altitude",
+      "inputs": {
+        "z": "11 km",
+        "r0": 6356766
+      },
+      "expect": {
+        "H": "10981.0 m"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "H = r0·z/(r0+z) = 6356766·11000/6367766 = 10981.0 m (geopotential < geometric)"
+      }
+    },
+    {
+      "calc": "aerospace.geopotential_altitude",
+      "inputs": {
+        "H": "10980.99804546838 m",
+        "r0": 6356766
+      },
+      "solve_for": [
+        "z"
+      ],
+      "expect": {
+        "z": "11 km"
+      },
+      "source": {
+        "kind": "hand",
+        "derivation": "Inverse: z = H·r0/(r0 − H) = 10980.998·6356766/(6356766 − 10980.998) = 11000 m"
+      }
+    },
+    {
+      "calc": "aerospace.standard_atmosphere",
+      "inputs": {
+        "z": 0,
+        "r0": 6356766
+      },
+      "expect": {
+        "H": "0 m",
+        "T": "288.15 K",
+        "P": "101325 Pa",
+        "rho": "1.225 kg/m^3"
+      },
+      "source": {
+        "kind": "cited",
+        "ref": "US Standard Atmosphere 1976 sea-level values T0 = 288.15 K, P0 = 101325 Pa, ρ0 = 1.225 kg/m³ (universal tabulated landmark; recalled, not re-read)"
+      }
+    },
+    {
+      "calc": "aerospace.standard_atmosphere",
+      "inputs": {
+        "z": "25098.708638316704 m",
+        "r0": 6356766
+      },
+      "expect": {
+        "H": "25000 m",
+        "T": "221.65 K",
+        "P": "2511.02 Pa",
+        "rho": "0.0394657 kg/m^3"
+      },
+      "rel_tol": 0.0001,
+      "source": {
+        "kind": "hand",
+        "derivation": "Geometric z = 25098.7086 m → H = 6356766·25098.7086/(6356766+25098.7086) = 25000 m. In the 20–32 km layer (lapse +1.0 K/km): T = 216.65 + 0.001·5000 = 221.65 K; from the layer base pressure 5474.877 Pa, P = 5474.877·(221.65/216.65)^(−9.80665/(287.05287·0.001)) = 5474.877·0.458643 = 2511.02 Pa; ρ = 2511.02/(287.05287·221.65) = 0.0394657 kg/m³"
+      }
+    },
+    {
+      "calc": "aerospace.standard_atmosphere",
+      "inputs": {
+        "z": "11019.067832000108 m",
+        "r0": 6356766
+      },
+      "expect": {
+        "H": "11000 m",
+        "T": "216.65 K",
+        "P": "22632 Pa",
+        "rho": "0.36392 kg/m^3"
+      },
+      "rel_tol": 0.0005,
+      "source": {
+        "kind": "cited",
+        "ref": "US Standard Atmosphere 1976 tropopause (11 km geopotential): 216.65 K, 22632 Pa, 0.3639 kg/m³ (tabulated landmark; recalled, not re-read). Input is the geometric altitude z = H·r0/(r0−H) = 11019.07 m, which converts back to H = 11000 m."
+      }
+    }
+  ]
+}
