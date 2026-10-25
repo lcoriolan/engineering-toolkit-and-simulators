@@ -63,6 +63,12 @@ The expected calculator values are maintained separately from the solvers. Most 
 
 The implementation inventory is broader than the tested surface. Importable functions without applicable numerical tests remain unqualified. See the coverage matrix for unsupported features, external dependencies and unexercised operating regimes.
 
+## Roadmap and voting
+
+Help choose future work: [read the proposed roadmap](docs/roadmap.md) and [vote on feature requests](https://github.com/lcoriolan/engineering-toolkit-and-simulators/issues?q=is%3Aissue%20is%3Aopen%20label%3Aroadmap). The proposals cover a versioned design record, dependency-aware workflows, manufacturing/supplier/logistics adapters, multidisciplinary optimization, traceable reports and a generic gearbox demonstrator.
+
+Add a **👍 reaction to each proposal's opening issue post** to support it; voting for multiple options is welcome. Comment with your use case or [suggest an alternative](https://github.com/lcoriolan/engineering-toolkit-and-simulators/issues/new?template=feature_request.yml). These integrated features are proposed, not currently implemented or guaranteed commitments.
+
 ## Licensing
 
 **Free for personal noncommercial hobby use. Commercial use outside the PolyForm grant requires a separately negotiated paid license.** Repository-owned material is licensed under [PolyForm Noncommercial 1.0.0](LICENSE); keep the [required notice](NOTICE) when sharing it.

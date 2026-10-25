@@ -1,0 +1,34 @@
+name: Feature proposal
+description: Propose a capability and explain the engineering workflow it would help.
+title: "[Proposal] "
+labels: [roadmap, enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check the [proposed roadmap](https://github.com/lcoriolan/engineering-toolkit-and-simulators/blob/main/docs/roadmap.md) and existing issues first.
+        Add a thumbs-up reaction to an existing proposal you support. New proposals collect feedback and do not establish an implementation commitment.
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use case
+      description: What engineering task or decision would this help with?
+    validations:
+      required: true
+  - type: textarea
+    id: capability
+    attributes:
+      label: Proposed capability
+      description: Describe the inputs, expected behavior and useful outputs.
+    validations:
+      required: true
+  - type: textarea
+    id: success_criteria
+    attributes:
+      label: Success criteria and validation
+      description: What would a small demonstration need to prove? Which checks or references matter?
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints and alternatives
+      description: Include relevant formats, units, dependencies, workflow constraints or alternative approaches.

@@ -2,6 +2,11 @@
   "audit_date": "2026-10-24",
   "files": [
     {
+      "bytes": 1332,
+      "path": ".github/ISSUE_TEMPLATE/feature_request.yml",
+      "sha256": "51d26a41347bda8eada5c58471c0ba5c39c886756384e36003a5bce4a4f319df"
+    },
+    {
       "bytes": 213,
       "path": ".gitignore",
       "sha256": "be5d6eea21b200f8311b8e677dd4be94dcd8536fe47f1255a2304ad821076d1c"
@@ -27,9 +32,9 @@
       "sha256": "95ba2043968d65a286239c1041797f4cab273f36aecd740bad7d33d387d07d41"
     },
     {
-      "bytes": 5740,
+      "bytes": 6557,
       "path": "README.md",
-      "sha256": "3b096df8714017db50ac6cab6b912c6acd471e5276edf965320604dd0b91a4f8"
+      "sha256": "7bd5c1174e79015bac0c910156b741d79d76df3f965f6f03e48708f67cb31188"
     },
     {
       "bytes": 8332,
@@ -345,6 +350,11 @@
       "bytes": 1163,
       "path": "docs/release-policy.md",
       "sha256": "089240f2930a586d5bff61c2ffde1e2edec49da7e71f8116764b1adec94574ba"
+    },
+    {
+      "bytes": 3140,
+      "path": "docs/roadmap.md",
+      "sha256": "1a3d730858c7e4225c7589029a4af45a26a9186504f6b7d5e23dd8851b769323"
     },
     {
       "bytes": 1038,
